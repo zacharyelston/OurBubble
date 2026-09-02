@@ -41,21 +41,21 @@ So the clock is ready and the object is ready. One tick passes. What should it *
 
 Here is the rule, and it is the only one in the book.
 
-**Every dot keeps changing the way it was already changing — and the differences on its lines bend
-how fast that change is happening.**
+**Each dot's number is pushed toward its neighbours' by the differences on its lines — and carries
+forward the motion it has already built up.**
 
-That is worth unpacking slowly, because there is a simpler rule nearby that is not the one we use.
-The simpler rule would be: *move toward your neighbours.* A dot looks along its lines, sees that its
-neighbours are higher, and goes up a bit. Perfectly reasonable, and it is the rule for something
-spreading out and levelling off — a drop of ink in water.
+The second half is doing as much work as the first, so here is the sentence that separates them. The
+push sets *the change in the change*, not the change. That one word is the difference between a wave
+and a leak.
 
-Ours is one step less obedient. A dot does not move toward its neighbours; its *rate of change* does.
-The differences on the lines do not say where the dot goes, they say how its motion is being pulled
-around. So a dot that is already rising keeps rising for a while even once its neighbours have
-dropped below it, because the rule has to turn the motion around before it can reverse it.
+It is worth naming the rule we are not using, because it is one word away and it sounds just as
+reasonable. *Move toward your neighbours*: a dot looks along its lines, finds its neighbours higher,
+and goes up a bit. That is the rule for a drop of ink in water — it spreads, it flattens, it stops.
 
-Which means a dot needs to remember one thing: not just where it is now, but where it was a tick ago.
-That is the difference between a drop of ink and a plucked string, and it is the whole difference.
+Ours pushes the motion instead of the number. So a dot already rising keeps rising for a moment even
+after its neighbours have fallen below it, because the push has to turn the motion around before it
+can reverse it. Which means a dot has to remember one thing beyond where it is: where it was a tick
+ago. Ink in water needs no memory. A plucked string does.
 
 Is that really the whole law?
 
@@ -108,9 +108,8 @@ That is the same balancing act as walking around a triangle, except now it is ha
 than around a shape. Then the sum came home to zero because you returned to where you started; now
 the total holds steady because every transfer is a matched pair.
 
-Hold on to the pairing, because it is the thing a later chapter takes away. Nothing here leaks. When
-we eventually build a world where something *can* leak away, the sloshing stops coming back — and
-what happens instead is a different chapter's subject.
+Nothing here leaks, and that is why the sloshing keeps coming back rather than dying away. A world
+that conserves its total has nowhere to put anything it loses.
 
 You have one thing left to play with. What does the dial do?
 
