@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the double-slit demo's lopsided fringes — cause and exact repair</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  table.disc td.num{font-variant-numeric:tabular-nums;color:var(--green)}
+  table.disc td.bad{font-variant-numeric:tabular-nums;color:var(--red)}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The double-slit demo's lopsided fringes — cause and exact repair</h1>
+  <p class="sub">The public demo's "two-slit" pattern is <b>3.8× brighter on one side</b> of a perfectly
+     symmetric scene. The cause is the mesh, not the wave: every grid cell's diagonal leans the same way.
+     Alternate the diagonals and the pattern is mirror-symmetric to <b>machine precision</b>.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Toy DEC scalar wave on a 200×140 triangle lattice (the demo's exact
+     scene). <b>Slit, screen, fringe, intensity</b> name lattice features and derived observables, never
+     claims about nature. Not a Maxwell/EM simulation; no claim about physical double-slit experiments.</div>
+
+  <div class="panel">
+    <h2>Before: the committed demo (uniform diagonal, ⋆=I)</h2>
+    <p class="q">Time-mean screen intensity vs y (each profile normalized to its own max — shapes only).
+       The scene — slits, drive, damping — is exactly symmetric about y = 70 (dashed); the pattern is not.</p>
+    <canvas id="before" width="1120" height="300"></canvas>
+    <div class="legend"><span class="sw" style="background:var(--red)"></span>demo mesh (uniform diagonal)
+      <span class="sw" style="background:var(--faint)"></span>mirror line y = 70</div>
+    <div class="take" id="btake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>After: alternate the diagonals (crossed mesh, ⋆=I)</h2>
+    <p class="q">Identical scene, identical star — only the cell diagonals alternate, so the y-mirror is an
+       exact automorphism of the mesh.</p>
+    <canvas id="after" width="1120" height="300"></canvas>
+    <div class="legend"><span class="sw" style="background:var(--cyan)"></span>crossed mesh (repair)
+      <span class="sw" style="background:var(--faint)"></span>mirror line y = 70</div>
+    <div class="take" id="atake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The four arms, measured</h2>
+    <p class="q">Mirror asymmetry Σ|I(y)−I(140−y)|/Σ|I(y)| of the screen intensity; the worst field-column
+       asymmetry over four x-stations; wavefront arrival; fringe spacing.</p>
+    <table class="disc" id="disc"><thead><tr><th>arm</th><th>intensity asym</th><th>worst station asym</th><th>front frame</th><th>fringe spacing</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"arms":[{"arm":"A","front":231,"max_asym":1.506071e0,"lobe_ratio":3.758212,"intensity_asym":1.372012e0,"spacing":24.2500},{"arm":"B","front":318,"max_asym":1.418191e-7,"lobe_ratio":1.000000,"intensity_asym":5.550268e-10,"spacing":13.2500},{"arm":"C","front":228,"max_asym":5.166479e-15,"lobe_ratio":1.000000,"intensity_asym":4.405008e-16,"spacing":19.0000},{"arm":"D","front":322,"max_asym":4.331776e-15,"lobe_ratio":1.000000,"intensity_asym":5.219791e-16,"spacing":13.2500}],"intensity_a":[1.251681e-7,1.729111e-7,5.224620e-7,1.726673e-6,5.480611e-6,1.791045e-5,6.029330e-5,1.983664e-4,6.051907e-4,1.654801e-3,3.969657e-3,8.187452e-3,1.417979e-2,2.026985e-2,2.592121e-2,3.053947e-2,3.367865e-2,3.509766e-2,3.478392e-2,3.299899e-2,3.021901e-2,2.700438e-2,2.393416e-2,2.156314e-2,2.032552e-2,2.048096e-2,2.214226e-2,2.527702e-2,2.965877e-2,3.489360e-2,4.052204e-2,4.606529e-2,5.104868e-2,5.508652e-2,5.793592e-2,5.943918e-2,5.951100e-2,5.823759e-2,5.588567e-2,5.272879e-2,4.894593e-2,4.470565e-2,4.022094e-2,3.567033e-2,3.114130e-2,2.668371e-2,2.235904e-2,1.823660e-2,1.440364e-2,1.098569e-2,8.104556e-3,5.826175e-3,4.167772e-3,3.122639e-3,2.649163e-3,2.658917e-3,3.047748e-3,3.711955e-3,4.534541e-3,5.387464e-3,6.173799e-3,6.863034e-3,7.451361e-3,7.917131e-3,8.239655e-3,8.431305e-3,8.530983e-3,8.572903e-3,8.578205e-3,8.562975e-3,8.542457e-3,8.529712e-3,8.525387e-3,8.516902e-3,8.478862e-3,8.384450e-3,8.241911e-3,8.072559e-3,7.858557e-3,7.592508e-3,7.329031e-3,7.120119e-3,6.965708e-3,6.831934e-3,6.656515e-3,6.400362e-3,6.143166e-3,6.034616e-3,6.127475e-3,6.338893e-3,6.551069e-3,6.680210e-3,6.695205e-3,6.615669e-3,6.451595e-3,6.157621e-3,5.705463e-3,5.165553e-3,4.656029e-3,4.243948e-3,3.933204e-3,3.708201e-3,3.552933e-3,3.448843e-3,3.382311e-3,3.354815e-3,3.374534e-3,3.438267e-3,3.535028e-3,3.667791e-3,3.850949e-3,4.075970e-3,4.291710e-3,4.428419e-3,4.438537e-3,4.315131e-3,4.084549e-3,3.794686e-3,3.506922e-3,3.280812e-3,3.145422e-3,3.074804e-3,2.996724e-3,2.834287e-3,2.543990e-3,2.126649e-3,1.622547e-3,1.102209e-3,6.461577e-4,3.126562e-4,1.350550e-4,5.533192e-5,2.284471e-5,9.849504e-6,4.394723e-6,1.942212e-6,8.132771e-7,3.149471e-7,1.150910e-7,4.605598e-8,2.764964e-8],"intensity_c":[1.223245e-8,3.663888e-8,1.115872e-7,5.469912e-7,1.891004e-6,8.404372e-6,2.685913e-5,9.729483e-5,2.732607e-4,7.535518e-4,1.781499e-3,3.503549e-3,6.608065e-3,8.646046e-3,1.227605e-2,1.357826e-2,1.718175e-2,1.817533e-2,2.248681e-2,2.448583e-2,3.106709e-2,3.518316e-2,4.538788e-2,5.170901e-2,6.587564e-2,7.332935e-2,9.048530e-2,9.708937e-2,1.150267e-1,1.183697e-1,1.341376e-1,1.321223e-1,1.429044e-1,1.343791e-1,1.382871e-1,1.232585e-1,1.196440e-1,9.959134e-2,8.953403e-2,6.801692e-2,5.502428e-2,3.678866e-2,2.569594e-2,1.421030e-2,8.532247e-3,4.458096e-3,4.839565e-3,6.117026e-3,1.048255e-2,1.340917e-2,1.824369e-2,1.954251e-2,2.213466e-2,2.074250e-2,2.086202e-2,1.802501e-2,1.774065e-2,1.597656e-2,1.831128e-2,2.006084e-2,2.750276e-2,3.383018e-2,4.724442e-2,5.708235e-2,7.528763e-2,8.555794e-2,1.054952e-1,1.119759e-1,1.292727e-1,1.280928e-1,1.383845e-1,1.280928e-1,1.292727e-1,1.119759e-1,1.054952e-1,8.555794e-2,7.528763e-2,5.708235e-2,4.724442e-2,3.383018e-2,2.750276e-2,2.006084e-2,1.831128e-2,1.597656e-2,1.774065e-2,1.802501e-2,2.086202e-2,2.074250e-2,2.213466e-2,1.954251e-2,1.824369e-2,1.340917e-2,1.048255e-2,6.117026e-3,4.839565e-3,4.458096e-3,8.532247e-3,1.421030e-2,2.569594e-2,3.678866e-2,5.502428e-2,6.801692e-2,8.953403e-2,9.959134e-2,1.196440e-1,1.232585e-1,1.382871e-1,1.343791e-1,1.429044e-1,1.321223e-1,1.341376e-1,1.183697e-1,1.150267e-1,9.708937e-2,9.048530e-2,7.332935e-2,6.587564e-2,5.170901e-2,4.538788e-2,3.518316e-2,3.106709e-2,2.448583e-2,2.248681e-2,1.817533e-2,1.718175e-2,1.357826e-2,1.227605e-2,8.646046e-3,6.608065e-3,3.503549e-3,1.781499e-3,7.535518e-4,2.732607e-4,9.729483e-5,2.685913e-5,8.404372e-6,1.891004e-6,5.469912e-7,1.115872e-7,3.663888e-8,1.223245e-8],"continuum_dy":27.125,"fresnel":2.36,"source":{"commit":"490f006"}};
+
+function drawProfile(canvasId, ys, color){
+  const cv=document.getElementById(canvasId), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=48,padR=16,padT=14,padB=30;
+  const n=ys.length;
+  const ymax=Math.max(...ys);
+  const X=i=>padL+i/(n-1)*(W-padL-padR);
+  const Y=v=>padT+(1-(ymax>0?v/ymax:0))*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let y=0;y<=140;y+=20){const x=X(y);g.strokeStyle="#141c27";g.beginPath();g.moveTo(x,padT);g.lineTo(x,H-padB);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText(y,x,H-padB+13);}
+  g.fillStyle="#4b5c70";g.textAlign="left";g.fillText("normalized intensity",padL,padT+2);
+  g.fillStyle="#3b4a5e";g.textAlign="center";g.fillText("screen position y (cells)",(padL+W-padR)/2,H-6);
+  // mirror line
+  g.strokeStyle="#6b7c90";g.setLineDash([5,4]);g.beginPath();g.moveTo(X(70),padT);g.lineTo(X(70),H-padB);g.stroke();g.setLineDash([]);
+  // profile
+  g.strokeStyle=color;g.lineWidth=2;g.beginPath();
+  ys.forEach((v,i)=>{const x=X(i),y=Y(v);i===0?g.moveTo(x,y):g.lineTo(x,y);});
+  g.stroke();
+}
+
+drawProfile("before", D.intensity_a, "#ef4444");
+drawProfile("after",  D.intensity_c, "#06b6d4");
+
+const A=D.arms.find(a=>a.arm==="A"), B=D.arms.find(a=>a.arm==="B"),
+      Cc=D.arms.find(a=>a.arm==="C"), Dd=D.arms.find(a=>a.arm==="D");
+
+document.getElementById("btake").innerHTML =
+  `The slit-side lobes differ by <b>${A.lobe_ratio.toFixed(2)}×</b> and the mirror asymmetry is
+   <b>${A.intensity_asym.toFixed(2)}</b> — order one, even upstream of the barrier where the geometry is
+   provably symmetric. The stencil {(±1,0),(0,±1),(+1,−1),(−1,+1)} is 180°-rotation invariant but not
+   y-mirror invariant: the lattice, not the scene.`;
+
+document.getElementById("atake").innerHTML =
+  `Same scene, same ⋆=I: mirror asymmetry <b>${Cc.intensity_asym.toExponential(1)}</b> — machine rounding.
+   Timing survives (front frame ${Cc.front} vs ${A.front}); the fringe centers pair exactly under
+   y → 140−y. The repair is a <b>drop-in mesh swap</b>.`;
+
+(function(){
+  const fmt=(a)=>[a.arm==="A"?"A · demo (uniform, ⋆=I)":a.arm==="B"?"B · uniform, geometric ⋆":a.arm==="C"?"C · crossed, ⋆=I (repair)":"D · crossed, geometric ⋆",
+    a.intensity_asym>1e-3?["bad",a.intensity_asym.toFixed(3)]:["num",a.intensity_asym.toExponential(1)],
+    a.max_asym>1e-3?["bad",a.max_asym.toFixed(3)]:["num",a.max_asym.toExponential(1)],
+    ["num",a.front], ["num",a.spacing.toFixed(2)]];
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=[A,B,Cc,Dd].map(a=>{const r=fmt(a);
+    return `<tr><td>${r[0]}</td><td class="${r[1][0]}">${r[1][1]}</td><td class="${r[2][0]}">${r[2][1]}</td><td class="num">${r[3][1]}</td><td class="num">${r[4][1]}</td></tr>`;}).join("");
+  document.getElementById("dtake").innerHTML =
+    `The geometric ⋆ (the #23 fix) also kills the stencil asymmetry — to ${B.max_asym.toExponential(1)} on the
+     uniform mesh, bounded by the open boundary's mirror-asymmetric ⋆₀ (corner defect 1/6); on the crossed mesh
+     it is machine-exact. And the page's textbook formula Δy = λL/d = <b>${D.continuum_dy}</b> is out of its
+     far-field regime here (Fresnel parameter d²/λL = <b>${D.fresnel.toFixed(2)}</b> &gt; 1): the repaired lattice
+     measures <b>${Cc.spacing.toFixed(1)}</b> — the formula is a comparison, not a prediction the demo must match.`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_doubleslit_mirror</code> from
+   <code>lab/warp-3-shield/0305-doubleslit-mirror/data/</code> (gate <code>uf3_5_doubleslit_mirror_gate</code>,
+   commit <code>${D.source.commit}</code>). Profiles normalized per-arm to their own maximum (absolute
+   transmission is drive-cavity sensitive; see eval.md). Self-contained; opens with no server.`;
+</script>
+</body>
+</html>

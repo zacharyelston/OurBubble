@@ -13,12 +13,18 @@
 #
 #     1. edit `sha` below to the new UniForge commit
 #     2. `tools/fetch_record.sh`            (re-checks out `.record/` at the new commit)
-#     3. `python3 check_edition.py`         (every quotation re-verified against the new commit)
-#     4. fix whatever moved — or, if nothing moved, commit the one-line SHA change on its own
+#     3. `tools/snapshot_record.sh`         (re-derives the committed `record/` snapshot from it)
+#     4. `python3 check_edition.py`         (quotations re-verified; any drift reported by file)
+#     5. fix whatever moved — or, if nothing moved, commit the SHA and the snapshot together
 #
-# Step 3 is the point. A bump that changes a number the book quotes fails here, by name, with the
-# file it stopped being carried by. `path =` lines are derived from `edition.json` and checked
-# against it on every run, so the footprint below cannot quietly under-declare what is pinned.
+# All five land in ONE commit. A bump that updates the pin without re-snapshotting would leave the
+# book quoting one commit and citing another, and the checker refuses that: the snapshot carries the
+# SHA it was taken at and must match this file.
+#
+# Step 4 is the point. A bump that changes a number the book quotes fails there, by name, with the
+# file it stopped being carried by. `path =` lines are derived from `edition.json` and the chapters'
+# own links, and are checked against both on every run, so the footprint below cannot quietly
+# under-declare what is pinned.
 #
 # Format: `key = value`, one per line; `#` comments; repeated keys accumulate.
 

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the shaped shift's energy — negative, on the wall, toroidal</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --blue:#1e3a8a;--cyan:#06b6d4;--gold:#eab308;--red:#ef4444}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:940px;margin:0 auto;padding:26px 20px 48px}
+  h1{font:600 20px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panels{display:flex;gap:18px;flex-wrap:wrap}
+  .panel{flex:1 1 380px;min-width:300px;background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:15px 16px}
+  .panel h2{font:600 12px/1 system-ui;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
+  .bar{margin:11px 0}
+  .bar .lab{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px}
+  .bar .lab .nm{color:var(--ink)} .bar .lab .vl{color:var(--mute);font-variant-numeric:tabular-nums}
+  .bar .track{height:15px;background:#0a0d12;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .bar .fill{height:100%;border-radius:4px 0 0 4px}
+  .callout{font-size:12px;color:var(--gold);margin-top:12px;line-height:1.6}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .clabel{font-size:11.5px;color:var(--faint);margin-top:8px;line-height:1.5}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+  code{color:var(--cyan);font-size:11.5px}
+  .verdict{margin:14px 0 4px;padding:10px 13px;border:1px solid #234;border-left:3px solid var(--cyan);background:rgba(6,182,212,.05);border-radius:8px;font-size:13px}
+  .verdict b{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The shaped shift's energy — negative, on the wall, toroidal</h1>
+  <p class="sub">A shaped shift <code>N = vs·f(r)·ẑ</code> read through the purely-geometric functional
+     <code>16πρ = (trK)² − K_ijK^ij</code>. Nothing is added by hand — the structure falls out of the geometry.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> A <b>toy</b> lattice: <code>N</code> is a prescribed field, <code>16πρ</code>
+     the quadratic invariant of its gradients. Not a spacetime, a measurement, or a device. Brightness shows
+     <b>|16πρ|</b>; the sign is <b>negative</b> (exotic) everywhere it is significant. c = G = 1.</div>
+
+  <div class="verdict" id="verdict">…</div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>Where the energy lives — by radial band</h2>
+      <div id="bars"></div>
+      <div class="callout" id="bandcall"></div>
+    </div>
+    <div class="panel">
+      <h2>The torus — energy vs angle from the travel axis</h2>
+      <canvas id="cv" width="720" height="560"></canvas>
+      <div class="clabel" id="torcall"></div>
+    </div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"bands":[{"band":"interior","mean":0.00001253444,"count":2969},{"band":"wall","mean":0.004213391,"count":25474},{"band":"exterior","mean":0.000003098821,"count":75152}],"angles":[{"lo":0,"hi":0.1111,"mean":0.006001219,"count":2832},{"lo":0.1111,"hi":0.2222,"mean":0.006377346,"count":2848},{"lo":0.2222,"hi":0.3333,"mean":0.005625232,"count":2864},{"lo":0.3333,"hi":0.4444,"mean":0.005452281,"count":2792},{"lo":0.4444,"hi":0.5556,"mean":0.004772191,"count":2888},{"lo":0.5556,"hi":0.6667,"mean":0.003916984,"count":2736},{"lo":0.6667,"hi":0.7778,"mean":0.003134609,"count":2840},{"lo":0.7778,"hi":0.8889,"mean":0.001945255,"count":2824},{"lo":0.8889,"hi":1,"mean":0.0007709702,"count":2520}],"wall_vs_in":336.145132929752,"wall_vs_ex":1359.6755023926844,"tor_ratio":7.783983090397009,"source":{"data":"lab/warp-2-energy/0200-shaped-shift-energy/data/","gate":"uf2_energy_structure_gate","lab":"warp-2-energy/0200-shaped-shift-energy","commit":"61a9b83"}};
+
+// ---------- verdict + panel A: radial bands (log scale — the wall dwarfs interior/exterior) ----------
+const order = ["interior","wall","exterior"];
+const byName = Object.fromEntries(D.bands.map(b=>[b.band,b]));
+const means = order.map(n=>byName[n]?byName[n].mean:0);
+const lo = Math.min(...means.filter(m=>m>0)), hi = Math.max(...means);
+const lg = m => m>0 ? Math.log10(m) : Math.log10(lo)-1;
+const span = (lg(hi)-lg(lo)) || 1;
+const colOf = {interior:"#334155", wall:"#ef4444", exterior:"#334155"};
+document.getElementById("bars").innerHTML = order.map(n=>{
+  const b = byName[n]||{mean:0,count:0};
+  const w = Math.max(2, Math.round(100*(lg(b.mean)-lg(lo)+0.15)/(span+0.15)));
+  return `<div class="bar"><div class="lab"><span class="nm">${n}</span>
+    <span class="vl">${b.mean.toExponential(2)} · ${b.count} cells</span></div>
+    <div class="track"><div class="fill" style="width:${w}%;background:${colOf[n]}"></div></div></div>`;
+}).join("");
+document.getElementById("bandcall").innerHTML =
+  `wall / interior = <b>${Math.round(D.wall_vs_in)}×</b> &nbsp;·&nbsp; wall / exterior = <b>${Math.round(D.wall_vs_ex)}×</b>
+   — the exotic energy is paid at the <b>wall</b>, not in the flat interior or the far field (log-scaled bars).`;
+
+// ---------- panel B: data-true toroidal cross-section (each angle bin placed on the wall circle) ----------
+const cv=document.getElementById("cv"), g=cv.getContext("2d"), W=cv.width, H=cv.height, cx=W/2, cy=H/2;
+const A = D.angles, maxA = Math.max(...A.map(a=>a.mean))||1;
+const Rr = Math.min(W,H)*0.33;                         // wall-shell radius in the cross-section
+function ramp(t){t=Math.max(0,Math.min(1,t));const s=[[30,58,138],[6,182,212],[234,179,8],[239,68,68]];
+  const u=t*3,i=Math.min(2,Math.floor(u)),f=u-i,a=s[i],b=s[i+1];
+  return `rgb(${Math.round(a[0]+(b[0]-a[0])*f)},${Math.round(a[1]+(b[1]-a[1])*f)},${Math.round(a[2]+(b[2]-a[2])*f)})`;}
+g.clearRect(0,0,W,H);
+// faint reference wall circle
+g.beginPath();g.arc(cx,cy,Rr,0,7);g.strokeStyle="#1b2735";g.lineWidth=1;g.stroke();
+// travel (z) axis — vertical
+g.strokeStyle="#3b4a5e";g.lineWidth=1;g.beginPath();g.moveTo(cx,cy-Rr-46);g.lineTo(cx,cy+Rr+46);g.stroke();
+g.fillStyle="#6b7c90";g.font="12px system-ui";g.textAlign="center";
+g.fillText("▲ travel axis (z)",cx,cy-Rr-54); g.fillText("pole",cx,cy-Rr-30); g.fillText("pole",cx,cy+Rr+40);
+g.textAlign="left"; g.fillText("equator →",cx+Rr+8,cy+4);
+g.textAlign="right"; g.fillText("← equator",cx-Rr-8,cy+4);
+// place each bin's measured magnitude on the wall at its polar angle, mirrored into all 4 quadrants
+for(const a of A){
+  const cosT=(a.lo+a.hi)/2, sinT=Math.sqrt(Math.max(0,1-cosT*cosT)); // angle from z-axis
+  const t=a.mean/maxA, r=3+16*Math.sqrt(t);
+  for(const sz of [1,-1]) for(const sr of [1,-1]){
+    const x=cx+sr*Rr*sinT, y=cy-sz*Rr*cosT;
+    g.beginPath();g.arc(x,y,r,0,7);g.globalAlpha=0.28+0.6*t;g.fillStyle=ramp(t);g.fill();
+  }
+}
+g.globalAlpha=1;
+document.getElementById("torcall").innerHTML =
+  `Each dot is a measured angular bin on the wall shell (size &amp; colour ∝ |16πρ|), mirrored by symmetry.
+   The energy rings the equator and <b>pinches to nothing at the poles</b> (the travel axis) — a torus.
+   equator / pole = <b>${D.tor_ratio.toFixed(1)}×</b>.`;
+
+// ---------- verdict + provenance caption ----------
+document.getElementById("verdict").innerHTML =
+  `<b>The tenet holds on warp.</b> The shaped shift's energy is <b>negative</b> (exotic), <b>wall-localized</b>
+   (${Math.round(D.wall_vs_in)}× the interior), and <b>toroidal</b> (${D.tor_ratio.toFixed(1)}× equator-over-pole)
+   — matching the hand-derived <code>−½·vs²·f'(r)²·sin²θ</code>, with nothing put in by hand.`;
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_energy</code> from <code>${D.source.data}</code>
+   (gate <code>${D.source.gate}</code>, lab <code>${D.source.lab}</code>, commit <code>${D.source.commit}</code>).
+   The browser computes no physics — it only draws the numbers the gate wrote. Self-contained; opens with no server.`;
+</script>
+</body>
+</html>

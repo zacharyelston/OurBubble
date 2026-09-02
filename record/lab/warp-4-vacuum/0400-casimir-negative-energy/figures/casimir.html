@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the Casimir vacuum is negative — and the lattice finds the law</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  table.disc td.num{font-variant-numeric:tabular-nums;color:var(--green)}
+  table.disc td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The Casimir vacuum is negative — and the lattice finds the law</h1>
+  <p class="sub">Confine a toy quantum field between two plates and its zero-point energy goes <b>below</b>
+     the free vacuum. The lattice is its own UV cutoff — no zeta trick — and the bench <b>discovers</b> the
+     law from the swept data.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Zero-point energy ½Σℏωₖ of a <b>toy</b> scalar field (a fixed–fixed
+     oscillator chain = the engine's Dirichlet Laplacian) on a <b>toy</b> lattice. ℏ dimensionless; standard
+     QFT bookkeeping — <b>not</b> a device, spacetime claim, or free energy. c = 1.</div>
+
+  <div class="panel">
+    <h2>The confined vacuum energy dips negative</h2>
+    <p class="q">Bulk-subtracted energy E_C(a) vs plate separation a (dots = the run). The curve is the
+       automated least-squares fit E_C = c₀ + c₁/a — it never touches zero: the vacuum here is exotic.</p>
+    <canvas id="ec" width="1120" height="330"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:var(--cyan)"></span>E_C(a) measured
+      <span class="sw" style="background:var(--gold)"></span>discovered fit c₀ + c₁/a
+      <span class="sw" style="background:var(--faint)"></span>free vacuum (0)
+    </div>
+    <div class="take" id="ectake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>What the bench discovered (not hardcoded)</h2>
+    <p class="q">The gate swept the separation, fit the data, and read off the surface term, the Casimir
+       coefficient, and the power-law exponent — then held each against theory.</p>
+    <table class="disc" id="disc"><thead><tr><th>discovered quantity</th><th>from the run</th><th>theory</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"sweep":[{"a":8,"e0":4.576585,"ec":-0.516373},{"a":12,"e0":7.128526,"ec":-0.510911},{"a":16,"e0":9.677734,"ec":-0.508183},{"a":24,"e0":14.773420,"ec":-0.505455},{"a":32,"e0":19.867742,"ec":-0.504091},{"a":48,"e0":30.055022,"ec":-0.502727},{"a":64,"e0":40.241620,"ec":-0.502045}],"fit":{"c0":-0.499997,"c1":-0.130990,"c1_theory":-0.130900,"exponent":-0.999726,"r2":0.99999992,"coeff_err":0.000691},"source":{"commit":"01e536e"}};
+const F = D.fit;
+
+// ---- E_C(a) curve + fit ----
+(function(){
+  const cv=document.getElementById("ec"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=64,padR=18,padT=18,padB=34, S=D.sweep;
+  const amax=Math.max(...S.map(s=>s.a)), amin=0;
+  const ys=S.map(s=>s.ec);
+  const ymin=Math.min(...ys)*1.08, ymax=0.02;
+  const X=a=>padL+(a-amin)/(amax-amin)*(W-padL-padR);
+  const Y=v=>padT+(ymax-v)/(ymax-ymin)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  // gridlines
+  for(let a=0;a<=amax;a+=16){const x=X(a);g.strokeStyle="#141c27";g.beginPath();g.moveTo(x,padT);g.lineTo(x,H-padB);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText(a,x,H-padB+13);}
+  for(let v=0;v>=ymin;v-=0.1){const y=Y(v);g.strokeStyle="#141c27";g.beginPath();g.moveTo(padL,y);g.lineTo(W-padR,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.textAlign="right";g.fillText(v.toFixed(1),padL-6,y+3);}
+  // zero line (free vacuum)
+  g.strokeStyle="#6b7c90";g.setLineDash([5,4]);g.beginPath();g.moveTo(padL,Y(0));g.lineTo(W-padR,Y(0));g.stroke();g.setLineDash([]);
+  g.fillStyle="#6b7c90";g.textAlign="left";g.fillText("free vacuum (E_C = 0)",padL+6,Y(0)-5);
+  // surface asymptote c0
+  g.strokeStyle="#c084fc";g.setLineDash([2,4]);g.beginPath();g.moveTo(padL,Y(F.c0));g.lineTo(W-padR,Y(F.c0));g.stroke();g.setLineDash([]);
+  g.fillStyle="#c084fc";g.fillText(`surface c₀ = ${F.c0.toFixed(3)}`,padL+6,Y(F.c0)+13);
+  // fit curve
+  g.strokeStyle="#eab308";g.lineWidth=2;g.beginPath();
+  let first=true;
+  for(let a=4;a<=amax;a+=0.5){const v=F.c0+F.c1/a;const x=X(a),y=Y(v);first?(g.moveTo(x,y),first=false):g.lineTo(x,y);}
+  g.stroke();
+  // measured points
+  S.forEach(s=>{g.fillStyle="#06b6d4";g.beginPath();g.arc(X(s.a),Y(s.ec),3.5,0,7);g.fill();});
+  g.fillStyle="#4b5c70";g.textAlign="left";g.fillText("E_C(a)",padL,padT+2);
+  document.getElementById("ectake").innerHTML =
+    `Every point is <b>below zero</b> — the confined vacuum is exotic (ρ<0), the sign classical fields (ch. 2)
+     and shields (ch. 3) could never reach. As the plates separate the energy rises toward the free vacuum
+     but never crosses it; as they approach it plunges — an <b>attractive</b> force.`;
+})();
+
+// ---- discovery table ----
+(function(){
+  const rows=[
+    ["surface term c₀", F.c0.toFixed(4), "−0.5"],
+    ["Casimir coefficient c₁", F.c1.toFixed(5), "−π/24 = "+F.c1_theory.toFixed(5)],
+    ["power-law exponent", F.exponent.toFixed(4), "−1"],
+    ["fit quality R²", F.r2.toFixed(7), "1"],
+    ["coefficient error", (F.coeff_err*100).toFixed(2)+"%", "0%"],
+  ];
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="thy">${r[2]}</td></tr>`).join("");
+  document.getElementById("dtake").innerHTML =
+    `The automation — not the author — extracted the physical law: <b>E_C(a) = ${F.c0.toFixed(2)} ${F.c1<0?"−":"+"} ${Math.abs(F.c1).toFixed(3)}/a</b>,
+     the Casimir coefficient within <b>${(F.coeff_err*100).toFixed(2)}%</b> of the exact −π/24, at R²=${F.r2.toFixed(5)}.
+     This is the value-add: the lattice runs the experiment and the bench <b>discovers and theory-checks</b> the result.`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_casimir</code> from
+   <code>lab/warp-4-vacuum/0400-casimir-negative-energy/data/</code> (gate <code>uf4_casimir_energy_gate</code>,
+   commit <code>${D.source.commit}</code>). The lattice spectrum is its own UV cutoff — ½Σωₖ is finite with no
+   regularization. Self-contained; opens with no server.`;
+</script>
+</body>
+</html>

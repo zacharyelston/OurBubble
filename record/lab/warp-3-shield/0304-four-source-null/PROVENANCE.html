@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-3-shield/0304-four-source-null/PROVENANCE.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-3-shield/0304-four-source-null/PROVENANCE.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># Provenance — 0304 Warp-3.4: the four-source null
+
+- **Registered (R1, pre-run):** commit `530a325`. **Run-for-record:** commit `2f81902` (gate + data); this
+  eval + provenance land in the following commit.
+- **Toolchain:** `rustc 1.94.1 (e408947bf 2026-03-25)`.
+- **Regenerate:**
+  ```bash
+  cd core
+  cargo test --release -p uniforge --test uf3_4_four_source_null_gate -- --nocapture   # prints recorded numbers
+  cargo run  --release -p viz     --bin gen_null                                          # → the figure
+  ```
+- **Determinism:** pure f64, closed-form plane-wave superposition (no wall-clock, no RNG). Grid `N=24`,
+  spacing 1, wavelength `λ=8` (`k=2π/λ`, domain = 3λ). Each wave is `Ê e^{i(k·x+φ)}` with `B̂ = k̂ × Ê`;
+  time-averaged energy `⟨ρ⟩ = ½·(em_energy(Ê_re,B̂_re) + em_energy(Ê_im,B̂_im)) = ¼(|Ê|²+|B̂|²)`
+  (`kinematics::em_energy`). Central cube = `±λ/4` about the domain center (side `λ/2`). Phase sweep over
+  `(pa, 0.7·pa, 1.9·pa)` for `pa ∈ [0,2π]` in 8 steps.
+- **Data files:** `data/null_configs.csv` — per config (single / standing_1pol / orthogonal_3pair /
+  parallel_antiphase): cube residual, center `⟨ρ⟩`, domain mean, `CoV`, max/min `⟨ρ⟩`; `data/phase_sweep.csv`
+  — center `⟨ρ⟩` vs pair phase for the orthogonal set (flat = phase-independent); `data/radial.csv` — `⟨ρ⟩`
+  along the body diagonal from center for the orthogonal and standing configs (flat = no null).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

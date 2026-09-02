@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the shield — the imbalance is real, the inertia change is not</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 12px}
+  .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:12.5px}
+  .row .k{width:150px;color:var(--faint);text-align:right}
+  .row .track{flex:1;position:relative;height:16px;background:#0a0d12;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .row .bar{position:absolute;top:2px;height:12px;border-radius:3px;left:0}
+  .row .v{width:150px;font-variant-numeric:tabular-nums;color:var(--mute)}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  .fence{margin-top:10px;border:1px dashed #5b4a23;background:rgba(234,179,8,.05);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--mute)}
+  .fence b{color:var(--gold)}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The shield — the imbalance is real, the inertia change is not</h1>
+  <p class="sub">Does a shield that decouples a region from its environment reduce its inertia? The
+     information imbalance is provable; the inertia change is a registered null (and names what's missing).</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> A prescribed barrier + a probe field's linear response on a <b>toy</b>
+     lattice. <b>Real EM does not screen gravity</b>; entropic inertia (Mach/Verlinde/MiHsC) is contested
+     prior physics, shown only as a fenced hypothesis. c = 1.</div>
+
+  <div class="panel">
+    <h2>The imbalance — coupling from an external source (log scale)</h2>
+    <p class="q">How much an exterior source reaches a probe, open vs shielded. Crossing the shell collapses; a path that doesn't is untouched.</p>
+    <div id="coupling"></div>
+    <div class="take" id="ctake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The inertia — unchanged inside</h2>
+    <p class="q">The barrier is a positive effective mass² (m²_eff = V); inside the bubble it is exactly zero.</p>
+    <div id="mass"></div>
+    <div class="take" id="mtake"></div>
+    <div class="fence" id="fence"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"coupling":[{"pair":"interior","open":2.002940e-3,"shielded":3.964936e-9,"ratio":0.000002},{"pair":"exterior_control","open":5.441245e-2,"shielded":4.664279e-2,"ratio":0.857208}],"inertia":{"m2_centre":0.000000e0,"m2_wall":40.000000,"disp_open":0.391403,"disp_shielded":0.391402,"coupling_ratio":0.000002},"source":{"commit":"6db889c"}};
+
+// Panel A — coupling, log scale (open vs shielded, per pair)
+(function(){
+  const C = D.coupling;
+  const vals = C.flatMap(c=>[c.open,c.shielded]).filter(v=>v>0);
+  const lo = Math.floor(Math.log10(Math.min(...vals)))-1, hi = Math.ceil(Math.log10(Math.max(...vals)))+1;
+  const L = e => Math.max(0, (e-lo)/(hi-lo)*100);
+  const barLog = (v,col) => `<div class="track"><div class="bar" style="width:${L(Math.log10(v))}%;background:${col}"></div></div>`;
+  let html="";
+  for(const c of C){
+    const label = c.pair.indexOf("interior")>=0 ? "interior (crosses shell)" : "exterior control (doesn't)";
+    html += `<div class="row"><div class="k">${label} · open</div>${barLog(c.open,"#334155")}<div class="v">${c.open.toExponential(2)}</div></div>`;
+    const col = c.pair.indexOf("interior")>=0 ? "#ef4444":"#06b6d4";
+    html += `<div class="row"><div class="k">shielded</div>${barLog(c.shielded,col)}<div class="v">${c.shielded.toExponential(2)} · ×${c.ratio.toExponential(1)}</div></div>`;
+  }
+  document.getElementById("coupling").innerHTML = html;
+  const inter = C.find(c=>c.pair.indexOf("interior")>=0), ctrl = C.find(c=>c.pair.indexOf("interior")<0);
+  document.getElementById("ctake").innerHTML =
+    `Crossing the shell, the interior coupling collapses to <b>×${inter.ratio.toExponential(1)}</b> — the inside sees ~${Math.round(1/inter.ratio).toLocaleString()}× less of the outside. A non-crossing exterior path barely moves (×${ctrl.ratio.toFixed(2)}). <b>The imbalance is real.</b>`;
+})();
+
+// Panel B — effective mass² bars + inertia null
+(function(){
+  const I = D.inertia, mx = Math.max(I.m2_wall, 1e-9);
+  const bar = (v,col)=>`<div class="track"><div class="bar" style="width:${Math.max(0.5,100*v/mx)}%;background:${col}"></div></div>`;
+  document.getElementById("mass").innerHTML =
+    `<div class="row"><div class="k">m²_eff at centre (inside)</div>${bar(I.m2_centre,"#334155")}<div class="v">${I.m2_centre.toExponential(1)} (zero)</div></div>
+     <div class="row"><div class="k">m²_eff at the wall</div>${bar(I.m2_wall,"#c084fc")}<div class="v">${I.m2_wall.toFixed(0)} (more inert)</div></div>`;
+  document.getElementById("mtake").innerHTML =
+    `The shield adds a <b>positive</b> mass² at the wall and <b>exactly nothing</b> inside. An interior packet's
+     displacement is unchanged: open <b>${(+I.disp_open).toFixed(5)}</b>, shielded <b>${(+I.disp_shielded).toFixed(5)}</b>.
+     Inertia (the φ̈ coefficient) = 1 either way — <b>shielding does not reduce inertia</b>.`;
+  const factor = I.coupling_ratio>0 ? Math.round(1/I.coupling_ratio) : 0;
+  document.getElementById("fence").innerHTML =
+    `<b>Fenced hypothesis (contested prior physics — NOT derived here):</b> Mach/Verlinde/MiHsC posit
+     inertia ∝ environmental coupling. <i>If</i> that held, this run's coupling drop would predict a
+     ~${factor.toLocaleString()}× lighter interior. The toy neither derives nor endorses this — it only
+     shows the standard-physics result is a null, and names the extra law that would be required.`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_shield</code> from
+   <code>lab/warp-3-shield/0300-shield-imbalance-inertia/data/</code> (gate <code>uf3_shield_imbalance_gate</code>,
+   commit <code>${D.source.commit}</code>). Self-contained; opens with no server.`;
+</script>
+</body>
+</html>

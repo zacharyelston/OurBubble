@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · live discovery — the bench recovers ω = c·k blind, in five directions</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  td.num{font-variant-numeric:tabular-nums;color:var(--green)} td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  td.law{color:var(--gold);font-weight:600}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+  .blind{border:1px solid var(--line);border-left:3px solid var(--violet);background:rgba(192,132,252,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:14px}
+  .blind b{color:var(--violet)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Live discovery — the bench is told nothing, and returns the law</h1>
+  <p class="sub">A frequency sweep on a 64³ periodic tetrahedral lattice, along five directions, with
+     <b>no dispersion relation supplied</b>. The bench scores six candidate laws against the data and
+     reports which one it is, how sure it is, and where the finite lattice stops obeying it.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> A <b>toy</b> DEC scalar wave on a tetrahedral 3-torus.
+     <i>ω, k, dispersion, light cone, speed, isotropy</i> name numerical properties of the discrete
+     operator <code>Δ₀ = ⋆₀⁻¹D₀ᵀ⋆₁D₀</code> and of least-squares fits to its Rayleigh quotients —
+     never a real photon, a real light cone, or a measurement of <i>c</i>. The prediction-grade
+     quantities are the dimensionless <b>exponent</b> and the dimensionless <b>anisotropy ratio</b>;
+     the fitted coefficient is an emergent lattice speed in code units. c = 1 in code units only.</div>
+  <div class="blind"><b>What "blind" means here.</b> The only path from swept data to a stated law is
+     <code>discover_law(&amp;[f64], &amp;[f64]) -&gt; Discovery</code> — its whole signature is the two
+     data columns, so no expected exponent can enter through a parameter. The candidate menu
+     <code>{k⁰, k^½, k, k^{3/2}, k², k³}</code> was registered before the run; the winner is whichever
+     the data's own log-space R² prefers.</div>
+
+  <div class="panel">
+    <h2>1 · The sweep, and the law the bench picked out of it</h2>
+    <p class="q">Measured ω(|k|) (points, log–log) with the discovered law <code>ω = C·k^p</code> drawn
+       through the long-wavelength window (shaded). The three axis directions coincide to 7×10⁻¹³ —
+       a cubic symmetry of the mesh — so one marker carries all three.</p>
+    <canvas id="disp" width="1120" height="420"></canvas>
+    <div class="legend" id="dleg"></div>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>2 · How sure — the candidate scorecard</h2>
+    <p class="q">Log-space R² of every candidate law against the long-wavelength data, per direction.
+       The linear law wins in all five directions by a margin the bench reports as a number; the
+       runner-up is always the diffusive k<sup>½</sup>, and k² scores <i>below zero</i>.</p>
+    <canvas id="cand" width="1120" height="330"></canvas>
+    <div class="legend" id="cleg"></div>
+    <div class="take" id="ctake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>3 · Isotropy — and a control that proves the test can fail</h2>
+    <p class="q">Left: phase speed ω/|k| against |k| per direction — the cone's own curvature, and the
+       source of the residual directional spread. Right: the anisotropy of the <i>discovered speed</i>
+       at the registered window and at half of it, for the geometric ⋆ and for the trivial ⋆ = I
+       control. Shrinking under k-halving means finite-k; staying put means a real cone defect.</p>
+    <canvas id="iso" width="1120" height="360"></canvas>
+    <div class="legend" id="ileg"></div>
+    <div class="take" id="itake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>4 · What the bench discovered, per direction</h2>
+    <table class="disc" id="dtab"><thead><tr><th>direction</th><th>selected law</th><th>margin over runner-up</th><th>free exponent</th><th>speed C</th><th>R²</th><th>short-λ bend</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="panel">
+    <h2>5 · Scorecard — measured vs registered targets</h2>
+    <table class="disc" id="score"><thead><tr><th>quantity</th><th>measured</th><th>target (registered before the run)</th><th>status</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"k_cut":1.05,"worst_p":0,"worst_r2":0.999906017,"worst_margin":0.241497081,"runner_r2":0.758135073,"a_geo":0.017754938,"a_geo_half":0.006878897,"a_i":0.331909655,"ratio_geo":2.5810733901089087,"ratio_i":0.9516372929332325,"i_over_geo":18.693934892929505,"key_dev":0.011963503000000042,"candidates":[0,0.5,1,1.5,2,3],"dirs":[{"name":"100","n_long":10,"sel":1,"margin":0.241497081,"p":0.983719824,"C":0.971668814,"r2":0.999906017,"p_full":0.941324566,"bend":0.042395258,"cand":[0.000000,0.758135,0.999632,0.724491,-0.067288,-3.200759],"k":[0.098175,0.196350,0.294524,0.392699,0.490874,0.589049,0.687223,0.785398,0.883573,0.981748,1.079922,1.178097,1.276272,1.374447,1.472622,1.570796,1.668971,1.767146,1.865321,1.963495,2.061670],"w":[0.098135,0.196034,0.293461,0.390181,0.485960,0.580569,0.673780,0.765367,0.855110,0.942793,1.028205,1.111140,1.191399,1.268787,1.343118,1.414214,1.481902,1.546021,1.606415,1.662939,1.715457],"speed":[0.999598,0.998394,0.996390,0.993587,0.989990,0.985605,0.980438,0.974495,0.967787,0.960322,0.952110,0.943165,0.933499,0.923125,0.912059,0.900316,0.887914,0.874869,0.861200,0.846928,0.832072]},{"name":"010","n_long":10,"sel":1,"margin":0.241497081,"p":0.983719824,"C":0.971668814,"r2":0.999906017,"p_full":0.941324566,"bend":0.042395258,"cand":[0.000000,0.758135,0.999632,0.724491,-0.067288,-3.200759],"k":[0.098175,0.196350,0.294524,0.392699,0.490874,0.589049,0.687223,0.785398,0.883573,0.981748,1.079922,1.178097,1.276272,1.374447,1.472622,1.570796,1.668971,1.767146,1.865321,1.963495,2.061670],"w":[0.098135,0.196034,0.293461,0.390181,0.485960,0.580569,0.673780,0.765367,0.855110,0.942793,1.028205,1.111140,1.191399,1.268787,1.343118,1.414214,1.481902,1.546021,1.606415,1.662939,1.715457],"speed":[0.999598,0.998394,0.996390,0.993587,0.989990,0.985605,0.980438,0.974495,0.967787,0.960322,0.952110,0.943165,0.933499,0.923125,0.912059,0.900316,0.887914,0.874869,0.861200,0.846928,0.832072]},{"name":"001","n_long":10,"sel":1,"margin":0.241497081,"p":0.983719824,"C":0.971668814,"r2":0.999906017,"p_full":0.941324566,"bend":0.042395258,"cand":[0.000000,0.758135,0.999632,0.724491,-0.067288,-3.200759],"k":[0.098175,0.196350,0.294524,0.392699,0.490874,0.589049,0.687223,0.785398,0.883573,0.981748,1.079922,1.178097,1.276272,1.374447,1.472622,1.570796,1.668971,1.767146,1.865321,1.963495,2.061670],"w":[0.098135,0.196034,0.293461,0.390181,0.485960,0.580569,0.673780,0.765367,0.855110,0.942793,1.028205,1.111140,1.191399,1.268787,1.343118,1.414214,1.481902,1.546021,1.606415,1.662939,1.715457],"speed":[0.999598,0.998394,0.996390,0.993587,0.989990,0.985605,0.980438,0.974495,0.967787,0.960322,0.952110,0.943165,0.933499,0.923125,0.912059,0.900316,0.887914,0.874869,0.861200,0.846928,0.832072]},{"name":"110","n_long":7,"sel":1,"margin":0.245272751,"p":0.990773135,"C":0.985078261,"r2":0.999976327,"p_full":0.967727977,"bend":0.023045158,"cand":[0.000000,0.754617,0.999890,0.735818,-0.037597,-3.112460],"k":[0.138840,0.277680,0.416520,0.555360,0.694200,0.833041,0.971881,1.110721,1.249561,1.388401,1.527241,1.666081,1.804921,1.943761,2.082601],"w":[0.138784,0.277234,0.415016,0.551799,0.687252,0.821049,0.952868,1.082392,1.209308,1.333311,1.454102,1.571390,1.684892,1.794335,1.899456],"speed":[0.999598,0.998394,0.996390,0.993587,0.989990,0.985605,0.980438,0.974495,0.967787,0.960322,0.952110,0.943165,0.933499,0.923125,0.912059]},{"name":"111","n_long":6,"sel":1,"margin":0.2462803,"p":0.992701757,"C":0.98903,"r2":0.999986953,"p_full":0.977962327,"bend":0.01473943,"cand":[0.000000,0.753653,0.999933,0.738841,-0.029623,-3.088669],"k":[0.170044,0.340087,0.510131,0.680175,0.850218,1.020262,1.190306,1.360350,1.530393,1.700437,1.870481,2.040524],"w":[0.169975,0.339541,0.508289,0.675813,0.841708,1.005576,1.167021,1.325654,1.481094,1.632966,1.780904,1.924552],"speed":[0.999598,0.998394,0.996390,0.993587,0.989990,0.985605,0.980438,0.974495,0.967787,0.960322,0.952110,0.943165]}],"iso":[{"star":"geometric","window":"long","a":0.017754938},{"star":"geometric","window":"half","a":0.006878897},{"star":"identity","window":"long","a":0.331909655},{"star":"identity","window":"half","a":0.348777478}],"results":[{"name":"blindly selected law (all 5 directions)","measured":"ω ∝ k¹, margin 0.2415 over the runner-up","target":"the linear law, margin > 0.15 (P1)","status":"pass"},{"name":"discovered exponent (worst direction)","measured":"0.000000","target":"1.00 ± 0.03, R² > 0.9995 (P1)","status":"pass"},{"name":"fit quality (worst direction)","measured":"R² = 0.99990602","target":"> 0.9995 (P1)","status":"pass"},{"name":"anisotropy of the discovered speed","measured":"1.7755%","target":"< 3% (P2a)","status":"pass"},{"name":"…and it shrinks with the window","measured":"ratio 2.5811 (1.7755% → 0.6879%)","target":"∈ [2.0, 3.2] ⇒ finite-k, not a cone defect (P2b)","status":"pass"},{"name":"discovered speed vs the code-unit key c = 1","measured":"max|1 − C| = 0.011964 on the halved window","target":"< 0.02 (P2c)","status":"pass"},{"name":"short-λ bend-down (pre-registered, R5)","measured":"every direction bends, min gap 0.01474; p_full ∈ [0.9413, 0.9780]","target":"gap > 0.008 and p_full ∈ (0.90, 1.00) (P3)","status":"predicted"},{"name":"⋆ = I negative control","measured":"33.19% anisotropy, ratio 0.9516 (does not shrink)","target":"> 25% and ratio ∈ [0.8, 1.2] ⇒ leading-order (P4)","status":"control"},{"name":"machinery vs the closed-form 7-point key","measured":"max|λ − Σ(2−2cos kₐ)| = 8.232526e-12","target":"< 1e-9 (P0)","status":"pass"},{"name":"⋆₁ on the diagonal edges (the mechanism)","measured":"max|⋆₁| = 0.000000e0 — exact zeros","target":"< 1e-14 (P0): the 3-D cot 90° = 0","status":"pass"}],"source":{"commit":"f2f610b","gate":"core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs","lab":"lab/warp-1-move/0117-dispersion-isotropy","data":"lab/warp-1-move/0117-dispersion-isotropy/data/"}};
+const COL = {"100":"#06b6d4","110":"#eab308","111":"#c084fc"};
+const SHOWN = D.dirs.filter(d => COL[d.name]);
+const LBL = {"100":"[100] / [010] / [001]","110":"[110]","111":"[111]"};
+
+function axes(g,W,H,pad,xlab,ylab){
+  g.strokeStyle="#233042";g.lineWidth=1;
+  g.beginPath();g.moveTo(pad.l,pad.t);g.lineTo(pad.l,H-pad.b);g.lineTo(W-pad.r,H-pad.b);g.stroke();
+  g.fillStyle="#4b5c70";g.font="10px system-ui";g.textAlign="left";g.fillText(ylab,pad.l,pad.t-7);
+  g.textAlign="right";g.fillText(xlab,W-pad.r,H-pad.b+26);
+}
+
+// ---- panel 1: the sweep, log-log, with the discovered law overlaid ----
+(function(){
+  const cv=document.getElementById("disp"),g=cv.getContext("2d"),W=cv.width,H=cv.height;
+  const pad={l:66,r:18,t:22,b:40};
+  let kmin=Infinity,kmax=-Infinity,wmin=Infinity,wmax=-Infinity;
+  SHOWN.forEach(d=>d.k.forEach((k,i)=>{kmin=Math.min(kmin,k);kmax=Math.max(kmax,k);
+    wmin=Math.min(wmin,d.w[i]);wmax=Math.max(wmax,d.w[i]);}));
+  const lx=Math.log10, X=k=>pad.l+(lx(k)-lx(kmin))/(lx(kmax)-lx(kmin))*(W-pad.l-pad.r);
+  const Y=w=>pad.t+(lx(wmax)-lx(w))/(lx(wmax)-lx(wmin))*(H-pad.t-pad.b);
+  g.clearRect(0,0,W,H);
+  // long-wavelength window shading
+  g.fillStyle="rgba(6,182,212,.07)";
+  g.fillRect(pad.l,pad.t,X(D.k_cut)-pad.l,H-pad.t-pad.b);
+  g.strokeStyle="rgba(6,182,212,.35)";g.setLineDash([4,4]);
+  g.beginPath();g.moveTo(X(D.k_cut),pad.t);g.lineTo(X(D.k_cut),H-pad.b);g.stroke();g.setLineDash([]);
+  g.fillStyle="rgba(6,182,212,.8)";g.font="10px system-ui";g.textAlign="left";
+  g.fillText("long-wavelength window  |k| ≤ "+D.k_cut+"  (the fit's data)",pad.l+8,pad.t+14);
+  g.textAlign="left";g.fillStyle="#3b4a5e";
+  g.fillText("beyond: the lattice bends its own cone down →",X(D.k_cut)+8,pad.t+14);
+  axes(g,W,H,pad,"|k|  (log)","ω  (log)");
+  [0.1,0.2,0.5,1,2].forEach(k=>{if(k<kmin||k>kmax)return;const x=X(k);
+    g.strokeStyle="#141c27";g.beginPath();g.moveTo(x,pad.t);g.lineTo(x,H-pad.b);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText(k,x,H-pad.b+14);});
+  // the REJECTED candidates, anchored at the first data point of [100] — this is what makes the
+  // straightness of the data an argument rather than a decoration
+  (function(){
+    const d0=D.dirs[0], k0=d0.k[0], w0=d0.w[0];
+    [[0.5,"the runner-up: ω ∝ k^½ (diffusive)"],[2,"ω ∝ k² (quadratic)"]].forEach(([p,lab])=>{
+      g.strokeStyle="#3b4a5e";g.lineWidth=1;g.setLineDash([2,4]);g.beginPath();
+      let last=null;
+      for(let i=0;i<=120;i++){const k=Math.pow(10,lx(kmin)+(lx(kmax)-lx(kmin))*i/120);
+        const w=w0*Math.pow(k/k0,p);
+        if(w<wmin*0.55||w>wmax*1.8){last=null;continue;}
+        const x=X(k),y=Y(w);last?g.lineTo(x,y):g.moveTo(x,y);last=1;}
+      g.stroke();g.setLineDash([]);
+      // label where the line leaves the plot
+      const kend=(p<1)?kmax:Math.pow(10,lx(k0)+(lx(wmax*1.0)-lx(w0))/p);
+      const wend=w0*Math.pow(kend/k0,p);
+      g.fillStyle="#4b5c70";g.font="10px system-ui";
+      g.textAlign=(p<1)?"right":"left";
+      g.fillText(lab,(p<1)?X(kend)-6:X(Math.min(kend,kmax))+6,Math.max(Y(Math.min(wend,wmax))+((p<1)?14:12),pad.t+12));
+    });
+  })();
+  // discovered law lines, extended across the whole axis (dashed outside the fit window)
+  SHOWN.forEach(d=>{
+    g.strokeStyle=COL[d.name];g.globalAlpha=.55;g.lineWidth=1.5;g.setLineDash([7,5]);
+    g.beginPath();
+    for(let i=0;i<=120;i++){const k=Math.pow(10,lx(kmin)+(lx(kmax)-lx(kmin))*i/120);
+      const w=d.C*Math.pow(k,d.p);const x=X(k),y=Y(w);i?g.lineTo(x,y):g.moveTo(x,y);}
+    g.stroke();g.setLineDash([]);g.globalAlpha=1;
+  });
+  // measured points
+  SHOWN.forEach(d=>{d.k.forEach((k,i)=>{
+    g.fillStyle=COL[d.name];g.beginPath();g.arc(X(k),Y(d.w[i]),i<d.n_long?3.4:2.2,0,7);
+    g.globalAlpha=i<d.n_long?1:.45;g.fill();g.globalAlpha=1;});});
+  // annotate the discovered law once per family, stacked in a corner so the labels never collide
+  g.textAlign="left";g.font="11px system-ui";
+  SHOWN.forEach((d,i)=>{g.fillStyle=COL[d.name];
+    g.fillText(LBL[d.name]+":  ω = "+d.C.toFixed(4)+"·k^"+d.p.toFixed(4)+"   (R² "+d.r2.toFixed(6)+")",
+      pad.l+14,H-pad.b-14-(SHOWN.length-1-i)*16);});
+  document.getElementById("dleg").innerHTML = SHOWN.map(d=>
+    `<span class="sw" style="background:${COL[d.name]}"></span>${LBL[d.name]}`).join("")
+    + `  ·  filled points = inside the fit window, faded = outside (shown, not fitted)`;
+  const w=D.dirs[0];
+  document.getElementById("dtake").innerHTML =
+    `The bench was handed these points and a menu of six laws. It returned <b>ω ∝ k¹</b> in all five
+     directions — exponent <b>${D.worst_p.toFixed(4)}</b> at worst (target 1.00 ± 0.03), R² ≥
+     <b>${D.worst_r2.toFixed(6)}</b>. Past the window the points fall away from their own fitted line:
+     the finite lattice bending its cone down, <b>pre-registered as a prediction</b>, not discovered
+     as a disappointment.`;
+})();
+
+// ---- panel 2: candidate scorecard ----
+(function(){
+  const cv=document.getElementById("cand"),g=cv.getContext("2d"),W=cv.width,H=cv.height;
+  const pad={l:66,r:18,t:22,b:46};
+  const lo=-0.5,hi=1.05;
+  const Y=v=>pad.t+(hi-Math.max(v,lo))/(hi-lo)*(H-pad.t-pad.b);
+  g.clearRect(0,0,W,H);
+  axes(g,W,H,pad,"candidate law","log-space R²");
+  [1,0.75,0.5,0.25,0,-0.25,-0.5].forEach(v=>{const y=Y(v);
+    g.strokeStyle=v===0?"#2c3a4d":"#141c27";g.beginPath();g.moveTo(pad.l,y);g.lineTo(W-pad.r,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="right";g.fillText(v.toFixed(2),pad.l-6,y+3);});
+  const nc=D.candidates.length, groupW=(W-pad.l-pad.r)/nc, barW=groupW/(SHOWN.length+1.4);
+  D.candidates.forEach((p,ci)=>{
+    const gx=pad.l+ci*groupW;
+    SHOWN.forEach((d,di)=>{
+      const r2=d.cand[ci], x=gx+groupW*0.16+di*barW, y=Y(r2), y0=Y(0);
+      g.fillStyle=COL[d.name];g.globalAlpha=(p===d.sel)?1:.42;
+      g.fillRect(x,Math.min(y,y0),barW*0.86,Math.abs(y-y0));g.globalAlpha=1;
+      if(r2<lo){g.fillStyle=COL[d.name];g.font="9px system-ui";g.textAlign="center";
+        g.fillText(r2.toFixed(2),x+barW*0.43,H-pad.b-4);}
+      if(p===d.sel){g.fillStyle="#22c55e";g.font="9px system-ui";g.textAlign="center";
+        g.fillText("✓",x+barW*0.43,y-4);}
+    });
+    g.fillStyle=(D.dirs[0].sel===p)?"#eab308":"#6b7c90";
+    g.font=(D.dirs[0].sel===p?"600 ":"")+"11px system-ui";g.textAlign="center";
+    g.fillText("ω ∝ k"+(p===1?"":("^"+p)),gx+groupW/2,H-pad.b+16);
+    g.fillStyle="#3b4a5e";g.font="9px system-ui";
+    g.fillText(["flat / gapped","diffusive","LINEAR / lightlike","—","quadratic","cubic"][ci],gx+groupW/2,H-pad.b+29);
+  });
+  document.getElementById("cleg").innerHTML = SHOWN.map(d=>
+    `<span class="sw" style="background:${COL[d.name]}"></span>${LBL[d.name]}`).join("")
+    + `  ·  ✓ = the candidate this direction's data selected; bars below −0.5 are clipped and labelled`;
+  document.getElementById("ctake").innerHTML =
+    `The linear law is selected in <b>5 of 5</b> directions with an R² margin of
+     <b>${D.worst_margin.toFixed(4)}</b> over the runner-up (always the diffusive k<sup>½</sup>, at
+     R² ≈ ${D.runner_r2.toFixed(3)}). That margin is the honest part: a discovery that could not say
+     how strongly the data prefers its answer would be a coin flip wearing a lab coat.`;
+})();
+
+// ---- panel 3: phase speed + the isotropy bars ----
+(function(){
+  const cv=document.getElementById("iso"),g=cv.getContext("2d"),W=cv.width,H=cv.height;
+  const split=Math.round(W*0.60);
+  // -- left: phase speed --
+  const pad={l:66,r:14,t:22,b:40};
+  let kmax=0,smin=1;
+  SHOWN.forEach(d=>d.k.forEach((k,i)=>{kmax=Math.max(kmax,k);smin=Math.min(smin,d.speed[i]);}));
+  const X=k=>pad.l+k/kmax*(split-pad.l-pad.r);
+  const ylo=Math.min(smin,0.8), Y=v=>pad.t+(1.005-v)/(1.005-ylo)*(H-pad.t-pad.b);
+  g.clearRect(0,0,W,H);
+  g.strokeStyle="#233042";g.beginPath();g.moveTo(pad.l,pad.t);g.lineTo(pad.l,H-pad.b);g.lineTo(split-pad.r,H-pad.b);g.stroke();
+  g.fillStyle="#4b5c70";g.font="10px system-ui";g.textAlign="left";g.fillText("ω / |k|   (code units)",pad.l,pad.t-7);
+  g.textAlign="right";g.fillText("|k|",split-pad.r,H-pad.b+26);
+  [1.0,0.95,0.90,0.85].forEach(v=>{if(v<ylo)return;const y=Y(v);
+    g.strokeStyle=v===1?"#2c3a4d":"#141c27";g.beginPath();g.moveTo(pad.l,y);g.lineTo(split-pad.r,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.textAlign="right";g.font="10px system-ui";g.fillText(v.toFixed(2),pad.l-6,y+3);});
+  g.fillStyle="rgba(34,197,94,.75)";g.textAlign="left";g.font="10px system-ui";
+  g.fillText("c = 1 (code units)",pad.l+6,Y(1)-5);
+  g.fillStyle="rgba(6,182,212,.07)";g.fillRect(pad.l,pad.t,X(D.k_cut)-pad.l,H-pad.t-pad.b);
+  SHOWN.forEach(d=>{g.strokeStyle=COL[d.name];g.lineWidth=2;g.beginPath();
+    d.k.forEach((k,i)=>{const x=X(k),y=Y(d.speed[i]);i?g.lineTo(x,y):g.moveTo(x,y);});g.stroke();});
+  [0.5,1,1.5,2].forEach(k=>{if(k>kmax)return;const x=X(k);
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText(k,x,H-pad.b+14);});
+  // -- right: anisotropy bars --
+  const bl=split+40, bw=(W-bl-24)/4.6, base=H-pad.b, top=pad.t+18;
+  const amax=Math.max(...D.iso.map(r=>r.a))*1.18;
+  const AY=a=>base-(a/amax)*(base-top);
+  g.fillStyle="#4b5c70";g.font="10px system-ui";g.textAlign="left";
+  g.fillText("anisotropy of the discovered speed  (max−min)/mean",bl,pad.t-7);
+  g.strokeStyle="#233042";g.beginPath();g.moveTo(bl-10,base);g.lineTo(W-16,base);g.stroke();
+  D.iso.forEach((r,i)=>{
+    const x=bl+i*bw*1.15, col=r.star==="geometric"?"#06b6d4":"#ef4444";
+    g.fillStyle=col;g.globalAlpha=r.window==="long"?1:.5;
+    g.fillRect(x,AY(r.a),bw,base-AY(r.a));g.globalAlpha=1;
+    g.fillStyle=col;g.font="11px system-ui";g.textAlign="center";
+    g.fillText((r.a*100).toFixed(2)+"%",x+bw/2,AY(r.a)-6);
+    g.fillStyle="#6b7c90";g.font="9px system-ui";
+    g.fillText(r.star==="geometric"?"geom ⋆":"⋆ = I",x+bw/2,base+13);
+    g.fillText(r.window==="long"?"|k|≤"+D.k_cut:"|k|≤"+(D.k_cut/2),x+bw/2,base+24);
+  });
+  // ratio arrows
+  const mark=(i,j,txt,col)=>{const x1=bl+i*bw*1.15+bw/2,x2=bl+j*bw*1.15+bw/2,y=top-6;
+    g.strokeStyle=col;g.setLineDash([3,3]);g.beginPath();g.moveTo(x1,y);g.lineTo(x2,y);g.stroke();g.setLineDash([]);
+    g.fillStyle=col;g.font="10px system-ui";g.textAlign="center";g.fillText(txt,(x1+x2)/2,y-4);};
+  mark(0,1,"÷"+D.ratio_geo.toFixed(2)+" ⇒ finite-k","#06b6d4");
+  mark(2,3,"×"+(1/D.ratio_i).toFixed(2)+" ⇒ leading-order","#ef4444");
+  document.getElementById("ileg").innerHTML =
+    `<span class="sw" style="background:#06b6d4"></span>geometric ⋆ (the metric-carrying star)
+     <span class="sw" style="background:#ef4444"></span>trivial ⋆ = I (rung 1.5 / #23 — the negative control)
+     · solid bar = registered window, faded = halved window`;
+  document.getElementById("itake").innerHTML =
+    `The discovered speeds agree to <b>${(D.a_geo*100).toFixed(2)}%</b>, and halving the window
+     <b>shrinks that to ${(D.a_geo_half*100).toFixed(2)}%</b> — the residue is a finite-k effect, so the
+     cone is isotropic in the long-wavelength limit (on the halved window every direction's speed sits
+     within ${D.key_dev.toFixed(3)} of the code-unit key c = 1). The same pipeline on ⋆ = I returns
+     <b>${(D.a_i*100).toFixed(1)}%</b> — ${D.i_over_geo.toFixed(1)}× larger — and it does <i>not</i> shrink.
+     That is what makes "isotropic" a measurement rather than a compliment.`;
+})();
+
+// ---- table 4 ----
+(function(){
+  const tb=document.querySelector("#dtab tbody");
+  D.dirs.forEach(d=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>[${d.name}]</td><td class="law">ω ∝ k${d.sel===1?"":"^"+d.sel}</td>`+
+      `<td class="num">${d.margin.toFixed(6)}</td><td class="num">${d.p.toFixed(6)}</td>`+
+      `<td class="num">${d.C.toFixed(6)}</td><td class="num">${d.r2.toFixed(8)}</td>`+
+      `<td class="thy">${d.p.toFixed(4)} → ${d.p_full.toFixed(4)} (−${d.bend.toFixed(4)})</td>`;
+    tb.appendChild(tr);
+  });
+})();
+
+// ---- table 5: scorecard ----
+(function(){
+  const tb=document.querySelector("#score tbody");
+  D.results.forEach(r=>{
+    const tr=document.createElement("tr");
+    const col=r.status==="pass"?"#22c55e":(r.status==="control"?"#ef4444":"#eab308");
+    tr.innerHTML=`<td>${r.name}</td><td class="num">${r.measured}</td><td class="thy">${r.target}</td>`+
+      `<td style="color:${col};font-weight:600">${r.status==="pass"?"PASS":(r.status==="control"?"CONTROL (must fail isotropy)":"PREDICTED")}</td>`;
+    tb.appendChild(tr);
+  });
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10).</b> Every number and every point on this page is read from
+   <code>${D.source.data}</code>, written by <code>${D.source.gate}</code> at commit
+   <code>${D.source.commit}</code>. Lab entry: <code>${D.source.lab}</code>. Rendered by
+   <code>core/viz gen_discovery</code>; no figure data is entered by hand and nothing is fetched from
+   the network. The five swept directions are exactly commensurate with the 64³ torus, so every
+   plane wave is a genuine periodic field on the mesh; stars are assembled minimum-image
+   (<code>solve::bloch::unfolded_scalar_stars</code>) because a 3-torus has a seam on every axis.`;
+</script>
+</body>
+</html>

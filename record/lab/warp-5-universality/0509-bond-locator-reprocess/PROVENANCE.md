@@ -1,0 +1,77 @@
+# Provenance — 0509 reprocessing 5.7's `d_f` negative with 5.8's crossing-drift locator
+
+- **Commits:** probe breadcrumb `4b58bae` (`core/uniforge/examples/uf5_9_bond_extrapolation_probe.rs`
+  + `kinematics::CrossingExtrapolation::p_c_stderr`) · registered `90886a1` (R1: `spec.md` + gate,
+  **before** any run for record) · run-for-record `8831c45` (`data/`) · figure + docs in the landing
+  commit of this entry. (`git -C UniForge rev-parse HEAD`)
+- **Toolchain:** `rustc 1.97.1 (8bab26f4f 2026-07-14)`
+- **Input (read-only, never modified):**
+  `lab/warp-5-universality/0507-stella-bond-percolation/data/rw_curves.csv` — the K=5-batch
+  aggregate wrapping-probability curves committed by rung 5.7. 5.7's gate and its `data/` are the
+  immutable record; this rung reads them and writes only under `0509-*/`.
+- **Answer keys (independent of anything in this repo):**
+  - `p_c(FCC-bond) = 0.1201635(10)` — Lorenz & Ziff, Phys. Rev. E **57**, 230 (1998); independently
+    tabulated in Tarasevich & van der Marck, Int. J. Mod. Phys. C **10**, 1193 (1999).
+  - `d_f = 3 − β/ν = 2.52295(15)`, `β/ν = 0.47705(15)` — Wang, Zhou, Zhang, Garoni, Deng,
+    Phys. Rev. E **87**, 052107 (2013).
+- **Regenerate:**
+  ```bash
+  cd core
+  # the run for record (~51 s, tier 2) — prints the recorded scorecard and rewrites data/
+  cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate -- --nocapture
+  # the probe breadcrumb (~54 s) — the wider ladder and the timings that set the gate's budget
+  cargo run --release -p uniforge --example uf5_9_bond_extrapolation_probe
+  # the figure, from the committed data/ only
+  cargo run -p viz --bin gen_bond_locator -- <commit-sha>
+  ```
+- **Determinism:** seeded splitmix64 throughout, all seeds compile-time constants echoed into
+  `data/seeds.csv` (sweep base `0x5EED ⊕ k·2⁵⁰`, measurement base `0xABCD`, K=5 batches × R=300
+  sweep samples, R=2400 measurement samples, fixed 4-way thread striping so accumulation order is
+  independent of core count). The measurement seeds do **not** depend on `p`, so two `p`-points are a
+  paired comparison and the `∂d_f/∂p` finite difference is far less noisy than two independent runs.
+  The re-analysis arms are closed-form least squares on a committed CSV. Pure `f64`, no wall-clock,
+  no unseeded RNG — the same numbers on every machine, every run. Verified: the run for record was
+  executed twice (before and after a reporting-layer fix, see `eval.md` "Fix vs the registered gate")
+  and reproduced every value bit-for-bit.
+- **Machinery provenance:** the percolation machinery in the gate (`Rng`, `Graph`, `fcc`, `stella`,
+  `Uf`, `measure`, `sample`, `crossings_of`, `crossing_estimate`, `sweep_batch`, and the `measure_at`
+  seed scheme) is **copied verbatim** from `core/uniforge/tests/uf5_7_stella_bond_percolation_gate.rs`
+  — a copy, never an import, so 5.7's gate stays untouched. Copy fidelity is gated: P0a reproduces
+  5.7's committed per-batch threshold estimates (`0.099641 ± 0.000312`) at all six committed
+  decimals, and P0b reproduces its committed `d_f` (`2.02746` vs `2.02762`; the `1.6e-4` residue is
+  `340 ×` the 6-decimal rounding of 5.7's own published `p_c`). One deliberate difference: `measure`
+  does not accumulate the χ' second moment, which no arm of this rung uses (R7 forbids a dead field);
+  the RNG, the edge draw order, the union-find and the `s_max` path are unchanged.
+- **Tool change:** `kinematics::CrossingExtrapolation` gained `p_c_stderr` (the OLS standard error of
+  the intercept) plus three unit tests. Rung 5.8's gate was re-run after the change: green, with its
+  committed `data/` unchanged bit-for-bit.
+- **Data files:**
+  - `data/locator_ladder.csv` — `family,label,p,d_f,sigma_df,smax_18,smax_24,smax_36,smax_48`: the
+    money plot's source of truth. Five measured `d_f` points for stella-bond across the candidate
+    locators (5.7's located threshold, the per-batch-extrapolated one, and the aggregate-extrapolated
+    one with `±0.0006` for the paired sensitivity), plus 5.7's registered-constant arm carried over
+    read-only from its committed `data/fss.csv` so the plot spans the full locator range, plus the two
+    FCC-bond control points. `sigma_df` is the replica error over the 4 seed stripes (the 5.5 rule);
+    it is empty for the row carried over from 5.7, which did not publish one.
+  - `data/locator_estimates.csv` — `family,kind,estimator,p_c_or_width,error_bar,r2,err_vs_key`.
+    `kind` separates a **threshold** estimate (where a distance to the FCC published key is
+    meaningful) from an **error_bar_candidate** — a width, which must never be compared to a
+    threshold. Six threshold estimators per family plus the published key and the `d_f`-anchored
+    inversion; four width candidates (OLS intercept se, the `w`-scan spread, the per-batch replica σ,
+    and — the point of P1c — the aggregate fit's *actual* error against the key).
+  - `data/crossing_pairs.csv` — `family,l_eff,p_star`: the four consecutive-size pair crossings per
+    family, recomputed read-only from 5.7's aggregate curve, at `L_eff = √(L_a·L_b)`.
+  - `data/w_scan.csv` — `family,w,p_c`: the extrapolated threshold across `w ∈ [1.0, 2.6]`,
+    report-only, the quantity P1c shows is *not* the locator's error bar.
+  - `data/verdict.csv` — `prediction,quantity,measured,registered,pass`: the registered scorecard,
+    fourteen gated rows plus three report-only rows. Ranges are written `[lo..hi]` and lists with
+    `|`, never with a comma inside a comma-delimited field (`lab/LESSONS.md`, 7.2).
+  - `data/seeds.csv` — every seed, count and window, plus the read-only input path.
+  - `data/probe_log.txt` — the committed probe's full stdout (the breadcrumb): the wider `d_f`
+    ladder, the answer-key calibration that motivated P1c, the ordering-systematic discovery, and
+    the per-stage timings that set the gate's budget.
+- **Figure (R10):** `figures/bond_locator.html`, generated from the committed `data/` only —
+  `core/viz/src/bin/gen_bond_locator.rs` + `core/viz/assets/bond_locator_template.html`, with a
+  self-containment unit test in `core/viz/src/lib.rs` (placeholder replaced, no `http(s)`/CDN, data
+  and commit injected, firewall block and answer keys present). Verified by rendering the actual page
+  headless and reading it back — which is how the comma-in-a-CSV-label bug was caught.

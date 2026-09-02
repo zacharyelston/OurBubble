@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! lab/0117 — Warp-1.7: the discovery bench recovers `ω = c·k` blind, in five directions at once.
+//!
+//! **What.** Rung 1.6/1.6b measured the lattice dispersion along **z only** (a z-periodic mesh, the
+//! transverse-constant plane wave keeping the open x,y boundaries out of the Rayleigh quotient).
+//! #46&#x27;s dispersion task wants the full statement — `ω = c·k`, discovered blind, **and isotropic**.
+//! This gate sweeps `ω(|k|)` on a **fully periodic 3-torus** (`mesh_3d_tetrahedral_grid_periodic`,
+//! seam-correct `unfolded_scalar_stars` — on a 3-torus every axis has a seam, #177/#153-Stage-2)
+//! along `[100]`, `[010]`, `[001]`, `[110]`, `[111]`, and hands the raw `(|k|, ω)` pairs to
+//! `kinematics::select_power_law` (answer-free model selection over a fixed menu of candidate laws)
+//! and `kinematics::power_law_fit` (free exponent).
+//!
+//! **Why blind is checkable.** `discover_law` below is the ONLY path from swept data to a stated
+//! law, and its whole signature is `(&amp;[f64], &amp;[f64]) -&gt; Discovery` — there is no parameter through
+//! which an expected exponent could enter. The menu `CANDIDATES` is a standard physics menu
+//! (flat / diffusive / linear / 3-2 / quadratic / cubic), registered before the run; the winner is
+//! whichever the data&#x27;s own log-space `R²` prefers. Every assertion reads the *returned* law.
+//!
+//! **P0&#x27;s answer key.** On this mesh the geometric ⋆ gives `⋆₁ = 1` on axis edges and EXACTLY `0`
+//! on every diagonal edge (rung 3.5&#x27;s `cot 90° = 0`, in 3-D), so `Δ₀` here IS the 7-point
+//! simple-cubic stencil with the closed-form symbol `Σ_a (2 − 2 cos k_a)`. P0 checks the machinery
+//! against that absolute key (#153&#x27;s rule); P1–P4 are the discovery and its honesty arms.
+//!
+//! Run: `cargo test -p uniforge --release --test uf1_7_dispersion_isotropy_gate -- --nocapture`
+//!
+//! FIREWALL (R3): a toy DEC scalar wave on a tetrahedral 3-torus. `ω`, `k`, &quot;dispersion&quot;,
+//! &quot;light cone&quot;, &quot;speed&quot;, &quot;isotropy&quot; name numerical properties of the discrete operator
+//! `Δ₀ = ⋆₀⁻¹D₀ᵀ⋆₁D₀` and of least-squares fits to its Rayleigh quotients — never a real photon,
+//! a real light cone, or a measurement of `c`. The prediction-grade quantities are the dimensionless
+//! exponent and the dimensionless anisotropy ratio; the fitted coefficient is an emergent lattice
+//! wave speed in code units. `c = 1` in code units only. Nothing here is a claim about nature.
+
+use dec::operators::apply_laplacian_0_metric;
+use kinematics::{power_law_fit, select_power_law};
+use solve::bloch::{unfolded_scalar_stars, Lattice};
+use std::io::Write;
+use uniforge::mesh::mesh_3d_tetrahedral_grid_periodic;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+/// Torus size (registered): 64³ vertices, 6·64³ tets, unit spacing.
+const N: usize = 64;
+/// Long-wavelength window (registered): between `π/3` and the next `[100]` mode, so every direction
+/// keeps ≥ 6 modes and the halved window keeps ≥ 3.
+const K_CUT: f64 = 1.05;
+
+/// The five probed directions. `k_m = (2π m / N)·n` is exactly commensurate with the torus for every
+/// integer `m`, so `cos(k·x)` is a genuine periodic field on the mesh.
+const DIRS: [([i32; 3], &amp;str); 5] = [
+    ([1, 0, 0], &quot;100&quot;),
+    ([0, 1, 0], &quot;010&quot;),
+    ([0, 0, 1], &quot;001&quot;),
+    ([1, 1, 0], &quot;110&quot;),
+    ([1, 1, 1], &quot;111&quot;),
+];
+
+/// The candidate menu handed to the model selector — a standard physics menu, registered before the
+/// run: flat/gapped, diffusive, **linear/lightlike**, 3/2, quadratic/massive-like, cubic. Nothing
+/// here tells the selector which one to prefer.
+const CANDIDATES: [f64; 6] = [0.0, 0.5, 1.0, 1.5, 2.0, 3.0];
+
+/// What the bench states after looking at one direction&#x27;s sweep. Built by [`discover_law`] from the
+/// data ALONE.
+struct Discovery {
+    /// exponent of the candidate the data selected (an element of `CANDIDATES`)
+    selected_exponent: f64,
+    /// the selected candidate&#x27;s log-space `R²`
+    selected_r2: f64,
+    /// its `R²` margin over the runner-up
+    margin: f64,
+    /// free-exponent fit: the discovered exponent
+    exponent: f64,
+    /// free-exponent fit: the discovered coefficient (an emergent lattice speed, code units)
+    coefficient: f64,
+    /// free-exponent fit: log-space `R²`
+    r2: f64,
+}
+
+/// **The only path from swept data to a stated law.** Signature is `(xs, ys) -&gt; Discovery`: no
+/// expected exponent, target, tolerance or direction label can enter here. Blindness is structural,
+/// not a promise.
+fn discover_law(xs: &amp;[f64], ys: &amp;[f64]) -&gt; Discovery {
+    let sel = select_power_law(xs, ys, &amp;CANDIDATES);
+    let free = power_law_fit(xs, ys);
+    Discovery {
+        selected_exponent: sel.law.exponent,
+        selected_r2: sel.law.r2,
+        margin: sel.margin,
+        exponent: free.exponent,
+        coefficient: free.coefficient,
+        r2: free.r2,
+    }
+}
+
+fn rayleigh(
+    mesh: &amp;geom::mesh::SimplicialComplex,
+    star0: &amp;[f64],
+    star1: &amp;[f64],
+    phi: &amp;[f64],
+) -&gt; f64 {
+    let a = apply_laplacian_0_metric(mesh, star0, star1, phi);
+    let num: f64 = phi.iter().zip(&amp;a).map(|(p, av)| p * av).sum();
+    let den: f64 = phi.iter().map(|p| p * p).sum();
+    num / den
+}
+
+/// One directional sweep: `(|k|, ω, λ)` for `m = 1,2,…` while `|k| ≤ k_max`.
+fn direction_sweep(
+    mesh: &amp;geom::mesh::SimplicialComplex,
+    coords: &amp;[[f64; 3]],
+    star0: &amp;[f64],
+    star1: &amp;[f64],
+    nvec: [i32; 3],
+    k_max: f64,
+) -&gt; (Vec&lt;f64&gt;, Vec&lt;f64&gt;, Vec&lt;f64&gt;) {
+    let tau = std::f64::consts::TAU;
+    let norm = ((nvec[0] * nvec[0] + nvec[1] * nvec[1] + nvec[2] * nvec[2]) as f64).sqrt();
+    let (mut ks, mut ws, mut lams) = (Vec::new(), Vec::new(), Vec::new());
+    for m in 1..=256usize {
+        let kmag = tau * m as f64 * norm / N as f64;
+        if kmag &gt; k_max {
+            break;
+        }
+        let kv = [
+            tau * m as f64 * nvec[0] as f64 / N as f64,
+            tau * m as f64 * nvec[1] as f64 / N as f64,
+            tau * m as f64 * nvec[2] as f64 / N as f64,
+        ];
+        let phi: Vec&lt;f64&gt; =
+            coords.iter().map(|p| (kv[0] * p[0] + kv[1] * p[1] + kv[2] * p[2]).cos()).collect();
+        let lam = rayleigh(mesh, star0, star1, &amp;phi);
+        ks.push(kmag);
+        ws.push(lam.max(0.0).sqrt());
+        lams.push(lam);
+    }
+    (ks, ws, lams)
+}
+
+/// Anisotropy of the discovered speed over a `|k| ≤ k_cut` window: `(C_max − C_min)/C̄` across the
+/// five directions, plus `(C_min, C_max)`. Every per-direction law comes from [`discover_law`].
+fn anisotropy(
+    mesh: &amp;geom::mesh::SimplicialComplex,
+    coords: &amp;[[f64; 3]],
+    star0: &amp;[f64],
+    star1: &amp;[f64],
+    k_cut: f64,
+) -&gt; (f64, f64, f64) {
+    let mut cs = Vec::new();
+    for (nvec, name) in DIRS {
+        let (ks, ws, _) = direction_sweep(mesh, coords, star0, star1, nvec, k_cut);
+        assert!(ks.len() &gt;= 3, &quot;[{name}] window |k|&lt;={k_cut} holds only {} modes&quot;, ks.len());
+        cs.push(discover_law(&amp;ks, &amp;ws).coefficient);
+    }
+    let cmin = cs.iter().cloned().fold(f64::INFINITY, f64::min);
+    let cmax = cs.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+    let cmean = cs.iter().sum::&lt;f64&gt;() / cs.len() as f64;
+    ((cmax - cmin) / cmean, cmin, cmax)
+}
+
+/// Minimum-image displacement of an edge on the `N`-torus (unit spacing), as an integer `|d|²`
+/// class: 1 = axis, 2 = face diagonal, 3 = body diagonal.
+fn edge_class(a: [f64; 3], b: [f64; 3]) -&gt; i64 {
+    let mut len2 = 0.0;
+    for c in 0..3 {
+        let mut x = b[c] - a[c];
+        let p = N as f64;
+        while x &gt; p / 2.0 {
+            x -= p;
+        }
+        while x &lt; -p / 2.0 {
+            x += p;
+        }
+        len2 += x * x;
+    }
+    len2.round() as i64
+}
+
+fn main() {
+    let t0 = std::time::Instant::now();
+    let mesh = mesh_3d_tetrahedral_grid_periodic(N, N, N);
+    let coords: Vec&lt;[f64; 3]&gt; = (0..N)
+        .flat_map(|i| (0..N).flat_map(move |j| (0..N).map(move |k| [i as f64, j as f64, k as f64])))
+        .collect();
+    assert_eq!(coords.len(), mesh.num_k_forms(0), &quot;coords must match vertex count&quot;);
+
+    let lat = Lattice::orthorhombic([N as f64, N as f64, N as f64]);
+    let (star0, star1) = unfolded_scalar_stars(&amp;mesh, &amp;coords, &amp;lat);
+    let star0_i = vec![1.0; mesh.num_k_forms(0)];
+    let star1_i = vec![1.0; mesh.num_k_forms(1)];
+
+    rec!(&quot;\n######## lab/0117 — Warp-1.7: `ω = c·k` discovered blind, in five directions ########&quot;);
+    rec!(&quot;FIREWALL (R3): toy DEC scalar wave on a {N}x{N}x{N} periodic tet lattice; ω, k, &#x27;speed&#x27;,&quot;);
+    rec!(&quot;  &#x27;isotropy&#x27; name operator properties, never a real light cone. Prediction-grade = the&quot;);
+    rec!(&quot;  dimensionless exponent and the dimensionless anisotropy ratio. c = 1 in code units only.&quot;);
+    rec!(
+        &quot;\n  mesh: V={} E={} T={}   candidate menu {CANDIDATES:?}   K_CUT={K_CUT}&quot;,
+        mesh.num_k_forms(0),
+        mesh.num_k_forms(1),
+        mesh.cells_3.len()
+    );
+
+    // ---------------- P0: the machinery, against an absolute answer key ----------------
+    let mut star0_dev: f64 = 0.0;
+    for s in &amp;star0 {
+        star0_dev = star0_dev.max((s - 1.0).abs());
+    }
+    let (mut axis_dev, mut diag_max, mut n_axis, mut n_diag) = (0.0f64, 0.0f64, 0usize, 0usize);
+    for (ei, e) in mesh.edges.iter().enumerate() {
+        match edge_class(coords[e.0 .0], coords[e.1 .0]) {
+            1 =&gt; {
+                axis_dev = axis_dev.max((star1[ei] - 1.0).abs());
+                n_axis += 1;
+            }
+            _ =&gt; {
+                diag_max = diag_max.max(star1[ei].abs());
+                n_diag += 1;
+            }
+        }
+    }
+
+    let tau = std::f64::consts::TAU;
+    let mut symbol_dev: f64 = 0.0;
+    let mut min_lambda = f64::INFINITY;
+    let mut max_lambda: f64 = 0.0;
+    let mut axis_lams: Vec&lt;Vec&lt;f64&gt;&gt; = Vec::new();
+    let mut sweeps: Vec&lt;(&amp;str, Vec&lt;f64&gt;, Vec&lt;f64&gt;, Vec&lt;f64&gt;)&gt; = Vec::new();
+    for (nvec, name) in DIRS {
+        let (ks, ws, lams) =
+            direction_sweep(&amp;mesh, &amp;coords, &amp;star0, &amp;star1, nvec, 2.0 * K_CUT);
+        for (i, lam) in lams.iter().enumerate() {
+            let m = (i + 1) as f64;
+            let sym: f64 = (0..3)
+                .map(|c| 2.0 - 2.0 * (tau * m * nvec[c] as f64 / N as f64).cos())
+                .sum();
+            symbol_dev = symbol_dev.max((lam - sym).abs());
+            min_lambda = min_lambda.min(*lam);
+            max_lambda = max_lambda.max(*lam);
+        }
+        if nvec[0] + nvec[1] + nvec[2] == 1 {
+            axis_lams.push(lams.clone());
+        }
+        sweeps.push((name, ks, ws, lams));
+    }
+    let mut axis_disagree: f64 = 0.0;
+    for i in 0..axis_lams[0].len() {
+        let (a, b, c) = (axis_lams[0][i], axis_lams[1][i], axis_lams[2][i]);
+        let scale = a.abs().max(b.abs()).max(c.abs()).max(1e-300);
+        axis_disagree = axis_disagree.max((a - b).abs().max((a - c).abs()) / scale);
+    }
+
+    rec!(&quot;\n  --- P0: machinery vs the closed-form key ---&quot;);
+    rec!(&quot;  ⋆₀ uniform:            max|⋆₀-1| = {star0_dev:.3e}   (over {} vertices)&quot;, star0.len());
+    rec!(&quot;  ⋆₁ on {n_axis} axis edges:  max|⋆₁-1| = {axis_dev:.3e}&quot;);
+    rec!(&quot;  ⋆₁ on {n_diag} diagonal edges: max|⋆₁|  = {diag_max:.3e}   (exact zeros: the 3-D cot 90° = 0)&quot;);
+    rec!(&quot;  7-point symbol:        max|λ - Σ(2-2cos k_a)| = {symbol_dev:.3e}  (λ ≤ {max_lambda:.4})&quot;);
+    rec!(&quot;  axis-triple agreement: max relative spread = {axis_disagree:.3e}&quot;);
+    rec!(&quot;  min λ over all probed modes = {min_lambda:.3e}&quot;);
+
+    // ---------------- P1 / P3: the blind discovery, per direction ----------------
+    rec!(&quot;\n  --- P1/P3: the blind discovery, per direction (long-λ |k| ≤ {K_CUT}, full |k| ≤ {}) ---&quot;, 2.0 * K_CUT);
+    rec!(&quot;  dir    n_long  n_full   selected  sel_R²      margin    free_p     C          R²           p_full   bend&quot;);
+    let mut rows: Vec&lt;(String, usize, usize, f64, f64, f64, f64, f64, f64, f64, f64)&gt; = Vec::new();
+    let (mut worst_sel_margin, mut worst_p_dev, mut worst_r2) = (f64::INFINITY, 0.0f64, 1.0f64);
+    let mut all_selected_linear = true;
+    let (mut min_bend, mut pfull_lo, mut pfull_hi) = (f64::INFINITY, f64::INFINITY, f64::NEG_INFINITY);
+    for (name, ks, ws, _) in &amp;sweeps {
+        let n_long = ks.iter().filter(|&amp;&amp;k| k &lt;= K_CUT).count();
+        assert!(n_long &gt;= 3, &quot;[{name}] long-λ window holds only {n_long} modes&quot;);
+        let long = discover_law(&amp;ks[..n_long], &amp;ws[..n_long]);
+        let full = discover_law(ks, ws);
+        all_selected_linear &amp;= long.selected_exponent == 1.0;
+        worst_sel_margin = worst_sel_margin.min(long.margin);
+        worst_p_dev = worst_p_dev.max((long.exponent - 1.0).abs());
+        worst_r2 = worst_r2.min(long.r2);
+        min_bend = min_bend.min(long.exponent - full.exponent);
+        pfull_lo = pfull_lo.min(full.exponent);
+        pfull_hi = pfull_hi.max(full.exponent);
+        rec!(
+            &quot;  [{name}]  {n_long:&gt;5}  {:&gt;5}     p={:.1}    {:.7}  {:.6}  {:.6}  {:.6}  {:.9}  {:.6}  {:.6}&quot;,
+            ks.len(),
+            long.selected_exponent,
+            long.selected_r2,
+            long.margin,
+            long.exponent,
+            long.coefficient,
+            long.r2,
+            full.exponent,
+            long.exponent - full.exponent
+        );
+        rows.push((
+            name.to_string(),
+            n_long,
+            ks.len(),
+            long.selected_exponent,
+            long.selected_r2,
+            long.margin,
+            long.exponent,
+            long.coefficient,
+            long.r2,
+            full.exponent,
+            long.exponent - full.exponent,
+        ));
+    }
+
+    // ---------------- P2: isotropy of the discovered speed, and its k-scaling ----------------
+    let (a_full, c_lo, c_hi) = anisotropy(&amp;mesh, &amp;coords, &amp;star0, &amp;star1, K_CUT);
+    let (a_half, c_lo_h, c_hi_h) = anisotropy(&amp;mesh, &amp;coords, &amp;star0, &amp;star1, K_CUT / 2.0);
+    let ratio = a_full / a_half;
+    let key_dev = (1.0 - c_lo_h).abs().max((1.0 - c_hi_h).abs());
+    rec!(&quot;\n  --- P2: isotropy of the discovered speed ---&quot;);
+    rec!(&quot;  A(K)   = {a_full:.6}   C ∈ [{c_lo:.6}, {c_hi:.6}]&quot;);
+    rec!(&quot;  A(K/2) = {a_half:.6}   C ∈ [{c_lo_h:.6}, {c_hi_h:.6}]   max|1-C| = {key_dev:.6}&quot;);
+    rec!(&quot;  ratio A(K)/A(K/2) = {ratio:.4}   (&gt;1 ⇒ finite-k; ≈1 ⇒ leading-order cone defect)&quot;);
+
+    // ---------------- P4: the negative control — the same pipeline on ⋆ = I ----------------
+    let (ai_full, ci_lo, ci_hi) = anisotropy(&amp;mesh, &amp;coords, &amp;star0_i, &amp;star1_i, K_CUT);
+    let (ai_half, _, _) = anisotropy(&amp;mesh, &amp;coords, &amp;star0_i, &amp;star1_i, K_CUT / 2.0);
+    let ratio_i = ai_full / ai_half;
+    rec!(&quot;\n  --- P4: negative control, the SAME pipeline on the trivial ⋆ = I (rung 1.5 / #23) ---&quot;);
+    rec!(&quot;  A_I(K)   = {ai_full:.6}   C ∈ [{ci_lo:.6}, {ci_hi:.6}]   ({:.1}× the geometric ⋆&#x27;s)&quot;, ai_full / a_full);
+    rec!(&quot;  A_I(K/2) = {ai_half:.6}   ratio = {ratio_i:.4}   (≈1 ⇒ a LEADING-ORDER defect, as expected)&quot;);
+
+    // ---------------- data (R10 source of truth) ----------------
+    let dir = concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/../../lab/warp-1-move/0117-dispersion-isotropy/data&quot;);
+    std::fs::create_dir_all(dir).expect(&quot;create data dir&quot;);
+    let mut sweep_csv = String::from(&quot;direction,m,k,lambda,omega,phase_speed,symbol_lambda\n&quot;);
+    for (name, ks, ws, lams) in &amp;sweeps {
+        let nvec = DIRS.iter().find(|(_, s)| s == name).unwrap().0;
+        for (i, ((k, w), lam)) in ks.iter().zip(ws).zip(lams).enumerate() {
+            let m = (i + 1) as f64;
+            let sym: f64 =
+                (0..3).map(|c| 2.0 - 2.0 * (tau * m * nvec[c] as f64 / N as f64).cos()).sum();
+            sweep_csv.push_str(&amp;format!(
+                &quot;{name},{},{k:.9},{lam:.9},{w:.9},{:.9},{sym:.9}\n&quot;,
+                i + 1,
+                w / k
+            ));
+        }
+    }
+    std::fs::write(format!(&quot;{dir}/dispersion_directions.csv&quot;), sweep_csv)
+        .expect(&quot;write dispersion_directions.csv&quot;);
+
+    let mut disc_csv = String::from(
+        &quot;direction,n_long,n_full,selected_exponent,selected_r2,margin,exponent,coefficient,r2,exponent_full,bend\n&quot;,
+    );
+    for r in &amp;rows {
+        disc_csv.push_str(&amp;format!(
+            &quot;{},{},{},{:.1},{:.9},{:.9},{:.9},{:.9},{:.9},{:.9},{:.9}\n&quot;,
+            r.0, r.1, r.2, r.3, r.4, r.5, r.6, r.7, r.8, r.9, r.10
+        ));
+    }
+    std::fs::write(format!(&quot;{dir}/discovery.csv&quot;), disc_csv).expect(&quot;write discovery.csv&quot;);
+
+    // candidate scorecard on the long-λ window, per direction — the model-selection panel&#x27;s source
+    let mut cand_csv = String::from(&quot;direction,candidate_exponent,r2,selected\n&quot;);
+    for (name, ks, ws, _) in &amp;sweeps {
+        let n_long = ks.iter().filter(|&amp;&amp;k| k &lt;= K_CUT).count();
+        let sel = select_power_law(&amp;ks[..n_long], &amp;ws[..n_long], &amp;CANDIDATES);
+        for p in CANDIDATES {
+            let f = kinematics::fit_fixed_exponent(&amp;ks[..n_long], &amp;ws[..n_long], p);
+            cand_csv.push_str(&amp;format!(
+                &quot;{name},{p:.1},{:.9},{}\n&quot;,
+                f.r2,
+                if p == sel.law.exponent { 1 } else { 0 }
+            ));
+        }
+    }
+    std::fs::write(format!(&quot;{dir}/candidates.csv&quot;), cand_csv).expect(&quot;write candidates.csv&quot;);
+
+    let mut iso_csv = String::from(&quot;star,window,k_cut,c_min,c_max,anisotropy\n&quot;);
+    iso_csv.push_str(&amp;format!(&quot;geometric,long,{K_CUT:.6},{c_lo:.9},{c_hi:.9},{a_full:.9}\n&quot;));
+    iso_csv.push_str(&amp;format!(
+        &quot;geometric,half,{:.6},{c_lo_h:.9},{c_hi_h:.9},{a_half:.9}\n&quot;,
+        K_CUT / 2.0
+    ));
+    iso_csv.push_str(&amp;format!(&quot;identity,long,{K_CUT:.6},{ci_lo:.9},{ci_hi:.9},{ai_full:.9}\n&quot;));
+    iso_csv.push_str(&amp;format!(&quot;identity,half,{:.6},,,{ai_half:.9}\n&quot;, K_CUT / 2.0));
+    std::fs::write(format!(&quot;{dir}/isotropy.csv&quot;), iso_csv).expect(&quot;write isotropy.csv&quot;);
+
+    let mut key_csv = String::from(&quot;quantity,value,bound\n&quot;);
+    key_csv.push_str(&amp;format!(&quot;star0_max_dev,{star0_dev:.6e},1e-12\n&quot;));
+    key_csv.push_str(&amp;format!(&quot;star1_axis_max_dev,{axis_dev:.6e},1e-12\n&quot;));
+    key_csv.push_str(&amp;format!(&quot;star1_diagonal_max_abs,{diag_max:.6e},1e-14\n&quot;));
+    key_csv.push_str(&amp;format!(&quot;symbol_max_dev,{symbol_dev:.6e},1e-9\n&quot;));
+    key_csv.push_str(&amp;format!(&quot;axis_triple_max_rel_spread,{axis_disagree:.6e},1e-9\n&quot;));
+    key_csv.push_str(&amp;format!(&quot;min_lambda,{min_lambda:.6e},-1e-9\n&quot;));
+    std::fs::write(format!(&quot;{dir}/answer_key.csv&quot;), key_csv).expect(&quot;write answer_key.csv&quot;);
+
+    // ---------------- scorecard + verdict ----------------
+    let p0 = min_lambda &gt; -1e-9
+        &amp;&amp; star0_dev &lt; 1e-12
+        &amp;&amp; axis_dev &lt; 1e-12
+        &amp;&amp; diag_max &lt; 1e-14
+        &amp;&amp; symbol_dev &lt; 1e-9
+        &amp;&amp; axis_disagree &lt; 1e-9;
+    let p1 = all_selected_linear &amp;&amp; worst_sel_margin &gt; 0.15 &amp;&amp; worst_p_dev &lt; 0.03 &amp;&amp; worst_r2 &gt; 0.9995;
+    let p2 = a_full &lt; 0.03 &amp;&amp; (2.0..=3.2).contains(&amp;ratio) &amp;&amp; key_dev &lt; 0.02;
+    let p3 = min_bend &gt; 0.008 &amp;&amp; pfull_lo &gt; 0.90 &amp;&amp; pfull_hi &lt; 1.00;
+    let p4 = ai_full &gt; 0.25 &amp;&amp; (0.8..=1.2).contains(&amp;ratio_i);
+
+    rec!(&quot;\n  ======== SCORECARD ========&quot;);
+    rec!(&quot;  P0 (valid operator + closed-form 7-point key + cubic symmetry): {}&quot;, if p0 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(&quot;  P1 (blind: linear law selected in all 5 dirs, margin {:.4}&gt;0.15; |p-1| {:.4}&lt;0.03; R² {:.7}&gt;0.9995): {}&quot;,
+        worst_sel_margin, worst_p_dev, worst_r2, if p1 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(&quot;  P2 (isotropy A={a_full:.5}&lt;0.03; ratio {ratio:.4}∈[2.0,3.2]; max|1-C|={key_dev:.5}&lt;0.02): {}&quot;, if p2 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(&quot;  P3 (pre-registered short-λ bend: min bend {min_bend:.5}&gt;0.008; p_full ∈ [{pfull_lo:.5},{pfull_hi:.5}] ⊂ (0.90,1.00)): {}&quot;, if p3 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(&quot;  P4 (⋆=I control anisotropic: A_I={ai_full:.5}&gt;0.25; ratio {ratio_i:.4}∈[0.8,1.2] ⇒ leading-order): {}&quot;, if p4 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(&quot;\n  VERDICT: handed a sweep with no dispersion relation supplied, the bench selects the LINEAR&quot;);
+    rec!(&quot;  law in all five directions (margin {worst_sel_margin:.3} over the runner-up) and returns exponent&quot;);
+    rec!(&quot;  1.00 to {:.1}%, R² ≥ {worst_r2:.6}. The discovered speeds agree to {:.2}% and that residue&quot;, worst_p_dev * 100.0, a_full * 100.0);
+    rec!(&quot;  SHRINKS with the window (ratio {ratio:.2}) — a finite-k effect, not a cone defect: the same&quot;);
+    rec!(&quot;  pipeline on ⋆=I returns {:.1}% anisotropy that does NOT shrink (ratio {ratio_i:.2}). The finite&quot;, ai_full * 100.0);
+    rec!(&quot;  lattice bends the cone down at short λ, as pre-registered. FIREWALL: toy operator, not nature.&quot;);
+    rec!(&quot;  (elapsed {:.1}s)&quot;, t0.elapsed().as_secs_f64());
+
+    assert!(p0, &quot;P0 failed: minλ={min_lambda:.3e} ⋆₀dev={star0_dev:.3e} axis={axis_dev:.3e} diag={diag_max:.3e} symbol={symbol_dev:.3e} axes={axis_disagree:.3e}&quot;);
+    assert!(p1, &quot;P1 failed: all_linear={all_selected_linear} margin={worst_sel_margin:.4} |p-1|={worst_p_dev:.4} R²={worst_r2:.7}&quot;);
+    assert!(p2, &quot;P2 failed: A={a_full:.5} ratio={ratio:.4} max|1-C|={key_dev:.5}&quot;);
+    assert!(p3, &quot;P3 failed: min bend={min_bend:.5} p_full ∈ [{pfull_lo:.5},{pfull_hi:.5}]&quot;);
+    assert!(p4, &quot;P4 failed: A_I={ai_full:.5} ratio_I={ratio_i:.4}&quot;);
+}
+
+#[test]
+fn uf1_7_dispersion_isotropy_gate() {
+    main();
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

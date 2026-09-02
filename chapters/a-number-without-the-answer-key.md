@@ -55,7 +55,7 @@ It got them, to six and seven digits.
 That is not a discovery. It is a calibration. An instrument that cannot recover a known answer has no
 business reporting an unknown one.
 
-**[Open the data-true universality figure](../.record/lab/warp-5-universality/0500-ising-universality/figures/universality.html)**
+**[Open the data-true universality figure](record/lab/warp-5-universality/0500-ising-universality/figures/universality.html)**
 
 ## Then take the answer key away
 

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf6_1_thz_shift_law_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf6_1_thz_shift_law_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! lab/dna-thz/0001 — rung 1: dielectric shift law Ω ∝ ε_r^p
+//!
+//! Does the steady-state resonant peak of the driven lattice follow a power law in the inclusion&#x27;s
+//! star0 weight ε_r? Is the exponent consistent with the naive −1/2 expected from uniform
+//! mass/permittivity scaling?
+//!
+//! Run: `cargo test -p uniforge --release --test uf6_1_thz_shift_law_gate -- --nocapture`
+//!
+//! FIREWALL (R3): toy DEC 1-form wave on a 16×8×8 tet lattice. ε_r is a dimensionless star0 scale
+//! factor, not a physical permittivity. Ω is a dimensionless drive frequency. The fitted exponent p is
+//! an empirical lattice-law, not a physical constant. No claim about real THz frequencies, DNA,
+//! cells, or SI material properties. c=1 (code units).
+
+use kinematics::discover::power_law_fit;
+use std::io::Write;
+use testkit::mesh_setup::tet_wave_geometric;
+use uniforge::wave_solver::MeshEdgePotential;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+// ── lattice geometry ───────────────────────────────────────────────────────
+const NX: usize = 16;
+const NY: usize = 8;
+const NZ: usize = 8;
+const C: f64 = 1.0;
+// Restrict sweep to the driven-mode band; avoids the low-frequency box-mode artifact.
+const N_FREQ: usize = 40;
+const OMEGA_LO: f64 = 0.20;
+const OMEGA_HI: f64 = 0.80;
+const N_SETTLE: usize = 400;
+const N_MEAS: usize = 300;
+const GAMMA: f64 = 0.04;
+const EPS_CASES: &amp;[f64] = &amp;[1.0, 4.0, 9.0, 16.0, 25.0, 36.0, 49.0];
+
+fn vid(i: usize, j: usize, k: usize) -&gt; usize {
+    i * (NY + 1) * (NZ + 1) + j * (NZ + 1) + k
+}
+
+
+fn find_x_edge(mesh: &amp;uniforge::mesh::SimplicialComplex, i: usize, j: usize, k: usize) -&gt; usize {
+    let v0 = vid(i, j, k);
+    let v1 = vid(i + 1, j, k);
+    for (e, row) in mesh.d0_sparse.iter().enumerate() {
+        let vs: Vec&lt;usize&gt; = row.iter().map(|&amp;(v, _)| v).collect();
+        if vs.contains(&amp;v0) &amp;&amp; vs.contains(&amp;v1) {
+            return e;
+        }
+    }
+    panic!(&quot;x-edge ({i},{j},{k})→({},{j},{k}) not found&quot;, i + 1)
+}
+
+fn sweep(eps_r: f64) -&gt; Vec&lt;(f64, f64)&gt; {
+    let mut solver = tet_wave_geometric(NX, NY, NZ);
+
+    if (eps_r - 1.0).abs() &gt; 1e-6 {
+        let ci = NX / 2;
+        let cj = NY / 2;
+        let ck = NZ / 2;
+        let nv = (NX + 1) * (NY + 1) * (NZ + 1);
+        let mut w = vec![1.0f64; nv];
+        for i in ci.saturating_sub(2)..=(ci + 2).min(NX) {
+            for j in cj.saturating_sub(1)..=(cj + 1).min(NY) {
+                for k in ck.saturating_sub(1)..=(ck + 1).min(NZ) {
+                    w[vid(i, j, k)] = eps_r;
+                }
+            }
+        }
+        solver.scale_star0(&amp;w);
+    }
+
+    let ci = NX / 2;
+    let cj = NY / 2;
+    let ck = NZ / 2;
+    let feed_edge = find_x_edge(solver.mesh(), ci - 1, cj, ck);
+    let probe_edge = find_x_edge(solver.mesh(), ci + 3, cj, ck);
+    let n_edges = solver.mesh().num_k_forms(1);
+    let dt = 0.4 / C;
+
+    let mut results = Vec::with_capacity(N_FREQ);
+    for fi in 0..N_FREQ {
+        let omega = OMEGA_LO + (OMEGA_HI - OMEGA_LO) * (fi as f64) / (N_FREQ as f64 - 1.0);
+        let mut a = MeshEdgePotential { a_e: vec![0.0; n_edges] };
+        let mut v = MeshEdgePotential { a_e: vec![0.0; n_edges] };
+        let mut rms_acc = 0.0f64;
+        for step in 0..(N_SETTLE + N_MEAS) {
+            let t = step as f64 * dt;
+            let mut src = MeshEdgePotential { a_e: vec![0.0; n_edges] };
+            src.a_e[feed_edge] = (omega * t).sin();
+            let (a_next, v_next) =
+                solver.evolve_wave_equation_with_source(&amp;a, &amp;v, C, dt, GAMMA, &amp;src);
+            a = a_next;
+            v = v_next;
+            if step &gt;= N_SETTLE {
+                rms_acc += a.a_e[probe_edge] * a.a_e[probe_edge];
+            }
+        }
+        results.push((omega, (rms_acc / N_MEAS as f64).sqrt()));
+    }
+    results
+}
+
+fn peak_omega(sweep: &amp;[(f64, f64)]) -&gt; f64 {
+    sweep
+        .iter()
+        .max_by(|a, b| a.1.partial_cmp(&amp;b.1).unwrap())
+        .map(|&amp;(o, _)| o)
+        .unwrap_or(0.0)
+}
+
+#[test]
+fn uf6_1_thz_shift_law_gate() {
+    rec!(&quot;\n######## dna-thz/0001 — rung 1: dielectric shift law ########&quot;);
+    rec!(&quot;FIREWALL (R3): toy DEC 1-form wave on a {}x{}x{} tet lattice.&quot;, NX, NY, NZ);
+    rec!(&quot;  ε_r = dimensionless star0 scale. Ω = dimensionless drive frequency.&quot;);
+    rec!(&quot;  Fitted p is a lattice-law, not a physical exponent. c=1.\n&quot;);
+
+    let data_dir = concat!(
+        env!(&quot;CARGO_MANIFEST_DIR&quot;),
+        &quot;/../../lab/dna-thz/0001-dna-permittivity-shift-law/data&quot;
+    );
+    std::fs::create_dir_all(data_dir).expect(&quot;create data dir&quot;);
+
+    let mut csv = String::from(&quot;eps_r,peak_omega\n&quot;);
+    let mut eps_vec: Vec&lt;f64&gt; = Vec::new();
+    let mut peak_vec: Vec&lt;f64&gt; = Vec::new();
+
+    for &amp;eps in EPS_CASES {
+        rec!(&quot;  Sweeping ε_r = {eps:.0} ...&quot;);
+        let s = sweep(eps);
+        let pk = peak_omega(&amp;s);
+        eps_vec.push(eps);
+        peak_vec.push(pk);
+        csv.push_str(&amp;format!(&quot;{eps:.1},{pk:.6}\n&quot;));
+        rec!(&quot;    peak Ω = {pk:.4}&quot;);
+    }
+
+    std::fs::write(format!(&quot;{data_dir}/shift_law.csv&quot;), &amp;csv).expect(&quot;write shift_law.csv&quot;);
+
+    let law = power_law_fit(&amp;eps_vec, &amp;peak_vec);
+    let bare_peak = peak_vec[0];
+
+    // ── scorecard ──────────────────────────────────────────────────────────
+    rec!(&quot;\n  ε_r      peak Ω     shift vs bare&quot;);
+    for (i, &amp;eps) in EPS_CASES.iter().enumerate() {
+        let pk = peak_vec[i];
+        let shift = (pk - bare_peak) / bare_peak * 100.0;
+        rec!(&quot;  {eps:&gt;5.0}    {pk:.4}     {shift:+.2}%&quot;);
+    }
+
+    rec!(&quot;\n  Power-law fit Ω = C · ε_r^p:&quot;);
+    rec!(&quot;    p  = {:.4}  (pre-registered target: -0.5000)&quot;, law.exponent);
+    rec!(&quot;    C  = {:.4}&quot;, law.coefficient);
+    rec!(&quot;    R² = {:.4}&quot;, law.r2);
+
+    let p0 = bare_peak &gt; OMEGA_LO &amp;&amp; bare_peak &lt; OMEGA_HI;
+    let p1 = law.r2 &gt; 0.95;
+    let p2 = law.exponent &lt; -0.10;
+    // P3 is an R5 NEGATIVE lock (#119). The pre-registered naive √ε_r law (p = -1/2) is FALSIFIED
+    // for this small-inclusion geometry, and that falsification IS the rung&#x27;s result (eval.md:
+    // NEGATIVE, clean power law p ≈ -0.28). So the gate asserts the negative — √ε_r refuted AND the
+    // emergent exponent held at its measured value — rather than asserting the refuted prediction
+    // (which kept the workspace suite permanently red on main). `p` reproduces bit-stable.
+    const P_MEASURED: f64 = -0.2753; // emergent exponent, run 7fdb4c3
+    let sqrt_law_falsified = (law.exponent + 0.5).abs() &gt; 0.10;
+    let exponent_locked = (law.exponent - P_MEASURED).abs() &lt; 0.02;
+    let p3 = sqrt_law_falsified &amp;&amp; exponent_locked;
+
+    rec!(&quot;\n  P0 bare peak inside restricted band ({OMEGA_LO},{OMEGA_HI}): {}&quot;, if p0 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(&quot;  P1 power-law fit R² &gt; 0.95: {}&quot;, if p1 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(&quot;  P2 exponent p &lt; -0.10 (downward shift): {}&quot;, if p2 { &quot;PASS&quot; } else { &quot;FAIL&quot; });
+    rec!(
+        &quot;  P3 (R5 negative) √ε_r FALSIFIED |p+1/2|={:.4}&gt;0.10 AND exponent locked |p-({:.4})|={:.4}&lt;0.02: {}&quot;,
+        (law.exponent + 0.5).abs(),
+        P_MEASURED,
+        (law.exponent - P_MEASURED).abs(),
+        if p3 { &quot;PASS&quot; } else { &quot;FAIL&quot; }
+    );
+
+    rec!(
+        &quot;\n  VERDICT: clean power law Ω ∝ ε_r^p with p = {:.4} — the naive √ε_r law is FALSIFIED for this \
+         small-inclusion geometry (R5 negative, locked into the gate; see #119).&quot;,
+        law.exponent
+    );
+    rec!(&quot;  FIREWALL: toy lattice-law only — no claim about real dielectrics or SI frequencies.\n&quot;);
+
+    assert!(p0, &quot;P0 FAIL: bare peak {bare_peak:.4} outside restricted band [{OMEGA_LO},{OMEGA_HI}]&quot;);
+    assert!(p1, &quot;P1 FAIL: R² = {:.4} &lt; 0.95&quot;, law.r2);
+    assert!(p2, &quot;P2 FAIL: p = {:.4} is not negative enough&quot;, law.exponent);
+    assert!(
+        p3,
+        &quot;P3 FAIL (R5 negative not held): expected √ε_r falsified (|p+1/2|&gt;0.10) AND p≈{:.4} (|Δ|&lt;0.02); got p = {:.4}&quot;,
+        P_MEASURED, law.exponent
+    );
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

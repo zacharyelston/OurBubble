@@ -87,3 +87,34 @@ and here, against the fetched record, character for character the same line — 
 adding `in source and rendered output` exactly as before. The 35 quotations are re-verified against
 `.record/`, so that count passing means the same 35 strings are still carried by the same files at
 the pinned commit.
+
+## The record snapshot (2026-09-01, after the move)
+
+The move left one thing broken for the reader it was meant to serve: the appendix could name the
+file behind every number and then not let anyone open it, because the engine is private and stays
+private (owner decision, 2026-09-01). A citation you cannot follow is a citation asking for trust.
+
+So the cited files were committed here, in `record/` — verbatim, copied out of a checkout of the
+pinned commit by `tools/snapshot_record.sh`, never hand-edited. 54 cited paths, 150 files of
+evidence, plus a generated view layer (listed in `record/.generated`) whose only job is to make the
+links land on the published site.
+
+What changed with it:
+
+1. **The checker grew a second layer.** Quotations verify against `record/`, which every clone has —
+   so the quotation gate no longer depends on engine access at all. A separate integrity layer
+   diffs `record/` against the engine at the pinned commit whenever the engine is reachable, because
+   a committed copy that only ever checks itself proves consistency, not truth. Both statuses print
+   on their own lines, every run.
+2. **Record links became `record/…`**, with `chapters/record` a symlink to it. One spelling now
+   resolves in the repository browser, in the local render (mdBook copies the tree to
+   `book/record/`), and on the published site — 190 record links in the built book, none dead.
+3. **The reproduce path lost its caveat.** `tools/fetch_record.sh` is no longer a prerequisite for
+   checking the book; the chapter says so.
+4. **Bumping the record gained a step** — fetch, *re-snapshot*, check — and the checker refuses a
+   pin that does not match the snapshot's stamp, so the two cannot come apart.
+
+An audit during this work found the integrity check's first implementation excluding thirteen real
+engine files (`data/.gitkeep`) from the comparison, because it told record from scaffolding by
+guessing at filenames. The generator now writes down what it generated. The check passed either
+way; it was simply checking less than it said.

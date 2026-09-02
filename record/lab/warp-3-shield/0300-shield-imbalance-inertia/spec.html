@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-3-shield/0300-shield-imbalance-inertia/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-3-shield/0300-shield-imbalance-inertia/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0300 — Warp-3.0: the shield, the imbalance, and inertia
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf3_shield_imbalance_gate.rs` · **Status:** CONFIRMED — see [`eval.md`](eval.md)
+
+## Goal (one paragraph)
+
+Test the hypothesis: *a shield decouples a region from its environment (an information imbalance) — does
+that reduce the region&#x27;s inertia (a start on gravity manipulation)?* We split it into the provable half and
+the honest null. **Part A** measures the **information imbalance** rigorously: a shield barrier suppresses
+the interior↔exterior linear response (the screened-Poisson Green&#x27;s function) — the inside &quot;sees less&quot; of
+the outside. **Part B** asks whether that imbalance changes **inertia**: in standard field theory a barrier
+is a *potential / effective-mass* term, not a change to the inertial (`φ̈`) coefficient, so the prediction
+is a **null** for the interior — and, if anything, the barrier is a *positive* mass² term (more inertia at
+the wall, not less). The null names exactly the extra ingredient &quot;gravity manipulation&quot; would require.
+
+## Firewall (R3)
+
+*shield, information, inertia, gravity* name a prescribed barrier potential and the linear response of a
+probe scalar field on a **toy** lattice (`compute_laplacian_0form`, `step_scalar_wave`). **Real EM does not
+screen gravity**; the entropic-inertia idea (Mach / Verlinde / MiHsC) is **contested prior physics**,
+computed here only as a fenced hypothesis-*consequence*, never a derivation. c = 1.
+
+## Predictions (registered before the run)
+
+- **P0 (the shield acts locally — control):** coupling between the exterior source and a *nearby exterior*
+  probe (a path that does **not** cross the shell) is ≈ unchanged by the shield — *gate:*
+  `G_shielded/G_open ∈ [0.7, 1.4]` for the exterior control pair.
+- **P1 (the information imbalance — provable):** coupling from the exterior source to the *interior* (bubble
+  centre) is strongly suppressed by the shield — *gate:* `G_shielded(centre)/G_open(centre) &lt; 0.3`. Local ≠
+  external: the inside sees less of the outside.
+- **P2 (inertia is unchanged inside — the honest null):** an interior excitation&#x27;s dynamics are identical
+  with the shield on vs off (the barrier is zero in the interior, so the interior evolution operator is
+  literally unchanged) — *gate:* an interior wave packet&#x27;s ballistic displacement over `T` steps is
+  **bit-for-bit identical** shielded vs open (`&lt; 1e-12`). Shielding does not reduce interior inertia.
+- **P3 (the barrier is a mass² term, not an inertia reducer):** the shield contributes a **positive**
+  effective mass² `m²_eff(x) = V(x) ≥ 0`, localized on the wall, with `m²_eff(interior) ≈ 0` (unchanged) —
+  *gate:* `V(centre) &lt; 1e-6` and `V(wall) &gt; 0`. If anything the wall is *more* inert, opposite to &quot;less
+  inertia inside.&quot;
+
+## Method (sketch)
+
+`mesh_3d_tetrahedral_grid(N=24)`, centre `c0=12`. Spherical shell shield `V(r) = V0·exp(−((r−R)/w)²)`,
+`R=8, w=1.2, V0=40`. **Part A:** solve the screened Poisson `(Δ + κ₀² + V)φ = δ_{x_ext}` (Richardson
+iteration; `Δ = compute_laplacian_0form`, the positive `d†d`; `κ₀²=0.05` regularizer) for a unit source
+just outside the shell; read `φ` at the centre (interior), at a nearby-exterior control point, both for
+`V` on and off; ratios are the couplings. **Part B:** evolve an interior Gaussian packet with initial
+velocity via `step_scalar_wave` for `T` steps, shield on vs off, compare the packet&#x27;s displacement/energy;
+read `V` at centre vs wall. Emit `data/shield.csv` (couplings) + `data/inertia.csv` (packet + mass² terms).
+
+## What would falsify this
+
+If interior coupling were *not* suppressed (P1), there is no imbalance. If the interior packet moved
+*differently* with the shield (P2), inertia would change under standard shielding — but it cannot, because
+`V ≡ 0` inside, so a non-null there would signal a bug. If the barrier gave a *negative* `m²_eff` (P3),
+it would reduce inertia directly — it does not.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

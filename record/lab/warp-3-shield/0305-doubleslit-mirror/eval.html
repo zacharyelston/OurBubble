@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-3-shield/0305-doubleslit-mirror/eval.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-3-shield/0305-doubleslit-mirror/eval.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0305 — eval (R5)
+
+**VERDICT: CONFIRMED, P0–P3 all pass** — gate `uf3_5_doubleslit_mirror_gate`
+(registered `4435bca`, run `490f006`; probe breadcrumb `154c578`). Runtime 1.9 s.
+
+&gt; **FIREWALL.** Toy DEC scalar wave on a 200×140 triangle lattice. *Slit, screen, fringe,
+&gt; intensity* name lattice features and derived observables, never claims about nature. Not a
+&gt; Maxwell/EM simulation; no claim about physical double-slit experiments.
+
+## Results
+
+| prediction | measured | registered | pass |
+|---|---|---|---|
+| P0 front-arrival frame (demo arm A) | 231 | exactly 231 | ✅ |
+| P0 slit-lobe ratio (A) | 3.758 | [3.0, 4.5] | ✅ |
+| P0 screen-intensity mirror asym (A) | 1.372 | &gt; 0.5 | ✅ |
+| P1 max station asym (C, crossed + ⋆=I) | 5.17e-15 | &lt; 1e-12 | ✅ |
+| P1 intensity asym (C) | 4.41e-16 | &lt; 1e-12 | ✅ |
+| P1 front frame (C) | 228 | [200, 260] | ✅ |
+| P1 fringe centers pair under y→140−y | exact (32↔108, 53↔87, 70) | ≤ 1 cell | ✅ |
+| P2 max station asym (B, uniform + geom ⋆) | 1.42e-7 | &lt; 1e-5 | ✅ |
+| P2 crossed-mesh ⋆₀ mirror defect | 0.0 exactly | = 0 | ✅ |
+| P2 max station asym (D, crossed + geom ⋆) | 4.33e-15 | &lt; 1e-12 | ✅ |
+| P3 fringe spacing (C) | 19.00 | [17, 22] | ✅ |
+| P3 relative deviation from Δy = λL/d = 27.125 | 0.300, smaller | &gt; 0.2, smaller | ✅ |
+| P3 Fresnel parameter d²/(λL) | 2.36 | &gt; 1 (documentation) | ✅ |
+
+## What this rules in / out
+
+- **The #252 diagnosis is confirmed as the mechanism, not just a correlation:** the identical
+  scene on the alternating-diagonal mesh (`mesh_2d_triangle_grid_crossed`, y-mirror a mesh
+  automorphism — unit-tested) is y-symmetric to machine precision (5e-15) at the same amplitude
+  scale and timing (front 228 vs 231). The demo&#x27;s ~3.4–3.8× lobe ratio is entirely the uniform
+  diagonal&#x27;s stencil asymmetry — the `⋆=I`/#23 family on a public page.
+- **The #23 fix (geometric ⋆) kills the stencil asymmetry but is NOT machine-exact on the open
+  uniform-diagonal mesh:** 1.4e-7, bounded by the boundary — the lumped ⋆₀ is itself
+  mirror-asymmetric at the open corners (defect 1/6, full-population census). With the crossed
+  mesh the ⋆₀ defect is exactly 0 and the geometric arm is machine-exact (4e-15). The two repairs
+  compose; each mechanism is separately measured.
+- **The geometric ⋆ is not a drop-in repair for THIS demo:** it changes the dispersion regime the
+  page was tuned to — front arrives at frame 318 (vs 231), transmitted amplitude ~20× weaker at
+  the demo&#x27;s thresholds, fringe spacing 13.25. The drop-in repair is the crossed mesh at ⋆=I.
+- **The #250 caveat now carries numbers:** the demo geometry is NOT in the far field
+  (d²/(λL) = 2.36 &gt; 1), so Δy = λL/d is out of its validity regime at these parameters
+  independent of any lattice effect; the repaired lattice measures 19.0 vs the formula&#x27;s 27.125
+  (−30%). The page must present the formula as an out-of-regime textbook comparison, or drop it.
+
+## Caveats (stated, not hidden)
+
+- All bounds are scoped to the OPEN 200×140 mesh at the demo&#x27;s exact parameters (λ=14, sep=64,
+  dt=0.3, the two-column pinned drive). The P2 1e-5 bound in particular is about this mesh
+  family/boundary, not a general statement about the cotan ⋆.
+- The source is a PINNED two-column drive: the strip between source and barrier is a weak-loss
+  driven cavity, so absolute transmitted amplitudes are detuning-sensitive (probed: the geometric
+  arm&#x27;s incident amplitude at the barrier is ~2.8× smaller). Amplitude ratios BETWEEN arms are
+  therefore not clean dispersion statements; only the symmetry/timing/spacing observables are
+  registered. (This is also #137&#x27;s &quot;accumulates transients / normalizes per-profile&quot; complaint.)
+- The fringe-spacing estimator is the clustered-local-maxima mean over the sponge-free band; the
+  arm-B/D spacing (13.25) is reported but not registered — a separate rung would need to relate
+  it to the actual lattice wavelength of the 5-point operator at this drive.
+
+## Deferred / next (fed to the chapter menu)
+
+- Wire the repair into the public page: `gen_doubleslit` exports a crossed-mesh &quot;after&quot; dataset;
+  `doubleslit.html` gets a before/after toggle + the #250 out-of-regime caveat (this rung&#x27;s
+  remaining demo-wiring step; #137 remains the release-hardening epic).
+- The driven-cavity systematic: measure the standing-wave detuning between source and barrier vs
+  gap/λ — makes the absolute amplitudes registerable (feeds #137&#x27;s &quot;screen observable&quot; item).
+- The crossed mesh&#x27;s light cone: the alternating diagonal restores mirror symmetry but not
+  isotropy — measure its cone anisotropy vs the uniform mesh&#x27;s (the 2-D cousin of the bridge
+  chapter&#x27;s 8.14 story).
+- The geometric-⋆ demo: retune (λ, thresholds, frames) for the 5-point regime so the #23 fix is
+  demo-visible too; then the page could show all three (defect / mesh repair / metric repair).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the four-source null — orthogonal polarizations can't empty a volume</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The four-source null — orthogonal polarizations can't empty a volume</h1>
+  <p class="sub">The conjecture, tested: stack orthogonal polarizations to null a region. The physics is
+     backwards — orthogonal fields don't interfere, so their energies <b>add</b>, never cancel.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Coherent classical plane-wave superposition on a <b>toy</b> lattice;
+     time-averaged energy ⟨ρ⟩ = ¼(|Ê|²+|B̂|²) via <code>kinematics::em_energy</code>. Quantum vacuum not
+     modelled. No device/spacetime claim. c = 1, dimensionless.</div>
+
+  <div class="panel">
+    <h2>Adding sources adds energy — it doesn't null</h2>
+    <p class="q">Central-region energy for each superposition. A single wave is the ½ baseline; a standing
+       wave doubles it; the three "orthogonal polarizations" TRIPLE it (energies add). The only config that
+       reaches zero is the trivial one — parallel antiphase waves that cancel the field <i>everywhere</i>.</p>
+    <canvas id="bars" width="1120" height="300"></canvas>
+    <div class="take" id="btake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The decisive test: orthogonal polarizations don't interfere</h2>
+    <p class="q">Sweep the phases of all three perpendicular pairs. If the fields interfered, the center
+       energy would rise and fall. It doesn't move at all — orthogonal components can't cancel.</p>
+    <canvas id="sweep" width="1120" height="280"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:var(--gold)"></span>center ⟨ρ⟩ vs pair phase (orthogonal set)
+      <span class="sw" style="background:var(--faint)"></span>ambient (single-wave baseline ½)
+    </div>
+    <div class="take" id="stake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"configs":[{"name":"single","residual":1.000000,"center":0.500000,"domain_mean":0.500000,"max":0.500000,"min":0.500000},{"name":"standing_1pol","residual":1.000000,"center":1.000000,"domain_mean":1.000000,"max":1.000000,"min":1.000000},{"name":"orthogonal_3pair","residual":1.000000,"center":3.000000,"domain_mean":3.000000,"max":3.000000,"min":3.000000},{"name":"parallel_antiphase","residual":0.000000,"center":0.000000,"domain_mean":0.000000000,"max":0.000000000,"min":0.000000000}],"sweep":[{"t":0.0000,"center":3.000000},{"t":0.2500,"center":3.000000},{"t":0.5000,"center":3.000000},{"t":0.7500,"center":3.000000},{"t":1.0000,"center":3.000000},{"t":1.2500,"center":3.000000},{"t":1.5000,"center":3.000000},{"t":1.7500,"center":3.000000},{"t":2.0000,"center":3.000000}],"source":{"commit":"2f81902"}};
+
+const LABELS = {
+  single:"single wave", standing_1pol:"standing (∥ pol)",
+  orthogonal_3pair:"3 orthogonal pols", parallel_antiphase:"parallel antiphase"
+};
+const COLORS = {
+  single:"#6b7c90", standing_1pol:"#06b6d4", orthogonal_3pair:"#eab308", parallel_antiphase:"#22c55e"
+};
+
+// ---- config bars (center energy) ----
+(function(){
+  const cv=document.getElementById("bars"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=48,padR=16,padT=18,padB=42, C=D.configs;
+  const ymax=Math.max(...C.map(c=>c.center),0.5)*1.2;
+  const Y=v=>(H-padB)-(v/ymax)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let v=0;v<=ymax;v+=0.5){const y=Y(v);g.strokeStyle="#141c27";g.beginPath();g.moveTo(padL,y);g.lineTo(W-padR,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="right";g.fillText(v.toFixed(1),padL-5,y+3);}
+  const bw=(W-padL-padR)/C.length;
+  C.forEach((c,i)=>{
+    const x=padL+i*bw+bw*0.22, w=bw*0.56, y=Y(c.center);
+    g.fillStyle=COLORS[c.name]||"#6b7c90";g.fillRect(x,y,w,(H-padB)-y);
+    g.fillStyle="#e6edf5";g.font="600 12px system-ui";g.textAlign="center";g.fillText(c.center.toFixed(2),x+w/2,y-6);
+    g.fillStyle="#9fb0c3";g.font="11px system-ui";g.fillText(LABELS[c.name]||c.name,x+w/2,H-padB+15);
+    g.fillStyle="#6b7c90";g.fillText("residual "+c.residual.toFixed(2),x+w/2,H-padB+29);
+  });
+  g.fillStyle="#4b5c70";g.textAlign="left";g.fillText("center ⟨ρ⟩",padL,padT+2);
+  const byName=Object.fromEntries(C.map(c=>[c.name,c]));
+  document.getElementById("btake").innerHTML =
+    `Orthogonal polarizations <b>add</b>: the 3-pair set sits at ⟨ρ⟩=<b>${(byName.orthogonal_3pair?.center??0).toFixed(0)}</b>
+     — three times the single-pair value, not a null. The one config that reaches
+     <b>0</b> is <b>parallel antiphase</b>, which cancels the field <i>everywhere</i> (no field, no shield).
+     There is no superposition that empties the middle while leaving field around it.`;
+})();
+
+// ---- phase sweep (flat line = no interference) ----
+(function(){
+  const cv=document.getElementById("sweep"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=48,padR=16,padT=18,padB=30, S=D.sweep;
+  const ymax=Math.max(...S.map(s=>s.center))*1.25||1;
+  const X=t=>padL+(t/2.0)*(W-padL-padR); // t = phase/π in [0,2]
+  const Y=v=>(H-padB)-(v/ymax)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let t=0;t<=2.0001;t+=0.5){const x=X(t);g.strokeStyle="#141c27";g.beginPath();g.moveTo(x,padT);g.lineTo(x,H-padB);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText(t.toFixed(1)+"π",x,H-padB+13);}
+  for(let v=0;v<=ymax;v+=1){const y=Y(v);g.strokeStyle="#141c27";g.beginPath();g.moveTo(padL,y);g.lineTo(W-padR,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.textAlign="right";g.fillText(v.toFixed(0),padL-5,y+3);}
+  g.fillStyle="#4b5c70";g.textAlign="left";g.fillText("center ⟨ρ⟩",padL,padT+2);
+  // ambient baseline (single-wave ½)
+  const base=(D.configs.find(c=>c.name==="single")?.center)??0.5;
+  g.strokeStyle="#6b7c90";g.setLineDash([5,4]);g.beginPath();g.moveTo(padL,Y(base));g.lineTo(W-padR,Y(base));g.stroke();g.setLineDash([]);
+  // the sweep (flat)
+  g.strokeStyle="#eab308";g.lineWidth=2.5;g.beginPath();
+  S.forEach((s,i)=>{const x=X(s.t),y=Y(s.center);i?g.lineTo(x,y):g.moveTo(x,y);});g.stroke();
+  S.forEach(s=>{g.fillStyle="#eab308";g.beginPath();g.arc(X(s.t),Y(s.center),3,0,7);g.fill();});
+  const vals=S.map(s=>s.center), mn=Math.min(...vals), mx=Math.max(...vals);
+  document.getElementById("stake").innerHTML =
+    `Dead flat at <b>${vals[0].toFixed(2)}</b> across the whole phase sweep (range ${(mx-mn).toExponential(1)}).
+     Tuning the phases does <b>nothing</b> — because orthogonal fields carry their energy on independent axes,
+     there is no cross term to cancel. To cancel you need <b>parallel</b> fields, and parallel fields that
+     vanish over a volume force the field to zero everywhere (unique continuation). Either way: <b>no
+     free-space volume null</b>.`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_null</code> from
+   <code>lab/warp-3-shield/0304-four-source-null/data/</code> (gate <code>uf3_4_four_source_null_gate</code>,
+   commit <code>${D.source.commit}</code>). A complete null needs a <i>boundary</i> of real currents
+   (Faraday/Huygens), and even then EM ρ≥0 (rung 2.4) — a null is zero, never negative. Self-contained.`;
+</script>
+</body>
+</html>

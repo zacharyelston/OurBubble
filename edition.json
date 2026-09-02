@@ -412,7 +412,6 @@
           "docs/DEMOS.md"
         ],
         "commands": [
-          "tools/fetch_record.sh",
           "python3 check_edition.py",
           "mdbook build",
           "python3 check_edition.py --rendered"

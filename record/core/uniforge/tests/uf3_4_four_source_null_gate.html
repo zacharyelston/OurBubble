@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf3_4_four_source_null_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf3_4_four_source_null_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! lab/0304 — Warp-3.4: the four-source null — can orthogonal polarizations empty a volume?
+//!
+//! Tests the chapter-endgame conjecture (&quot;~4 orthogonal polarizations null an area completely → a
+//! negative-energy region&quot;) head-on. We superpose coherent monochromatic plane waves on the lattice and
+//! read the time-averaged energy `⟨ρ⟩ = ¼(|Ê|²+|B̂|²)` off the engine&#x27;s own `kinematics::em_energy`. The
+//! physics says the conjecture is BACKWARDS:
+//!   • orthogonally-polarized fields don&#x27;t interfere — their energies ADD (no cross term), so orthogonality
+//!     is the wrong tool for cancellation (P2);
+//!   • a standing wave nulls E on planes but leaves ⟨ρ⟩ uniform (E-node = B-antinode) (P1);
+//!   • the only superposition that empties a volume is the trivial one — parallel antiphase waves that zero
+//!     the field EVERYWHERE (unique continuation for Maxwell) (P3).
+//! A first-class negative (R5) that names the achievable alternative (a bounding current: Faraday/Huygens).
+//!
+//! Run: `cargo test -p uniforge --release --test uf3_4_four_source_null_gate -- --nocapture`
+//!
+//! FIREWALL (R3): coherent classical plane-wave superposition on a TOY lattice; ⟨ρ⟩=¼(|Ê|²+|B̂|²) via
+//! `kinematics::em_energy`. Quantum vacuum NOT modelled. No device/spacetime claim. c=1, dimensionless.
+
+use kinematics::em_energy;
+use std::io::Write;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+type V3 = [f64; 3];
+const N: usize = 24;
+const LAMBDA: f64 = 8.0;
+
+/// A coherent plane wave: real wavevector `k`, complex polarization amplitude `e_re + i e_im`, extra phase.
+#[derive(Clone, Copy)]
+struct Wave {
+    k: V3,
+    e_re: V3,
+    e_im: V3,
+    phase: f64,
+}
+
+fn cross(a: V3, b: V3) -&gt; V3 {
+    [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+}
+fn khat(k: V3) -&gt; V3 {
+    let m = (k[0] * k[0] + k[1] * k[1] + k[2] * k[2]).sqrt();
+    if m &lt; 1e-12 { [0.0, 0.0, 0.0] } else { [k[0] / m, k[1] / m, k[2] / m] }
+}
+
+/// A plane wave from a propagation direction `dir` (magnitude ignored), polarization `e`, phase `ph`.
+fn wave(dir: V3, e: V3, ph: f64) -&gt; Wave {
+    let k = khat(dir);
+    let kmag = 2.0 * std::f64::consts::PI / LAMBDA;
+    Wave { k: [k[0] * kmag, k[1] * kmag, k[2] * kmag], e_re: e, e_im: [0.0, 0.0, 0.0], phase: ph }
+}
+
+/// Total complex field (E_re,E_im,B_re,B_im) at position `x` from a set of waves. B̂ = k̂ × Ê.
+fn field_at(x: V3, waves: &amp;[Wave]) -&gt; (V3, V3, V3, V3) {
+    let (mut ere, mut eim, mut bre, mut bim) = ([0.0; 3], [0.0; 3], [0.0; 3], [0.0; 3]);
+    for w in waves {
+        let kd = w.k[0] * x[0] + w.k[1] * x[1] + w.k[2] * x[2] + w.phase;
+        let (c, s) = (kd.cos(), kd.sin());
+        let b_re = cross(khat(w.k), w.e_re);
+        let b_im = cross(khat(w.k), w.e_im);
+        for i in 0..3 {
+            // (e_re + i e_im)(c + i s) = (e_re c − e_im s) + i(e_re s + e_im c)
+            ere[i] += w.e_re[i] * c - w.e_im[i] * s;
+            eim[i] += w.e_re[i] * s + w.e_im[i] * c;
+            bre[i] += b_re[i] * c - b_im[i] * s;
+            bim[i] += b_re[i] * s + b_im[i] * c;
+        }
+    }
+    (ere, eim, bre, bim)
+}
+
+/// Time-averaged energy density ⟨ρ⟩ = ¼(|Ê|²+|B̂|²) = ½(em_energy(E_re,B_re)+em_energy(E_im,B_im)).
+fn rho_avg(x: V3, waves: &amp;[Wave]) -&gt; f64 {
+    let (ere, eim, bre, bim) = field_at(x, waves);
+    0.5 * (em_energy(ere, bre) + em_energy(eim, bim))
+}
+
+/// Sample ⟨ρ⟩ over the whole grid + a central λ/2 cube; return (domain_mean, cube_mean, center, cov, max, min).
+fn scan(waves: &amp;[Wave]) -&gt; (f64, f64, f64, f64, f64, f64) {
+    let c = (N as f64 - 1.0) / 2.0; // domain center
+    let half = LAMBDA / 4.0; // cube half-side = λ/4 → side λ/2
+    let (mut sum, mut sq, mut n) = (0.0, 0.0, 0.0);
+    let (mut csum, mut cn) = (0.0, 0.0);
+    let (mut mx, mut mn) = (f64::MIN, f64::MAX);
+    for iz in 0..N {
+        for iy in 0..N {
+            for ix in 0..N {
+                let x = [ix as f64, iy as f64, iz as f64];
+                let r = rho_avg(x, waves);
+                sum += r;
+                sq += r * r;
+                n += 1.0;
+                mx = mx.max(r);
+                mn = mn.min(r);
+                if (x[0] - c).abs() &lt;= half &amp;&amp; (x[1] - c).abs() &lt;= half &amp;&amp; (x[2] - c).abs() &lt;= half {
+                    csum += r;
+                    cn += 1.0;
+                }
+            }
+        }
+    }
+    let mean = sum / n;
+    let var = (sq / n - mean * mean).max(0.0);
+    let cov = if mean.abs() &gt; 1e-12 { var.sqrt() / mean } else { 0.0 };
+    let center = rho_avg([c, c, c], waves);
+    (mean, csum / cn, center, cov, mx, mn)
+}
+
+// ---- configs ----
+fn x_() -&gt; V3 { [1.0, 0.0, 0.0] }
+fn y_() -&gt; V3 { [0.0, 1.0, 0.0] }
+fn z_() -&gt; V3 { [0.0, 0.0, 1.0] }
+
+fn cfg_single() -&gt; Vec&lt;Wave&gt; {
+    vec![wave(z_(), x_(), 0.0)]
+}
+fn cfg_standing() -&gt; Vec&lt;Wave&gt; {
+    // counter-propagating, PARALLEL polarization (x̂): E-nodes on planes, energy uniform.
+    vec![wave(z_(), x_(), 0.0), wave([0.0, 0.0, -1.0], x_(), 0.0)]
+}
+/// Three perpendicular standing-wave pairs — the &quot;orthogonal polarization&quot; set. Per-pair phases pa,pb,pc.
+fn cfg_ortho(pa: f64, pb: f64, pc: f64) -&gt; Vec&lt;Wave&gt; {
+    vec![
+        wave(z_(), x_(), pa),
+        wave([0.0, 0.0, -1.0], x_(), pa), // pair A: ±ẑ, x̂
+        wave(x_(), y_(), pb),
+        wave([-1.0, 0.0, 0.0], y_(), pb), // pair B: ±x̂, ŷ
+        wave(y_(), z_(), pc),
+        wave([0.0, -1.0, 0.0], z_(), pc), // pair C: ±ŷ, ẑ
+    ]
+}
+fn cfg_antiphase() -&gt; Vec&lt;Wave&gt; {
+    // parallel, CO-propagating, antiphase → cancels the field everywhere (the trivial volume null).
+    vec![wave(z_(), x_(), 0.0), wave(z_(), x_(), std::f64::consts::PI)]
+}
+
+#[test]
+fn uf3_4_four_source_null_gate() {
+    rec!(&quot;\n######## lab/0304 — Warp-3.4: the four-source null — can orthogonal polarizations empty a volume? ########&quot;);
+    rec!(&quot;FIREWALL (R3): coherent plane-wave superposition on a TOY lattice; ⟨ρ⟩=¼(|Ê|²+|B̂|²) via kinematics::em_energy.&quot;);
+    rec!(&quot;  N={N} λ={LAMBDA} (domain = {:.0}λ). Quantum vacuum NOT modelled. c=1.\n&quot;, N as f64 / LAMBDA);
+
+    // P0 — single traveling wave: uniform energy
+    let (m0, cube0, cen0, cov0, mx0, mn0) = scan(&amp;cfg_single());
+    let res0 = cube0 / m0;
+
+    // P1 — standing wave (parallel pol): E-nodes but uniform energy
+    let (m1, cube1, cen1, cov1, mx1, mn1) = scan(&amp;cfg_standing());
+    let res1 = cube1 / m1;
+
+    // P2 — orthogonal-polarization set: phase-independent, additive, cannot null
+    let base = cfg_ortho(0.0, 0.0, 0.0);
+    let (m2, cube2, cen2, cov2, _mx2, _mn2) = scan(&amp;base);
+    let res2 = cube2 / m2;
+    // phase sweep: vary all three pair phases; center ⟨ρ⟩ must stay constant
+    rec!(&quot;[P2] orthogonal-pol phase sweep — center ⟨ρ⟩ vs (pa,pb,pc):&quot;);
+    let mut sweep = Vec::new();
+    let (mut smin, mut smax) = (f64::MAX, f64::MIN);
+    for i in 0..=8 {
+        let t = std::f64::consts::PI * i as f64 / 4.0;
+        let cen = scan(&amp;cfg_ortho(t, 0.7 * t, 1.9 * t)).2;
+        smin = smin.min(cen);
+        smax = smax.max(cen);
+        rec!(&quot;   t={:.2}π | center ⟨ρ⟩={cen:.6}&quot;, i as f64 / 4.0);
+        sweep.push((i as f64 / 4.0, cen));
+    }
+    let sweep_mean = sweep.iter().map(|s| s.1).sum::&lt;f64&gt;() / sweep.len() as f64;
+    let sweep_cov = if sweep_mean.abs() &gt; 1e-12 {
+        (sweep.iter().map(|s| (s.1 - sweep_mean).powi(2)).sum::&lt;f64&gt;() / sweep.len() as f64).sqrt() / sweep_mean
+    } else {
+        0.0
+    };
+    // &quot;sum of the parts&quot;: each pair alone contributes its own energy; three pairs → 3× a single pair&#x27;s center.
+    let one_pair = scan(&amp;[base[0], base[1]]).2;
+    let sum_of_parts = 3.0 * one_pair;
+    let additivity_err = (cen2 - sum_of_parts).abs() / sum_of_parts;
+
+    // P3 — parallel antiphase (trivial global null)
+    let (m3, _cube3, _cen3, _cov3, mx3, mn3) = scan(&amp;cfg_antiphase());
+
+    rec!(&quot;\n[P0] single wave: cube residual={res0:.4} (want ~1), CoV={cov0:.2e} (want &lt;1%) [mean={m0:.3} min={mn0:.3} max={mx0:.3}]&quot;);
+    rec!(&quot;[P1] standing (parallel pol): cube residual={res1:.4} (want ~1), CoV={cov1:.2e} (want &lt;2%) — E-nodes, but energy UNIFORM [center={cen1:.3}]&quot;);
+    rec!(&quot;[P2] orthogonal-pol set: cube residual={res2:.4} (want &gt;0.8), CoV(space)={cov2:.2e}, center={cen2:.4}&quot;);
+    rec!(&quot;     phase-sweep center CoV={sweep_cov:.2e} (want &lt;0.1% — phase-INDEPENDENT), min={smin:.4} max={smax:.4}&quot;);
+    rec!(&quot;     center vs sum-of-parts: {cen2:.4} vs {sum_of_parts:.4} (err {additivity_err:.2e}, want &lt;1% — energies ADD)&quot;);
+    rec!(&quot;[P3] parallel antiphase: max ⟨ρ⟩={mx3:.2e} (want &lt;1e-9 — field zero EVERYWHERE) [min={mn3:.2e} mean={m3:.2e}]&quot;);
+
+    // R10 artifacts
+    let dir = concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/../../lab/warp-3-shield/0304-four-source-null/data&quot;);
+    std::fs::create_dir_all(dir).expect(&quot;create lab data dir&quot;);
+    let configs = format!(
+        &quot;config,cube_residual,center_rho,domain_mean,cov,max_rho,min_rho\n\
+         single,{res0:.6},{cen0:.6},{m0:.6},{cov0:.6},{mx0:.6},{mn0:.6}\n\
+         standing_1pol,{res1:.6},{cen1:.6},{m1:.6},{cov1:.6},{mx1:.6},{mn1:.6}\n\
+         orthogonal_3pair,{res2:.6},{cen2:.6},{m2:.6},{cov2:.6},{cen2:.6},{cen2:.6}\n\
+         parallel_antiphase,{:.6},{:.6},{m3:.9},{:.6},{mx3:.9},{mn3:.9}\n&quot;,
+        0.0_f64, 0.0_f64, 0.0_f64
+    );
+    std::fs::write(format!(&quot;{dir}/null_configs.csv&quot;), configs).expect(&quot;write null_configs.csv&quot;);
+    let mut ph = String::from(&quot;t_over_pi,center_rho\n&quot;);
+    for (t, cen) in &amp;sweep {
+        ph.push_str(&amp;format!(&quot;{t:.4},{cen:.6}\n&quot;));
+    }
+    std::fs::write(format!(&quot;{dir}/phase_sweep.csv&quot;), ph).expect(&quot;write phase_sweep.csv&quot;);
+    // radial profile out from center along the diagonal — the ortho set (flat) vs single (flat) show no null
+    let c = (N as f64 - 1.0) / 2.0;
+    let mut rad = String::from(&quot;r,ortho_rho,standing_rho\n&quot;);
+    let sqrt3 = 3.0_f64.sqrt();
+    for i in 0..=40 {
+        let d = i as f64 * 0.2;
+        let x = [c + d / sqrt3, c + d / sqrt3, c + d / sqrt3];
+        rad.push_str(&amp;format!(&quot;{d:.3},{:.6},{:.6}\n&quot;, rho_avg(x, &amp;base), rho_avg(x, &amp;cfg_standing())));
+    }
+    std::fs::write(format!(&quot;{dir}/radial.csv&quot;), rad).expect(&quot;write radial.csv&quot;);
+
+    // verdicts
+    let p0 = cov0 &lt; 0.01 &amp;&amp; (0.98..=1.02).contains(&amp;res0);
+    let p1 = cov1 &lt; 0.02 &amp;&amp; (0.95..=1.05).contains(&amp;res1);
+    let p2 = sweep_cov &lt; 0.001 &amp;&amp; additivity_err &lt; 0.01 &amp;&amp; res2 &gt; 0.8;
+    let p3 = mx3 &lt; 1e-9;
+
+    let verdict = if p0 &amp;&amp; p1 &amp;&amp; p2 &amp;&amp; p3 {
+        format!(&quot;THE CONJECTURE IS BACKWARDS (R5) — orthogonal polarizations CANNOT empty a volume. A single \
+             wave carries uniform energy (control). A standing wave nulls E on planes but leaves ⟨ρ⟩ UNIFORM \
+             (residual {res1:.2}) — the E-node is a B-antinode, energy just sloshes. The &#x27;orthogonal \
+             polarization&#x27; set is the decisive test: its energy is phase-INDEPENDENT (sweep CoV {sweep_cov:.0e}) \
+             and equals the SUM of the parts ({cen2:.2} = 3×{one_pair:.2}, err {additivity_err:.0e}) — \
+             orthogonal fields don&#x27;t interfere, so they can&#x27;t cancel; the cube stays full (residual {res2:.2}). \
+             The only superposition that empties a volume is the trivial one: parallel antiphase waves that \
+             zero the field EVERYWHERE (max ⟨ρ⟩ {mx3:.0e}) — no field, no shield (unique continuation). A \
+             complete null needs a BOUNDARY of real currents (Faraday/Huygens), and even then EM ρ≥0 (rung \
+             2.4) → a null is ZERO, never negative. FIREWALL (R3): toy Huygens/EM optics.&quot;)
+    } else {
+        format!(&quot;CHECK (R5) — p0={p0} p1={p1} p2={p2} p3={p3}; res0={res0:.3} res1={res1:.3} res2={res2:.3} \
+             sweepCoV={sweep_cov:.1e} addErr={additivity_err:.1e} maxAntiphase={mx3:.1e}. FIREWALL (R3).&quot;)
+    };
+    rec!(&quot;\n[lab/0304 VERDICT] {verdict}&quot;);
+    rec!(&quot;\n  [recorded: p0={p0} p1={p1} p2={p2} p3={p3} res0={res0:.4} res1={res1:.4} res2={res2:.4} sweep_cov={sweep_cov:.3e} add_err={additivity_err:.3e} center2={cen2:.4} sum_parts={sum_of_parts:.4} max_antiphase={mx3:.3e}]&quot;);
+
+    assert!(p0, &quot;P0: a single traveling wave carries spatially uniform energy&quot;);
+    assert!(p1, &quot;P1: a standing wave nulls E on planes but leaves the energy uniform (no energy null)&quot;);
+    assert!(p2, &quot;P2: orthogonal polarizations ADD (phase-independent, sum-of-parts) — they cannot null&quot;);
+    assert!(p3, &quot;P3: the only volume null from superposition is the trivial field-zero-everywhere case&quot;);
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · light-cone isotropy (⋆=I vs geometric ⋆)</title>
+<style>
+  :root{
+    --bg:#0b0e13; --ink:#e6edf5; --mute:#9fb0c3; --line:#233042;
+    --cyan:#06b6d4; --gold:#eab308; --amber:#f59e0b; --red:#ef4444; --green:#22c55e; --blue:#1e3a8a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:28px 20px 40px}
+  h1{font-size:20px;margin:0 0 4px}
+  .sub{color:var(--mute);font-size:13.5px;margin:0 0 18px}
+  .fire{border:1px solid #5b2330;background:#1a1013;color:#f0b8b8;border-radius:8px;
+    padding:9px 12px;font-size:12.5px;margin:0 0 20px}
+  .fire b{color:#ff9d9d}
+  .panels{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+  .panel{flex:1 1 300px;min-width:280px;border:1px solid var(--line);border-radius:12px;
+    background:#0e131b;padding:14px}
+  .panel h2{font-size:14px;margin:0 0 2px}
+  .panel .note{color:var(--mute);font-size:12px;margin:0 0 8px}
+  svg{width:100%;height:auto;display:block}
+  .aniso{font-size:22px;font-weight:600;margin-top:6px}
+  table{width:100%;border-collapse:collapse;margin:20px 0 6px;font-size:13px}
+  th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right}
+  th:first-child,td:first-child{text-align:left;color:var(--mute)}
+  caption{caption-side:bottom;color:var(--mute);font-size:11.5px;text-align:left;padding-top:10px;line-height:1.5}
+  code{color:var(--cyan);font-size:12px}
+  .legend{color:var(--mute);font-size:12px;margin:6px 0 0}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin:0 3px 0 10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The light cone: does the lattice move the same way in every direction?</h1>
+  <p class="sub">Wavefront speed of a scalar pulse along a lattice <b>axis [100]</b> vs a body
+     <b>diagonal [111]</b> — under the trivial Hodge star <code>⋆=I</code> vs the geometric (lattice-matched) star.</p>
+
+  <div class="fire"><b>FIREWALL.</b> A toy DEC scalar pulse on a tetrahedral lattice. “light cone / isotropy /
+     lattice-matched” name <b>solver behaviour</b>, never a real EM/gravity measurement or a warp bubble.
+     Dimensionless; c=1.</div>
+
+  <div class="panels" id="panels"></div>
+
+  <div class="legend">
+    <span class="dot" style="background:var(--gold)"></span>measured speed along an axis [100]
+    <span class="dot" style="background:var(--cyan)"></span>measured speed along a diagonal [111]
+    <span style="margin-left:12px">dashed = perfectly round (isotropic) reference</span>
+  </div>
+
+  <table id="tbl">
+    <caption id="cap"></caption>
+    <thead><tr><th>solver</th><th>v · axis [100]</th><th>v · diag [111]</th><th>anisotropy |v<sub>ax</sub>/v<sub>di</sub>−1|</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+"use strict";
+// Data-true: injected verbatim from the run's lab data by core/viz `gen_isotropy`.
+const ISO = {"trivial":{"v_axis":0.6289,"v_diag":0.8109,"aniso":0.224},"geometric":{"v_axis":0.7843,"v_diag":0.8019,"aniso":0.022},"improvement":10.181818181818183,"source":{"data":"lab/warp-1-move/0115-lattice-matched-isotropy/data/isotropy.csv","gate":"uf1_5_lattice_matched_gate","lab":"warp-1-move/0115-lattice-matched-isotropy","commit":"a1941b0"}};
+
+const NS = "http://www.w3.org/2000/svg";
+// common scale across panels so the two are directly comparable
+const allV = [ISO.trivial.v_axis, ISO.trivial.v_diag, ISO.geometric.v_axis, ISO.geometric.v_diag];
+const vmax = Math.max.apply(null, allV);
+const R = 92, CX = 110, CY = 110, S = R / vmax; // px per unit speed
+
+function svgEl(t, attrs){ const e=document.createElementNS(NS,t); for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+
+// eight measured directions in the slice: 4 axis (0,90,180,270), 4 diagonal (45,...)
+function wavefront(d, color){
+  const pts = [];
+  for(let a=0;a<360;a+=90){ pts.push([a, d.v_axis, "axis"]); }
+  for(let a=45;a<360;a+=90){ pts.push([a, d.v_diag, "diag"]); }
+  pts.sort((p,q)=>p[0]-q[0]);
+  const xy = pts.map(([a,v]) => {
+    const r=(a*Math.PI)/180;
+    return [CX + Math.cos(r)*v*S, CY - Math.sin(r)*v*S];
+  });
+  const g = svgEl("g",{});
+  // isotropic reference circle at the axis speed (dashed)
+  g.appendChild(svgEl("circle",{cx:CX,cy:CY,r:d.v_axis*S,fill:"none",
+    stroke:"#3a4a5e","stroke-width":1,"stroke-dasharray":"3 4"}));
+  // wavefront outline (closed) through the measured points — a guide between the measured directions
+  let path = "M "+xy[0][0].toFixed(2)+" "+xy[0][1].toFixed(2);
+  for(let i=1;i<xy.length;i++) path += " L "+xy[i][0].toFixed(2)+" "+xy[i][1].toFixed(2);
+  path += " Z";
+  g.appendChild(svgEl("path",{d:path,fill:color+"22",stroke:color,"stroke-width":2}));
+  // the measured dots (the real data)
+  pts.forEach(([a,v,kind],i)=>{
+    g.appendChild(svgEl("circle",{cx:xy[i][0],cy:xy[i][1],r:4,
+      fill: kind==="axis" ? "var(--gold)" : "var(--cyan)"}));
+  });
+  // emission point
+  g.appendChild(svgEl("circle",{cx:CX,cy:CY,r:2.5,fill:"var(--mute)"}));
+  return g;
+}
+
+function panel(title, note, d, color){
+  const wrap=document.createElement("div"); wrap.className="panel";
+  const h=document.createElement("h2"); h.textContent=title; wrap.appendChild(h);
+  const n=document.createElement("p"); n.className="note"; n.textContent=note; wrap.appendChild(n);
+  const svg=svgEl("svg",{viewBox:"0 0 220 220","aria-label":title+" wavefront"});
+  svg.appendChild(wavefront(d,color));
+  wrap.appendChild(svg);
+  const a=document.createElement("div"); a.className="aniso";
+  a.style.color=color; a.textContent=(100*d.aniso).toFixed(1)+"% anisotropy";
+  wrap.appendChild(a);
+  return wrap;
+}
+
+const panels=document.getElementById("panels");
+panels.appendChild(panel("Trivial  ⋆ = I", "the combinatorial Laplacian — lopsided (the #23 defect)", ISO.trivial, "var(--red)"));
+panels.appendChild(panel("Geometric ⋆ (lattice-matched)", "the metric-carrying Hodge star — round", ISO.geometric, "var(--green)"));
+
+const tb=document.querySelector("#tbl tbody");
+function row(name,d){
+  const tr=document.createElement("tr");
+  tr.innerHTML="<td>"+name+"</td><td>"+d.v_axis.toFixed(4)+"</td><td>"+d.v_diag.toFixed(4)+"</td><td>"+(100*d.aniso).toFixed(1)+"%</td>";
+  tb.appendChild(tr);
+}
+row("trivial ⋆=I", ISO.trivial);
+row("geometric ⋆", ISO.geometric);
+const tr=document.createElement("tr");
+tr.innerHTML="<td>improvement</td><td colspan=3 style='text-align:right;color:var(--green)'>×"+ISO.improvement.toFixed(1)+" more isotropic when lattice-matched</td>";
+tb.appendChild(tr);
+
+document.getElementById("cap").innerHTML =
+  "Data-true (R10): rendered by <code>core/viz gen_isotropy</code> from <code>"+ISO.source.data+"</code> "
+  + "(gate <code>"+ISO.source.gate+"</code>, lab <code>"+ISO.source.lab+"</code>, commit <code>"+ISO.source.commit+"</code>). "
+  + "Dots are the measured speeds along the two symmetry directions; the outline interpolates between them (a guide, not measured).";
+</script>
+</body>
+</html>

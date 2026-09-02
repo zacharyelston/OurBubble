@@ -1,0 +1,6 @@
+metric,value,theory
+c0_surface,-0.499997,-0.5
+c1_casimir,-0.130990,-0.130900
+r_squared,0.99999992,1.0
+exponent,-0.999726,-1.0
+coeff_err_frac,0.000691,0.0

@@ -61,7 +61,7 @@ middle and over a thousand times the far field. Whatever a shaped push costs, yo
 travel — the value is about six times what it is at the front and back, and it falls off smoothly
 between the two. The nose and the tail are comparatively cheap.
 
-**[Open the data-true energy figure](../.record/lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html)**
+**[Open the data-true energy figure](record/lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html)**
 
 Every one of those three was written down as a prediction, with a threshold, before the run.
 

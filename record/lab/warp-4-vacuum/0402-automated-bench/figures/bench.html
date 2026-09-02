@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the automated bench — one law-finder, many laws</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  table.disc td.num{font-variant-numeric:tabular-nums;color:var(--green)}
+  table.disc td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The automated bench — one law-finder, many laws</h1>
+  <p class="sub">The lattice is a cheap virtual workbench; the value-add is automation. One reusable fitter
+     (<code>kinematics::power_law_fit</code>) discovers scaling laws across unrelated experiments and checks
+     each against theory.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Pure data-analysis of <b>toy</b>-lattice outputs — a log–log power-law
+     fit and the periodic graph-Laplacian heat-kernel trace. The "dimension" is the toy lattice's spectral
+     dimension, not a claim about nature. c = 1.</div>
+
+  <div class="panel">
+    <h2>Measuring the lattice's dimension from its heat kernel</h2>
+    <p class="q">The heat-kernel trace decays as K(t) ∝ t^(−d/2). On log–log axes each dimension is a
+       straight line of slope −d/2 — the fitter reads the dimension straight off the slope.</p>
+    <canvas id="hk" width="1120" height="360"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:var(--cyan)"></span>d=1 (slope −½)
+      <span class="sw" style="background:var(--gold)"></span>d=2 (slope −1)
+      <span class="sw" style="background:var(--red)"></span>d=3 (slope −3/2)
+    </div>
+    <div class="take" id="hktake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>What the one fitter discovered — across three experiments</h2>
+    <p class="q">The same <code>power_law_fit</code> recovers a synthetic law, the Casimir force scaling, and
+       three lattice dimensions — three different exponents, all held against theory.</p>
+    <table class="disc" id="disc"><thead><tr><th>experiment</th><th>discovered</th><th>theory</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"heat":[{"t":16,"k1":283.216757,"k2":80211.731584,"k3":22717306.512328},{"t":32,"k1":199.864214,"k2":39945.703850,"k3":7983716.683807},{"t":64,"k1":141.185748,"k2":19933.415376,"k3":2814314.155706},{"t":128,"k1":99.784377,"k2":9956.921804,"k3":993545.234573},{"t":256,"k1":70.540935,"k2":4976.023454,"k3":351013.345019},{"t":512,"k1":49.873876,"k2":2487.403485,"k3":124056.452394}],"fits":[{"name":"synthetic 3·x⁻²","disc":"exponent -2.000000 · coeff 3.000000","thy":"−2 · 3"},{"name":"Casimir force |F| vs a","disc":"exponent -2.007432 (R²=0.999996)","thy":"−2"},{"name":"lattice dimension (d=1)","disc":"dim 1.002053 (R²=0.999999)","thy":"1"},{"name":"lattice dimension (d=2)","disc":"dim 2.004106 (R²=0.999999)","thy":"2"},{"name":"lattice dimension (d=3)","disc":"dim 3.006158 (R²=0.999999)","thy":"3"}],"dims":[1.002053,2.004106,3.006158],"source":{"commit":"01a3efc"}};
+
+// ---- heat-kernel log-log ----
+(function(){
+  const cv=document.getElementById("hk"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=54,padR=16,padT=16,padB=34, HK=D.heat;
+  const series=[["k1","#06b6d4"],["k2","#eab308"],["k3","#ef4444"]];
+  const lx=HK.map(r=>Math.log10(r.t));
+  const allv=HK.flatMap(r=>[r.k1,r.k2,r.k3]).map(v=>Math.log10(v));
+  const xmin=Math.min(...lx),xmax=Math.max(...lx),ymin=Math.min(...allv),ymax=Math.max(...allv);
+  const X=v=>padL+(v-xmin)/(xmax-xmin)*(W-padL-padR);
+  const Y=v=>padT+(ymax-v)/(ymax-ymin)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  // grid ticks (log decades-ish)
+  for(let i=0;i<HK.length;i++){const x=X(lx[i]);g.strokeStyle="#141c27";g.beginPath();g.moveTo(x,padT);g.lineTo(x,H-padB);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText("t="+HK[i].t,x,H-padB+13);}
+  g.fillStyle="#4b5c70";g.textAlign="left";g.fillText("log K(t)",padL,padT+2);
+  for(const [key,col] of series){
+    g.strokeStyle=col;g.lineWidth=2;g.beginPath();
+    HK.forEach((r,i)=>{const x=X(lx[i]),y=Y(Math.log10(r[key]));i?g.lineTo(x,y):g.moveTo(x,y);});g.stroke();
+    HK.forEach((r,i)=>{g.fillStyle=col;g.beginPath();g.arc(X(lx[i]),Y(Math.log10(r[key])),3,0,7);g.fill();});
+  }
+  document.getElementById("hktake").innerHTML =
+    `Three straight lines, three slopes. The fitter reads dimension = −2·slope and returns
+     <b>${D.dims.map(d=>d.toFixed(2)).join(", ")}</b> for d = 1, 2, 3 — the lattice measuring its own
+     dimension, with no geometry hardcoded.`;
+})();
+
+// ---- discovery table ----
+(function(){
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=D.fits.map(f=>`<tr><td>${f.name}</td><td class="num">${f.disc}</td><td class="thy">${f.thy}</td></tr>`).join("");
+  document.getElementById("dtake").innerHTML =
+    `Three experiments, three <b>different</b> exponents (−1 for the Casimir energy in 4.0, −2 for the force,
+     −d/2 for the heat kernel) — all from the <b>same</b> unit-tested <code>kinematics::power_law_fit</code>.
+     The automation reads the physics; it isn't echoing a hardcoded answer.`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_bench</code> from
+   <code>lab/warp-4-vacuum/0402-automated-bench/data/</code> (gate <code>uf4_automated_bench_gate</code>,
+   commit <code>${D.source.commit}</code>). Self-contained; opens with no server.`;
+</script>
+</body>
+</html>

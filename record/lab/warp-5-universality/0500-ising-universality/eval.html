@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0500-ising-universality/eval.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0500-ising-universality/eval.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0500 — Warp-5.0: universality — evaluation
+
+**Verdict:** CONFIRMED (R10) · **Gate:** `uf5_universality_gate` (green: yes) · **Commit:** `962dacb` (registered `dc2c12e`)
+
+## Result
+
+**The lattice measures nature&#x27;s Ising numbers, parameter-free — the graduation swing lands.** From raw
+finite-size data of the critical transverse-field Ising chain, with the velocity `v` *measured* from the
+dispersion (not assumed), the lattice returns the universal invariants of the 2-D Ising universality class:
+
+| invariant | measured | exact | pass |
+|---|---|---|---|
+| P0 critical energy density `e∞` | −1.273239545 | `−4/π` = −1.273239545 | ✅ |
+| P1 **central charge `c`** | **0.49999987** | `1/2` | ✅ |
+| P2 correlation-length exponent `ν` | 1.000000 | 1 | ✅ |
+| P3 dynamic exponent `z` | 0.999617 | 1 | ✅ |
+| (measured) velocity `v` | 2.000000 | 2 | — |
+| (cited) magnetization exponent `β` | 0.125 | `1/8` (Pfeuty) | — |
+
+Nothing was tuned: `½, 1, 1` emerged from the `E₀(L)` scaling (`E₀/L = e∞ − πcv/6L²`, coefficient
+`b = −0.5236 = −π/6`). These are the **same numbers measured in real Ising-class materials** (uniaxial
+magnets, order–disorder transitions) — universality means they don&#x27;t depend on the microscopic model. Data:
+[`data/fss.csv`](data/fss.csv), [`data/nu.csv`](data/nu.csv), [`data/exponents.csv`](data/exponents.csv).
+Figure: `core/viz gen_universality`.
+
+## What it rules in / out — and the honest scope
+
+- **Rules IN the capability the ledger demanded:** the lattice bench produces a **dimensionless,
+  parameter-free number of nature** (`c = 1/2` and the exponents), extracted from raw data with the velocity
+  measured — exactly the prediction-grade bar from [rung 4.4](../../warp-4-vacuum/0404-energy-number). And it
+  reused the engine&#x27;s own `kinematics::power_law_fit` for `ν, z`, on the same `2−2cos k` lattice-Laplacian
+  spectrum from chapter 4.
+- **Honest about &quot;no longer a toy&quot;:** `c = 1/2` for the transverse-field Ising chain is a **postdiction** —
+  the model is exactly solvable, so its universal numbers are known. This rung therefore *validates the
+  machinery* (finite-size scaling on the lattice yields the exact universal invariants) rather than
+  delivering a **novel** prediction. The true graduation is to run the identical machinery on an **unsolved**
+  model and predict a **real material&#x27;s** exponents before they&#x27;re looked up — that is rung 5.x, not this one.
+- **Firewall intact:** this is universality-class membership of a toy Ising critical point, shared with real
+  Ising-class systems. It is **not** a claim that the warp/DEC engine &quot;is&quot; a magnet, and not a spacetime
+  claim. `c = 1/2` was not put in; but neither was it a discovery — it is the known invariant of a known
+  class, reproduced.
+
+## Deferred / next
+
+**Data collapse** (scale `M·L^{β/ν}` vs `(h−h_c)L^{1/ν}` onto one curve — the visual proof of universality);
+the **magnetization exponent `β = 1/8`** computed directly (Toeplitz/correlators, not cited); and the real
+graduation: an **unsolved model → a real material&#x27;s exponents**, a genuinely novel parameter-free prediction.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

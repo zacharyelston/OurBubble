@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>book/chapters/02-the-price-of-warp/chapter.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>book/chapters/02-the-price-of-warp/chapter.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 02 · The price of the bubble — where does the exotic energy come from?
+
+**Concept:** a warp bubble is a *shaped* shift of the lattice. Read its energy straight off the geometry
+of that shaping, and out falls the classic warp-drive signature — **negative** energy, on the **wall**, in
+a **ring** — with nothing put in by hand. This is the [genesis tenet](../../../GENESIS.md) (&quot;only
+geometry&quot;) tested on the warp-drive problem itself.
+
+&gt; **Firewall.** *Shift, energy, warp bubble, exotic* name structures of a **toy** lattice: `N` is a
+&gt; prescribed field, `16πρ` the quadratic invariant of its gradients. Nothing here is a spacetime, a
+&gt; measurement, or a device. Dimensionless; c = G = 1.
+
+**Source:** lab [`warp-2-energy/0200-shaped-shift-energy`](../../../lab/warp-2-energy/0200-shaped-shift-energy) ·
+gate `core/uniforge/tests/uf2_energy_structure_gate.rs`
+
+---
+
+## The hook  &lt;!-- [PUBLIC] --&gt;
+
+The famous catch with a warp drive is that it seems to need *exotic* matter — stuff with **negative**
+energy — and not just anywhere, but arranged in a very particular way. That sounds like an extra
+ingredient you&#x27;d have to bolt on. It isn&#x27;t. Take a lattice, push it along with a shift that is *shaped*
+like a bubble (moving fast inside, still outside, with a wall in between), and then simply *measure the
+energy of that shape*. The negative energy appears on its own — and it appears exactly where the theory
+says it should: in a **ring around the bubble&#x27;s waist**, vanishing straight ahead and straight behind.
+The picture below is that ring, drawn from the numbers the engine computed.
+
+## The prediction  &lt;!-- [STUDY GUIDE] --&gt;
+
+Registered before the run (R1/P0–P3). Prior known physics (Alcubierre): the warp shift&#x27;s energy density is
+`ρ ≤ 0`, localized on the wall (`∝ f&#x27;²`), and toroidal (`∝ sin²θ`). Feeding our shift `N = vs·f(r)·ẑ`
+through the functional `16πρ = (trK)² − K_ijK^ij` collapses **analytically** to
+`16πρ = −½·vs²·f&#x27;(r)²·sin²θ` — the same three features. The gate checks the *discrete lattice* delivers them:
+
+- **P0 (control):** a *uniform* shift (no wall) costs **zero** — moving is free, only shaping pays.
+- **P1:** the energy is **negative** where significant (`neg_frac ≥ 0.98`, `min &lt; −10⁻³`).
+- **P2:** it is **wall-localized** (`mean|16πρ|_wall ≥ 10×` interior and exterior).
+- **P3:** it is **toroidal** (`equator ≥ 5×` pole).
+
+## Figure
+
+**[▶ open the energy-structure figure](../../../lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html)**
+— left: where the energy lives, by radial band; right: the torus, each dot a measured angular bin on the
+wall shell (brightness ∝ `|16πρ|`), pinching to nothing on the travel axis.
+
+&gt; **Fig. 1.** The shaped shift&#x27;s energy: negative, wall-localized, toroidal. *Data-true (R10): rendered by
+&gt; `core/viz gen_energy` from `lab/warp-2-energy/0200-…/data/` (gate `uf2_energy_structure_gate`).*
+
+## What happened
+
+**In plain terms** &lt;!-- [PUBLIC] --&gt;: pushing the lattice uniformly is free — a bare translation costs
+*exactly* nothing. The bill arrives only when you **shape** the push into a bubble, and the whole bill is
+paid at the **wall**: the energy there is **336×** what&#x27;s in the calm interior and **1360×** the far
+field. Every bit of it is **negative** — the &quot;exotic&quot; requirement, appearing by itself. And it isn&#x27;t
+spread evenly over the wall; it forms a **ring around the equator** (perpendicular to travel) and fades to
+nothing at the front and back. That ring *is* the warp-drive torus everyone talks about — here it&#x27;s just
+the geometry of a shaped push, measured.
+
+**The numbers** &lt;!-- [STUDY GUIDE] --&gt;:
+
+| prediction | expected | measured | pass |
+|---|---|---|---|
+| P0 · uniform shift `max\|16πρ\|` | `&lt; 10⁻⁹` | **0.0** (exact) | ✅ |
+| P1 · negative fraction | `≥ 0.98` | **1.0000** (100%) | ✅ |
+| P2 · wall / interior | `≥ 10×` | **336×** | ✅ |
+| P2 · wall / exterior | `≥ 10×` | **1360×** | ✅ |
+| P3 · equator / pole | `≥ 5×` | **6.1×** | ✅ |
+
+The angular profile falls **monotonically** from equator (`6.0×10⁻³`) to pole (`7.7×10⁻⁴`) — the `sin²θ`
+torus, in nine bins. The result **rules in** the genesis tenet for warp: the three defining features of
+warp-drive energy are not assumptions — they are consequences of the shift&#x27;s geometry read through a
+quadratic invariant. It **rules out** &quot;the energy is a boundary/discretization artifact&quot;: the uniform
+control costs exactly zero, so the functional charges only for the shaping, and the negativity is a real
+property of the wall&#x27;s **shear** (`trK² &lt; K_ijK^ij`), not a sign convention.
+
+## What *is* &quot;negative&quot;?  &lt;!-- [STUDY GUIDE] --&gt;
+
+The energy splits exactly into two competing pieces — **expansion** and **shear**:
+
+`16πρ = (2/3)·(trK)² − |σ|²  =  expansion − shear`
+
+so **negative energy just means the shift shears the lattice faster than it expands it.** It is not an
+invented mechanism, and not an interpretation — it is the sign of a fixed geometric invariant. Three
+data-true rungs pin this down (the **[negative-energy catalog](../../../lab/warp-2-energy/figures/negative_catalog.html)**):
+
+- **2.1 — negative *is* the shear term.** On the bubble wall, every negative cell has shear &gt; expansion;
+  the equatorial belt is essentially pure shear, and the poles are where expansion rises to *cancel* shear
+  (so the energy fades to zero there). → lab [`0201`](../../../lab/warp-2-energy/0201-expansion-vs-shear).
+- **2.2 — pure shear → negative *everywhere*.** A divergence-free shear layer (`trK≡0`) is negative at
+  every cell; a shearless expansion field (`σ≡0`) is positive at every cell. No wall, no harmonics, no
+  smooth-max needed — the sign is set by shear-vs-expansion alone.
+  → lab [`0202`](../../../lab/warp-2-energy/0202-pure-shear-negative).
+- **2.3 — nesting doesn&#x27;t deepen; sharpness does.** Putting a second wall closer does *not* make the
+  exotic skin deeper (the peak is flat across the gap); halving the wall width instead multiplies it ~4×
+  (a `1/w²` law). Proximity buys more skins, not deeper ones.
+  → lab [`0203`](../../../lab/warp-2-energy/0203-nested-walls).
+
+&gt; **Fig. 2.** The &quot;what is negative?&quot; catalog — the shear decomposition, the sign dyad, and the
+&gt; sharpness law. *Data-true (R10): `core/viz gen_energy_catalog` from `lab/warp-2-energy/{0201,0202,0203}`.*
+
+## Can the photon pay the bill?  &lt;!-- [STUDY GUIDE] --&gt;
+
+Alcubierre&#x27;s question was really *&quot;what source generates this?&quot;* — and the answer was exotic matter. So
+can **electromagnetism**, the field this whole engine is built on, supply it? Rung 2.4 puts a real EM
+stress-energy on the lattice and asks (the **[EM figure](../../../lab/warp-2-energy/0204-can-the-photon-pay/figures/em_bill.html)**):
+
+- **The sign says no.** Classical EM energy density is `ρ = ½(E² + B²) ≥ 0` — for *every* polarization it
+  sits on the wrong side of zero. The wall demands `ρ &lt; 0`; EM&#x27;s floor is `0`. The photon **cannot pay the
+  bill**. This is the energy-condition obstruction, now demonstrated in our own engine rather than quoted.
+- **But polarization is the knob for the *shape*.** The Maxwell stress `σ_ij = E_iE_j + B_iB_j − ½δ_ij(E²+B²)`
+  is shear-rich, and a linear polarization aims its principal (shear) axis *exactly* along the polarization
+  angle; a circular state is isotropic. EM has all the shear you want — the shear that rung 2.1 says drives
+  negativity — but its energy sign is stuck positive.
+
+So EM is **the right shape, the wrong sign**. The sign is precisely where the **quantum vacuum**
+(Casimir / squeezed light) would have to enter — a locally-negative energy density classical fields
+forbid, and one bounded by quantum inequalities in real physics. That boundary is outside this toy; the
+toy&#x27;s job was to locate it exactly. → lab [`0204`](../../../lab/warp-2-energy/0204-can-the-photon-pay).
+
+And it holds for the **real, propagated photon**, not just prescribed fields: rung 2.5 evolves `A` on the
+edges with the engine&#x27;s own incidence `d` (the curl-curl) and geometric Hodge star `⋆₁` (the Whitney edge
+mass), and reads the energy `E = ½VᵀM₁V + ½c²AᵀKA` straight off those operators. That energy stays `≥ 0`
+at every step, is **conserved** to 0.09% (it *is* the solver&#x27;s Maxwell energy), and sloshes
+electric↔magnetic like a real photon — the obstruction, unified with the genesis tenet&#x27;s `d` and `⋆`.
+→ lab [`0205`](../../../lab/warp-2-energy/0205-the-evolved-photon), figure
+[photon energy](../../../lab/warp-2-energy/0205-the-evolved-photon/figures/photon_energy.html).
+
+&gt; **Fig. 3.** Demand vs supply: EM energy density is ≥0 for all polarizations (can&#x27;t reach the wall&#x27;s
+&gt; negative demand), while polarization steers the stress-shear axis. *Data-true (R10): `core/viz gen_em_bill`.*
+
+## Where does the minus sign come from?  &lt;!-- [STUDY GUIDE] --&gt;
+
+If a single field can&#x27;t carry negative energy, where does a minus sign ever live? The answer:
+**relational** quantities — and the knob is **charge / phase flipping**. The
+**[sign catalog](../../../lab/warp-2-energy/figures/sign_catalog.html)** maps every classical route:
+
+- **Charge product (2.6).** Two charges: the *interaction* energy `⟨E₁,E₂⟩` has sign `sign(q₁q₂)`. Flip a
+  charge → it flips (negative for opposite = binding), while self-energies and the total stay `≥ 0`.
+  → lab [`0206`](../../../lab/warp-2-energy/0206-coulomb-interaction-flip).
+- **The stella&#x27;s built-in C (2.7).** The lattice&#x27;s matter/antimatter parity split *is* a charge
+  conjugation: a matter–antimatter pair binds (negative interaction), matter–matter repels.
+  → lab [`0207`](../../../lab/warp-2-energy/0207-stella-matter-antimatter).
+- **Interference (2.8).** Two modes in quadrature build a negative energy density at their destructive
+  fringes — but it is **bounded and paid back** (`∫ = 0`): locally negative, globally on loan. This is the
+  classical shadow of the quantum vacuum (Casimir / squeezed light, Ford–Roman).
+  → lab [`0208`](../../../lab/warp-2-energy/0208-interference-negative).
+
+&gt; **Fig. 4.** Three relational routes to a minus sign — charge product, the stella&#x27;s C, and interference.
+&gt; *Data-true (R10): `core/viz gen_sign_catalog` from `lab/warp-2-energy/{0206,0207,0208}`.*
+
+**The pattern:** every classical minus sign is relational, and every one is balanced or dominated. A *net*
+negative — the thing a warp bubble actually needs — requires a **baseline to subtract**, and that baseline
+is the quantum vacuum. The toy takes us exactly to that door and no further, honestly.
+
+## The bill, in numbers — and why warp stays hypothetical  &lt;!-- [STUDY GUIDE] --&gt;
+
+If the negative energy has to come from the quantum vacuum, *how much* can the vacuum lend, and how does
+that compare to what a bubble needs? This is prior published physics (Alcubierre 1994; Ford–Roman 1995–96;
+Pfenning–Ford 1997; Van Den Broeck 1999), computed as a budget — **not** a lattice result — in the
+**[quantum-budget figure](../../../lab/warp-2-energy/0209-quantum-budget/figures/quantum_budget.html)**:
+
+- **The vacuum lends weakly and briefly.** The Ford–Roman quantum inequality bounds sustained negative
+  energy density as `|ρ| ≲ ℏ/(c³τ⁴)` — the longer you hold it, the weaker it must be (`τ⁻⁴`). It is
+  rung 2.8&#x27;s &quot;paid back,&quot; made quantitative.
+- **The quantum inequality forces a Planck-thin wall.** Requiring the Alcubierre wall to obey the QI drives
+  its thickness to the **Planck scale** (Pfenning–Ford: ~10²–10³ Planck lengths) — where known physics
+  itself runs out.
+- **The macroscopic bill is astronomical.** A QI-consistent 100 m bubble needs a negative mass-energy of
+  order **10¹² × the mass of the observable universe**.
+- **The levers are the toy&#x27;s own rungs — and none reaches zero.** Sharpen the wall (rung 2.3 — but
+  Planck-thin is unphysical), shrink the payload volume (Van Den Broeck, `E ∝ R²`, ÷10³⁴ here — rung 2.3&#x27;s
+  menu), or lower the speed (`E ∝ v²`). They cut *tens of orders* off the bill; they never cancel the
+  QI-bounded exotic requirement.
+
+&gt; **Fig. 5.** The gap on log ladders: what the vacuum can supply (Ford–Roman, Casimir) vs what the wall
+&gt; demands, and the bubble&#x27;s total mass against the Sun and the universe. *All values prior physics;
+&gt; `core/viz gen_budget` from `lab/warp-2-energy/0209-quantum-budget`.*
+
+**The honest end of the chapter.** The toy did its job precisely: it located the door (the exotic
+requirement is real, it is a *shear* effect, and the minus sign is *relational* — it needs a vacuum
+baseline), and it showed classical fields — including the photon this engine is built on — cannot open it.
+The quantum inequality then prices the room beyond that door, and the price is astronomical. That is why
+warp remains hypothetical: not a flaw the toy hides, but a boundary the toy draws honestly, in numbers.
+
+## Reproduce
+
+```bash
+cd core
+cargo test --release -p uniforge --test uf2_energy_structure_gate -- --nocapture  # writes data/*.csv
+cargo run  --release -p viz     --bin gen_energy                                     # → the figure
+```
+Pinned in [`PROVENANCE.md`](PROVENANCE.md). Full scorecard in the lab entry&#x27;s
+[`eval.md`](../../../lab/warp-2-energy/0200-shaped-shift-energy/eval.md).
+
+## Try it  &lt;!-- [STUDY GUIDE] --&gt;
+
+- **Thin the wall** (`WALL = 2.5 → 1.5`): a steeper `f&#x27;` should make the energy *more* negative — the
+  classic &quot;thinner wall costs more exotic matter.&quot; Predict the change in `min`, then run.
+- **Recompute through the geometric `⋆`** (`dec::hodge`) instead of central differences: does the torus
+  survive on the *engine&#x27;s* geometry? That unifies this result with the light-cone chapter — the harder
+  sibling, and the next rung in the [chapter menu](../../../lab/warp-2-energy).
+- **Turn off the shaping** (`f ≡ 1`): confirm P0 by hand — why does a bare boost carry no energy at all?
+
+---
+
+## Addendum — nothing about 1/r went in, and the inverse-square law came out &lt;!-- [PUBLIC] --&gt;
+
+This chapter has used charges before — to chase the minus sign, we prescribed a Coulomb-shaped
+potential and asked what its energy did. That is a fine way to answer *that* question and a useless
+way to answer this one, because the answer is typed in.
+
+So we did it the other way round. Pin a &quot;charge&quot; at the middle of a lattice box. Ground the outside
+of the box. Then let the engine **solve** for the field between them — a linear solve on the same
+discrete Laplacian the wave chapter uses, with no formula for the potential supplied anywhere. Read
+the field strength off the lattice, average it over shells at each radius, and hand the machine two
+columns of numbers and five candidate laws: *constant, one over r, one over r squared, one over r
+cubed, one over r to the fourth.*
+
+It picked one over r squared, by a wide margin.
+
+**Source:** lab [`warp-2-energy/0210-coulomb-discovery`](../../../lab/warp-2-energy/0210-coulomb-discovery)
+· gate `core/uniforge/tests/uf2_10_coulomb_discovery_gate.rs` — the second task on the
+Discovery-Bench checklist (#46), after the light cone.
+
+**The part that is not a curve fit** &lt;!-- [PUBLIC] --&gt;: getting the *shape* right is the easy half.
+The fit also needs a number out front — how strong the field is — and that number turns out to be the
+charge. We can measure the charge a completely different way, without any fitting at all: add up what
+the operator itself says is inside a sphere. That is Gauss&#x27;s law, and on this lattice it is exact —
+the sum came out identical to nine digits whether the sphere had radius 4, 8, 12 or 16, because the
+arithmetic telescopes. The two numbers agree to **0.72%**. One of them never looks at a radius; the
+other never looks at the operator.
+
+**The control that can fail** &lt;!-- [PUBLIC] --&gt;: a detector that always answers &quot;inverse square&quot; would
+have answered it here too. So we ran the whole thing again with two opposite charges a couple of cells
+apart — a dipole — changing nothing else at all. The same pipeline came back with **one over r
+cubed**, which is the right answer for a dipole and the wrong answer for everything else it might
+have said.
+
+**The predictions (R1, probe-informed)** &lt;!-- [STUDY GUIDE] --&gt;: P0 — the solve converges and Gauss&#x27;s
+law is radius-independent to `1e-9`. P1 — the selector returns `−2` with an R² margin &gt; 0.15, and the
+free exponent lands in `−2.00 ± 0.05`. P2 — `4πC` from the fit matches the Gauss charge to better
+than 1.5%. P3 — the near field is *worse*, in a specific pre-registered way. P4 — the dipole returns a
+different exponent.
+
+**Figure:** [▶ open the Coulomb figure](../../../lab/warp-2-energy/0210-coulomb-discovery/figures/coulomb.html)
+— the profile with the rejected laws visibly peeling away, the same data compensated by r² (a flat
+line *is* an inverse-square law, and its height *is* the charge), and the monopole-vs-dipole
+scorecard.
+
+**What happened, including the honest part:** all five held on the first run. And P3 is the one worth
+reading. Close to the source — within about three cells — the lattice is *not* Coulombic: the
+exponent there is `−2.19` and the coefficient is 8% too big. We predicted that before running, and we
+predicted *why*: on a lattice a &quot;point charge&quot; is not a point, it is a pinned vertex, so the near
+field is measuring the pixel rather than the physics. The way to tell that story from the alternative
+— &quot;your box is too small&quot; — is to make the box bigger. We did, by 40%, and the error moved by less
+than one part in ten thousand. It is the grid spacing, and no amount of extra room will fix it. Full
+scorecard in [`eval.md`](../../../lab/warp-2-energy/0210-coulomb-discovery/eval.md).
+
+*(Firewall: a toy lattice operator with pinned vertices, and fits to its own numbers. &quot;Charge&quot;,
+&quot;field&quot; and &quot;Coulomb&quot; name properties of that operator — never a real charge, a real field, or a
+measurement of any physical coupling. The `4π` is the textbook conversion used to score one route
+against the other, not something the lattice derived.)*
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

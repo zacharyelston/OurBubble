@@ -1,0 +1,7 @@
+dimension,dilution,lattice,sensitivity,source
+2,site,triangular,10.3,this run (paired ±0.005)
+3,site,fcc,99.4,this run
+3,site,stella,113.4,this run (paired ±0.0006)
+3,site,stella (5.6's secant),116.7,recomputed from 5.6's committed record
+3,bond,fcc,275.7,rung 5.9's committed record
+3,bond,stella,340.1,rung 5.9's committed record

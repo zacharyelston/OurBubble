@@ -1,0 +1,52 @@
+# 0400 — Warp-4.0: the Casimir vacuum is negative — evaluation
+
+**Verdict:** CONFIRMED (R10) · **Gate:** `uf4_casimir_energy_gate` (green: yes) · **Commit:** `01e536e` (registered `661cc5b`)
+
+## Result
+
+**The quantum vacuum is the one place `ρ < 0` is real — and the lattice discovers the law by itself.** The
+zero-point energy `½Σℏωₖ` of a toy scalar field confined between two Dirichlet "plates" is, after removing
+the bulk vacuum, **negative at every plate separation**. And the gate does not check a hardcoded number: it
+sweeps the separation, least-squares-fits the swept data, and *recovers* the Casimir law — the surface term,
+the `1/a` exponent, and the coefficient `−π/24` — from the run alone.
+
+| prediction | expected | measured | pass |
+|---|---|---|---|
+| P0 spectrum = engine's Dirichlet Laplacian | `Σωₖ²=2N`, `Σωₖ⁴=6N−2` | **30.000, 88.000** (N=15) | ✅ |
+| P1 confined vacuum energy negative | `E_C(a) < 0` ∀a | **−0.516 … −0.502** (all < 0) | ✅ |
+| P2 discovered surface term `c₀` | `→ −0.5` | **−0.499997** | ✅ |
+| P2 discovered Casimir coeff `c₁` | `−π/24` within 3% | **−0.13099** (0.07%) | ✅ |
+| P2 fit quality / exponent | `R²>0.999`, slope→−1 | **R²=0.9999999**, **−0.9997** | ✅ |
+| P3 attractive | `E_C(a)` increasing in a | **strictly increasing** | ✅ |
+
+No regularization was applied — the lattice spectrum is its own UV cutoff, so `½Σωₖ` is *literally finite*
+and the negative Casimir piece falls straight out of `E_C(a) = ½Σωₖ − ε∞·a` (bulk density `ε∞ = 2/π`). The
+confined energy decomposes exactly as `E_C(a) = c₀ + c₁/a` with a constant **surface term** `c₀ = −½` (the
+two plate edges) and the universal **Casimir term** `c₁ = −π/24` — both read off the data by the automated
+fit, matching the textbook 1+1D result to sub-percent. Data: [`data/spectrum.csv`](data/spectrum.csv),
+[`data/energy_sweep.csv`](data/energy_sweep.csv), [`data/fit.csv`](data/fit.csv). Figure: `core/viz gen_casimir`.
+
+## What it rules in / out
+
+- **Rules IN genuine negative energy (the whole point):** unlike classical EM (`ρ≥0`, rung 2.4) and shields
+  (`ρ→0` at best, rung 3.4), the boundary vacuum reaches `ρ<0`. This is the physics that could, in
+  principle, source an exotic wall — the door chapters 2–3 closed classically, reopened by the quantum
+  vacuum.
+- **Rules IN the lattice as an automated bench (the value-add):** the gate ran a parameter sweep and
+  *extracted a physical law* — exponent and coefficient — with the automation, not the author, doing the
+  discovery. That is the reusable capability the chapter set out to prove: cheaper-than-a-lab experiments
+  whose analysis is automatic and theory-checked.
+- **Does NOT yet weigh it against the warp bill:** this rung establishes existence and law, not sufficiency.
+  The magnitude is tiny and steep (`∝1/a`, and `∝1/a⁴` for 3D force) — rung 4.2 holds it against the
+  Ford–Roman/geometry budget of 2.9. Static Casimir negative energy is *allowed* (it does not violate the
+  time-sampled quantum inequalities), but its size is bounded by geometry.
+- **Firewall stays hard:** this is zero-point *bookkeeping* of a toy scalar field; `ℏ` is a dimensionless
+  constant, the "plates" are fixed lattice endpoints. It is not a device, not free energy, not a spacetime
+  claim.
+
+## Deferred / next
+
+Rung 4.1 (the **piston force** — subtraction-free: `|F|a² → π/24`, attractive, far-wall-independent) and
+rung 4.2 (**the bill** — static Casimir vs Ford–Roman and the warp-wall demand). Then generalize the
+law-finder into a reusable **auto-discovery harness** (sweep → fit → model-select → report), and a **3D
+scalar Casimir** (`E/A = −π²/1440 a³`) to see the bench recover a different exponent.

@@ -4,8 +4,12 @@
 #
 # The build half is the same tier-0 pass `check.yml` runs on pull requests, and both call the one
 # implementation, `tools/check.sh`, so the site can only be built by a pass that also checks the
-# book. Read `check.yml`'s header for the runner choice and — importantly — for what CI can and
-# cannot verify while the engine record is a private repository.
+# book. Read `check.yml`'s header for the runner choice and for which of the two record layers can
+# run without a token.
+#
+# The published site carries `record/` — the committed snapshot of every file the book cites — so a
+# reader can click from a number in the appendix through to the file it came from without any access
+# to the engine. mdBook copies it into the build via the `chapters/record` symlink.
 #
 # Pages is configured with `build_type: workflow`, so this workflow is the only thing that publishes.
 
@@ -41,42 +45,35 @@ jobs:
           curl -fsSL "$url" | tar -xz -C "$HOME/.local/bin"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Fetch the pinned record
+      - name: Fetch the pinned engine (for the snapshot-integrity layer)
         id: record
+        continue-on-error: true
         env:
           RECORD_TOKEN: ${{ secrets.RECORD_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "${RECORD_TOKEN:-}" ]; then
-            echo "have=false" >> "$GITHUB_OUTPUT"
-            echo "::warning title=Published without verifying the record::RECORD_TOKEN is not set, so the private engine record could not be fetched. The site was built but its quotations were NOT verified in this run."
+            echo "::warning title=Snapshot integrity unverified::RECORD_TOKEN is not set, so the private engine could not be fetched and record/ was not diffed against it. Quotations are still gated against the committed snapshot."
             {
-              echo "### :warning: published without verifying the record"
+              echo "### :warning: snapshot integrity unverified — RECORD_TOKEN not set"
               echo
-              echo "\`RECORD_TOKEN\` is not set on this repository, so \`.record/\` could not be fetched."
-              echo "\`check_edition.py\` needs the record for almost everything it asserts and refuses to run"
-              echo "without it, so **it did not run at all** before this deploy."
-              echo "What did run: the book built, and the generated appendix was confirmed to be in step with"
-              echo "\`edition.json\` and the reading order."
+              echo "The engine repository is private and no \`RECORD_TOKEN\` secret is configured, so"
+              echo "\`.record/\` could not be fetched and **\`record/\` was not diffed against the engine**"
+              echo "before this deploy."
               echo
-              echo "Set \`RECORD_TOKEN\` (a fine-grained PAT with Contents:read on the engine repository), or"
-              echo "make that repository public, and the quotation check becomes a publish gate."
+              echo "**Still gated in this run:** all 35 declared quotations, verbatim against the committed"
+              echo "\`record/\` snapshot; the excluded-claims guard and its probes; the reading order, prose"
+              echo "rules, internal links and every record link in the built book."
+              echo
+              echo "**Not checked:** whether \`record/\` is still byte-for-byte the engine at the pinned commit."
+              echo "Add \`RECORD_TOKEN\` (a fine-grained PAT with Contents:read on the engine) to close that gap."
             } >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          echo "have=true" >> "$GITHUB_OUTPUT"
           tools/fetch_record.sh
 
-      - name: Tier 0 — check the edition against the record, build, check the built pages
-        if: steps.record.outputs.have == 'true'
+      - name: Tier 0 — integrity, quotations, build, rendered links
         run: tools/check.sh
-
-      - name: Build and check what does not need the record
-        if: steps.record.outputs.have != 'true'
-        run: |
-          set -euo pipefail
-          mdbook build
-          git diff --exit-code -- chapters/the-simulations.md
 
       - name: Upload the rendered book
         uses: actions/upload-pages-artifact@v3

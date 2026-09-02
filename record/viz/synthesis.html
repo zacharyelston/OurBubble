@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>One Lattice, Many Sciences</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e;--blue:#3b82f6}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:26px 20px 60px}
+  h1{font:600 27px/1.2 Georgia,serif;margin:0 0 4px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13.5px;max-width:74ch}
+  .ramp{height:5px;border-radius:3px;margin:12px 0 16px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:10px 13px;color:var(--mute);font-size:12.5px;margin-bottom:12px}
+  .fire b{color:#f87171}
+  .blind{border:1px solid var(--line);border-left:3px solid var(--violet);background:rgba(192,132,252,.06);border-radius:8px;padding:10px 13px;color:var(--mute);font-size:12.5px;margin-bottom:20px}
+  .blind b{color:var(--violet)}
+  section{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:17px 19px;margin-bottom:16px}
+  section>h2{font:600 12px/1.3 system-ui;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin:0 0 4px}
+  section>.q{color:var(--mute);font-size:12.5px;margin:0 0 12px;max-width:80ch}
+  a{color:var(--cyan)}
+  code{color:var(--cyan);font-size:.92em;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  /* header thesis */
+  .thesis{border:1px solid var(--line);border-left:3px solid var(--cyan);background:rgba(6,182,212,.05);border-radius:8px;padding:11px 14px;color:var(--mute);font-size:13px;margin:0 0 4px;max-width:80ch}
+  .thesis b{color:var(--ink)}
+  /* 1 · the ramp */
+  .beat{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+  .beat.last{padding-bottom:2px}
+  .beat .bn{flex:0 0 30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#0a0f16;
+    color:var(--cyan);font:600 14px/28px system-ui;text-align:center;font-variant-numeric:tabular-nums}
+  .beat .bt{flex:1 1 auto;min-width:0}
+  .beat h3{font:600 15px/1.35 Georgia,serif;color:var(--ink);margin:2px 0 7px}
+  .beat p{margin:0 0 9px;font-size:13px;color:var(--mute);max-width:82ch}
+  .beat p:last-child{margin-bottom:0}
+  .jarg{color:var(--faint)}
+  .jarg b,.jarg code{color:var(--cyan)}
+  .dial{display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 10px}
+  .dial .d{flex:1 1 300px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:#0a0f16}
+  .dial .d .r{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
+  .dial .d .q{font-size:13px;color:var(--ink);margin:4px 0 7px}
+  .dial .d .q code{color:var(--cyan)}
+  .dial .d a{font-size:11px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--mute);background:#0e131b;margin-right:6px;display:inline-block}
+  .dial .d a:hover{border-color:var(--cyan);color:var(--ink)}
+  .dial .d.src{flex:1 1 100%;background:transparent}
+  .dial .d.src .r{margin-bottom:7px}
+  .dialnote{color:var(--faint)!important}
+  .gap{display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 10px}
+  .gap .g1{flex:1 1 190px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#0a0f16}
+  .gap .g1 b{display:block;font:600 20px/1.25 system-ui;font-variant-numeric:tabular-nums;color:var(--gold)}
+  .gap .g1 span{display:block;font-size:11.5px;color:var(--faint);margin-top:4px}
+  .obj{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;margin-top:4px}
+  .obj svg{flex:0 0 300px;background:#080b10;border:1px solid var(--line);border-radius:10px}
+  .obj .txt{flex:1 1 340px;min-width:280px}
+  .obj .txt p{margin:0 0 9px;font-size:12.5px;color:var(--faint)}
+  .census{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .census div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:#0a0f16;font-size:11.5px;color:var(--faint)}
+  .census b{display:block;font:600 15px/1.3 system-ui;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .chain{margin-top:4px;font-size:12.5px;color:var(--mute);border-left:2px solid var(--gold);background:rgba(234,179,8,.05);border-radius:0 8px 8px 0;padding:9px 12px}
+  .chain b{color:var(--gold)}
+  /* 2 · the science map */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:12px}
+  .cell{border:1px solid var(--line);border-radius:11px;padding:13px 14px;background:#0a0f16;display:flex;flex-direction:column}
+  .cell .sci{font:600 14px/1.3 system-ui;margin-bottom:3px}
+  .cell .fra{font-size:12px;color:var(--faint);margin-bottom:9px;flex:0 0 auto}
+  .cell .num{font:600 19px/1.25 system-ui;font-variant-numeric:tabular-nums;color:var(--cyan);word-break:break-word}
+  .cell .cav{font-size:12px;color:var(--mute);margin-top:5px}
+  .cell .cav b{color:var(--gold);font-weight:600}
+  .cell .nte{font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.5}
+  .cell .nte b{color:var(--mute)}
+  .cell .bk{margin-top:auto;padding-top:9px;font-size:14px;letter-spacing:1px;color:var(--mute)}
+  .cell .vd{font-size:11.5px;color:var(--faint);margin-top:7px;border-top:1px solid var(--line);padding-top:7px}
+  .cell .lk{margin-top:9px;display:flex;flex-wrap:wrap;gap:6px}
+  .cell .lk a{font-size:11px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--mute);background:#0e131b}
+  .cell .lk a:hover{border-color:var(--cyan);color:var(--ink)}
+  .cell.neg{border-left:3px solid var(--red)}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--faint);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em}
+  td.n{font-variant-numeric:tabular-nums;color:var(--green);white-space:nowrap}
+  td.t{font-variant-numeric:tabular-nums;color:var(--faint);white-space:nowrap}
+  td.l{color:var(--gold);font-weight:600;white-space:nowrap}
+  td.miss{font-variant-numeric:tabular-nums;color:#fca5a5;white-space:nowrap}
+  /* 3 · bench strip */
+  section>.q.rows{margin-top:-4px}
+  td .arm{font-size:11px;color:var(--faint);margin-top:2px}
+  .strip{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+  .strip a{flex:1 1 260px;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#0a0f16;color:inherit}
+  .strip a:hover{border-color:var(--cyan)}
+  .strip .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
+  .strip .hd{font:600 15px/1.3 system-ui;margin:3px 0 5px}
+  .strip .p{font-size:12px;color:var(--mute)}
+  /* 4 · honesty */
+  .hon{border-left:3px solid var(--gold);background:rgba(234,179,8,.05);border-radius:8px;padding:11px 14px;margin-bottom:11px;font-size:12.5px;color:var(--mute)}
+  .hon h3{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
+  .hon p{margin:0 0 8px}
+  .negs{max-height:none;margin-top:8px;padding-left:20px}
+  .negs li{margin-bottom:7px;font-size:12px;color:var(--mute)}
+  .negs li b{color:#fca5a5}
+  .more{margin-top:6px;border-top:1px solid var(--line);padding-top:8px}
+  .more summary{cursor:pointer;font-size:12px;color:var(--gold);list-style:revert}
+  .more summary:hover{color:var(--ink)}
+  /* 5 · subjunctive */
+  .subj td.if{color:var(--mute)}
+  .subj td.then{color:var(--ink)}
+  .subj tr.none td.then{color:#fca5a5}
+  /* 6 · the skeptic's test */
+  .step{display:flex;gap:14px;padding:13px 0;border-top:1px solid var(--line)}
+  .step .bn{flex:0 0 30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#0a0f16;
+    color:var(--green);font:600 14px/28px system-ui;text-align:center;font-variant-numeric:tabular-nums}
+  .step .bt{flex:1 1 auto;min-width:0}
+  .step h3{font:600 14px/1.35 system-ui;color:var(--ink);margin:4px 0 6px}
+  .step p{margin:0 0 8px;font-size:12.5px;color:var(--mute);max-width:82ch}
+  .step pre{margin:0 0 7px;padding:10px 12px;background:#080b10;border:1px solid var(--line);
+    border-radius:8px;overflow-x:auto;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--green)}
+  .step .exp{font-size:11.5px;color:var(--faint);margin-bottom:5px}
+  .step .exp code{color:var(--faint)}
+  .kfoot{font-size:11.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+  h3.mech{font:600 12px/1.3 system-ui;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);
+    margin:18px 0 6px;border-top:1px solid var(--line);padding-top:14px}
+  .cap{font-size:11px;color:var(--faint);line-height:1.6;margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+  .cap code{color:var(--faint)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>One lattice, many sciences</h1>
+  <p class="sub"><b>One object.</b> Twelve different sciences were pointed at it, and each panel
+     below is one of them. The results that came back <i>no</i> are printed at the same size as the
+     ones that came back yes. If you have not met any of this before, <b>start at section 1 and read
+     down</b>: it begins before the maths, with a point and a line.</p>
+  <p class="thesis"><b>The claim is not that one piece of maths turns up in many sciences.</b> That
+     is a textbook fact and nobody needs a page for it. The claim is that <b>one exact, certified,
+     bit-reproducible instrument</b> spans them: each science below was entered with its prediction
+     <i>written down first</i>, run against controls that were free to give the answer away, and
+     reported at full size when it came back negative. <b>The discipline is the product</b>; the
+     physics is what it was pointed at.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Everything here is a <b>toy</b> DEC computation on a lattice.
+     <i>Photon, charge, light cone, Coulomb, vacuum, diffraction, material, orbit</i> name numerical
+     properties of discrete operators and of fits to their output — never real photons, charges,
+     particles, forces, or measurements of any physical constant. What is prediction-grade is a set of
+     <b>dimensionless</b> exponents and ratios, each pre-registered before its own run (R1).
+     <code>c = G = 1</code> in code units only.</div>
+  <div class="blind"><b>This page is a demo artifact, not a new result.</b> It registers no
+     prediction, runs nothing and claims nothing of its own. It is <b>generated</b> from the
+     committed record — <code>PREDICTIONS.md</code>'s ledger rows, each chapter's rung log, each
+     entry's <code>eval.md</code> verdict line, and the run CSVs. Section 6 says exactly which of the
+     numbers below a program has checked, and which it has not.</div>
+  <div class="blind" style="border-left-color:var(--green)"><b>This is the complete edition.</b> It
+     quotes the record in the record's own words and does not slow down for anyone. The front door is
+     <a href="./synthesis-slow-ramp.html">the slow-ramp edition</a>, which walks the same evidence
+     with more explanation and fewer assumptions — same numbers, same sources, more scaffolding. If
+     you have met none of this before, start there and come back.</div>
+
+  <section id="s-object">
+    <h2>1 · Start here — eleven steps to the object</h2>
+    <p class="q">Before any physics, and before any symbol. Eleven steps, each one forced by the step
+       before it, ending at the thing every other section on this page runs on.</p>
+
+    <div class="beat">
+      <div class="bn">1</div>
+      <div class="bt">
+        <h3>What is the least you actually need?</h3>
+        <p>The calculus physics is written in assumes you can always look closer — infinitely many
+           points between any two. <b>No measurement has ever seen that</b>: every measurement ever
+           made is a finite list of numbers. Whether space itself is like the calculus is an old open
+           question, and this page does not need the answer.</p>
+        <p>So don't start from a continuum and approximate it. <b>Start from nothing</b>, and ask what
+           is the least you need to hold a physics. Somewhere to put a number — call that a
+           <b>point</b>. Somewhere to put <i>change</i> — a difference is never at one place, it is
+           between two, so it lives on the <b>line joining them</b>.</p>
+        <p>A point and a line. <b>Not a shrunken picture of something richer</b> — a complete world of
+           its own, on which everything that follows is <i>exact</i>. When a textbook continuum
+           formula appears on this page, it appears as a <b>comparison</b>, never as the standard the
+           lattice owes anything to.</p>
+        <p>Nothing else has been assumed yet — not distance, not direction, not time.
+           <span class="jarg">In the jargon: a number living on a point is a <b>0-form</b>; a number
+           living on a line is a <b>1-form</b>.</span></p>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">2</div>
+      <div class="bt">
+        <h3>Go around a closed loop and the differences cancel — exactly</h3>
+        <p>Walk a loop of lines back to where you started, adding up the differences as you go. You
+           must arrive at zero, because you are back at the number you left. Not <i>nearly</i> zero:
+           <b>zero</b>. The differences are added with plus and minus signs that come from which way
+           each line points, so the cancellation is a fact about <b>integers</b>, not the outcome of a
+           subtraction that happened to be small.</p>
+        <p>This is the whole reason a machine built this way can be trusted <i>before</i> any physics
+           is put into it. Most simulation error is the slow rot of an identity that was only ever
+           approximately true. Here the identity is combinatorial: it holds at any resolution, in any
+           units, on any mesh, at any timestep — or the mesh is not a mesh.
+           <span class="jarg">In the jargon: <code>d² = 0</code>.</span></p>
+        <div class="chain" id="loop"></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">3</div>
+      <div class="bt">
+        <h3>So far, nothing knows how long a line is</h3>
+        <p>Read step 2 again and notice what was never used: <b>length</b>. No line has one. Two lines
+           cannot be compared. There is no angle, no volume, no speed — and the loop identity does not
+           care, because it never asked.</p>
+        <p>That is not a gap to be filled in later. It is <b>why</b> the structure is exact. Counting
+           and orientation are all that step 2 consumed, so nothing about the shape of the world can
+           make step 2 wrong. Geometry has to come from somewhere else, and keeping it somewhere else
+           is the design.</p>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">4</div>
+      <div class="bt">
+        <h3>Nothing has moved yet. Make time.</h3>
+        <p>Everything so far is a still photograph. Numbers sit on points, differences sit on lines,
+           and nothing has happened — because there is no clock. So add one: <b>let there be
+           ticks</b>, all the same size.</p>
+        <p>Then add exactly one rule for what a tick does. <b>At each tick, every point adjusts its
+           own number toward its neighbours' — by an amount the differences on its lines tell it —
+           and carries forward the change it has built up so far.</b></p>
+        <p>That sentence is the whole law. <b>Nothing is ever added to it</b>: no forces, no
+           particles, no separate equation of motion bolted on later when something needs explaining.
+           Everything further down this page is that one rule, run.
+           <span class="jarg">In the jargon: the discrete wave equation
+           <span id="rule-eq"></span>, stepped by the engine's <span id="rule-fn"></span>.</span></p>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">5</div>
+      <div class="bt">
+        <h3>The rule makes ripples</h3>
+        <p>Start everything at rest and <b>poke a single point</b> — raise its number, then let go.
+           Its neighbours notice, because the differences on their lines just changed. Their
+           neighbours notice on the next tick. What comes out is a <b>ring spreading outward</b>,
+           like a stone dropped in a pond.</p>
+        <p>Nobody wrote "wave" anywhere. There is no wave in the rule — the rule is one sentence
+           about neighbours. <b>The ring is what that sentence does.</b> You can watch it happen:</p>
+        <div class="dial" id="watch"></div>
+        <p>And now you have the question a stopwatch asks, which turns out to be the first real
+           question in this whole project: <b>how fast is that ring travelling — and is it the same
+           speed in every direction?</b></p>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">6</div>
+      <div class="bt">
+        <h3>"How fast" needs "how far" — and no line has a length</h3>
+        <p>Speed is distance over time. The time half is easy: it is ticks, and every tick is the
+           same. The distance half you <b>do not have</b> — and step 3 was <i>proud</i> of that.</p>
+        <p>Counting hops is not distance. A step along a cube's edge and a step along its diagonal are
+           both <b>one hop</b>, and nothing anywhere in the structure says they should count
+           differently. If they truly don't, then "how fast" has no answer at all — only "how many
+           hops", which is a different question, and not one a stopwatch can check.</p>
+        <p>So sizes have to be written in somewhere. <b>Length is not something this object has; it is
+           something you have to give it</b> — and it has to enter through exactly <i>one</i> place,
+           because steps 2 and 3 hold precisely <i>because</i> nothing else knows about it.</p>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">7</div>
+      <div class="bt">
+        <h3>The metric is a dial — and you can watch it being turned</h3>
+        <p><b>Here is that one place.</b> A single component, whose only job is to say how big things
+           are: how much each line counts for, how much each small piece of surface counts for. Set it
+           and the object has a geometry; set it differently and the object has a different one. It is
+           a <b>dial</b>, and it is the <i>only</i> dial.
+           <span class="jarg">In the jargon: the Hodge star, <code>⋆</code>.</span></p>
+        <p>Set it naively — every line weighted the same, <code>⋆ = I</code>, the thing that looks
+           like "no assumption" and is in fact a strong one — and <b>step 5's ring comes out
+           lopsided</b>: it runs faster along some directions than others, so what ought to be a
+           circle is a squashed one. Set the dial from the actual geometry instead and the ring comes
+           back round. (Draw that ring's speed in every direction and you have the thing physics calls
+           a <b>light cone</b> — it is a picture of the ring, and nothing more than that.) This is not
+           an argument; it is measured, twice, and both measurements are on this page:</p>
+        <div class="dial" id="dial"></div>
+        <p class="dialnote">The second one is worth clicking — and notice that it is <b>the same ring
+           all the way down</b>: the ring you poked in step 5 is the ring this dial rounds out, and it
+           is also the physics behind the double-slit demo's before/after toggle. That demo was
+           quietly lopsided for months; the same dial explains it, and it now carries the toggle so
+           you can turn the dial yourself. A lattice can be wrong, and the honest thing is to show you
+           where.</p>
+        <p><b>Now read that against step 1.</b> There is no truer geometry sitting behind this one
+           for the dial to be tuned toward: nothing else on this object assumes a length anywhere, so
+           the dial does not <i>approximate</i> a geometry — it <b>supplies</b> the only one there is.
+           Two settings are therefore not a better and a worse version of the same thing; they are
+           <b>two different geometries</b>, and the difference shows up in measurements. Which is why
+           a whole arc of the record stops treating the dial as plumbing and makes it the object of
+           study: <span id="arc"></span></p>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">8</div>
+      <div class="bt">
+        <h3>Finish the ladder before choosing any shape</h3>
+        <p>That was a long way into the record for one step, so come back to the construction. Two
+           rungs are still missing, and both are needed before the shape of the object can be
+           settled.</p>
+        <p>Step 1 stopped at a point and a line. Take one more rung at the same walking pace. A
+           <b>patch</b> is a piece of surface with lines around its edge. Walk that edge, adding up
+           the line-numbers as you go — exactly the walk from step 2 — and you get one number. It is
+           not a number about any single line; it belongs to the <b>patch</b>. It is the amount of
+           <i>circulation</i> the patch encloses.</p>
+        <p>One more rung and you are done. A <b>volume</b> is a region with patches around its
+           outside. Add up what each of those patches carries and you get a number about the volume:
+           how much is flowing <i>out</i> of it.</p>
+        <p>Now the physics words can land, and they land plainly. In electromagnetism the potential
+           <b>A</b> is a number on each line; the field strength <b>F</b> is a number on each patch.
+           And they are not two things you have to relate by a law — <b>the loop-sum of A around a
+           patch simply IS the F on that patch.</b> Same walk as step 2, one rung up.
+           <span class="jarg">In the jargon: patches hold <b>2-forms</b>, volumes hold
+           <b>3-forms</b>, and <code>F = dA</code>.</span></p>
+        <div class="chain" id="chain"></div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">9</div>
+      <div class="bt">
+        <h3>What shape should a patch be?</h3>
+        <p>Squares look like the obvious answer, and they are the wrong atom. Pin the four corners of
+           a square and the square can still <b>flex</b>: it leans into a diamond without any corner
+           moving off its own pin, because nothing fixes its diagonals. A <b>triangle</b> cannot. Fix
+           its three corners and the triangle is finished — it is the smallest patch that holds its
+           own shape.</p>
+        <p>The same argument one rung up gives the <b>tetrahedron</b>: four corners, four triangular
+           faces, rigid for the same reason. So the honest atoms are triangles and tetrahedra.
+           <span class="jarg">In the jargon: simplices — hence <i>simplicial</i>.</span></p>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="bn">10</div>
+      <div class="bt">
+        <h3>And regular tetrahedra do not fill space</h3>
+        <p>This is the surprise, and it is an old one: Aristotle wrote that they do, and the mistake
+           stood for roughly eighteen centuries. Stack tetrahedra around a shared edge and they very
+           nearly close — but not quite, and you can measure the miss on the tetrahedron this page
+           draws:</p>
+        <div class="gap" id="gap"></div>
+        <p>So there is no perfect answer, and <b>every tetrahedral lattice is a compromise</b>. That
+           matters more than it sounds: a compromise is a <b>choice</b>, a choice has consequences,
+           and the consequences are measurable — which is what most of this page turns out to be
+           about. The repo says it in one line: <span id="choice"></span>.</p>
+        <p><b>Here is the choice.</b> Take the cube's eight corners and two-colour them by whether
+           their coordinates sum to an even or an odd number. Each colour's four corners span a
+           regular tetrahedron; the two tetrahedra interpenetrate and <b>never share an edge</b>.
+           That figure is the <b>stella octangula</b>. Tile it, and the near-closure gap from above
+           shows up as honest <b>octahedral holes</b> between the tetrahedra — filled in their turn,
+           each split into four more tetrahedra. The builder's own description:
+           <span id="honeycomb"></span>, in which <span id="holes"></span>.</p>
+        <p>The two families are mirror images of each other, so <b>chirality is not a feature added
+           later</b> — it is on the ground floor, before a single field is defined, which is why the
+           chapters keep meeting it. (The engine's source calls the two families <i>matter</i> and
+           <i>antimatter</i>. That is a nickname for two sets of cube corners and nothing more — see
+           the firewall above.)</p>
+        <div class="obj">
+          <svg id="stella" viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg" role="img"
+               aria-label="The stella octangula: a cube's eight corners two-coloured by coordinate parity, each colour spanning a regular tetrahedron"></svg>
+          <div class="txt">
+            <p class="drawn">The drawing is <b>constructed, not illustrated</b>: the corner positions
+               and each family's six edges are computed from the parity rule when this page is
+               generated, then drawn. The counts below are the engine's own census of the tiled
+               complex.</p>
+            <div class="census" id="census"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="beat last">
+      <div class="bn">11</div>
+      <div class="bt">
+        <h3>One object, two sciences — the whole page, in miniature</h3>
+        <p>Before the twelve-cell map, here is the move it repeats, done once. Put a blob on the
+           lattice and let it spread using step 4's one rule — nothing else. Run it two ways.</p>
+        <p><b>Let it leak</b> — the blob loses height as it widens, the way heat does — and its width
+           grows in step with the clock: double the time, double the spread. <b>Let nothing leak</b>
+           — everything is kept, the way a quantum amplitude keeps its total — and it does not spread,
+           it <i>travels</i>: double the time, quadruple the spread. Two sciences, two different
+           answers, and the machine was not told which one it was looking at:</p>
+        <div class="two" id="two"></div>
+        <p class="dialnote">Same operator, same mesh, same starting blob. The only difference is one
+           factor of <i>i</i>, and the bench comes back with a <b>different correct law</b> rather
+           than repeating the one it just found — which is what makes the first answer worth
+           anything.</p>
+        <p><b>That is the whole page.</b> Every cell below is this same move again: one object, one
+           set of operators, a different question asked of it — and, each time, a control that was
+           free to give the answer away. No new engine is built for any of them, which is exactly why
+           a control can catch this one out.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="s-map">
+    <h2>2 · The science map</h2>
+    <p class="q">Twelve cells, twelve different sciences, <b>one object</b> — step 11, twelve times.
+       Each cell starts with the plain question that was asked of the lattice, then gives the answer
+       it came back with.</p>
+    <p class="q"><b>The numbers in a cell are quotations.</b> The big figure and the line under it are
+       lifted word for word out of that experiment's row in the project's ledger, and checked against
+       it when the page is built. The framing question above them is written by a person; the glyphs
+       are the ledger's own verdicts:
+       <b>🟢</b> a real prediction · <b>🔵</b> a mathematical constant of this lattice · <b>⚪</b>
+       true by construction, so a check rather than a discovery · <b>🟥</b> a null, or something ruled
+       out · <b>🎓</b> the graduation swing.
+       Where a cell's second number is a <i>control</i> rather than a result, a grey line says so —
+       and read those lines, because <b>several of the worst-looking numbers on this page are the
+       arm that was supposed to fail, failing on cue</b>. Every label is written with its chapter in
+       front (<code>photonic-bands 9.0</code>), because rung numbers repeat across chapters.</p>
+    <div class="grid" id="map"></div>
+  </section>
+
+  <section id="s-bench">
+    <h2>3 · How the answers were chosen</h2>
+    <p class="q">Every experiment above ends with a number, and a number is easy to get right by
+       accident. So the numbers are not read off by hand. They go to <b>one machine whose job is to
+       look at a table and say what law it is looking at</b> — and that machine is never told what it
+       is looking at.</p>
+    <p class="q"><b>Here is exactly what "never told" means.</b> Before a run, someone writes down
+       the <i>menu</i> the machine is allowed to choose from — flat, spreading, straight-line, three
+       halves, squared, cubed — and then hands over nothing but the raw pairs of numbers. There is no
+       slot in which an expected answer could be passed in. The machine picks whichever item on the
+       menu the data itself prefers, and the <b>margin</b> column says how far ahead of the runner-up
+       that winner finished — so a near-tie shows up as a near-tie instead of being rounded into a
+       victory.</p>
+    <p class="q"><b>The other half is the arms that are supposed to come back different.</b> The same
+       machine is fed cases whose right answer is <i>not</i> the one it just found: a deliberately
+       broken metric, two charges instead of one, a walk that keeps everything instead of leaking, and
+       a made-up law with no lattice in it at all. Each time, it has to return the <i>other</i> right
+       answer. A machine that only ever agrees with you is not a test of anything.</p>
+    <p class="q rows"><b>One row below is one arm of one run</b> — one direction, one window, one
+       experiment — read straight out of that run's committed file and rounded for reading, so these
+       are renderings of the file rather than quotations from it. That is why two numbers for the light cone are not a contradiction: the <code>0.9837</code>
+       here is direction <code>[100]</code> on its own, and the <code>p = 1.00 ± 0.016</code> in the
+       map above is the summary across all five directions. Same run, different scope.</p>
+    <p class="q rows" style="color:var(--faint)">Fitted values are shown to four significant
+       figures. <code>R²</code> — how well the chosen law fits, where 1 would be
+       perfect — is rounded <i>down</i>, never up, so a fit that is not perfect can never print as
+       <code>1.000</code>. Where you see <code>1.000</code>, the run's own file records the fit as
+       exactly 1. Full precision lives in the files named at the foot of this page.</p>
+    <table id="bench"><thead><tr><th>experiment</th><th>law recovered</th><th>exponent</th><th>R²</th><th>margin</th><th>target</th></tr></thead><tbody></tbody></table>
+    <div class="strip" id="strip"></div>
+  </section>
+
+  <section id="s-honesty">
+    <h2>4 · Where the method falls short</h2>
+    <p class="q">The part of a project that usually goes unpublished. Everything below is what the
+       record says about <b>its own limits</b>, quoted in the record's own words — the thing that did
+       not work, the number that missed, the question still open. It is here at the same size as the
+       wins, and in the same typeface, because a page that shows only the wins is not evidence of
+       anything.</p>
+    <div id="honesty"></div>
+  </section>
+
+  <section id="s-subj">
+    <h2>5 · What a passing test permits</h2>
+    <p class="q">A <b>gate</b> is an automated test that re-runs an experiment and refuses to pass
+       unless the answer comes back as registered. This table asks a narrow question about each one:
+       supposing that gate is passing, what does it actually entitle anyone to <i>go and try next</i>?</p>
+    <p class="q">Read every row in the conditional. <b>IF</b> the gate is green, <b>THEN</b> some
+       piece of work <i>may be attempted</i> — that is the whole claim. Not that the work will
+       succeed, not that anything has been built, and never that something is true of the real world.
+       The wording is deliberately cautious because the failure mode it guards against is the
+       ordinary one: quietly treating a passing test as permission to claim more than it measured.
+       <b>Two rows license nothing at all</b>, and they are kept rather than deleted — one because
+       its experiment came back negative, one because the owner cancelled it. A table you can only
+       add successes to is a menu, not a record.
+       <span class="jarg">(The record calls this the <b>subjunctive</b> lane, because every row stays
+       in the conditional mood and none of them is allowed to slip into the indicative. Tracked as
+       issue #70.)</span></p>
+    <table class="subj" id="subj"><thead><tr><th>gate</th><th>what it certifies</th><th>then …</th></tr></thead><tbody></tbody></table>
+  </section>
+
+  <section id="s-skeptic">
+    <h2>6 · The skeptic's test</h2>
+    <p class="q">Everything above is a page telling you about a record. Here is how to stop taking
+       its word for it, in about the time it takes to make coffee.</p>
+    <p class="q"><b>Step 2 is the one that matters.</b> Step 1 re-runs a real experiment and lets it
+       <b>overwrite the very files this page has been quoting</b>. Step 2 then asks the version
+       control system a single question: did anything change? If any number here had been nudged,
+       tuned, or typed in after the fact, that is where it shows up. Nothing should change. That is
+       the claim, and this is the command that tests it.</p>
+    <p class="q" style="color:var(--faint)">These are not illustrative commands: each one is quoted
+       from the repo's own rehearsed script, and checked against it when the page is built.</p>
+
+    <div id="skeptic"></div>
+
+    <h3 class="mech">What a program checked, and what it did not</h3>
+    <p class="q">This page is assembled from the record, so it is worth being exact about how far that
+       goes. <b>Checked word for word against its row in <code>PREDICTIONS.md</code> — the project's
+       ledger, listed at the foot of this page — and a mismatch stops the build:</b> every headline and
+       caveat in the science map, the two dial measurements in step 7 and the entropy price beside them,
+       and step 11's two exponents. The commands above are checked the same way against the repo's own
+       rehearsed script. The verdict on each card is its chapter's rung log's own word, and where the
+       experiment's <code>eval.md</code> records a verdict too, the two are required to agree.</p>
+    <p class="q"><b>Computed here, while the page was being written:</b> the loop identity's
+       <code>372</code> checks, the object's census, and step 10's tetrahedron angles — those are not
+       quoted from anywhere, they are worked out and checked against the exact value.</p>
+    <p class="q"><b>Read from a committed file but not cross-checked:</b> the fitted exponents,
+       <code>R²</code> and margins in section 3's table. They come straight out of the run's own data
+       file and are rounded for reading, so the figure you see is a rendering of the file rather than a
+       quotation from it — change that file and this page will print the new number without complaint.
+       The miss percentages in section 4's open-swing table are arithmetic on the two columns beside
+       them.</p>
+    <p class="q"><b>And everything else here is prose.</b> Every framing question, every grey line
+       explaining what a control means, every word of the table in section 5 — written by a person,
+       checked by nobody. What a program does guarantee is narrower than this page could have claimed
+       and easier to act on: the quoted figures are the record's own, the links all resolve, and the
+       commands above let you go past the page entirely.</p>
+  </section>
+
+  <div class="cap" id="cap"></div>
+</div>
+<script>
+const D = {"bench":{"bench_readme_href":"../lab/discovery-bench/README.md","closer_href":"../lab/discovery-bench/figures/closer.html","dashboard_href":"../lab/discovery-bench/figures/dashboard.html","laws":[{"arm":"direction [100] — one of the five swept","exponent":"0.9837","law":"ω ∝ k","margin":"0.2415","r2":"0.9999","target":"1","what":"how fast the ring travels"},{"arm":"row monopole_mid — the mid-distance shells","exponent":"−2.014","law":"|E| ∝ r⁻²","margin":"0.2394","r2":"0.9999","target":"−2","what":"the field around one charge"},{"arm":"row classical_early — the first few ticks","exponent":"1.0000","law":"⟨Δx²⟩ ∝ t","margin":"0.2500","r2":"1.000","target":"1","what":"a blob spreading out"},{"arm":"the machine checking itself","exponent":"−2.500","law":"y = 3x⁻²","margin":null,"r2":"1.000","target":"−2","what":"a made-up law, no lattice involved"}],"limits":[{"literature":"0.63","measured":"0.7659","pct":"+21.6%","quantity":"nu"},{"literature":"0.326","measured":"0.3719","pct":"+14.1%","quantity":"beta_via_nu"},{"literature":"1.237","measured":"1.5528","pct":"+25.5%","quantity":"gamma_via_nu"}],"n_replica_rows":4,"worst_z":"-1.97","worst_z_name":"beta"},"commit":"c3eb8be","honesty":{"bottom_line":["- <b>The toy is accurate.</b> It reproduces a wide span of known physics — isotropy, the energy conditions, the Casimir law, the magnetic-mirror loss cone, diffraction — all <b>parameter-free and pre-registered</b>. Those are genuine (post)dictions, not fits. That is the \"accurate toy\" half earned. - <b>The graduation swing has landed (rung 5.1).</b> A generic Monte Carlo with <b>no exact-solution content</b> predicted the <b>3-D Ising exponents</b> (<code>β≈0.315, γ≈1.259</code>) — a model with <b>no closed-form solution</b> — matching the values <b>measured</b> at the real liquid–gas critical point and in uniaxial magnets (<code>β≈0.325, γ≈1.24</code>) to a few percent, after the same pipeline reproduced the 2-D exponents <i>exactly</i> as a blind validation. This is the project's first <b>genuine parameter-free prediction of a measured number of nature obtained without the answer</b> — the door is walked through, for the Ising class. - <b>Honest boundary.</b> This is <i>universality-class membership</i> of a <b>toy</b> Ising model, computed by MC — not a claim about the warp/DEC engine or spacetime, and with stated caveats (small-<code>L</code> corrections bias the 3-D estimate ~few %; <code>T_c</code> and <code>ν</code> were supplied). Every other 🟢 still reproduces something already in the answer key; the 🔵 constants are mathematics. So: the toy has <i>demonstrated the capability to predict nature</i> on a real, measured, unsolved case — a decisive milestone — while remaining, in its warp ambitions, a firewalled toy. An accurate toy that has now shown it <i>can</i> predict. - <b>It is honest about the rest.</b> Nulls are first-class (3.4, the inertia half of 3.0); speculation is fenced (entropic inertia, the quantum-vacuum loophole); numerology is refused (α is not derivable here — hitting 137 would be curve-fitting, the one thing the firewall forbids)."],"graduation":["To stop being a toy, one 🟢 must point at a number <b>not already in the answer key</b> — a <b>dimensionless constant of nature</b> the toy outputs with zero tuning that then checks out against experiment. The chapter-5 arc did exactly this: <b>5.0</b> proved the vehicle (universality — the lattice reproduced the Ising set <code>c=½, ν=1, z=1</code>); <b>5.1</b> took the swing (a blind Monte Carlo on the <i>unsolved</i> 3-D Ising model returned the exponents measured at the real liquid–gas critical point and in uniaxial magnets); <b>5.2</b> made the pipeline <b>self-contained</b> (the Binder cumulant <i>locates</i> <code>T_c</code> and <i>measures</i> <code>ν</code> with nothing supplied but the model). So the criterion is <b>met for the Ising class</b>: a dimensionless number of nature, predicted parameter-free, without the answer key, end-to-end.","The one remaining composition is <b>compute-bound, not method-bound</b> — run the fully-blind pipeline (5.2) on the 3-D model (5.1), so the 3-D <code>T_c</code> and <code>ν</code> are measured too (3-D temperature scans are heavy; both pieces are already proven). <b>α remains the wrong target</b> (measured, no derivation); universality was the right one."],"limit_5_3":"full-blind pipeline on the <b>unsolved 3-D model</b>: <code>T_c=4.5099</code> (0.036%), <code>U*=0.484</code>, γ/ν, β/ν","limit_5_3_needle":"the bench states its own resolution limit","limit_5_3_why":"the composition lands — every number an output on a model with no answer key. And the <code>ν</code> estimator's L≤32 corrections bias was <b>pre-registered and confirmed</b> (0.766 &gt; 0.630): the bench states its own resolution limit","n_collapsed":12,"n_featured":5,"n_ledger":59,"n_live":13,"n_negatives":17,"n_resolving":2,"n_superseded":2,"negatives":[{"bucket":"🟥","featured":false,"kind":"live","other":null,"result":"chiral <code>[111]</code> screw's photon helicity split: <code>1.28e-6</code> on a genuine periodic Bloch chiral mesh — <b>≈4.4 decades tighter</b> than legacy lab/0140's own open-mesh floor <code>3.06e-2</code>, still no split","rung":"1.41"},{"bucket":"🟢 + 🟥","featured":false,"kind":"live","other":null,"result":"<b>the audit closes: certified, not corrected (#177).</b> Every committed rung standing on a periodic mesh is now classified, and the last uncertified row — #153 Stage 1's <code>uf_bloch_empty_lattice_gate</code>, which measured a linear isotropic light cone on a 12² triangle 2-torus with <b>raw glued-coordinate</b> stars — was re-measured on the identical bed with only the star inputs swapped. …","rung":"warp-1 1.8"},{"bucket":"🟢 + 🟥","featured":false,"kind":"live","other":null,"result":"shield <b>imbalance real</b> (interior coupling ×2e-6); <b>inertia unchanged</b>","rung":"3.0"},{"bucket":"🟥","featured":true,"kind":"live","other":null,"result":"\"4 orthogonal polarizations null a region\" is <b>false</b> (energies add)","rung":"3.4"},{"bucket":"⚪ + 🟥","featured":false,"kind":"live","other":null,"result":"the public demo's ~3.8× \"two-slit\" y-asymmetry is the <b>uniform mesh diagonal</b> (⋆=I/#23 family); …","rung":"3.5"},{"bucket":"🟢🎓 + 🟥","featured":false,"kind":"live","other":null,"result":"full-blind pipeline on the <b>unsolved 3-D model</b>: <code>T_c=4.5099</code> (0.036%), <code>U*=0.484</code>, γ/ν, β/ν","rung":"5.3"},{"bucket":"🟥","featured":false,"kind":"live","other":null,"result":"dna-thz dielectric shift law: Ω_peak ∝ ε_r^p, measured <b>p = −0.2753</b>; naive <b>p = −1/2 falsified</b>","rung":"6.1"},{"bucket":"🔵 + 🟥","featured":false,"kind":"live","other":null,"result":"von Neumann <b>spectral-entropy defect</b> of the stella tet-oct graph: <b>σ_stella = lim(S − ln N) = −0.0439377153</b> (ρ = L/tr L; …","rung":"7.1"},{"bucket":"🟥 + 🔵","featured":false,"kind":"live","other":null,"result":"<b>sharpening z — a first-class NEGATIVE</b>: isotropic singularity-subtraction (simple-cubic reference) does NOT accelerate z's convergence (fast error-ratio 6.51 ≈ raw 6.53, both ~1/M^2.7) — because the <b>acoustic band is anisotropic</b> (<code>c²[111]=4/3</code>, <code>c²[100]≈3.78</code>, ratio ~1/3, the #23 defect / 8.1 cone tensor). …","rung":"8.6"},{"bucket":"🔵 + 🟢 + 🟥","featured":true,"kind":"superseded","other":"warp-5 5.10","result":"percolation on the stella complex: <b>p_c(stella-site) = 0.17445(41)</b> — a NEW lattice constant, located blind by the wrapping crossing after the exact triangular key (1/2) and the published FCC key (0.1992365) were reproduced; <b>τ = 2.121, γ/ν = 2.143 in the 3-D percolation class</b> at the located threshold; the <b>d_f arm missed its registered band</b> (2.4378 vs 2.523 ± 0.06) — locked as a first-class negative with its measured diagnosis (∂d_f/∂p ≈ 117; d_f = 2.525 at the pre-registered constant)","rung":"5.6"},{"bucket":"🔵 + 🟢 + 🟥","featured":true,"kind":"superseded","other":"warp-5 5.9","result":"BOND percolation on the stella complex: <b>p_c(stella-bond) = 0.09964(31)</b> — a SECOND new lattice constant, located blind after the published FCC-bond key (0.1201635, two independent sources) was reproduced; below FCC-bond by 0.0201, as the superset graph must be; <b>τ = 2.150, γ/ν = 1.964 in the 3-D percolation class</b> at the located threshold. <code>d_f</code>'s locator-sensitivity was <b>pre-registered as a falsifiable two-arm design BEFORE the run</b> (issue #182 step 3, converting 5.6's post-hoc lock into an up-front prediction): both the located p_c and a differently-windowed pre-registered constant were predicted to miss the class band (bond's sensitivity ≈3× steeper than 5.6's site value), and both did, in their pre-registered bands (2.028 in [1.70,2.30]; 1.906 in [1.50,2.20]), with the measured sensitivity (338) landing in its pre-registered [150,600] range — no post-hoc rescue needed","rung":"5.7"},{"bucket":"⚪ + 🟢 + 🟥","featured":false,"kind":"live","other":null,"result":"lattice apsidal advance vs the continuum 2-D log potential (#254, from the <code>gen_mercury</code> demo): a test particle in the engine's own relaxed potential converges by N=80 to the quadrature answer key <b>Φ(f=1.15) = 127.0514°</b> (near-circular limit <b>π/√2</b>) <b>minus a pre-registered −0.30..−0.05° finite-domain offset</b> — measured <b>−0.145°</b>, mechanism confirmed (the l=4 square-boundary term, a₄/K = 0.9×10⁻²). Same mesh with ⋆=I: no convergence, 89° apsis scatter, elliptic equipotentials (the #23/#252 anisotropy as orbital mechanics). The #244 broken-integrator family posts an angle 1.5×10⁻⁵ ° off — indistinguishable — while failing the pre-registered energy check by 11 orders","rung":"1.42"},{"bucket":"⚪ + 🔵 + 🟥","featured":false,"kind":"live","other":null,"result":"mesh-native gates — the contraction bound to the STORE: the operator assembled from <code>d0_sparse</code> + the geometric stars equals the solver's own <code>compute_laplacian_0form</code> to <b>9e-16</b>, and the 8.12 identity holds on the engine's mesh in both metric arms (Strang 2.0000, R²=1.000000, Richardson 2.8e-13). …","rung":"8.13"},{"bucket":"⚪ + 🔵 + 🟥","featured":false,"kind":"live","other":null,"result":"the ⋆₂ positivity census + the photon-port question, both answered against the expected grain: the circumcentric ⋆₂ carries <b>NO negative weights</b> — its pathology is <b>exact degeneracy</b> (⋆₂ = 0 on the 252/432 faces containing a screw bond, because every octahedron-splitting tet has its screw bond as a circumsphere <b>diameter</b>: circumradius exactly 1, circumcenter exactly the bond midpoint — Thales in 3D, verified on every splitter); the fully-diagonal DEC photon pencil breaks <b>twice</b> (its mass ⋆₁ is indefinite, 108 negatives; its curl term is blind to the 432 zero faces — 30/30 lowest ω² &lt; 1e-9, a spurious null space); and <b>8.14's mirrored repair does NOT port to 1-forms</b>: every second-moment tensor is <i>exactly</i> isotropic (T₁(cotan)=T₁(mirror)=T₂(FCC)=216·I, T₂(screw)=144·I — the algebra that derived the scalar repair is blind here; the obstruction is optical-mode relaxation), yet the tensor-balanced positive family (mirror ⋆₁ mass, screw fill f) has <b>leading-order</b> cone anisotropy (k-halving ratio 0.98, vs the exact Nédélec+Whitney reference's quartic 0.25) converging as <b>f²</b> (6.80e-3 → 1.63e-3 → 4.32e-4) — asymptotically exact as f→0⁺, exact for NO member, with f=0 the degenerate collapse. At 1-forms, FEM-ness buys the cone. Scope registered up front: four mass patterns probed (non-mirror ones 10–60× worse); not a proof over all diagonal pairs","rung":"8.15"},{"bucket":"🔵 + 🟥","featured":false,"kind":"live","other":null,"result":"the closed form of y* — a mixed verdict, both halves exact: (a) <b>bounded negative</b> — 8.16's repair coordinates, refined to <b>30 digits</b> by double-double Newton on the exact-rational pencil (QᵀSQ = 216·I to 2e-32; …","rung":"8.17"},{"bucket":"🟥→ resolved + 🔵 + ⚪","featured":true,"kind":"resolving","other":"5.7","result":"<b>reprocessing a registered negative, and finding the mistake was ours</b>: rung 5.7's bond <code>d_f</code> miss (0.495 from the class value 2.52295) <b>dissolves into the locator</b>. Re-analysing 5.7's own committed curves with 5.8's crossing-drift estimator moves the stella-bond locator to <code>0.100648 ± 0.000518</code> (the fit's OLS intercept standard error, added to <code>kinematics</code> by this rung) and <code>d_f</code> there to <b>2.37985 ± 0.01076</b> — 71% of the miss closed, <b>0.81σ</b> from the class value once the locator's error is propagated through the <i>measured</i> <code>∂d_f/∂p = 340.1</code>. Zero-location-error control: at the <b>published</b> FCC-bond threshold the same code returns <code>d_f = 2.51943</code> (0.0035 from the class, 141× smaller than 5.7's miss). Three estimator mistakes measured and gated: (1) a <code>w</code>-scan spread is <b>not</b> the locator's error bar (real error 1.10× the OLS se but 6.09× the spread, on the answer key); …","rung":"warp-5 5.9"},{"bucket":"🟥→ resolved + ⚪ + 🔵","featured":true,"kind":"resolving","other":"5.6","result":"<b>both percolation negatives in this chapter were the same mistake, and this one was inside an error bar the rung had already published</b>: rung 5.6's site <code>d_f</code> miss dissolves, ordering-robustly. 5.6's own quoted locator error <code>±0.000410</code>, propagated through the <code>∂d_f/∂p ≈ 117</code> measured <i>in 5.6's own eval</i>, is <code>±0.0478</code> — 80% of the <code>±0.06</code> band 5.6 registered — so the class value sits inside at <b>z = 1.69 at 5.6's own threshold</b>, with no new estimator involved. At 5.8's locator (<code>0.174911 ± 0.000514</code>) <code>d_f = 2.49050 ± 0.02197</code>, <b>z = 0.52</b>, inside 5.6's own band. The verdict is registered at <b>all three</b> candidate locators (z = 1.69/1.73/0.52), so unlike 5.9 it cannot hinge on the estimator-ordering fork. …","rung":"warp-5 5.10"}],"predictions_href":"../PREDICTIONS.md","reconcile":{"limit_5_3":"0.766 &gt; 0.630","measured_5_1":"β≈0.315, γ≈1.259","nature_5_1":"β≈0.325, γ≈1.24","supplied_5_1":"<code>T_c</code>, <code>ν</code> supplied"}},"licences":[{"certifies":"the light cone is linear and direction-independent in the k→0 limit, with a broken-metric control that comes back anisotropic","gate":"uf1_7_dispersion_isotropy_gate.rs","gate_href":"../core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs","licenses":"propagation studies on this complex may be pursued — anything that assumes a well-posed lattice cone","verdict":"CONFIRMED (P0–P4, first run)"},{"certifies":"the evolved vector photon conserves its ⋆-energy and keeps it non-negative","gate":"uf2_5_evolved_photon_gate.rs","gate_href":"../core/uniforge/tests/uf2_5_evolved_photon_gate.rs","licenses":"radiating-structure work on the 1-form sector may be pursued (the antenna track, epic #65)","verdict":"CONFIRMED (R10)"},{"certifies":"one reusable fitter recovers a law it was handed with no answer attached, including on a synthetic control","gate":"uf4_automated_bench_gate.rs","gate_href":"../core/uniforge/tests/uf4_automated_bench_gate.rs","licenses":"blind law-finding on new lattice data may be pursued (the Discovery Bench, #46)","verdict":"CONFIRMED (R10)"},{"certifies":"the empty-lattice control: computed bands fold onto the torus's own exact free spectrum","gate":"uf9_0_empty_lattice_bands_gate.rs","gate_href":"../core/uniforge/tests/uf9_0_empty_lattice_bands_gate.rs","licenses":"a dielectric-decorated band map may be attempted against this control (#150) — no photonic-crystal claim is licensed yet","verdict":"CONFIRMED"},{"certifies":"the Dirichlet-to-Neumann map reproduces the bulk from the boundary, and recovers an interior conductance from boundary data","gate":"uf8_8_holographic_dtn_gate.rs","gate_href":"../core/uniforge/tests/uf8_8_holographic_dtn_gate.rs","licenses":"inverse-problem / impedance-tomography experiments on this complex may be pursued","verdict":"CONFIRMED"},{"certifies":"a threshold located blind after two published answer keys were reproduced. Its d_f arm was registered as a negative; rung 5.10's gate later traced that miss to the locator's own unpropagated error, so the null is upgraded rather than retracted","gate":"uf5_6_stella_percolation_gate.rs","gate_href":"../core/uniforge/tests/uf5_6_stella_percolation_gate.rs","licenses":"disordered-media class studies on this complex may be pursued <b>only with the locator's error propagated</b> — which is what 5.9/5.10 measured, and the reason this row's licence is narrower than its headline","verdict":"CONFIRMED (P0–P2) + R5 NEGATIVE on the d_f arm, locked"},{"certifies":"that a class exponent measured at a <i>located</i> threshold inherits the locator's error, verified against an exactly-known key and a published one (zero location error at both ends)","gate":"uf5_10_site_locator_reprocess_gate.rs","gate_href":"../core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs","licenses":"re-analysis of an already-registered negative may be pursued — the estimator, not the lattice, is the first suspect. It licenses no new claim about any threshold","verdict":"CONFIRMED"},{"certifies":"the measured shift-law exponent, and the falsification of the naive uniform-medium value","gate":"uf6_1_thz_shift_law_gate.rs","gate_href":"../core/uniforge/tests/uf6_1_thz_shift_law_gate.rs","licenses":"nothing. A negative licenses no application: this row exists so the table cannot be read as a menu of successes","verdict":"NEGATIVE"},{"certifies":"G2, the FDTD speed benchmark — DROPPED by owner decision (2026-07-06, recorded on #64): the engine's thesis is accuracy, not speed","gate":null,"gate_href":null,"licenses":"nothing, and deliberately so. No gate measures speed, so no \"faster\" claim is licensed. The row is kept rather than deleted — the lane's history is the point","verdict":null}],"object":{"diagram":{"corners":[{"label":"(0,0,0)","parity":0,"x":0.0,"y":0.0},{"label":"(0,0,1)","parity":1,"x":0.45,"y":0.3},{"label":"(0,1,0)","parity":1,"x":0.0,"y":1.0},{"label":"(0,1,1)","parity":0,"x":0.45,"y":1.3},{"label":"(1,0,0)","parity":1,"x":1.0,"y":0.0},{"label":"(1,0,1)","parity":0,"x":1.45,"y":0.3},{"label":"(1,1,0)","parity":0,"x":1.0,"y":1.0},{"label":"(1,1,1)","parity":1,"x":1.45,"y":1.3}],"tets":[{"edges":[[0,3],[0,5],[0,6],[3,5],[3,6],[5,6]],"family":"even-parity family","parity":0},{"edges":[[1,2],[1,4],[1,7],[2,4],[2,7],[4,7]],"family":"odd-parity family","parity":1}]},"mesh":{"active_vertices":32,"builder":"geom::mesh_3d_chiral_tetoct(3, 3, 3, chiral_oct_screw111)","cells":43,"d2_pairs":372,"d2_worst":0,"edges":112,"faces":124,"vertices":64}},"ramp":{"arc":{"chapter_href":"../lab/bridge/README.md","entry_href":"../lab/bridge/0818-full-star-coopt","first":"bridge 8.13","gate_href":"../core/uniforge/tests/uf8_18_full_star_coopt_gate.rs","last":"bridge 8.18","price":"entropy cost of exact isotropy is 3.771e-5"},"choice":"the <b>stella-octangula</b> is a <i>choice of lattice</i>","holes":"Odd-sum points are octahedral-hole centres, NOT vertices.","honeycomb":"tetrahedral–octahedral (alternated cubic / FCC)","isotropy":{"figure_href":"../lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html","quote":"anisotropy 22.4% → 2.2%, ×10.2","rung":"warp-1 1.5"},"mirror":{"asymmetry":"~3.8×","demo_href":"./doubleslit.html","figure_href":"../lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html","repair":"the crossed-diagonal mesh repairs it to 5e-15","rung":"warp-3 3.5"},"rule":{"equation":"φ̈ = −c² Δ₀ φ","solver_href":"../core/solve/src/wave_solver.rs","stepper":"step_scalar_wave"},"tetra":{"around":"5.1043","dihedral":"70.5288","fit":5,"gap":"7.3561"},"two_sciences":{"ballistic":"p = 2.0000000","entry_href":"../lab/bridge/0819-diffusion-discovery","figure_href":"../lab/bridge/0819-diffusion-discovery/figures/diffusion.html","gate_href":"../core/uniforge/tests/uf8_19_diffusion_discovery_gate.rs","rung":"bridge 8.19","same":"same generator, same lattice, same start","spread":"p = 0.9999997","spread_law":"⟨Δx²⟩ ∝ t"},"watch":[{"href":"./doubleslit.html","label":"watch the rule run","note":"a poke, the rings, and two slits — the engine steps it, the browser only draws what it sends"},{"href":"./em.html","label":"the ring itself, round and lopsided","note":"the same rule as an expanding pulse, exported from the engine — the picture step 7 is about"}]},"sciences":[{"bucket_raw":"⚪ + 🟢 + 🟥","buckets":["⚪","🟢","🟥"],"caveat":"89° apsis scatter","chapter":"lab/warp-1-move","demo_href":"./mercury.html","demo_label":"the orbit, live","entry_href":"../lab/warp-1-move/0142-apsidal-advance","figure_href":"../lab/warp-1-move/0142-apsidal-advance/figures/apsidal.html","framing":"Let one speck fall around a heavy centre. Does its path close up the way textbook orbits do?","gate":"uf1_42_apsidal_advance_gate.rs","gate_href":"../core/uniforge/tests/uf1_42_apsidal_advance_gate.rs","headline":"Φ(f=1.15) = 127.0514°","log_rung":"1.42","note":"The 89° is the <b>control</b>, not the result. Run the same orbit on the same lattice with the dial set naively and it stops settling down: the point where the orbit turns around wanders, instead of creeping forward by the same small amount every lap. That arm was written down in advance as the one that should fail, and it failed. The result is the steady number above it.","rung":"1.42","rung_label":"warp-1 1.42","science":"Mechanics — orbits","verdict":"CONFIRMED (P0–P3, first run)"},{"bucket_raw":"🟢 + ⚪","buckets":["🟢","⚪"],"caveat":"33.2%","chapter":"lab/warp-1-move","demo_href":"./em.html","demo_label":"round vs lopsided cone","entry_href":"../lab/warp-1-move/0117-dispersion-isotropy","figure_href":"../lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html","framing":"Hand the machine nothing but the ring's size and its timing. Does it work out the speed by itself — and get the same speed every way it looks?","gate":"uf1_7_dispersion_isotropy_gate.rs","gate_href":"../core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs","headline":"p = 1.00 ± 0.016","log_rung":"1.7","note":"33.2% is how much the ring's speed varies with direction when the dial is set naively — and here is the part that decides it: <b>that gap does not close</b> as you use bigger, gentler ripples. With the dial set from the geometry, it does. One of those is a real defect and the other is just a coarse lattice, and that is the test that tells them apart.","rung":"warp-1 1.7","rung_label":"warp-1 1.7","science":"Wave mechanics — the light cone","verdict":"CONFIRMED (P0–P4, first run)"},{"bucket_raw":"🟢","buckets":["🟢"],"caveat":"visibility ≥ 0.97","chapter":"lab/warp-3-shield","demo_href":"./doubleslit.html","demo_label":"the slit, live","entry_href":"../lab/warp-3-shield/0306-live-double-slit","figure_href":"../lab/warp-3-shield/0306-live-double-slit/figures/live_double_slit.html","framing":"Send the ripple through two gaps. Do the bright bands land where two overlapping rings say they must?","gate":"uf3_6_live_double_slit_gate.rs","gate_href":"../core/uniforge/tests/uf3_6_live_double_slit_gate.rs","headline":"0.49–6.53%","log_rung":"3.6","note":null,"rung":"3.6","rung_label":"warp-3 3.6","science":"Wave optics — diffraction","verdict":"CONFIRMED (R10)"},{"bucket_raw":"🟢 + ⚪","buckets":["🟢","⚪"],"caveat":"0.72%","chapter":"lab/warp-2-energy","demo_href":"./afeb.html","demo_label":"A → F → E/B","entry_href":"../lab/warp-2-energy/0210-coulomb-discovery","figure_href":"../lab/warp-2-energy/0210-coulomb-discovery/figures/coulomb.html","framing":"Put one charge in a grounded box and solve. Nobody typed in an inverse-square law — so what law comes back out?","gate":"uf2_10_coulomb_discovery_gate.rs","gate_href":"../core/uniforge/tests/uf2_10_coulomb_discovery_gate.rs","headline":"4πC = 4.024926","log_rung":"2.10","note":null,"rung":"warp-2 2.10","rung_label":"warp-2 2.10","science":"Electromagnetism — electrostatics","verdict":"CONFIRMED (P0–P4, first run)"},{"bucket_raw":"🟢","buckets":["🟢"],"caveat":"0.07%","chapter":"lab/warp-4-vacuum","demo_href":null,"demo_label":null,"entry_href":"../lab/warp-4-vacuum/0400-casimir-negative-energy","figure_href":"../lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html","framing":"Squeeze the empty lattice between two plates. Does the energy go negative, and by exactly how much?","gate":"uf4_casimir_energy_gate.rs","gate_href":"../core/uniforge/tests/uf4_casimir_energy_gate.rs","headline":"−π/24","log_rung":"4.0","note":null,"rung":"4.0","rung_label":"warp-4 4.0","science":"Quantum vacuum","verdict":"CONFIRMED (R10)"},{"bucket_raw":"🟢🎓 + 🟥","buckets":["🟢","🎓","🟥"],"caveat":"0.766 &gt; 0.630","chapter":"lab/warp-5-universality","demo_href":null,"demo_label":null,"entry_href":"../lab/warp-5-universality/0503-blind-3d","figure_href":"../lab/warp-5-universality/0502-self-contained/figures/selfcontained.html","framing":"Point the whole blind pipeline at a problem nobody has solved on paper. What can it resolve, and where does it run out?","gate":"uf5_3_blind3d_gate.rs","gate_href":"../core/uniforge/tests/uf5_3_blind3d_gate.rs","headline":"T_c=4.5099","log_rung":"5.3","note":"The second line is a <b>limit this run published about itself before it ran</b> — and then hit. At the lattice sizes it could afford, this quantity was expected to come out too high, and it did. Announcing your own ceiling in advance is a different act from explaining a miss afterwards.","rung":"5.3","rung_label":"warp-5 5.3","science":"Statistical mechanics — criticality","verdict":"CONFIRMED (R10)"},{"bucket_raw":"⚪ + 🔵","buckets":["⚪","🔵"],"caveat":"7.2%/14.7%","chapter":"lab/photonic-bands","demo_href":null,"demo_label":null,"entry_href":"../lab/photonic-bands/0900-empty-lattice-bands","figure_href":"../lab/photonic-bands/0900-empty-lattice-bands/figures/bands.html","framing":"Wrap the lattice into a doughnut, where the allowed frequencies are known exactly in advance. Do the computed ones land on them?","gate":"uf9_0_empty_lattice_bands_gate.rs","gate_href":"../core/uniforge/tests/uf9_0_empty_lattice_bands_gate.rs","headline":"ω²=|k+G|²","log_rung":"9.0","note":"The two numbers are <b>worst-case gaps</b>, one per lattice: the furthest any computed frequency sits from the value known exactly in advance. They are the lattice's own coarseness bending the answer at short wavelengths — the same bend measured on purpose elsewhere on this page — not a flaw in the match.","rung":"photonic-bands 9.0","rung_label":"photonic-bands 9.0","science":"Solid state — photonic bands","verdict":"CONFIRMED"},{"bucket_raw":"⚪","buckets":["⚪"],"caveat":"compression 27→9","chapter":"lab/bridge","demo_href":null,"demo_label":null,"entry_href":"../lab/bridge/0808-holographic-dtn","figure_href":"../lab/bridge/0808-holographic-dtn/figures/holographic_dtn.html","framing":"Measure only at the edges of a block. Can you work out what the inside is made of, without looking?","gate":"uf8_8_holographic_dtn_gate.rs","gate_href":"../core/uniforge/tests/uf8_8_holographic_dtn_gate.rs","headline":"α=0.6 to 5e-15","log_rung":"8.8","note":null,"rung":"8.8","rung_label":"bridge 8.8","science":"Inverse problems — tomography","verdict":"CONFIRMED"},{"bucket_raw":"🟢 + ⚪","buckets":["🟢","⚪"],"caveat":"p = 2.0000000","chapter":"lab/bridge","demo_href":null,"demo_label":null,"entry_href":"../lab/bridge/0819-diffusion-discovery","figure_href":"../lab/bridge/0819-diffusion-discovery/figures/diffusion.html","framing":"Two blobs spread from the same rule — one leaking, one not. Told nothing about which, can the machine tell them apart?","gate":"uf8_19_diffusion_discovery_gate.rs","gate_href":"../core/uniforge/tests/uf8_19_diffusion_discovery_gate.rs","headline":"p = 0.9999997","log_rung":"8.19","note":"The second number is the <b>control coming back with a different right answer</b>. One small change turns the spreading blob into a travelling one, and the machine — told nothing about which it is looking at — returns the other law instead of repeating the one it just found.","rung":"bridge 8.19","rung_label":"bridge 8.19","science":"Information — walks on the graph","verdict":"CONFIRMED (P0–P4, first run)"},{"bucket_raw":"🔵","buckets":["🔵"],"caveat":"err 6e-12","chapter":"lab/lattice-constants","demo_href":null,"demo_label":null,"entry_href":"../lab/lattice-constants/0700-watson-constant","figure_href":"../lab/lattice-constants/0700-watson-constant/figures/watson.html","framing":"Recompute a number someone published to twelve digits. Match it, then compute this lattice's own.","gate":"uf7_0_watson_gate.rs","gate_href":"../core/uniforge/tests/uf7_0_watson_gate.rs","headline":"G = 1.302310014103","log_rung":"7.0","note":null,"rung":"7.0","rung_label":"lattice-constants 7.0","science":"Exact constants — lattice sums","verdict":"CONFIRMED"},{"bucket_raw":"🟥","buckets":["🟥"],"caveat":"unique continuation forbids a free-space volume null","chapter":"lab/warp-3-shield","demo_href":null,"demo_label":null,"entry_href":"../lab/warp-3-shield/0304-four-source-null","figure_href":"../lab/warp-3-shield/0304-four-source-null/figures/null.html","framing":"Can four carefully aimed sources cancel out and leave a patch of nothing? A hunch, tested until it broke.","gate":"uf3_4_four_source_null_gate.rs","gate_href":"../core/uniforge/tests/uf3_4_four_source_null_gate.rs","headline":"is <b>false</b> (energies add)","log_rung":"3.4","note":null,"rung":"3.4","rung_label":"warp-3 3.4","science":"Field engineering — the null that isn't","verdict":"CONFIRMED (R5/R10)"},{"bucket_raw":"🟥","buckets":["🟥"],"caveat":"naive <b>p = −1/2 falsified</b>","chapter":"lab/dna-thz","demo_href":null,"demo_label":null,"entry_href":"../lab/dna-thz/0001-dna-permittivity-shift-law","figure_href":"../lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html","framing":"Drop a small lump of different material in and shake the lattice. Does the tone shift by the amount the simple rule predicts?","gate":"uf6_1_thz_shift_law_gate.rs","gate_href":"../core/uniforge/tests/uf6_1_thz_shift_law_gate.rs","headline":"p = −0.2753","log_rung":"1","note":null,"rung":"6.1","rung_label":"dna-thz 6.1","science":"Materials — dielectric response","verdict":"NEGATIVE"}],"skeptic":{"data_dir":"lab/warp-1-move/0117-dispersion-isotropy/data","demos_href":"../docs/DEMOS.md","gate_href":"../core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs","rewrites":["dispersion_directions.csv","discovery.csv","candidates.csv","isotropy.csv","answer_key.csv"],"steps":[{"cmds":["cd core","cargo test -p uniforge --release --test uf1_7_dispersion_isotropy_gate -- --nocapture"],"expect":"it narrates what it finds as it goes, and rewrites every file listed below","title":"Re-run a gate for record","why":"Not a quick check — this is the full experiment, at full size, and it overwrites the very files the map and the bench strip above quote."},{"cmds":["cd ..","git status --porcelain lab/"],"expect":"prints nothing at all — byte-for-byte the same files that were committed","title":"Check that nothing moved","why":"The run just rebuilt committed data from nothing. If any number on this page had been tuned, nudged, or typed in by hand, this is where it shows up."},{"cmds":["cargo build --release -p uniforge --features server --bin serve","python3 -m http.server 8080"],"expect":"open localhost:8080/viz/synthesis.html — every link on this page resolves, and the live demos find the engine on port 4100","title":"Walk the pages the way a visitor does","why":"This page links out of its own folder into the experiments and the test files, so point the server at the top of the repo, not at the page's folder."}]},"sources":["PREDICTIONS.md","lab/*/README.md (each chapter's rung log)","lab/*/*/eval.md (the Verdict line — cross-checked against the rung log)","docs/DEMOS.md (the rehearsed commands in section 6)","lab/warp-1-move/0117-dispersion-isotropy/data/discovery.csv","lab/warp-2-energy/0210-coulomb-discovery/data/discovery.csv","lab/bridge/0819-diffusion-discovery/data/discovery.csv","lab/warp-4-vacuum/0402-automated-bench/data/fits.csv","lab/warp-5-universality/0505-error-bars/data/errorbars.csv","lab/warp-5-universality/0503-blind-3d/data/results.csv"]};
+const esc = s => String(s == null ? "" : s);
+
+/* ---- 1 · the object ---------------------------------------------------------------------- */
+(function(){
+  const d = D.object.diagram, S = document.getElementById("stella");
+  const xs = d.corners.map(c=>c.x), ys = d.corners.map(c=>c.y);
+  const pad = 44, W = 300, H = 260;
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const k = Math.min((W-2*pad)/(x1-x0), (H-2*pad)/(y1-y0));
+  const px = c => pad + (c.x - x0)*k, py = c => H - pad - (c.y - y0)*k;
+  const col = ["#06b6d4","#eab308"];
+  let out = "";
+  d.tets.forEach(t => t.edges.forEach(([a,b]) => {
+    out += `<line x1="${px(d.corners[a]).toFixed(1)}" y1="${py(d.corners[a]).toFixed(1)}" `
+        +  `x2="${px(d.corners[b]).toFixed(1)}" y2="${py(d.corners[b]).toFixed(1)}" `
+        +  `stroke="${col[t.parity]}" stroke-width="1.5" stroke-opacity="0.85"/>`;
+  }));
+  d.corners.forEach(c => {
+    out += `<circle cx="${px(c).toFixed(1)}" cy="${py(c).toFixed(1)}" r="4.2" fill="${col[c.parity]}"/>`;
+    out += `<text x="${(px(c)+7).toFixed(1)}" y="${(py(c)+3.5).toFixed(1)}" font-size="8.5" `
+        +  `fill="#6b7c90" font-family="ui-monospace,monospace">${esc(c.label)}</text>`;
+  });
+  out += `<text x="14" y="20" font-size="10.5" fill="#06b6d4" font-family="system-ui">even parity</text>`;
+  out += `<text x="14" y="34" font-size="10.5" fill="#eab308" font-family="system-ui">odd parity</text>`;
+  out += `<text x="14" y="${H-12}" font-size="9.5" fill="#6b7c90" font-family="system-ui">`
+      +  `two regular tetrahedra · 6 edges each · no shared edge</text>`;
+  S.innerHTML = out;
+
+  const m = D.object.mesh;
+  document.getElementById("census").innerHTML =
+    [["vertices (active)", m.active_vertices],["edges", m.edges],["faces", m.faces],
+     ["tetrahedra", m.cells]]
+    .map(([l,v]) => `<div><b>${v}</b>${esc(l)}</div>`).join("");
+
+  const r = D.ramp;
+
+  /* beat 2's evidence, and only that: the loop identity, re-checked while this page was written. */
+  document.getElementById("loop").innerHTML =
+    `<b>Checked while this page was generated.</b> The complex was built here as `
+    + `<code>${esc(m.builder)}</code>, and every boundary walk in it was added up, at every point `
+    + `that walk touches — <b>${m.d2_pairs}</b> checks in all. Largest total that survived: `
+    + `<b>${m.d2_worst}</b>. Not "below tolerance" — <b>${m.d2_worst}</b>, as an integer.`;
+
+  /* beat 4: the one rule, named in the engine's own words. */
+  document.getElementById("rule-eq").innerHTML = `<code>${r.rule.equation}</code>`;
+  document.getElementById("rule-fn").innerHTML =
+    `<a href="${esc(r.rule.solver_href)}"><code>${r.rule.stepper}</code></a>`;
+
+  /* beat 5: the rule running, where the reader can watch it. */
+  document.getElementById("watch").innerHTML = r.watch.map(w =>
+    `<div class="d">
+       <div class="r">${esc(w.label)}</div>
+       <div class="q" style="font-size:12px;color:var(--mute)">${esc(w.note)}</div>
+       <a href="${esc(w.href)}">open the demo</a>
+     </div>`).join("");
+
+  /* beat 7: the dial, measured twice — both quotations, both with the figure that shows them. */
+  document.getElementById("dial").innerHTML =
+    `<div class="d">
+       <div class="r">turned on the light cone · ${esc(r.isotropy.rung)}</div>
+       <div class="q">${r.isotropy.quote}</div>
+       <a href="${esc(r.isotropy.figure_href)}">the two cones, drawn from the run</a>
+     </div>
+     <div class="d">
+       <div class="r">found in a live demo · ${esc(r.mirror.rung)}</div>
+       <div class="q">a ${r.mirror.asymmetry} left/right brightness asymmetry in the double-slit
+          demo was the mesh, not the optics — ${r.mirror.repair}</div>
+       <a href="${esc(r.mirror.demo_href)}">the demo, with the before/after toggle</a>
+       <a href="${esc(r.mirror.figure_href)}">the repair, measured</a>
+     </div>`;
+
+  /* beat 7's forward clause: the arc that engineers the dial and prices what it costs. */
+  const arc = r.arc;
+  document.getElementById("arc").innerHTML =
+    `<a href="${esc(arc.chapter_href)}">${esc(arc.first)} through ${esc(arc.last)}</a> engineer the `
+    + `<code>⋆</code> deliberately and measure what each choice costs — in isotropy, in positivity, `
+    + `in entropy. The last rung of that arc puts a number on one of the trades: the `
+    + `<b>${arc.price}</b> `
+    + `(<a href="${esc(arc.entry_href)}">the entry</a> · <a href="${esc(arc.gate_href)}">its gate</a>).`;
+
+  /* beat 8: the finished ladder, one rung per degree. */
+  document.getElementById("chain").innerHTML =
+    `<b>point</b> <code>—d₀→</code> <b>line (the potential <code>A</code>)</b> `
+    + `<code>—d₁→</code> <b>patch (the field <code>F = dA</code>)</b> <code>—d₂→</code> `
+    + `<b>volume</b>. Each arrow is "walk the boundary and add up", and step 2 is the statement `
+    + `that doing it twice in a row always gives nothing.`;
+
+  /* beat 10: the packing gap, measured on the tetrahedron this page draws. */
+  const t = r.tetra;
+  document.getElementById("gap").innerHTML =
+    `<div class="g1"><b>${esc(t.dihedral)}°</b><span>the angle between two faces of this
+       tetrahedron, meeting along one edge</span></div>
+     <div class="g1"><b>${esc(t.around)}</b><span>copies of it needed to close a full turn (360°)
+       around that edge — not a whole number</span></div>
+     <div class="g1"><b>${esc(t.gap)}°</b><span>left over once ${t.fit} are packed in: the wedge
+       that cannot be filled by another one</span></div>`;
+  document.getElementById("choice").innerHTML = r.choice;
+  document.getElementById("honeycomb").innerHTML = r.honeycomb;
+  document.getElementById("holes").innerHTML =
+    r.holes.replace(/\.$/, "").replace(/^Odd/, "odd");
+
+  /* beat 11: one object, two sciences — the page in miniature. */
+  const s2 = r.two_sciences;
+  document.getElementById("two").innerHTML =
+    `<div class="d">
+       <div class="r">let it leak — heat</div>
+       <div class="q">spread grows with the clock (${s2.spread_law}) — measured
+          <b>${s2.spread}</b></div>
+     </div>
+     <div class="d">
+       <div class="r">let nothing leak — the quantum walk</div>
+       <div class="q">spread grows with the clock <i>squared</i> — measured
+          <b>${s2.ballistic}</b></div>
+     </div>
+     <div class="d src">
+       <div class="r">${esc(s2.rung)} · ${s2.same}</div>
+       <a href="${esc(s2.figure_href)}">the figure</a>
+       <a href="${esc(s2.gate_href)}">the gate</a>
+       <a href="${esc(s2.entry_href)}">the lab entry</a>
+     </div>`;
+})();
+
+/* ---- 2 · the science map ------------------------------------------------------------------ */
+document.getElementById("map").innerHTML = D.sciences.map(s => {
+  const links = [];
+  if (s.figure_href) links.push(`<a href="${esc(s.figure_href)}">figure</a>`);
+  if (s.demo_href)   links.push(`<a href="${esc(s.demo_href)}">${esc(s.demo_label)}</a>`);
+  links.push(`<a href="${esc(s.gate_href)}">gate · ${esc(s.gate)}</a>`);
+  if (s.entry_href)  links.push(`<a href="${esc(s.entry_href)}">lab entry</a>`);
+  const neg = s.buckets.indexOf("🟥") >= 0 ? " neg" : "";
+  return `<div class="cell${neg}">
+    <div class="sci">${esc(s.science)}</div>
+    <div class="fra">${esc(s.framing)}</div>
+    <div class="num">${s.headline}</div>
+    <div class="cav">${s.caveat}</div>
+    ${s.note ? `<div class="nte">${s.note}</div>` : ""}
+    <div class="bk g">${s.bucket_raw}</div>
+    <div class="vd">${esc(s.rung_label)} — ${s.verdict}</div>
+    <div class="lk">${links.join("")}</div>
+  </div>`;
+}).join("");
+
+/* ---- 3 · the bench strip ------------------------------------------------------------------ */
+document.querySelector("#bench tbody").innerHTML = D.bench.laws.map(l =>
+  `<tr><td>${esc(l.what)}<div class="arm">${esc(l.arm)}</div></td>
+   <td class="l">${esc(l.law)}</td><td class="n">${esc(l.exponent)}</td>
+   <td class="t">${esc(l.r2)}</td><td class="t">${l.margin ? esc(l.margin) : "—"}</td>
+   <td class="t">${esc(l.target)}</td></tr>`).join("");
+
+document.getElementById("strip").innerHTML =
+  `<a href="${esc(D.bench.dashboard_href)}">
+     <div class="lab">the dashboard</div>
+     <div class="hd">Every law, one table</div>
+     <div class="p">The whole bench, not just the four rows above — including every arm that was
+        <i>supposed</i> to come back with a different answer, and did.</div></a>
+   <a href="${esc(D.bench.closer_href)}">
+     <div class="lab">the honesty panel</div>
+     <div class="hd">Worst miss: ${esc(D.bench.worst_z)} error bars (${esc(D.bench.worst_z_name)})</div>
+     <div class="p">${D.bench.n_replica_rows} answers the machine found blind, checked against values
+        known exactly on paper — the two-dimensional case, the one that has a closed-form solution.
+        Because one run proves nothing, the whole pipeline was re-run from scratch with fresh
+        randomness to see how far the answers wander. The number above is the furthest any of them
+        strayed, in units of its own error bar. The page also says where the method stops
+        working.</div></a>`;
+
+/* ---- 4 · the honesty row ------------------------------------------------------------------ */
+(function(){
+  const h = D.honesty;
+  let out = "";
+  out += `<div class="hon"><h3>Has it earned the right to be called more than a toy? — quoted from the ledger</h3>`
+       + `<p>The bar the project set for itself, years before it could reach it: <b>compute a number
+          nobody fed you, and have it agree with a number measured in the real world.</b> Reproducing
+          something already in the textbook does not count — you could have looked it up. Below is the
+          project's own standing answer on whether it has cleared that bar, <b>in its own words and
+          unedited</b>. It is dense; the plain-words version is the paragraph after it.</p>`
+       + h.graduation.map(p => `<p>${p}</p>`).join("")
+       + `<p style="color:var(--faint)"><b>Read this next to the table two panels down, not instead
+          of it.</b> Those two look like they contradict each other, and they do not — here is why,
+          because a reader who spots it deserves the answer rather than the benefit of the doubt.
+          The swing just described got ${h.reconcile.measured_5_1} where nature measures
+          ${h.reconcile.nature_5_1} — close. But it was handed the hardest ingredient
+          (${h.reconcile.supplied_5_1}), so that part was an input, not a result. A later run
+          measured that ingredient itself, from scratch, and it is the one quantity this lattice was
+          too small to pin down — a limit written down <i>before</i> the run and then hit exactly
+          (${h.reconcile.limit_5_3}). Every full answer built on top of it inherits that, which is
+          why the misses two panels down are fifths rather than percents. Neither result is being
+          withdrawn. Which one the record should finally stand on needs a bigger machine, and that
+          campaign is registered as #295.</p></div>`;
+  out += `<div class="hon"><h3>The limit that run wrote down about itself, before it ran</h3>`
+       + `<p>The run described above did the whole job with nothing supplied — and said in advance
+          which part of it the lattice was too small to get right. Its own row in the ledger,
+          unedited:</p>`
+       + `<p>${h.limit_5_3}</p><p><i>Why the ledger scores it that way:</i> ${h.limit_5_3_why}</p>`
+       + `<p style="color:var(--faint)">This is quoted because leaving it out is the easy thing to
+          do. A page that shows the blind three-dimensional result and quietly omits the limit that
+          same run registered against itself would be an advertisement, not a record.</p></div>`;
+  out += `<div class="hon"><h3>The open swing — issue #295</h3>`
+       + `<p>The obvious closing figure for this whole project would be "here is a number we
+          computed, and here is the same number measured in a real material". <b>It cannot honestly be
+          built from what is committed.</b> The three-dimensional answers in the repo miss the
+          published values by the amounts below, and the only error bars measured by re-running from
+          scratch are for the two-dimensional case. So the figure was <b>not made</b>. Presenting a
+          miss as a match is the one thing that would cost this record everything it has; the work
+          that would earn the figure properly is registered as #295.</p>`
+       + `<table><thead><tr><th>quantity</th><th>measured (rung 5.3)</th><th>its own literature column</th><th>miss</th></tr></thead><tbody>`
+       + h_limits() + `</tbody></table></div>`;
+  out += `<div class="hon"><h3>Negatives — ${h.n_negatives} of the ledger's ${h.n_ledger} rows carry a 🟥</h3>`
+       + `<p>That count is not a boast and not an apology — it is counted off the ledger by the
+          program that builds this page. A guess the lattice <i>kills</i> is a result: it closes a
+          question, and closing a question is the job. So the negatives are listed at the same size as
+          everything else on this page.</p>`
+       + `<p><b>Not all ${h.n_negatives} are live nulls, and the page will not pretend otherwise.</b>
+          They come in three kinds, and flattening them would misreport the record in both
+          directions.
+          <b style="color:#fca5a5">${h.n_live} live</b> — the answer came back no, and it still is no.
+          <b style="color:var(--gold)">${h.n_superseded} superseded</b> — still no, and <i>not</i>
+          withdrawn: every bound written down in advance held. What changed is the diagnosis. A later
+          experiment showed the thing being measured was our own measuring tool, not the lattice —
+          which is worth knowing, and is written into the ledger rather than quietly fixed.
+          <b style="color:var(--green)">${h.n_resolving} resolving</b> — the later experiments that
+          did that work. They register no failure of their own, so counting them as failures would
+          score a repair as a defect. Which row repairs which is read out of the ledger — each
+          repairing row names the one it upgrades — not decided here.</p>`
+       + `<p style="color:var(--faint)">Quoted at length below: the ${h.n_featured} rows where the
+          distinction is easiest to get wrong — both halves of each superseded/resolving pair, plus
+          the plainest live null. The other ${h.n_collapsed} are one click away. Every quotation ends
+          where the ledger ended a sentence, never mid-clause; the rows themselves, entire, are in
+          <a href="${esc(h.predictions_href)}">PREDICTIONS.md</a>.</p>`
+       + `<ul class="negs">` + h.negatives.filter(n => n.featured).map(neg).join("") + `</ul>`
+       + `<details class="more"><summary>the remaining ${h.n_collapsed} 🟥 rows</summary>`
+       + `<ul class="negs">` + h.negatives.filter(n => !n.featured).map(neg).join("") + `</ul>`
+       + `</details></div>`;
+  out += `<div class="hon"><h3>Two things this page cannot tell you</h3>`
+       + `<p><b>Which experiment a bare number means.</b> Rung numbers repeat across chapters, so
+          <code>6.1</code> on its own is ambiguous — which is why every label on this page carries its
+          chapter in front of it (<code>dna-thz 6.1</code>). The 🟥 rows just above are the one place
+          you will see a bare number, and deliberately: those lines are the ledger's own text, quoted
+          exactly as written. Tracked as issue #278.</p>`
+       + `<p><b>Whether the tests are passing right now.</b> Every test linked from here was checked
+          to exist when this page was built, and every verdict shown is the one recorded when that
+          experiment was run and committed. But a page sitting still on a disk cannot know what
+          happened on the build server this morning. That is not a gap you have to take on trust:
+          the last section of this page, <b>the skeptic's test</b>, is the version of it you run
+          yourself.</p></div>`;
+  document.getElementById("honesty").innerHTML = out;
+
+  function neg(n){
+    const tag = n.kind === "live"
+      ? `<span style="color:#fca5a5">live</span>`
+      : n.kind === "superseded"
+        ? `<span style="color:var(--gold)">superseded by ${esc(n.other)}</span>`
+        : `<span style="color:var(--green)">resolves ${esc(n.other)}</span>`;
+    return `<li><b>${esc(n.rung)}</b> ${n.bucket} · ${tag} — ${n.result}</li>`;
+  }
+
+  function h_limits(){
+    return D.bench.limits.map(l =>
+      `<tr><td class="l">${esc(l.quantity)}</td><td class="n">${esc(l.measured)}</td>
+       <td class="t">${esc(l.literature)}</td><td class="miss">${esc(l.pct)}</td></tr>`).join("");
+  }
+})();
+
+/* ---- 5 · the subjunctive table ------------------------------------------------------------ */
+document.querySelector("#subj tbody").innerHTML = D.licences.map(l => {
+  const none = /^nothing/.test(l.licenses.replace(/<[^>]*>/g, "")) ? " none" : "";
+  const gate = l.gate_href
+    ? `<a href="${esc(l.gate_href)}"><code>${esc(l.gate)}</code></a>`
+      + (l.verdict ? `<div style="color:var(--faint);font-size:11px;margin-top:3px">${l.verdict}</div>` : "")
+    : `<span style="color:var(--faint)">— no gate —</span>`;
+  return `<tr class="${none.trim()}"><td>${gate}</td><td class="if">IF green: ${l.certifies}</td>
+          <td class="then">THEN ${l.licenses}</td></tr>`;
+}).join("");
+
+/* ---- 6 · the skeptic's test ---------------------------------------------------------------- */
+(function(){
+  const k = D.skeptic;
+  document.getElementById("skeptic").innerHTML =
+    k.steps.map((s, i) => `
+      <div class="step">
+        <div class="bn">${i+1}</div>
+        <div class="bt">
+          <h3>${esc(s.title)}</h3>
+          <p>${esc(s.why)}</p>
+          <pre>${s.cmds.map(c => esc(c)).join("\n")}</pre>
+          <p class="exp">→ ${esc(s.expect)}</p>
+          ${i === 0 ? `<p class="exp">rewrites, from the gate's own source: `
+            + k.rewrites.map(f => `<code>${esc(f)}</code>`).join(" · ")
+            + ` — all in <code>${esc(k.data_dir)}</code></p>` : ""}
+        </div>
+      </div>`).join("")
+    + `<div class="kfoot">The script this is quoted from is
+         <a href="${esc(k.demos_href)}">docs/DEMOS.md</a>, and the gate step 1 runs is
+         <a href="${esc(k.gate_href)}">uf1_7_dispersion_isotropy_gate.rs</a> — its own header states
+         the same command. Every other gate in the repo re-runs the same way.</div>`;
+})();
+
+/* ---- provenance ---------------------------------------------------------------------------- */
+document.getElementById("cap").innerHTML =
+  `Generated by <code>core/viz gen_synthesis</code> at commit <code>${esc(D.commit)}</code>. `
+  + `Regenerate with <code>cd core &amp;&amp; cargo run -p viz --release --bin gen_synthesis -- "$(git rev-parse --short HEAD)"</code>. `
+  + `Parsed from: ` + D.sources.map(s => `<code>${esc(s)}</code>`).join(", ") + `. `
+  + `Nothing on this page is fetched over a network; it is one self-contained file. `
+  + `Issue numbers are written as plain text on purpose — this page links only to files inside the repo.`;
+</script>
+<script src="./nav.js"></script>
+</body>
+</html>
