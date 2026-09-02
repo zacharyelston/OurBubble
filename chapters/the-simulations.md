@@ -63,7 +63,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
@@ -78,7 +78,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
@@ -93,7 +93,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
@@ -120,7 +120,7 @@ All of it is computed and asserted by [`tools/octahedron.py`](../tools/octahedro
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
