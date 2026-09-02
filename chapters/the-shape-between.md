@@ -98,7 +98,7 @@ Now put numbers on its lines instead, the way you did on the tetrahedron.
 
 <!-- beat 40 -->
 
-Now walk the eight faces the way they face from outside, and add up what goes round each.
+Eight faces this time, and the same walk as before. What do they add up to?
 
 {{napkin:octa_face_sum}}
 

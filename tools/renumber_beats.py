@@ -26,7 +26,14 @@ Usage:
 write: the operator states what they believe the file contains, and a stale belief is refused. The
 refusal deliberately does not print the number that would unblock it.
 
-**What that does and does not buy, stated plainly.** It stops the realistic accident — the
+**The insertion window, because it is not obvious and it breaks the repository's own rule.** A
+first shift opens a hole on purpose — this tool prints it — and `tools/beat_coverage.py`, which runs
+in tier 0, refuses any hole in the numbering. So **from the shift until the new beat lines are typed
+into `OUTLINE.md`, tier 0 is red**, by design: an outline with a hole in it is a half-finished
+insertion. Do the two together, in one commit. And the way back out of a shift is `git checkout`,
+not this tool: it refuses to run on a tree that already has a hole, so it cannot undo its own shift.
+
+**What --expect-last does and does not buy, stated plainly.** It stops the realistic accident — the
 documented command re-run verbatim. It cannot distinguish a re-run from a *deliberate* second
 insertion at the same beat, because nothing in the file distinguishes them: both open a hole and
 move everything after it. Two things cover that instead. A tree with a hole already in it is

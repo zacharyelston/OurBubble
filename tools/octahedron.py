@@ -1831,8 +1831,10 @@ def stella_runaway(k: Fraction = BOOK_TICK) -> Dict[str, object]:
         "printable_rows": printable,
         "stable_tried": tuple(tried),
         "push_at_a_middle": push,
-        "example": {"k": example_k, "first_denominator": first_denominator,
-                    "second_denominator": second_denominator},
+        # The fifth-sized tick's denominators are asserted above and deliberately NOT returned. They
+        # were, and nothing rendered them — an assertion beside an unrendered value looks like cover
+        # for whatever a future caption does with it, which is the shape the caption defect had (a
+        # proofreader, 2026-09-02). The chapter states them in prose; this is where they are checked.
         "never_returns": True,
     }
 

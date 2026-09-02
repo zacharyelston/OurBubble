@@ -671,6 +671,34 @@ def fraction_text(value: Fraction) -> str:
     return text
 
 
+FRACTION_WORDS = {
+    Fraction(1, 2): "half",
+    Fraction(1, 3): "a third",
+    Fraction(2, 3): "two thirds",
+    Fraction(1, 4): "a quarter",
+    Fraction(1, 5): "a fifth",
+    Fraction(2, 5): "two fifths",
+    Fraction(1, 8): "an eighth",
+    Fraction(3, 2): "half again",
+}
+
+
+def fraction_words(value: Fraction) -> str:
+    """A small fraction in words — `an eighth`, `half` — derived, for prose that reads better so.
+
+    `fraction_text` gives `1/8`, which is right in a table cell and wrong in a sentence: making a
+    caption fidelity-checked turned "an eighth of it each … exactly half" into "1/8 … 1/2" four
+    lines above prose still saying "an eighth" (a proofreader, 2026-09-02). The same fact in two
+    registers is a stumble, and a caption is prose. The table keeps the digits; the caption gets the
+    words; both come from the same value.
+    """
+    assert value in FRACTION_WORDS, (
+        f"{value} has no worded form here — add it to FRACTION_WORDS rather than writing it out in "
+        f"a caption, or use fraction_text() and let the sentence carry the digits"
+    )
+    return FRACTION_WORDS[value]
+
+
 def _thousands(count: int) -> str:
     return f"{count:,}"
 
@@ -689,6 +717,27 @@ def word(count: int) -> str:
     """
     assert 0 <= count < len(SMALL_WORDS), f"{count} is not a small count"
     return SMALL_WORDS[count]
+
+
+def shows_each(name: str, fragment: str, pairs: Sequence[Tuple[str, Fraction]]) -> None:
+    """Every labelled cell in rendered text carries ITS OWN number, and the text carries no others.
+
+    `shows_exactly` compares a sorted multiset, so a permutation is invisible: swap two arrows
+    between lines and the same numbers are all still present (a proofreader, 2026-09-02). The page
+    then disagrees with itself between two adjacent tables — under a sentence inviting the reader to
+    check exactly that. So each cell is matched against the line it names.
+    """
+    for label, value in pairs:
+        cell = f"{label} **{number(value)}**"
+        assert cell in fragment, (
+            f"{name}: the rendered text does not carry {cell!r} — a number is against the wrong "
+            f"name, or was typed instead of taken from the data"
+        )
+    found = re.findall(r"\*\*(−?[\d.]+)\*\*", fragment)
+    assert len(found) == len(pairs), (
+        f"{name}: the rendered text shows {len(found)} emphasised numbers for {len(pairs)} pieces "
+        f"of data"
+    )
 
 
 def shows_exactly(name: str, fragment: str, expected: Sequence[Fraction]) -> None:
@@ -767,11 +816,11 @@ def octa_cut() -> str:
     return checked_block(
         "octa_cut", body,
         f"one tetrahedron cut at the middles of its six lines: the {word(cut['tips'])} tips are "
-        f"{fraction_text(cut['tip_share'])} of it each and the shape between them is exactly "
-        f"{fraction_text(cut['core_share'])}, so the {word(cut['tips'] + cut['octahedra'])} pieces "
+        f"{fraction_words(cut['tip_share'])} of it each and the shape between them is exactly "
+        f"{fraction_words(cut['core_share'])}, so the {word(cut['tips'] + cut['octahedra'])} pieces "
         f"account for all of it",
-        in_caption={"tip_share": fraction_text(cut["tip_share"]),
-                    "core_share": fraction_text(cut["core_share"]),
+        in_caption={"tip_share": fraction_words(cut["tip_share"]),
+                    "core_share": fraction_words(cut["core_share"]),
                     "tips": f"the {word(cut['tips'])} tips",
                     "pieces": f"the {word(cut['tips'] + cut['octahedra'])} pieces"},
         dots=f"**{cut['dots']}**", tips=f"**{cut['tips']}**",
@@ -874,7 +923,8 @@ def octa_face_sum() -> str:
     assert all(len(items) == 3 for items in grouped.values()), "a face does not hold three lines"
     grouped_table = "\n".join(f"| {face} | {' · '.join(items)} |"
                               for face, items in sorted(grouped.items()))
-    shows_exactly("octa_face_sum's arrows", grouped_table, list(arrows.values()))
+    shows_each("octa_face_sum's arrows", grouped_table,
+               [(f"{names[line[0]]}–{names[line[1]]}", arrows[line]) for line in lines])
 
     walk_rows = []
     for face, value in zip(faces, surface["face_numbers"]):
@@ -1029,7 +1079,7 @@ def stella_refusal() -> str:
         f"over what this object will take, so nothing sloshes — it runs away, past "
         f"{_thousands(bounds[max(bounds)])} by tick {max(bounds)}. Only "
         f"{runaway['printable_rows']} rows of the full table can be written down in halves at all, "
-        f"and no tick that does stay under the bound prints more than {most_rows}",
+        f"and no tick that does stay under the bound prints more than {word(most_rows)} rows",
         column="the tick it must stay under",
         **{f"bound for {row['dots']} dots": fraction_text(row["bound"])
            for row in ceilings["rows"]},
@@ -1038,7 +1088,7 @@ def stella_refusal() -> str:
         in_caption={"runaway": _thousands(bounds[max(bounds)]),
                     "tick": f"by tick {max(bounds)}",
                     "rows": f"Only {runaway['printable_rows']} rows",
-                    "most": f"more than {most_rows}"})
+                    "most": f"more than {word(most_rows)} rows"})
 
 
 # What a token's arithmetic REFUSES, in the prose of any chapter that carries the token.

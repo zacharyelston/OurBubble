@@ -414,6 +414,20 @@ def check_napkin_contradictions(errors: List[str]) -> str:
     if hits("The tick that must stay under two fifths is the one we brought.", everywhere):
         errors.append("napkin contradictions: the guard false-positives on a correct sentence")
 
+    # The captions first, because they are the surface this was missed on: `REFUSED_IN_PROSE` reads
+    # a chapter's markdown, and a token's caption is not in the markdown — it is rendered into the
+    # page at build time. A blocked phrasing typed one file over, into the caption, went green (a
+    # proofreader, 2026-09-02). The caption is the sentence claiming the page computed its numbers;
+    # it answers to the same refusal list as the prose it sits under.
+    for name in sorted(napkin.TOKENS):
+        rendered = napkin.render(name)
+        phrases = everywhere + refused.get(name, [])
+        for phrase in hits(rendered, phrases):
+            errors.append(
+                f"tools/napkin.py: {name}'s rendered block says {phrase!r}, which its own "
+                f"arithmetic refuses — see napkin.REFUSED_IN_PROSE"
+            )
+
     checked = 0
     for path in sorted((EDITION_DIR / "chapters").glob("*.md")):
         markdown = path.read_text(encoding="utf-8")
@@ -428,7 +442,8 @@ def check_napkin_contradictions(errors: List[str]) -> str:
                 f"chapters/{path.name}: the prose says {phrase!r}, which this chapter's own "
                 f"arithmetic refuses — see napkin.REFUSED_IN_PROSE"
             )
-    return f"{checked} chapters read for {len(everywhere)} refused readings and each token's own"
+    return (f"{checked} chapters and {len(napkin.TOKENS)} rendered blocks read for "
+            f"{len(everywhere)} refused readings and each token's own")
 
 
 def check_canon(errors: List[str]) -> str:
