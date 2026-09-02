@@ -613,17 +613,28 @@ def check_snapshot_integrity(cited: Sequence[str], errors: List[str]) -> str:
     engine = snapshot_files(FETCHED_DIR, cited)
     committed = snapshot_files(RECORD_DIR, cited, skip=generated_paths())
 
+    drifted = 0
     for rel in sorted(set(engine) | set(committed)):
         if rel not in committed:
             errors.append(f"snapshot integrity: {rel} is in the engine but missing from record/")
+            drifted += 1
         elif rel not in engine:
             errors.append(f"snapshot integrity: record/{rel} is not in the engine at this commit")
+            drifted += 1
         elif engine[rel] != committed[rel]:
             errors.append(
                 f"snapshot integrity: record/{rel} differs from the engine at the pinned commit — "
                 f"re-run `tools/snapshot_record.sh`; if the bytes changed on purpose, that is a "
                 f"record bump and belongs in record.lock"
             )
+            drifted += 1
+
+    # The status line has to be the *outcome*, not the fact that the comparison happened. A tamper
+    # test caught this reading "verified — 150 files byte-for-byte" on the same run that reported
+    # drift: the errors were correct and the headline contradicted them, which is the one thing a
+    # status line must never do.
+    if drifted:
+        return f"FAILED — {drifted} of {len(committed)} files differ from the engine"
     return f"verified — {len(committed)} files byte-for-byte"
 
 
