@@ -35,8 +35,8 @@ them separate.
 **Question one: does the wall actually isolate?** Send a signal from outside and see how much of it
 reaches the inside.
 
-**Question two: is the blob inside now easier to push?** Give it a shove and measure how far it moves,
-then compare with the same shove in the same world with no wall.
+**Question two: is the blob inside now easier to push?** Give it a shove and measure how far it
+moves, then compare with the same shove in the same world with no wall.
 
 Both were registered before the run, with thresholds. They are not the same question and the answers
 did not agree.
@@ -104,13 +104,14 @@ from outside — and the reason is structural rather than a matter of trying har
 
 **[Open the data-true null figure](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
 
-Two chapters, three negatives, and the barrier from [the bubble and its
-bill](the-bubble-and-its-bill.md) still standing. This is the point in a project where you either
-stop or you go and find the one place the sign is genuinely allowed.
+Two chapters, three negatives, and the barrier from
+[the bubble and its bill](the-bubble-and-its-bill.md) still standing. This is the point in a project
+where you either stop or you go and find the one place the sign is genuinely allowed.
 
 There is one. It is in the next chapter, and it is not in the fields.
 
-*The simulations behind this chapter: [the simulations](the-simulations.md#s-the-wall-that-worked-and-didnt).*
+*The simulations behind this chapter:
+[the simulations](the-simulations.md#s-the-wall-that-worked-and-didnt).*
 
 **Next:** [Where negative energy appears](where-negative-energy-appears.md)—the one place the sign
 is real, and what it costs to get there.

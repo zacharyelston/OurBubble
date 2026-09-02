@@ -67,22 +67,23 @@ The first command is the book reading itself, and it is worth being exact about 
 
 **Every figure with a `read from` file beside it in the appendix is checked verbatim** against that
 file — those, and only those, are the ones a program has been over. **Every figure a chapter sets in
-digits and puts in bold is checked too**: it has to be one its own appendix section declares that way,
-so a number cannot be emphasised into your eye without a counterpart in the record. Alongside that, it
-confirms each cited test and figure is still in the repository, each chapter still points at its own
-section, and each chapter still carries its visible scope statement.
+digits and puts in bold is checked too**: it has to be one its own appendix section declares that
+way, so a number cannot be emphasised into your eye without a counterpart in the record. Alongside
+that, it confirms each cited test and figure is still in the repository, each chapter still points
+at its own section, and each chapter still carries its visible scope statement.
 
 It also holds the whole edition against **the list of retired claims** — the constant-formulas and
-structural correspondences this project's older phase went in for, of the kind [a number without the
-answer key](a-number-without-the-answer-key.md) opens on. If any of them reappear, in a chapter or
-in the appendix, in any wording it recognises, the book is refused. That guard is itself tested on
-every run against sentences it is required to refuse, so it cannot quietly stop working.
+structural correspondences this project's older phase went in for, of the kind
+[a number without the answer key](a-number-without-the-answer-key.md) opens on. If any of them
+reappear, in a chapter or in the appendix, in any wording it recognises, the book is refused. That
+guard is itself tested on every run against sentences it is required to refuse, so it cannot quietly
+stop working.
 
 **Everything else is prose, including some of the appendix.** When a chapter says the energy at the
-wall is a few hundred times what sits in the calm middle, or that a signal arrives about half a million
-times weaker, no program has read that sentence — the second one is bold, but it is bold *words*, so
-the digit rule never sees it. Those are numbers we wrote, from runs whose figures are linked and whose
-experiments the appendix names.
+wall is a few hundred times what sits in the calm middle, or that a signal arrives about half a
+million times weaker, no program has read that sentence — the second one is bold, but it is bold
+*words*, so the digit rule never sees it. Those are numbers we wrote, from runs whose figures are
+linked and whose experiments the appendix names.
 
 The history chapter's figures are outside it too, and differently: no file is named beside `89.85°`
 or `~0.3 arcseconds` because none of it is ours. **Those are the numbers in this book you can check
@@ -138,4 +139,5 @@ and handed back. Neither of them asks for belief, and this book has tried hard n
 
 So go and find another shadow. Then write down what it would take to surprise you — before you look.
 
-*What this chapter cites — and what it does not: [the simulations](the-simulations.md#s-cast-your-own-shadow).*
+*What this chapter cites — and what it does not:
+[the simulations](the-simulations.md#s-cast-your-own-shadow).*

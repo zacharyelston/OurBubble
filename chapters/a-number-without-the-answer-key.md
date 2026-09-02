@@ -106,12 +106,13 @@ not the little world. It was us. The location of the critical point carries its 
 that uncertainty had not been propagated through into the quantities that depend on it. Once it was,
 both "failures" fell inside their bands.
 
-**This is the same move as the star that was never fixed.** Ptolemy looked with the instrument he had,
-recorded honestly that there was nothing to see, and the record stood for seventeen centuries — until
-Bessel's finer instrument found the shift had been there all along. The difference here, and it is the whole difference, is that
-the uncertainty which dissolved these two misses had *already been published*. It was sitting in the
-record, correct, and simply never carried through into the numbers that depended on it. Nobody needed
-a better telescope. They needed to propagate a number they already had.
+**This is the same move as the star that was never fixed.** Ptolemy looked with the instrument he
+had, recorded honestly that there was nothing to see, and the record stood for seventeen centuries —
+until Bessel's finer instrument found the shift had been there all along. The difference here, and
+it is the whole difference, is that the uncertainty which dissolved these two misses had *already
+been published*. It was sitting in the record, correct, and simply never carried through into the
+numbers that depended on it. Nobody needed a better telescope. They needed to propagate a number
+they already had.
 
 The original rows are still in the record. They were not deleted and rewritten; they carry a note
 saying what later work found, so the original miss is still there to read.
@@ -124,6 +125,7 @@ One ability is still missing, and it is the one that decides whether any of the 
 
 It has to be able to tell us we were wrong.
 
-*The simulations behind this chapter: [the simulations](the-simulations.md#s-a-number-without-the-answer-key).*
+*The simulations behind this chapter:
+[the simulations](the-simulations.md#s-a-number-without-the-answer-key).*
 
 **Next:** [When the expected law fails](when-the-expected-law-fails.md)—the obvious answer, refused.

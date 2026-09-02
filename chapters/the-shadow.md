@@ -35,8 +35,7 @@ end of it is one multiplication.
 
 What he had was a story about a well. At Syene, far to the south, at noon on the longest day of the
 year, sunlight was said to fall straight down a deep well and light the water at the bottom.
-Straight down. Stand an upright post beside that well at that moment and it would throw no shadow at
-all.
+Straight down. An upright post standing beside that well threw no shadow at all.
 
 In Alexandria, on the same day and at the same hour, an upright post *did* throw a shadow. A short
 one, but a real one.
@@ -119,7 +118,8 @@ That is what the rest of this book does. It builds the smallest world we could m
 what the world should do before it does it, and then lets it answer. The arithmetic stays about as
 hard as fifty times five thousand.
 
-*What this chapter cites — and what it does not: [the simulations](the-simulations.md#s-the-shadow).*
+*What this chapter cites — and what it does not:
+[the simulations](the-simulations.md#s-the-shadow).*
 
 **Next:** [A few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md)—the
 same method, and the two thousand years it took for the instruments to catch up with it.

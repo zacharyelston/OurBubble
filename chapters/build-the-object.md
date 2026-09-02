@@ -64,8 +64,8 @@ this resolution, in these units, for this many steps, and then it quietly stops.
 cancellation is a fact about counting. It holds at any size, in any units, however long you run — or
 the thing you built is not a mesh at all.
 
-And it is checkable by counting rather than by argument. Walk every loop in the object, add the
-totals up, and they come back zero — exactly zero, as integers, at any size.
+And you do not have to take that on argument. Walk every loop in the object, add the totals up, and
+they come back zero — exactly zero, as integers, at any size.
 
 ## Nothing yet knows how long a line is
 
@@ -138,8 +138,8 @@ So: tetrahedra. Except for one old surprise.
 
 **Regular tetrahedra do not fill space.** Aristotle wrote that they do, and the mistake stood for
 something like eighteen centuries. Stack them around a shared edge and they come very close to
-closing, and *very close* is the whole story: five of them leave a thin wedge that no sixth can fill.
-The angle is in the appendix, measured on the tetrahedron itself rather than remembered from a
+closing, and *very close* is the whole story: five of them leave a thin wedge that no sixth can
+fill. The angle is in the appendix, measured on the tetrahedron itself rather than remembered from a
 table.
 
 Which means there is no perfect answer, and **every tetrahedral lattice is a compromise.** That
@@ -159,5 +159,5 @@ That is the object. Everything from here is this one thing, asked a different qu
 
 *The simulations behind this chapter: [the simulations](the-simulations.md#s-build-the-object).*
 
-**Next:** [The round ripple](the-round-ripple.md)—we give the object a sense of size, and watch
-what happens to the ring when we get it wrong.
+**Next:** [The round ripple](the-round-ripple.md)—we give the object a sense of size, and watch what
+happens to the ring when we get it wrong.

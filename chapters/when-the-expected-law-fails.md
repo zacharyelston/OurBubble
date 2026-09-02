@@ -48,8 +48,8 @@ repeatably. There is no ambiguity about whether there is an effect, and no ambig
 direction.
 
 So there is a law here worth measuring. We handed the peak positions and the weights to the same
-blind fitter from [the round ripple](the-round-ripple.md) and [the vacuum
-chapter](where-negative-energy-appears.md).
+blind fitter from [the round ripple](the-round-ripple.md) and
+[the vacuum chapter](where-negative-energy-appears.md).
 
 ## The part that failed
 
@@ -88,7 +88,8 @@ That is what the four steps in [the shadow](the-shadow.md) were for.
 We have followed the chain now from an object, through a ripple, a cost, a wall, a vacuum, a
 prediction, and a refusal. There is one step left, and it does not belong to us.
 
-*The simulations behind this chapter: [the simulations](the-simulations.md#s-when-the-expected-law-fails).*
+*The simulations behind this chapter:
+[the simulations](the-simulations.md#s-when-the-expected-law-fails).*
 
 **Next:** [Cast your own shadow](cast-your-own-shadow.md)—read a prediction before its result, and
 check one for yourself.

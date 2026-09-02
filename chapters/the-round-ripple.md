@@ -53,8 +53,8 @@ geometry, they differ by **2.2%** — about ten times less. Both predictions wer
 the run: that the naive setting would be *obviously* uneven, and that the geometric one would at
 least halve it.
 
-**[Open the data-true isotropy figure](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)** —
-the two rings side by side, dots measured, a dashed circle for reference.
+**[Open the data-true isotropy figure](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)**
+— the two rings side by side, dots measured, a dashed circle for reference.
 
 ## The same question, asked five ways at once
 
@@ -102,12 +102,11 @@ it onto itself. Same scene, same solver, same everything else. The asymmetry dro
 where the computer's own arithmetic runs out — about fifteen decimal places down, which is another
 way of saying *exactly*, as far as the machine can tell.
 
-**[Open the data-true mesh-repair figure](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)** ·
-**[open the demo and turn it on and off yourself](record/viz/doubleslit.html)**
+**[Open the data-true mesh-repair figure](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)**
+· **[open the demo and turn it on and off yourself](record/viz/doubleslit.html)**
 
-That last link is the one worth clicking. The demo carries a switch between the two meshes, so you
-can watch a real defect in our own published demo appear and disappear. The switch is still in the
-demo.
+That last link is the one worth clicking. It carries a switch between the two meshes, so you can
+watch a real defect of ours appear and disappear. The switch is still in it, on the public page.
 
 ## What this chapter actually established
 

@@ -50,15 +50,16 @@ between the two. That transition is the wall.
 Three things came back.
 
 **All of it is negative.** Every single point where the formula returns anything at all returns a
-value below the baseline — not most of them, not on average. That is the first of the three properties,
-and nobody wrote it into the setup.
+value below the baseline — not most of them, not on average. That is the first of the three
+properties, and nobody wrote it into the setup.
 
 **All of it is at the wall.** The calm interior is nearly free, the far exterior is nearly free, and
 the energy piles up in the transition. At the wall it is a few hundred times what sits in the quiet
-middle and over a thousand times the far field. Whatever a shaped push costs, you pay it at the edge.
+middle and over a thousand times the far field. Whatever a shaped push costs, you pay it at the
+edge.
 
-**It is a ring, not a shell.** Around the bubble's waist — the band perpendicular to the direction of
-travel — the value is about six times what it is at the front and back, and it falls off smoothly
+**It is a ring, not a shell.** Around the bubble's waist — the band perpendicular to the direction
+of travel — the value is about six times what it is at the front and back, and it falls off smoothly
 between the two. The nose and the tail are comparatively cheap.
 
 **[Open the data-true energy figure](record/lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html)**
@@ -99,7 +100,8 @@ Which forces the next move, and it is not *only* a cleverer arrangement of field
 cannot supply the sign, stop asking them — and ask instead whether the *other* half of the problem
 is softer than it looks. Not what a push costs, but the resistance it is pushing against.
 
-*The simulations behind this chapter: [the simulations](the-simulations.md#s-the-bubble-and-its-bill).*
+*The simulations behind this chapter:
+[the simulations](the-simulations.md#s-the-bubble-and-its-bill).*
 
-**Next:** [The wall that worked, and didn't](the-wall-that-worked-and-didnt.md)—one experiment,
-one yes and one no.
+**Next:** [The wall that worked, and didn't](the-wall-that-worked-and-didnt.md)—one experiment, one
+yes and one no.

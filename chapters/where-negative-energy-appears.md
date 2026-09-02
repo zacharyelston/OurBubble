@@ -75,11 +75,11 @@ draw on it; there is nothing to draw. Arranging boundaries costs more than the d
 and in any case there is no energy in this chapter at all — there is a lattice, a spectrum, and a
 subtraction.
 
-**It does not rescue the shaped push.** That experiment wants a particular amount of the sign, in
-a particular place, at a particular scale. What we found here is the sign, in a tiny gap, at a
-magnitude set by the gap itself. The distance between those two facts is enormous and this chapter does
-not shrink it by a step. What it does is establish that the sign is not forbidden — which is a much smaller
-thing than a solution.
+**It does not rescue the shaped push.** That experiment wants a particular amount of the sign, in a
+particular place, at a particular scale. What we found here is the sign, in a tiny gap, at a
+magnitude set by the gap itself. The distance between those two facts is enormous and this chapter
+does not shrink it by a step. What it does is establish that the sign is not forbidden — which is a
+much smaller thing than a solution.
 
 ## What actually changed here
 
@@ -94,7 +94,8 @@ not told, you can point it at something where nobody knows the answer.
 
 Which is what the next chapter does.
 
-*The simulations behind this chapter: [the simulations](the-simulations.md#s-where-negative-energy-appears).*
+*The simulations behind this chapter:
+[the simulations](the-simulations.md#s-where-negative-energy-appears).*
 
 **Next:** [A number without the answer key](a-number-without-the-answer-key.md)—can it find
 something nobody told it?
