@@ -95,15 +95,14 @@ What if the dial is set from the shape instead?
 
 <!-- beat 48 -->
 
-Measure the pieces of the object and weight each line by what it actually is. Same dial, same six
-settings per tetrahedron, no new machinery — just a reading taken from the thing rather than
-assumed.
+Measure the pieces of the object and weight each line by what it actually is. Same dial, same
+settings, no new machinery — a reading taken from the thing rather than assumed.
 
 The two speeds now differ by **2.2%**: about ten times less.
 
-Both of those predictions were written down before either run — that the naive setting would be
-*obviously* uneven, and that the geometric one would at least halve it. That matters more than the
-numbers do, and it is the step from the shadow chapter that people skip.
+Both predictions were written down before either run — that the naive setting would be *obviously*
+uneven, and that the geometric one would at least halve it. That matters more than the numbers do,
+and it is the step people skip.
 
 **[Open the data-true isotropy figure](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)**
 — the two rings side by side, dots measured, a dashed circle for reference.
@@ -135,10 +134,10 @@ It can, and this is where the book acquires the instrument it uses for the rest 
 
 Run the sweep again in five directions at once and hand the timings to a blind fitter: a program
 told nothing about what it is looking at — not the expected law, not which arm was which. It picks
-from a menu written down beforehand and reports how far ahead of the runner-up its choice finished.
+from a menu written down beforehand and reports how far ahead of the runner-up it finished.
 
 It picked the straight-line law in all five directions, and by a wide margin: its score beat the
-runner-up — a square-root law — by about a quarter every time, which for a fit quality is not close.
+runner-up — a square-root law — by about a quarter every time, which for a fit quality is a rout.
 The speed it returned agrees across directions to within a couple of percent, and that spread
 *shrinks* as the ripples get gentler. Which is the signature of a coarse grid.
 
