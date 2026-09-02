@@ -98,7 +98,7 @@ Now put numbers on its lines instead, the way you did on the tetrahedron.
 
 <!-- beat 40 -->
 
-Eight faces this time, and the same walk as before. What do they add up to?
+Eight faces this time, and the same walk. What do they add to?
 
 {{napkin:octa_face_sum}}
 
