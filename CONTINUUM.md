@@ -9,6 +9,9 @@ This is the book's ledger. The engine's is in UniForge's own `CONTINUUM.md`, and
 disjoint by repository: a lane here never edits the record, and a lane there never edits the prose.
 
 Rules of the ledger:
+- **The checkout stays on `main`; every lane works in its own worktree under `/private/tmp`** — including
+  the coordinator. A shared working copy is a hazard: a concurrent branch switch strands or mixes
+  uncommitted work (learned 2026-09-02).
 - **One lane → one territory (paths) → one delivery branch/PR.** Two lanes never edit the same
   path; a lane that needs another lane's file asks the coordinator, not the file.
 - A lane idle past the branch TTL (7 days) is a stale lane: hand off or retire — no third state.

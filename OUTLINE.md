@@ -62,7 +62,7 @@ reader every time instead of explained to her once.
 
 27. What is still missing before anything can happen?  *(a clock)*
 28. What is the least a clock needs?  *(ticks, all the same)*
-29. What should one tick *do*?  *(one rule: each dot moves toward its neighbours by the differences on its lines)*
+29. What should one tick *do*?  *(one rule: each dot's number is pushed toward its neighbours' by the differences on its lines — and carries forward the motion it has already built up. The push sets the change in the change, not the change; that one word is the difference between a wave and a leak)*
 30. Is that really the whole law — nothing else, ever?  *(yes; every result in the book is that sentence, run)*
 31. Run it on the tetrahedron — four numbers, tick by tick: what do they do?  *(they slosh back and forth — and every four ticks they are exactly back where they started; nothing leaks)*  [table: four numbers, ten ticks — computed at build]
 32. Add the four up at every tick — what happens to the total?  *(it never changes: coming home, in time)*
