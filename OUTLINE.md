@@ -44,7 +44,7 @@ reader every time instead of explained to her once.
 14. Walk around the triangle adding the differences — what do I get?  *(2 → 5 → 1 → 2: +3, −4, +1 = 0)*
 15. Would any three numbers do that?  *(every time — because I came home)*
 16. Why *exactly* zero and not nearly?  *(plus and minus signs cancel the way integers do)*
-17. What did I never use?  *(length — no line has one, and that is *why* it is exact)*
+17. What did I never use?  *(length — no line has one. And giving the lines lengths later will not disturb the zero: it comes from coming home, not from size)*
 18. What have I assumed so far?  *(nothing: no distance, no direction, no time — a complete little world, not a sketch of a better one)*
 
 ## 2 · One tetrahedron is a whole world
@@ -74,8 +74,8 @@ reader every time instead of explained to her once.
 
 36. If I need room, I need more tetrahedra — do they fill space the way triangles fill a floor?  *(no — Aristotle said yes and was wrong for eighteen centuries; five leave a wedge)*  [picture: the wedge]
 37. Why tetrahedra at all — what can a square do that a triangle cannot?  *(flex: pin its corners and it still leans; the triangle is finished)*
-38. So every tetrahedral world is a compromise — which did we choose?  *(a cube's eight corners sorted odd and even: two tetrahedra threaded through each other, never sharing a line)*  [picture: the two families]
-39. What did that choice hand us for free?  *(the two families are mirror images — handedness is in the object before a single number is stored)*
+38. So every tetrahedral world is a compromise — which did we choose?  *(take a cube and keep the four corners whose coordinates add to an even number — they make one regular tetrahedron, its edges the cube's face diagonals. Stack cubes: the tetrahedra never meet face to face; between them sit holes shaped like octahedra, centred on the corners you did not keep. Cut each hole into four tetrahedra along one of its long diagonals — now space is all tetrahedra)*  [picture: one cube, its four kept corners, the hole beside it]
+39. Is any dot special?  *(no — every dot sees exactly the same arrangement around it; there is no privileged place, which is what a fair ripple test needs)*
 40. Now poke a dot in the middle of many — is there a ring?  *(yes: the pond)*
 41. It reached the edge of our world and bounced back — how do I have no edge?  *(wrap it: the far side *is* the near side, like a screen where walking off the right returns you on the left)*
 42. What is that wrapped world called, and why do we live there from now on?  *(a torus — no walls to bounce off, so the ring is only ever the ring)*
