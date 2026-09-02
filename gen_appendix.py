@@ -91,7 +91,7 @@ the chapters link to.
         if s.get('history'):
             # N8 (proofread, tranche B round 2): this said "no rung, no gate and no figure
             # corresponds to any of it", which stopped being true when the outline moved the two
-            # self-corrections into this chapter's beats 98-99. The history is still not ours; the
+            # self-corrections into this chapter's beats 109-110. The history is still not ours; the
             # chapter's last two beats are, and they carry rungs, so the sentence now says which
             # half is which instead of denying the second half exists.
             L.append("**What this chapter recounts.** Two things, and they are checkable in different "
@@ -102,7 +102,7 @@ the chapters link to.
                      "gates below are theirs.\n")
             L+=[f"- {h}" for h in s['history']]; L.append("")
             # M16 (proofread, tranche B): this pointed at chapter 9 for the self-correction, which
-            # the outline moved into this chapter's own beats 98-99. It now points at nothing,
+            # the outline moved into this chapter's own beats 109-110. It now points at nothing,
             # because the thing it pointed at is on the same page.
             L.append("What the book carries forward is the **method** — measure, state your resolution, let "
                      "a finer instrument overturn you — never the discoveries. This chapter's own last "
