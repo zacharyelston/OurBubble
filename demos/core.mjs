@@ -1592,6 +1592,202 @@ export function drawRing({ values = {}, emphasis = [], face = null, tips = false
   return body.join("\n");
 }
 
+// ── the wireframe: the one place 3-D earns its keep ───────────────────────────────────────────────
+//
+// The ring carries the octahedron. It does not carry the two tetrahedra threaded through it, and the
+// owner said so on the live page: *"42 — what have I got now? Is funny. If those lines are drawn
+// from the code we're doomed."* They are drawn from the code — all thirty-six of them, from the same
+// census the table prints — and that is exactly the trouble. Flat, thirty-six lines lay strokes
+// across dots they never touch, and a reader cannot count an edge off a picture whose crossings mean
+// nothing.
+//
+// So beats 42–45 get the one thing the charter reserved for this: **the simplest possible
+// orthographic wireframe.** No shading, no perspective camera, no library, no fill. Points are
+// projected by two rotations and a drop of the third coordinate — five lines of arithmetic — and the
+// reader can turn it by dragging or with the arrow keys, because a wireframe you cannot turn is a
+// flat drawing with extra steps.
+//
+// The default view is **chosen by counting**, not by taste: `bestView()` sweeps a fixed grid of
+// directions and keeps the one whose projection has the fewest crossings that are not real meetings
+// — the fewest places where the flat page says two lines touch and the object says they do not.
+// `demos/DEMOS.md` states the view it picked and why.
+
+/** Two rotations and a drop: yaw about the vertical, then pitch, then keep x and y. Nothing else. */
+export function project3d(point, yaw, pitch) {
+  const [x, y, z] = point.map((v) => (v instanceof Frac ? v.toApprox() : v));
+  const cy = Math.cos(yaw);
+  const sy = Math.sin(yaw);
+  const cp = Math.cos(pitch);
+  const sp = Math.sin(pitch);
+  const rx = x * cy + z * sy;
+  const rz = -x * sy + z * cy;
+  return [rx, y * cp - rz * sp];
+}
+
+/**
+ * How many crossings a view invents, and how close its closest unrelated dot-and-line come.
+ *
+ * A crossing between two edges that share an end is a real meeting and costs nothing. Every other
+ * crossing is the flat page telling the reader something the object does not say, and so is a dot
+ * that lands on a line it is not an end of. Both are counted so a view can be chosen rather than
+ * liked.
+ */
+export function viewCost(points, edges, yaw, pitch) {
+  const flat = points.map((p) => project3d(p, yaw, pitch));
+  let invented = 0;
+  for (let i = 0; i < edges.length; i += 1) {
+    for (let j = i + 1; j < edges.length; j += 1) {
+      const [a, b] = edges[i];
+      const [c, d] = edges[j];
+      if (a === c || a === d || b === c || b === d) continue;
+      if (segmentsCross(flat[a], flat[b], flat[c], flat[d])) invented += 1;
+    }
+  }
+  const spread = Math.max(...flat.map(([x]) => x)) - Math.min(...flat.map(([x]) => x)) || 1;
+
+  // A dot sitting on a line it does not end reads as a crossing whether or not two lines meet
+  // there, and an edge that projects to a point has vanished. Both are the same lie the count above
+  // is looking for, so both are counted with it. The first sweep ranked on crossings alone and
+  // picked a view straight down an axis: no crossings at all, and dots stacked on lines everywhere.
+  let hidden = 0;
+  let nearest = Infinity;
+  for (let dot = 0; dot < flat.length; dot += 1) {
+    for (const [a, b] of edges) {
+      if (dot === a || dot === b) continue;
+      const [px, py] = flat[dot];
+      const dx = flat[b][0] - flat[a][0];
+      const dy = flat[b][1] - flat[a][1];
+      const length = Math.hypot(dx, dy);
+      if (length < 1e-9) continue;
+      const along = ((px - flat[a][0]) * dx + (py - flat[a][1]) * dy) / (length * length);
+      if (along <= 0 || along >= 1) continue;
+      const across = Math.abs((px - flat[a][0]) * dy - (py - flat[a][1]) * dx) / length / spread;
+      nearest = Math.min(nearest, across);
+      if (across < 0.02) hidden += 1;
+    }
+  }
+  const flattened = edges.filter(([a, b]) =>
+    Math.hypot(flat[a][0] - flat[b][0], flat[a][1] - flat[b][1]) / spread < 0.02).length;
+  // The three are not equally bad, and the weights say which. A visible crossing costs one: a reader
+  // can see that two lines pass and read on. A dot sitting on a line costs more, because it looks
+  // like a join that is not there, and a line that has vanished into a point costs most of all,
+  // because it has taken an edge out of a picture whose whole job is to let her count them.
+  return {
+    invented, hidden, flattened,
+    lies: invented + 4 * hidden + 12 * flattened,
+    nearest: Number.isFinite(nearest) ? nearest : 1,
+  };
+}
+
+/** How many directions the sweep tries in each of the two angles. */
+export const VIEW_GRID = 72;
+
+/**
+ * The view the wireframe opens in: the one, of a fixed sweep, that invents the fewest crossings.
+ *
+ * Ties are broken by pushing the closest unrelated dot-and-line as far apart as the projection can,
+ * because a view with no crossings but a dot sitting a hair off a line reads as a crossing anyway.
+ * The sweep is fixed and the arithmetic is deterministic, so this returns the same view every time
+ * and `demos/DEMOS.md` can name it.
+ */
+export function bestView(points, edges) {
+  let best = null;
+  for (let a = 0; a < VIEW_GRID; a += 1) {
+    for (let b = 0; b < VIEW_GRID; b += 1) {
+      const yaw = (a / VIEW_GRID) * Math.PI * 2;
+      const pitch = (b / VIEW_GRID) * Math.PI - Math.PI / 2;
+      const cost = viewCost(points, edges, yaw, pitch);
+      if (best === null || cost.lies < best.lies
+        || (cost.lies === best.lies && cost.nearest > best.nearest)) {
+        best = { yaw, pitch, ...cost };
+      }
+    }
+  }
+  return best;
+}
+
+/** The stella's fourteen dots, its thirty-six lines, and which of the three families each line is in. */
+export function stellaWireframe() {
+  const points = stellaPoints();
+  const edges = stellaLines();
+  if (points.length !== 14) throw new Error(`the wireframe has ${points.length} dots, not 14`);
+  if (edges.length !== 36) throw new Error(`the wireframe has ${edges.length} lines, not 36`);
+  // Three families, and the split is derived from what each line joins rather than declared: a line
+  // between two middles is the octahedron's; a line from a middle to one of the four corners we cut
+  // is the first tetrahedron's; to one of the four the second brought, the second's.
+  const family = edges.map(([i, j]) => {
+    const high = Math.max(i, j);
+    if (high < 6) return "octahedron";
+    return STELLA_NAMES[high].endsWith("′") ? "second" : "first";
+  });
+  const counts = { octahedron: 0, first: 0, second: 0 };
+  for (const kind of family) counts[kind] += 1;
+  if (counts.octahedron !== 12 || counts.first !== 12 || counts.second !== 12) {
+    throw new Error(`the three families came out ${JSON.stringify(counts)}, not twelve each`);
+  }
+  return { points, edges, family, names: STELLA_NAMES, counts };
+}
+
+const WIRE_BOX = 460;
+const WIRE_RADIUS = 168;
+
+/**
+ * The stella, turned to `yaw` and `pitch`, as a plain orthographic wireframe.
+ *
+ * Every one of the thirty-six lines carries the two dot names it joins, in the drawing itself, so
+ * `demos/core.test.mjs` can check that what is drawn is the census and not a picture of it: thirty-six
+ * lines, fourteen dots, and every line an edge the napkin exported.
+ */
+export function drawWire({ yaw, pitch, values = {}, emphasis = [], title = "", desc = "" } = {}) {
+  const { points, edges, family, names } = stellaWireframe();
+  const strong = new Set(emphasis);
+  const flat = points.map((p) => project3d(p, yaw, pitch));
+  const spread = Math.max(...flat.flatMap(([x, y]) => [Math.abs(x), Math.abs(y)])) || 1;
+  const place = ([x, y]) => [
+    WIRE_BOX / 2 + (x / spread) * WIRE_RADIUS,
+    WIRE_BOX / 2 + (y / spread) * WIRE_RADIUS,
+  ];
+  const at = flat.map(place);
+
+  const body = [];
+  body.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIRE_BOX} ${WIRE_BOX}" role="img" class="wire" tabindex="0">`);
+  body.push(`  <title>${esc(title || "The two tetrahedra, threaded")}</title>`);
+  body.push(`  <desc>${esc(desc || "An orthographic wireframe of two tetrahedra threaded through one another, sharing the octahedron between them. Fourteen dots and thirty-six lines: the first tetrahedron's twelve in the full stroke, the second's twelve lighter, and the octahedron's twelve between them. No shading and no perspective. Drag it, or use the arrow keys, to turn it.")}</desc>`);
+
+  for (const kind of ["octahedron", "second", "first"]) {
+    body.push(`  <g class="stroke ${kind}">`);
+    edges.forEach(([i, j], index) => {
+      if (family[index] !== kind) return;
+      const heavy = strong.has(`${names[i]}–${names[j]}`) ? " strong" : "";
+      body.push(`    <line class="edge${heavy}" data-edge="${names[i]}|${names[j]}" x1="${d2(at[i][0])}" y1="${d2(at[i][1])}" x2="${d2(at[j][0])}" y2="${d2(at[j][1])}"/>`);
+    });
+    body.push("  </g>");
+  }
+
+  body.push('  <g class="dots">');
+  names.forEach((name, index) => {
+    const middle = index < 6;
+    body.push(`    <circle class="${middle ? "middle" : "tip"}${strong.has(name) ? " strong" : ""}" data-dot="${name}" cx="${d2(at[index][0])}" cy="${d2(at[index][1])}" r="${middle ? 8 : 6}"/>`);
+  });
+  body.push("  </g>");
+
+  body.push('  <g class="labels">');
+  names.forEach((name, index) => {
+    const [x, y] = at[index];
+    const away = Math.hypot(flat[index][0], flat[index][1]) || 1;
+    const lx = x + (flat[index][0] / away) * 22;
+    const ly = y + (flat[index][1] / away) * 22;
+    const value = values[name];
+    body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} x="${d2(lx)}" y="${d2(ly)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`);
+    if (value !== undefined) {
+      body.push(`    <text class="value" x="${d2(lx)}" y="${d2(ly + 16)}" font-size="14" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+    }
+  });
+  body.push("  </g>");
+  body.push("</svg>");
+  return body.join("\n");
+}
+
 // The three numbers these pages write that are not values of the object at all, each with its
 // reason. They are declared HERE, above the step definitions, because the rule that governs those
 // definitions is absolute: no digit may appear in any piece of text a step produces — a table cell,
