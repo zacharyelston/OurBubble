@@ -475,6 +475,143 @@ def check_canon(errors: List[str]) -> str:
     return "unavailable"
 
 
+DEMOS_DIR = EDITION_DIR / "demos"
+DEMO_EXPORT = DEMOS_DIR / "data" / "napkin.json"
+DEMO_TEST = DEMOS_DIR / "core.test.mjs"
+
+# What `demos/` must contain for the published site to carry a working demo. Listed rather than
+# globbed: a page that stopped being written to disk, or a chapter that lost its demo, should fail
+# by name here instead of quietly not being published.
+DEMO_PAGES = (
+    "index.html",
+    "two-dots-and-a-line.html",
+    "one-tetrahedron-is-a-whole-world.html",
+    "make-it-move.html",
+    "the-shape-between.html",
+)
+DEMO_ASSETS = ("core.mjs", "core.test.mjs", "demo.css", "data/napkin.json")
+
+
+def check_napkin_export(errors: List[str]) -> str:
+    """The demos' oracle is in step with the napkin, exact, and byte-identical across two builds.
+
+    `demos/` recomputes chapters 1–4 in the reader's browser, which is the point of it and also the
+    risk: two implementations of the same arithmetic are two places the book can disagree with
+    itself. `tools/napkin_export.py` is the boundary between them — the napkin's *data*, with none of
+    its prose — and this holds it to three things:
+
+    * it is what is committed. A stale `demos/data/napkin.json` would let the cross-check below pass
+      against arithmetic the napkin no longer does, so the file is re-derived here and compared byte
+      for byte, and the diff is reported as a change to the export rather than as a mystery.
+    * it is deterministic, and carries no float anywhere. Both are the export's own assertions; they
+      run here so that they run on every check.
+    * every number in it is an exact rational written as a string, which is what lets the JavaScript
+      side be compared rather than approximated.
+    """
+    try:
+        import napkin_export
+    except ImportError as failure:
+        errors.append(f"napkin export: cannot import tools/napkin_export.py ({failure})")
+        return "unavailable"
+
+    try:
+        line = napkin_export.self_test()
+    except AssertionError as failure:
+        errors.append(f"napkin export: failed one of its own assertions — {failure}")
+        return "unavailable"
+    except Exception as failure:  # noqa: BLE001 - any failure here must surface, not crash
+        errors.append(f"napkin export: raised {type(failure).__name__}: {failure}")
+        return "unavailable"
+
+    fresh = napkin_export.text()
+    if not DEMO_EXPORT.exists():
+        errors.append(
+            f"napkin export: {DEMO_EXPORT.relative_to(EDITION_DIR)} is missing — run "
+            f"`python3 tools/napkin_export.py` and commit it"
+        )
+        return "unavailable"
+    committed = DEMO_EXPORT.read_text(encoding="utf-8")
+    if committed != fresh:
+        errors.append(
+            f"napkin export: {DEMO_EXPORT.relative_to(EDITION_DIR)} is not what the napkin now "
+            f"exports ({len(committed)} bytes committed, {len(fresh)} derived) — the arithmetic "
+            f"moved. Run `python3 tools/napkin_export.py`, check what changed, and commit it with "
+            f"whatever moved it"
+        )
+    return line
+
+
+def check_demo_cross_check(errors: List[str]) -> str:
+    """Run the demos' core under node and hold every number it computes to the napkin's export.
+
+    This is the discipline the demos stand on: **a demo may not show a number the napkin did not
+    compute.** `demos/core.test.mjs` compares the two implementations value by value as exact
+    rational strings, and it also scans every table cell of every step of every chapter for a
+    numeric token the export does not contain — which is the attack the rule exists for, someone
+    typing a number into a page that no arithmetic produced.
+
+    **When node is absent this reports `unverified`, and never a pass.** That is the same shape as
+    the snapshot-integrity layer: a check that could not run says so, on its own line, rather than
+    letting a green tick imply it happened. CI has node, so the gap closes there.
+    """
+    import shutil
+    import subprocess
+
+    if not DEMO_TEST.exists():
+        errors.append(f"demo cross-check: {DEMO_TEST.relative_to(EDITION_DIR)} is missing")
+        return "unavailable"
+    node = shutil.which("node")
+    if node is None:
+        return "unverified — node absent, so the demos' numbers were not compared to the napkin's"
+
+    finished = subprocess.run(  # noqa: S603 - a fixed argv, no shell
+        [node, str(DEMO_TEST)],
+        capture_output=True, text=True, cwd=EDITION_DIR, timeout=300, check=False,
+    )
+    if finished.returncode != 0:
+        for line in (finished.stderr or "").splitlines():
+            if line.strip():
+                errors.append(f"demo cross-check: {line.strip()}")
+        if not (finished.stderr or "").strip():
+            errors.append(
+                f"demo cross-check: node exited {finished.returncode} with nothing on stderr"
+            )
+        return "unavailable"
+    summary = [line for line in finished.stdout.splitlines() if line.startswith("core.test.mjs:")]
+    return summary[-1].split(": ", 1)[1] if summary else "passed, with no summary line"
+
+
+def check_demos_published(errors: List[str]) -> str:
+    """The built site actually carries the demos, and each one links back to its chapter.
+
+    `demos/` sits outside `chapters/`, so it reaches the published site only through the
+    `chapters/demos` symlink that mdBook copies — the same mechanism that carries `record/`. That is
+    a piece of wiring nothing would notice breaking: the book would build, the check would pass, and
+    the demo links would 404 for readers only. So the built tree is looked at.
+    """
+    built = RENDER_DIR / "demos"
+    if not built.is_dir():
+        errors.append(
+            "demos published: book/demos/ does not exist — mdBook did not copy demos/ into the "
+            "build. Is chapters/demos still a symlink to ../demos?"
+        )
+        return "unavailable"
+    for name in DEMO_PAGES + DEMO_ASSETS:
+        if not (built / name).is_file():
+            errors.append(f"demos published: book/demos/{name} is missing from the built site")
+    for name in DEMO_PAGES:
+        page = built / name
+        if not page.is_file():
+            continue
+        for target in HTML_LINK.findall(page.read_text(encoding="utf-8")):
+            if target.startswith(("http://", "https://", "#", "mailto:", "data:")):
+                continue
+            resolved = (page.parent / target.split("#", 1)[0]).resolve()
+            if not resolved.exists():
+                errors.append(f"demos published: book/demos/{name} links to {target}, which is not there")
+    return f"{len(DEMO_PAGES)} pages and {len(DEMO_ASSETS)} files, every link resolved"
+
+
 def appendix_sections(markdown: str) -> Dict[str, str]:
     """The appendix split into its per-chapter sections, keyed by **slug**.
 
@@ -1187,6 +1324,14 @@ def main() -> int:
     # rather than reach a reader as a second, differently-labelled picture of the same object.
     status(errors, "canon self-test", lambda: check_canon(errors))
 
+    # And the demos, which recompute chapters 1–4 in the reader's browser. Two lines, because two
+    # different things can be wrong: the export the browser is measured against can go stale, and the
+    # browser's own arithmetic can drift from it. The second says `unverified` rather than passing
+    # when node is not installed.
+    status(errors, "napkin export", lambda: check_napkin_export(errors))
+    if not args.rendered:
+        status(errors, "demo cross-check", lambda: check_demo_cross_check(errors))
+
     appendix_file = str(manifest["appendix"]["file"])
     if appendix_file != APPENDIX_FILE:
         errors.append(
@@ -1243,6 +1388,7 @@ def main() -> int:
 
     if args.rendered:
         check_rendered(order, sections, errors)
+        status(errors, "demos published", lambda: check_demos_published(errors))
 
     return report(errors, narrative, sections, manifest, args)
 
