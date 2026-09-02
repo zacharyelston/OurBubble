@@ -99,22 +99,21 @@ how much precision they needed.
 slipping out of schedule depending on where the Earth happened to be. Rømer put the slippage at
 about twenty-two minutes across the width of our orbit; it is nearer seventeen. He gave the delay,
 not a speed; Christiaan Huygens turned it into one, and because the delay was long the speed came
-out about a quarter low — a real number, honestly out by a knowable amount, and out for a reason
-you can point at.
+out about a quarter low — a real number, honestly out by a knowable amount, and out for a reason you
+can point at.
 
-**The distance to the Sun**, at last, in the 1760s — two thousand years after Aristarchus tried.
-Not by measuring that impossible angle but by sidestepping it, in a scheme Edmond Halley had set
-out decades before anyone could use it: watch Venus cross the face of the Sun from two places far
-apart on the Earth, and time the crossings. Different vantage points, slightly different timings,
-and the difference gives you the scale. It took telescopes, marine chronometers and expeditions —
-James Cook to Tahiti in 1769, others to Siberia and northern Norway — to be in the right place on
-the right day.
+**The distance to the Sun**, at last, in the 1760s — two thousand years after Aristarchus tried. Not
+by measuring that impossible angle but by sidestepping it, in a scheme Edmond Halley had set out
+decades before anyone could use it: watch Venus cross the face of the Sun from two places far apart
+on the Earth, and time the crossings. Different vantage points, slightly different timings, and the
+difference gives you the scale. It took telescopes, marine chronometers and expeditions — James Cook
+to Tahiti in 1769, others to Siberia and northern Norway — to be in the right place on the right
+day.
 
 **The distance to a star** — Friedrich Bessel, 1838 — and with it the answer to that ancient null,
-seventeen centuries late — the first stellar parallax anyone believed. The shift was there. For
-61 Cygni, the star Bessel caught, it is
-about a third of a second of arc — the width of a coin seen from fifteen kilometres away. The
-stars had never been still. They had been outside the resolution.
+seventeen centuries late — the first stellar parallax anyone believed. The shift was there. For 61
+Cygni, the star Bessel caught, it is about a third of a second of arc — the width of a coin seen
+from fifteen kilometres away. The stars had never been still. They had been outside the resolution.
 
 **A ruler for what parallax could not reach** — Henrietta Swan Leavitt, 1912 — who noticed that a
 certain kind of variable star pulses more slowly when it is intrinsically brighter. Turn a pattern
@@ -144,29 +143,30 @@ confirmed either.
 ## Which is why the rest of this book keeps talking about how well it can see
 
 We are about to build a small world and start measuring things in it. Nothing it produces is a fact
-about nature. But the *method* in this chapter is not about nature either, and that part transfers
-exactly.
+about nature. But the *method* in this chapter is not about nature either — it is about how to hold
+a measurement honestly — and that part transfers exactly.
 
-So watch for these three things in the chapters ahead, because they are the same three:
+So watch for these three things in the chapters ahead — they are the same three:
 
-**A stated resolution.** Every experiment in this book says, before it runs, how well it expects
-to be able to see. One of them writes down in advance that a particular quantity is beyond the
+**A stated resolution.** Every experiment in this book says, before it runs, how well it expects to
+be able to see. One of them writes down in advance that a particular quantity is beyond the
 resolution it can afford, and predicts which way it will fail. It fails that way.
 
-**A null read as a bound.** When something comes back "no", the chapters say how tight the no is.
-A region could not be emptied. A wall did not change inertia. Those are bounds with numbers
-attached, not shrugs.
+**A null read as a bound.** When something comes back "no", the chapters say how tight the no is. A
+region could not be emptied. A wall did not change inertia. Those are bounds with numbers attached,
+not shrugs.
 
 **And once — this is the one to wait for — two measurements whose ruler had an error nobody had
-carried into them.** Both were taken from a point in the little world whose position was itself known only to
-within a margin, and that margin had never been carried through into them. Once it was, both landed
-inside the bands they were meant to hit. Nothing was re-run, and nothing in the little world had
-changed.
+carried into them.** Both were taken from a point in the little world whose position was itself
+known only to within a margin, and that margin had never been carried through into them. Once it
+was, both landed inside the bands they were meant to hit. Nothing was re-run, and nothing in the
+little world had changed.
 
 When you reach that chapter, you will have met the move already. It is the star that was never
 fixed.
 
-*What this chapter cites — and what it does not: [the simulations](the-simulations.md#s-a-few-thousand-years-of-sharper-shadows).*
+*What this chapter cites — and what it does not:
+[the simulations](the-simulations.md#s-a-few-thousand-years-of-sharper-shadows).*
 
 **Next:** [Build the object](build-the-object.md)—the fewest parts you need before anything can
 happen at all.
