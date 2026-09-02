@@ -9,11 +9,11 @@
 <!-- NOTE(figure): alt — "Four dots joined by every possible line, drawn so the six lines and four triangular faces are separately visible, with the enclosed volume shaded to show that there is an inside." -->
 <!-- NOTE(figure): brief — one tetrahedron, drawn open enough to count on: six individually traceable lines, four individually shaded faces, the inside indicated rather than solid. No perspective trick may hide one line behind another, because countability is the whole job. -->
 
-A triangle is three dots with every possible line drawn between them. It closes, and it has an
-inside, and the inside is flat.
+A triangle is three dots with every possible line drawn between them. It closes, and it fences off a
+flat inside.
 
-So do the same thing one dimension up. Take four dots, none of them in the same plane, and draw every
-possible line between them.
+So do the same thing one dimension up. Take four dots, none of them in the same plane, and draw
+every possible line between them.
 
 What have you got?
 
@@ -27,15 +27,17 @@ four dots on a napkin with the lines drawn in and one of them dashed to show it 
 point of building it is that you stop taking anybody's word for the counts, and the counts are the
 whole of this section.
 
-So count. How many dots, how many lines, how many triangular faces — and how many insides?
+So count. How many dots, how many lines, how many triangular faces — and how many solid insides? The
+faces have flat insides of their own, four of those; what is new one dimension up is the volume the
+four of them fence off between them, and that is the one to count.
 
 ## The whole inventory
 
 {{napkin:tetra_counts}}
 
 That is the entire object. Not the interesting part of the object, not a simplified version of it —
-all of it. You can hold those four numbers in your head while you read the rest of this book, and you
-will never need a fifth.
+all of it. You can hold those four numbers in your head while you read the rest of this book, and
+you will never need a fifth.
 
 Compare that to what you would have to hold in your head to think about a cubic centimetre of air,
 and you will see why we started here.
@@ -45,12 +47,12 @@ faces say?
 
 ## Four numbers on the corners, four faces, four zeros
 
-The lines say what they said before. Each line joins two corners, so each line carries the difference
-between them: six lines, six differences, none of them chosen.
+The lines say what they said before. Each line joins two corners, so each line carries the
+difference between them: six lines, six differences, none of them chosen.
 
-Each face is a triangle. And you already know what a triangle does when you walk its boundary and add
-up the differences — you proved it in the last chapter with three numbers of your own choosing. So
-walk each of the four faces in turn.
+Each face is a triangle. And you already know what a triangle does when you walk its boundary and
+add up the differences — you proved it in the last chapter with three numbers of your own choosing.
+So walk each of the four faces in turn.
 
 {{napkin:tetra_face_loops}}
 
@@ -62,48 +64,63 @@ Because so far the line-numbers were *differences*. What if they were not?
 
 ## What if the lines came first
 
-This is the turn the chapter exists for, so take it slowly.
-
-Everything so far started at the corners. The lines only ever carried what the corners already
-said. But nothing forces that. You can put six numbers straight onto the six lines and never
-mention the corners at all — six little arrows, each saying "along this line, this much, in this
-direction".
+Everything so far started at the corners. The lines only ever carried what the corners already said.
+But nothing forces that. You can put six numbers straight onto the six lines and never mention the
+corners at all — six little arrows, each saying "along this line, this much, in this direction".
 
 Now walk a face and add them up. And now the sum need not be zero, because those six numbers were
 not differences of anything. They were just numbers, and there is nothing making them cancel.
 
-So the face has acquired a number of its own: how much goes *round* it. Not a property of any corner,
-not a property of any line — a fact about the face, the way a difference was a fact about a pair.
+So the face has acquired a number of its own: how much goes *round* it. Not a property of any
+corner, not a property of any line — a fact about the face, the way a difference was a fact about a
+pair.
 
 Four faces, four such numbers. Which raises the same question one rung higher.
 
 ## Round the inside
 
 The four faces are the boundary of the inside, the way the three lines were the boundary of the
-triangle's face. So do to the faces exactly what you did to the lines: take the four face-numbers and
-add them up around the inside, keeping track of which way each face is oriented.
+triangle's face. So do to the faces what you did to the lines — add the four face-numbers up around
+the inside.
+
+There is one thing to settle first, and it is the only rule in these two chapters you could not have
+guessed. Walking round a triangle, you knew which way to go because you were following a route.
+There is no route round four faces, so you need a convention for which way each one faces, and here
+it is. Each face is the three corners you get by leaving one out. Take them in the order the table
+uses — ABC, ABD, ACD, BCD, which is leaving out D, then C, then B, then A — and **alternate the
+signs as you go: minus, plus, minus, plus.**
+
+That is the rule. Apply it and add.
 
 {{napkin:tetra_inside_sum}}
 
-Zero again. And again not nearly — exactly, and for the same reason, one storey up: every line in the
-object sits on exactly two of the four faces, and it is counted one way round on one of them and the
-other way round on the other. Everything cancels in pairs. The boundary of the inside closes, so the
-books balance.
+Zero again, exactly — and now you can check the cancellation with the arrows row and a pencil.
 
-You have now met the same fact twice: walk the boundary of a closed thing and the total comes home to
-zero. It is the one structural truth in this book, and it did not cost anything.
+Take any line and find the two faces it lies on. Every line lies on exactly two: line AB is on ABC
+and on ABD, and nowhere else. Walk each of those faces and you will find AB going in with the same
+sign both times, contributing its arrow of 3 to each. But ABC enters the total with a minus and ABD
+with a plus, so those two threes are equal and opposite, and they kill each other.
+
+Do that for all six lines and nothing is left over. That is why the total is zero rather than merely
+small: every line gets counted exactly twice, once with each sign.
+
+You have now met the same fact twice: walk the boundary of a closed thing and the total comes home
+to zero. It is the one structural truth in this book, and it did not cost anything.
 
 So how many kinds of number can this world hold?
 
 ## Four kinds, and that is all there will ever be
 
-Count the places a number can live: on a dot, on a line, on a face, on the inside. Four kinds.
+Count the places a number can live: on a dot, on a line, on a face, on the solid inside. Four kinds.
 
-And that is the complete list — not for the tetrahedron, but for this book. Everything measured in
-every chapter that follows is a number of one of those four kinds, living on one of those four kinds
-of place, in a world with more dots in it. When a later chapter talks about something spreading, it
-is line-numbers changing. When it talks about how much goes round something, it is a face-number.
-There is no fifth kind waiting to be introduced.
+And that is the complete list of *places* — not for the tetrahedron, but for this book. However many
+dots a later chapter uses, a number stored in the little world sits on a dot, a line, a face or an
+inside, and there is no fifth kind of place waiting to be introduced. When a later chapter talks
+about something spreading, that is line-numbers changing. When it talks about how much goes round
+something, that is a face-number.
+
+Results are a different matter, and later chapters have plenty of those — percentages, exponents,
+temperatures. Those are things we work out *about* the little world. They do not live in it.
 
 You now own the whole vocabulary. There is one thing left, and it is the thing the object does *not*
 tell you.
@@ -118,10 +135,10 @@ off the object. The object does not contain it. You are choosing how much each o
 counts — whether a long line and a short line are worth the same when a number travels along them,
 or whether the long one should count for less.
 
-Call it the dial. Six lines, six settings, and every setting gives you a different world with the same
-dots in it. Nothing so far has needed the dial, which is why you have not met it until now. Almost
-every result later in this book turns out to depend on it, and one whole chapter is about what happens
-when it is set carelessly.
+Call it the dial. Six lines, six settings, and every setting gives you a different world with the
+same dots in it. Nothing so far has needed the dial, which is why you have not met it until now.
+Almost every result later in this book turns out to depend on it, and one whole chapter is about
+what happens when it is set carelessly.
 
 Is that really enough to call a world?
 

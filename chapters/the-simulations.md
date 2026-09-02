@@ -63,7 +63,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None. This section's chapter carries no quoted measurement.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
@@ -78,7 +78,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None. This section's chapter carries no quoted measurement.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
@@ -93,7 +93,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None. This section's chapter carries no quoted measurement.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 

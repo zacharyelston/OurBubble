@@ -406,21 +406,24 @@
         "standards": [
           "book/chapters/00-the-object/chapter.md",
           "book/LESSON_STANDARD.md"
-        ]
+        ],
+        "computed": true
       },
       "one-tetrahedron-is-a-whole-world": {
         "title": "One tetrahedron is a whole world — every kind of number, on a napkin",
         "standards": [
           "book/chapters/00-the-object/chapter.md",
           "book/LESSON_STANDARD.md"
-        ]
+        ],
+        "computed": true
       },
       "make-it-move": {
         "title": "Make it move — the one rule, and what one tick does",
         "standards": [
           "book/chapters/00-the-object/chapter.md",
           "book/LESSON_STANDARD.md"
-        ]
+        ],
+        "computed": true
       },
       "room-and-a-world-with-no-edge": {
         "title": "Room, and a world with no edge — why tetrahedra need a compromise",

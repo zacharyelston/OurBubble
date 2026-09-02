@@ -44,55 +44,58 @@ Here is the rule, and it is the only one in the book.
 **Each dot's number is pushed toward its neighbours' by the differences on its lines — and carries
 forward the motion it has already built up.**
 
-The second half is doing as much work as the first, so here is the sentence that separates them. The
-push sets *the change in the change*, not the change. That one word is the difference between a wave
-and a leak.
+The word to watch is **carries**. Take it out and you have the other rule, the one we are not using:
+*move toward your neighbours* — a dot looks along its lines, finds its neighbours higher, goes up a
+bit, and next tick starts again from wherever it landed. That is a drop of ink in water. It spreads,
+it flattens, it stops.
 
-It is worth naming the rule we are not using, because it is one word away and it sounds just as
-reasonable. *Move toward your neighbours*: a dot looks along its lines, finds its neighbours higher,
-and goes up a bit. That is the rule for a drop of ink in water — it spreads, it flattens, it stops.
+Leave it in, and the push does not deliver the number anywhere this tick. It leans on the number's
+*motion*, and whatever motion the dot had already built up keeps going. So the differences set the
+change in the change rather than the change itself, and a dot already rising keeps rising for a
+moment after its neighbours have fallen below it — the push has to turn a motion around before it
+can reverse it.
 
-Ours pushes the motion instead of the number. So a dot already rising keeps rising for a moment even
-after its neighbours have fallen below it, because the push has to turn the motion around before it
-can reverse it. Which means a dot has to remember one thing beyond where it is: where it was a tick
-ago. Ink in water needs no memory. A plucked string does.
+Which means a dot must remember one thing beyond where it is: where it was a tick ago. Ink in water
+needs no memory. A plucked string does.
 
 Is that really the whole law?
 
 ## Nothing else, ever
 
-Yes, and this is the promise the rest of the book keeps.
+Yes. Everything the rest of this book measures is that sentence, run.
 
-Every result you are going to read — the ripple that is round or lopsided, the cost of pushing on a
-region, the walls and what fits between them, the numbers that agree with real matter, the prediction
-that came back refused — is that one sentence, run on a bigger object, and then measured.
+The ripple that is round or lopsided, the cost of pushing on a region, the walls and what fits
+between them, the numbers that agree with real matter, the prediction that came back refused — all
+of it is that sentence on a bigger object.
 
-There is no second rule for the hard chapters. There is no extra term switched on when a result needs
-help. When a later chapter surprises you, the surprise is in what that sentence *does*, not in
+There is no second rule for the hard chapters. There is no extra term switched on when a result
+needs help. When a later chapter surprises you, the surprise is in what that sentence *does*, not in
 anything that was added to it.
 
 So run it. Four numbers on four corners: what do they do?
 
 ## Ten ticks
 
-Put four different numbers on the four corners, start them at rest, apply the rule ten times, and
-write down what you get.
+Put four different numbers on the four corners and start them **at rest** — which now means
+something checkable: each one was in the same place a tick ago, so there is no motion carried in
+yet. Then apply the rule ten times.
 
 {{napkin:slosh_table}}
 
-They slosh — and then they come back. Look at the corner values at tick 0 and at tick 4: not close,
-not nearly. The same four numbers, in the same places. The world visits one other arrangement and
-returns to exactly where it began, every four ticks, and it will keep doing that forever.
+They slosh — and then they come back. Tick 3 holds the same four numbers as tick 0, in the same
+places. Not close; the same. It does it again at tick 4, and again at 7 and 8, and it will go on
+doing that forever.
 
-This is the beat to be surprised at, so let it land. **Nothing settles.** Nothing spreads out, nothing
-levels off, nothing runs down. If the rule had been *move toward your neighbours*, the four numbers
-would have converged on their average and stayed there — that is what ink in water does. This is what
-a plucked string does instead: it goes, it comes back, and with nothing to damp it, it does that
-again.
+This is the beat to be surprised at. **Nothing settles.** Nothing spreads out, nothing levels off,
+nothing runs down. Under the other rule the four numbers would have converged on their average and
+stopped there, which is what ink in water does. This is the plucked string: it goes, it comes back,
+and with nothing to damp it, it does that again.
 
-Nobody told it to be periodic. There is no clock inside the rule and no instruction to return. It
-comes out of the rule needing to turn a motion around before it can reverse it, and of there being
-nowhere for anything to leak away to.
+One caveat, because the table is tidier than the rule deserves the credit for. That the world comes
+back *at all* is the rule's doing — there is nowhere for anything to leak away to, so it cannot run
+down. That it comes back on a whole tick, onto exactly those numbers, is a *setting*: the step size
+used here is the one value that lands the cycle on four ticks. Change it and the world still
+oscillates forever and still never settles. It just stops keeping such round hours.
 
 Now add up the four numbers at each tick and look down that last column.
 
@@ -100,13 +103,16 @@ Now add up the four numbers at each tick and look down that last column.
 
 It does not change. Not on any tick, not by a little — the same number, eleven times.
 
-And you can see why in one step, which is the pleasure of a world this small. Whatever one dot gains
-along a line, the dot at the other end loses along the same line. Every line is a transfer between
-its two ends. Nothing enters the world and nothing leaves it, so the total is untouched.
+Two things have to be true for that, and both are worth having.
 
-That is the same balancing act as walking around a triangle, except now it is happening in time rather
-than around a shape. Then the sum came home to zero because you returned to where you started; now
-the total holds steady because every transfer is a matched pair.
+**The pushes cancel in pairs.** Every line leans on its two ends by the same difference in opposite
+directions: what one end is pushed up by, the other is pushed down by. Add the pushes over the whole
+world and they contribute nothing at all. That is the same balancing act as walking around a
+triangle, moved from a shape into time.
+
+**And the carried motion started at zero.** We began at rest, so on the first tick there was no
+motion anywhere; the pushes added none to the total; so the total motion at the end of that tick was
+still zero — and the same two sentences run again on the next tick, and every tick after it.
 
 Nothing here leaks, and that is why the sloshing keeps coming back rather than dying away. A world
 that conserves its total has nowhere to put anything it loses.
@@ -127,14 +133,15 @@ sooner — one of them now goes *below every number the world started with*, whi
 look, because a levelling-off process could never do that. Overshooting past everything you began
 with is a wave's signature.
 
-The rhythm changed too. The world still comes home — but not on the same beat. It is back at its
-starting numbers at tick 3 rather than tick 4, and then not again until tick 8. Count it off in the
-table. The tidy pulse is gone because the world now has two speeds in it instead of one.
+The rhythm got thinner. The even world came home at tick 3 and again at 4, then again at 7 and 8 —
+twice in every cycle. This one comes home at tick 3 and then not until 8. Count it off in both
+tables. The world now has two speeds in it instead of one, and they no longer agree on when to
+arrive.
 
-And the total never moved, and neither did the average. The dial changed *how* the world moves. It
-did not change how much there is, or what it is moving around. Hold on to that: a later chapter is
-entirely about a dial set badly, and the tell was never in the totals — it was always in the
-motion.
+And the total never moved, so neither did the average — there are always four numbers sharing it.
+The dial changed *how* the world moves. It did not change how much there is. Hold on to that: a
+later chapter is entirely about a dial set badly, and the tell was never in the totals — it was
+always in the motion.
 
 Now stop being gentle. Poke one dot hard — put a big number on it and leave the others alone. Watch.
 
@@ -144,12 +151,12 @@ There isn't one.
 
 You know what you were expecting, because you have dropped a stone in a pond. A disturbance at one
 spot, then a ring spreading outward, and behind the ring a place it has already passed. Poke this
-tetrahedron and the big number simply sloshes into the other three at once, all of them together, and
-back again.
+tetrahedron and the big number simply sloshes into the other three at once, all of them together,
+and back again.
 
-The reason is embarrassingly simple. On a tetrahedron, every dot is joined to every other dot.
-There is no "outward", because there is nowhere that is further away than anywhere else. There is
-no behind-the-ring, because nothing is behind anything. The object has no *room* in it.
+The reason is embarrassingly simple. On a tetrahedron, every dot is joined to every other dot. There
+is no "outward", because there is nowhere that is further away than anywhere else. There is no
+behind-the-ring, because nothing is behind anything. The object has no *room* in it.
 
 Which means there is a question you cannot ask here.
 
@@ -157,18 +164,22 @@ Which means there is a question you cannot ask here.
 
 You cannot ask how fast.
 
-Speed is a distance divided by a time. You have the time — ticks, and you can count them. You do not
-have the distance, and not because the dial is unset: you have nowhere for a distance to *be*. Every
-pair of dots is one line apart. The whole world is one step wide.
+Speed is a distance divided by a time. You have the time — ticks, and you can count them. What you
+do not have is anything to divide by, and the reason is not that the dial is unset. You were offered
+lengths for the six lines in
+[one tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md), and you may set them
+however you like. The trouble is that on one tetrahedron every pair of dots is one line apart, so
+every journey is the same journey. There is nothing to compare with anything.
 
 And there is a sharper version of the question hiding behind it, which is the one this book is
 actually going to spend a chapter on. Not just *how fast*, but: **is it the same speed in every
 direction?** Because that question needs directions, and directions need somewhere to go.
 
-So you need room. Which means you need more than one tetrahedron — and it turns out that wanting more
-than one tetrahedron is where the trouble starts.
+So you need room. Which means you need more than one tetrahedron — and it turns out that wanting
+more than one tetrahedron is where the trouble starts.
 
-*What this chapter cites — and what it does not: [the simulations](the-simulations.md#s-make-it-move).*
+*What this chapter cites — and what it does not:
+[the simulations](the-simulations.md#s-make-it-move).*
 
 **Next:** [Room, and a world with no edge](room-and-a-world-with-no-edge.md)—why tetrahedra will not
 stack, what Aristotle got wrong for eighteen centuries, and how to build a world with no walls.

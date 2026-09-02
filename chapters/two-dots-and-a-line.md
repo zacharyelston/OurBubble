@@ -32,8 +32,7 @@ So where does change live?
 
 ## Change lives between
 
-Not at a dot. This is the first thing in the book that is genuinely worth stopping on, because it is
-the piece most people carry a wrong picture of.
+Not at a dot — and this is the piece most people carry a wrong picture of.
 
 Put a second dot down and give it a number — three, say. Now something exists that did not exist a
 moment ago: the *difference* between them. Seven and three are two facts about two places. Four is a
@@ -41,23 +40,29 @@ fact about neither of them. It belongs to the pair.
 
 So draw the pair. A line, joining the two dots, and the difference lives on the line.
 
-That is the whole of the vocabulary so far: dots hold numbers, lines hold differences. Two words, and
-you already own both.
+That is the whole of the vocabulary so far: dots hold numbers, lines hold differences. Two words,
+and you already own both.
 
-Can you do anything with two dots and a line?
+And here is the awkward thing about differences, which is going to drive the rest of the chapter.
+Once you write one down on a line, nothing checks it. You could write four, or forty; the line has
+no opinion. To catch a mistake you would need a second, independent route to the same place — and
+with two dots there is no second route to anywhere.
+
+Unless you could get back to where you started without going the way you came. Can you, with two
+dots and a line?
 
 ## Nothing closes yet
 
 Try to go somewhere and come back.
 
 Start at the first dot, cross the line to the second, and then — there is nowhere to go but back the
-way you came. And going back the way you came is not a journey; it undoes itself. Whatever you added
-crossing the line, you subtract crossing it again. You learn nothing, because you never really went
-anywhere.
+way you came. And going back the way you came checks nothing, because it undoes itself. Whatever you
+added crossing the line you subtract crossing it again, so the trip comes home to zero no matter
+what number was on the line. A test that passes whatever the answer is, is not a test.
 
-That matters more than it sounds. The interesting thing a world can do is let you set out, keep
-going, and arrive back where you started *without retracing*. Two dots and a line cannot do it. There
-is no round trip available.
+So what you want is a route out and a *different* route home. Then the two routes have to agree, and
+disagreement means somebody wrote a number down wrong. Two dots and a line cannot offer it: there is
+only ever one way across.
 
 So add a third dot. What is the smallest thing that closes?
 
@@ -66,7 +71,7 @@ So add a third dot. What is the smallest thing that closes?
 Three dots. Join each to both of the others: three lines. And the moment you draw the third line,
 something appears that was not there before and that you did not ask for.
 
-An inside.
+An inside — a flat one, a patch of ground fenced off.
 
 Two dots and a line have no inside. Three dots and three lines have a region enclosed — a face — and
 the boundary of that region is a route you can walk all the way round and come home by, never
@@ -98,16 +103,16 @@ Do it with real numbers rather than in the abstract.
 
 Zero. Not a small number, not a number close to zero. Zero.
 
-And once you have seen it once, you can feel why. Each corner number got added when you arrived at it
-and subtracted when you left. Every corner is arrived at exactly once and left exactly once, so every
-number in the walk appears twice with opposite signs. The books balance because you came home.
+And once you have seen it once, you can feel why. Each corner number got added when you arrived at
+it and subtracted when you left. Every corner is arrived at exactly once and left exactly once, so
+every number in the walk appears twice with opposite signs. The books balance because you came home.
 
 But is that special to those three numbers?
 
 ## Any three numbers at all
 
-No. Try it with any three. Try it with numbers you pick to be awkward — enormous ones, negative ones,
-the same one three times. It comes back zero every time, and it is not luck.
+No. Try it with any three. Try it with numbers you pick to be awkward — enormous ones, negative
+ones, the same one three times. It comes back zero every time, and it is not luck.
 
 You can see it in one line of reasoning. Going all the way round a closed loop means each corner is
 entered once and left once. The sum of the differences along a closed walk is therefore the sum of
@@ -115,7 +120,8 @@ each corner number minus itself. There is nothing left over. There is nothing th
 over.
 
 This is the first fact about the object that is true of the object rather than of any particular
-numbers you put on it. It has one more surprise in it, though, and the surprise is the word *exactly*.
+numbers you put on it. It has one more surprise in it, though, and the surprise is the word
+*exactly*.
 
 Why exactly zero, and not nearly?
 
@@ -151,17 +157,17 @@ So what have you actually assumed, all told?
 
 ## Nothing at all
 
-Take the inventory, because it is short and it is the point of the chapter.
+Take the inventory. It is short.
 
 No distances. No directions — nothing here knows what "north" would mean. No time; nothing has
 happened yet, and nothing can. No physics: not a force, not a field, not a particle. Just dots
-holding numbers, lines holding differences, one face with an inside, and one fact that came for free
-when the shape closed.
+holding numbers, lines holding differences, one face with its flat inside, and one fact that came
+free when the shape closed.
 
-And this is worth saying plainly, because it is easy to read what you have built as a crude sketch of
-something better. It is not. It is a small world, complete in itself, with nothing missing that it
-needs. Everything from here is that world, made slightly larger, and always because a question forced
-it.
+And this is worth saying plainly, because it is easy to read what you have built as a crude sketch
+of something better. It is not. It is a small world, complete in itself, with nothing missing that
+it needs. Everything from here is that world, made slightly larger, and always because a question
+forced it.
 
 Here is the question that forces the next one. A triangle closes, and it is flat. What is the same
 shape, one dimension up?

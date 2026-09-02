@@ -254,7 +254,8 @@ def tetra_counts() -> str:
         f"| {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |"
     )
     return block("tetra_counts", body,
-                 "the tetrahedron's census, and that its boundary closes twice (d∘d = 0 on both rungs)")
+                 "the tetrahedron's census, and that walking the boundary comes home to zero twice "
+                 "over — round each face, and round the solid inside")
 
 
 def triangle_loop_example() -> str:
@@ -300,7 +301,7 @@ def tetra_face_loops() -> str:
         f"| line | {line_rows} |\n"
         f"|---|{'---|' * len(lines)}\n"
         f"| difference | {diff_rows} |\n\n"
-        "| face | its three line-numbers, walked round | loop |\n|---|---|---|\n"
+        "| face | its three line-numbers | loop, walked round |\n|---|---|---|\n"
         f"{face_rows}"
     )
     return block("tetra_face_loops", body,
@@ -377,10 +378,9 @@ def slosh_table() -> str:
     assert repeat, "the run did not repeat within the ticks computed"
     body = _slosh_body(history)
     return block("slosh_table", body,
-                 f"the engine's leapfrog scalar wave (φ′ = 2φ − φ_old − c²dt²Δ₀φ, c²dt² = "
-                 f"{number(TICK_K)}) run {TICKS} ticks from rest on one tetrahedron with every line "
-                 f"counting the same (⋆₁ = 1); the total is conserved exactly, and with nothing to "
-                 f"damp it and no room to spread into, the whole world returns to its start every "
+                 f"the engine's own wave rule, run {TICKS} ticks from rest on one tetrahedron with "
+                 f"every line counting the same; the total is conserved exactly, and with nothing to "
+                 f"damp it and no room to spread into, the whole world comes back to its start every "
                  f"{repeat} ticks")
 
 
@@ -406,10 +406,10 @@ def slosh_table_dialed() -> str:
 
     body = _slosh_body(history)
     return block("slosh_table_dialed", body,
-                 f"the same {TICKS} ticks with line {edge_name(DIALED_LINE)} counted double "
-                 f"(⋆₁ = 2 there, 1 elsewhere) — the dial, on one line. The total is still conserved "
-                 f"exactly and the four numbers still average to {number(average)}; what changed is "
-                 f"the motion, which is now faster along {edge_name(DIALED_LINE)} than the rest")
+                 f"the same {TICKS} ticks with line {edge_name(DIALED_LINE)} counted double and "
+                 f"every other line counting one — the dial, on one line. The total is still "
+                 f"conserved exactly and the four numbers still average to {number(average)}; what "
+                 f"changed is the motion, now faster along {edge_name(DIALED_LINE)} than the rest")
 
 
 TOKENS = {
