@@ -540,12 +540,18 @@ def declared_record_paths(manifest: Dict[str, object]) -> List[str]:
     """
     paths = set()
     prefix = f"{RECORD_DIR.name}/"
+    views = generated_manifest()
     for chapter in sorted((EDITION_DIR / "chapters").glob("*.md")):
         markdown = chapter.read_text(encoding="utf-8")
         for raw in MARKDOWN_LINK.findall(markdown) + HTML_LINK.findall(markdown):
             target = raw.strip().strip("<>").split("#", 1)[0].split("?", 1)[0]
-            if target.startswith(prefix):
-                paths.add(target[len(prefix):])
+            if not target.startswith(prefix):
+                continue
+            inside = target[len(prefix):]
+            # A link to a generated view is a link to the file it renders. Normalising here is what
+            # lets the appendix send a reader to a readable `.rs` gate while the footprint stays a
+            # list of real record files.
+            paths.add(views.get(inside) or inside)
     for section in dict(manifest["appendix"]["sections"]).values():
         entry = dict(section)
         for key in ("entries", "gates", "figures", "standards"):
@@ -557,19 +563,35 @@ def declared_record_paths(manifest: Dict[str, object]) -> List[str]:
     return sorted(paths)
 
 
-def generated_paths() -> set:
-    """The snapshot's scaffolding, as `record/.generated` lists it.
+def generated_manifest() -> Dict[str, str]:
+    """`record/.generated`, as `{generated path: the record file it shows, or ""}`.
 
     An explicit list rather than a name heuristic, and the reason is a caught bug: the first version
     guessed — skip `index.html`, skip an `.html` beside a text file, skip dotfiles — and that guess
     silently excluded thirteen real engine files (`data/.gitkeep`) from the byte-for-byte
     comparison. The check still passed; it was just checking less than it claimed. The generator now
     writes down what it made, so record and scaffolding are told apart by record, not by resemblance.
+
+    The second field arrived with the gate links. A `.rs` file is served by GitHub Pages as a
+    download, so the appendix points at the view page instead — and without this mapping that link
+    would look like a dependency on `…/gate.html`, a file the record does not contain, and the
+    footprint check would reject it. The map says which record file a view stands for.
     """
     listing = RECORD_DIR / ".generated"
     if not listing.exists():
-        return set()
-    return {line.strip() for line in listing.read_text(encoding="utf-8").splitlines() if line.strip()}
+        return {}
+    out: Dict[str, str] = {}
+    for line in listing.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        generated, _, source = line.partition("\t")
+        out[generated.strip()] = source.strip()
+    return out
+
+
+def generated_paths() -> set:
+    """Just the paths — the set the byte-for-byte comparison skips."""
+    return set(generated_manifest())
 
 
 def snapshot_files(root: Path, cited: Sequence[str], skip: set = frozenset()) -> Dict[str, bytes]:

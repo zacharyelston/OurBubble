@@ -30,7 +30,20 @@ def render() -> str:
     # The prefix has no `../` on purpose. `chapters/record` is a symlink to it, so `record/…`
     # resolves three ways with one spelling: in the repository browser (from `chapters/`), in the
     # built book (mdBook copies the tree to `book/record/`), and on the published site.
-    def rel(p): return "record/" + p
+    #
+    # One wrinkle, and it is about what the browser does rather than what the link says. mdBook
+    # rewrites a `*.md` link to `*.html` on its own, which lands on the generated view — good. It
+    # leaves `*.rs` alone, and GitHub Pages serves `.rs` as a type browsers download instead of
+    # display. The gate source is exactly what a skeptic clicks, so those point at the view page,
+    # which shows the file's own bytes. `record/.generated` records that the view stands for the
+    # `.rs` file, so the footprint check still sees a dependency on the gate itself.
+    RENDERED_ONLY = (".rs",)
+
+    def rel(p):
+        for suffix in RENDERED_ONLY:
+            if p.endswith(suffix):
+                return "record/" + p[: -len(suffix)] + ".html"
+        return "record/" + p
 
     L=["# Appendix · The Simulations\n",
     """> **Scope.** Everything on this page describes computations inside a **toy** discrete lattice. The
