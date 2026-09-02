@@ -440,6 +440,172 @@ def slosh_table_dialed() -> str:
                  f"changed is the motion, now faster along {edge_name(DIALED_LINE)} than the rest")
 
 
+# ── the object one dimension out: how many kinds of place are there? ──────────────────────────────
+#
+# Chapters 1–3 never leave one tetrahedron. Chapter 4 has to, because she asks for room, and the
+# answer to "do tetrahedra fill space?" is no — so the book has to say what was built instead. This
+# token replicates that construction and counts what it produced.
+#
+# Faithful to `mesh_3d_chiral_tetoct_periodic` in the engine's `core/geom/src/mesh.rs`:
+#
+#   * dots are the integer points with x+y+z EVEN; the odd points are hole centres and carry
+#     nothing at all (asserted below — they must come out with no lines on them);
+#   * every unit cube contributes ONE tetrahedron, on its four even corners;
+#   * every odd point carries the octahedron of its six axis neighbours, cut into four tetrahedra
+#     about ONE long diagonal, and which of the three the cut uses is `(x+y+z) mod 3` —
+#     `chiral_oct_screw111`, the rule the engine's own audit picked.
+#
+# The whole point of the token is the CONTROL. "Three kinds of place" means nothing on its own; it
+# means something next to "cut every hole the same way and there is one kind of place". Same
+# builder, same lattice, one line different.
+
+TORUS_MIN = 6      # the builder's own minimum: parity (mod 2) and the cut rule (mod 3) must both
+TORUS_CHECK = 12   # close under a wrap, and ±2 hops must stay distinct. 12 confirms 6 is enough.
+
+
+def screw111(x: int, y: int, z: int) -> int:
+    """The engine's cut rule: which of the three long diagonals this hole is split about."""
+    return (x + y + z) % 3
+
+
+def uniform_cut(x: int, y: int, z: int) -> int:
+    """The control: every hole cut the same way, whatever its position."""
+    return 0
+
+
+def tetoct_stars(n: int, cut) -> Dict[Tuple[int, int, int], frozenset]:
+    """Build the complex on an n³ torus and return each dot's set of line-directions.
+
+    A dot's "star" here is the set of directions the lines leaving it point in — the arrangement a
+    reader would see standing on that dot and looking around. Directions are taken by shortest way
+    round the torus, so a line that wraps is still the short line it geometrically is.
+    """
+    def wrap(p):
+        return (p[0] % n, p[1] % n, p[2] % n)
+
+    def direction(a, b):
+        out = []
+        for u, v in zip(a, b):
+            d = (v - u) % n
+            out.append(d - n if d > n // 2 else d)
+        return tuple(out)
+
+    tets = []
+    # one tetrahedron per cube, on its four even corners
+    for i in range(n):
+        for j in range(n):
+            for k in range(n):
+                corners = [
+                    (i + a, j + b, k + c)
+                    for a in (0, 1) for b in (0, 1) for c in (0, 1)
+                    if (i + a + j + b + k + c) % 2 == 0
+                ]
+                assert len(corners) == 4, "a cube must have four even corners"
+                tets.append([wrap(p) for p in corners])
+
+    # one cut-up octahedron per odd point
+    for x in range(n):
+        for y in range(n):
+            for z in range(n):
+                if (x + y + z) % 2 == 0:
+                    continue
+                xp, xm = (x + 1, y, z), (x - 1, y, z)
+                yp, ym = (x, y + 1, z), (x, y - 1, z)
+                zp, zm = (x, y, z + 1), (x, y, z - 1)
+                axis = cut(x, y, z)
+                if axis == 0:
+                    d0, d1, eq = xm, xp, [yp, zp, ym, zm]
+                elif axis == 1:
+                    d0, d1, eq = ym, yp, [zp, xp, zm, xm]
+                else:
+                    d0, d1, eq = zm, zp, [xp, yp, xm, ym]
+                for w in range(4):
+                    tets.append([wrap(p) for p in (d0, d1, eq[w], eq[(w + 1) % 4])])
+
+    stars: Dict[Tuple[int, int, int], set] = {}
+    for x in range(n):
+        for y in range(n):
+            for z in range(n):
+                stars[(x, y, z)] = set()
+    for tet in tets:
+        for a in tet:
+            for b in tet:
+                if a != b:
+                    stars[a].add(direction(a, b))
+    return {point: frozenset(star) for point, star in stars.items()}
+
+
+def kinds_of_place(n: int, cut) -> Tuple[int, List[int], Dict[Tuple[int, int, int], int]]:
+    """The number of distinct arrangements, their sizes, and which arrangement each dot has.
+
+    Only the dots that carry lines are counted. The odd points are not places a number can live —
+    they are the holes the octahedra are centred on — and that they come out with no lines at all is
+    asserted here rather than assumed, because it is the load-bearing half of "dots are the even
+    points".
+    """
+    stars = tetoct_stars(n, cut)
+    arrangements: Dict[frozenset, int] = {}
+    labels: Dict[Tuple[int, int, int], int] = {}
+    sizes: List[int] = []
+    for point in sorted(stars):
+        star = stars[point]
+        if sum(point) % 2:
+            assert not star, f"the hole at {point} carries {len(star)} line(s); it should carry none"
+            continue
+        assert len(star) == 14, f"the dot at {point} has {len(star)} lines, not 14"
+        if star not in arrangements:
+            arrangements[star] = len(arrangements)
+            sizes.append(0)
+        labels[point] = arrangements[star]
+        sizes[arrangements[star]] += 1
+    return len(arrangements), sizes, labels
+
+
+def vertex_classes() -> str:
+    dots = TORUS_MIN ** 3 // 2
+
+    count, sizes, labels = kinds_of_place(TORUS_MIN, screw111)
+    assert count == 3, f"the twisting rule gave {count} kinds of place, not 3"
+    assert sizes == [dots // 3] * 3, f"the three kinds are not equal thirds: {sizes}"
+    assert sum(sizes) == dots, f"{sum(sizes)} dots classified, expected {dots}"
+
+    # Each kind is exactly one value of (x+y+z) mod 3 — the arrangement a dot has is fixed by where
+    # it sits, and by nothing else. This is the claim the chapter will make, so it is the assertion.
+    by_kind: Dict[int, set] = {}
+    for point, kind in labels.items():
+        by_kind.setdefault(kind, set()).add(sum(point) % 3)
+    assert all(len(values) == 1 for values in by_kind.values()), (
+        f"a kind of place spans more than one position rule: {by_kind}"
+    )
+    assert {next(iter(v)) for v in by_kind.values()} == {0, 1, 2}, (
+        f"the three kinds do not use all three positions: {by_kind}"
+    )
+
+    control, control_sizes, _ = kinds_of_place(TORUS_MIN, uniform_cut)
+    assert control == 1, f"cutting every hole the same way gave {control} kinds, not 1"
+    assert control_sizes == [dots], f"the control's single kind does not hold every dot: {control_sizes}"
+
+    # A bigger world must agree, or 6 was too small to see the truth rather than the wrap.
+    bigger, bigger_sizes, _ = kinds_of_place(TORUS_CHECK, screw111)
+    big_dots = TORUS_CHECK ** 3 // 2
+    assert bigger == 3, f"the {TORUS_CHECK}³ world gave {bigger} kinds, not 3"
+    assert bigger_sizes == [big_dots // 3] * 3, f"the bigger world is not in thirds: {bigger_sizes}"
+
+    body = (
+        "| how the holes are cut | kinds of place | how the dots divide |\n"
+        "|---|---|---|\n"
+        f"| all the same way | **{control}** | all {dots} alike |\n"
+        f"| turning by a third each step | **{count}** | "
+        f"{' · '.join(str(size) for size in sizes)} — exact thirds |"
+    )
+    return block("vertex_classes", body,
+                 f"the object built on a {TORUS_MIN}×{TORUS_MIN}×{TORUS_MIN} wrapped world — every "
+                 f"dot has {14} lines either way, and the only difference is the cut: cut every hole "
+                 f"alike and every dot stands in the same arrangement, turn the cut by a third each "
+                 f"step and there are exactly three, in equal thirds "
+                 f"(confirmed unchanged on a {TORUS_CHECK}³ world)")
+
+
 TOKENS = {
     "tetra_counts": tetra_counts,
     "triangle_loop_example": triangle_loop_example,
@@ -447,6 +613,7 @@ TOKENS = {
     "tetra_inside_sum": tetra_inside_sum,
     "slosh_table": slosh_table,
     "slosh_table_dialed": slosh_table_dialed,
+    "vertex_classes": vertex_classes,
 }
 
 
