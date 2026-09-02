@@ -4,6 +4,7 @@
 - [Two dots, a line, and the first thing that closes](two-dots-and-a-line.md)
 - [One tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md)
 - [Make it move](make-it-move.md)
+- [The shape between](the-shape-between.md)
 - [Room, and a world with no edge](room-and-a-world-with-no-edge.md)
 - [Is it round?](the-round-ripple.md)
 - [What does pushing on it cost?](the-bubble-and-its-bill.md)

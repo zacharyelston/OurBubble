@@ -199,11 +199,11 @@ And there is a sharper version of the question hiding behind it, which is the on
 actually going to spend a chapter on. Not just *how fast*, but: **is it the same speed in every
 direction?** Because that question needs directions, and directions need somewhere to go.
 
-So you need room. Which means you need more than one tetrahedron — and it turns out that wanting
-more than one tetrahedron is where the trouble starts.
+So you need room. The obvious way to get it is a second tetrahedron — but there is a cheaper place
+to look first, and it is inside the one you already have.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-make-it-move).*
 
-**Next:** [Room, and a world with no edge](room-and-a-world-with-no-edge.md)—why tetrahedra will not
-stack, what Aristotle got wrong for eighteen centuries, and how to build a world with no walls.
+**Next:** [The shape between](the-shape-between.md)—cut one tetrahedron at the middles of its six
+lines, and count what falls out.

@@ -9,7 +9,7 @@
   <figcaption><strong>Analogy — not data.</strong> One experiment, two answers: the isolation worked, and the effect people wanted from it did not.</figcaption>
 </figure>
 
-<!-- beat 61 -->
+<!-- beat 72 -->
 
 The last chapter stopped at a barrier. A shaped push wants something below the floor; ordinary
 fields never go below the floor. So stop asking the fields, and look at the other half of the
@@ -31,7 +31,7 @@ have a world we can cut a region off inside.
 
 ## ✎ Before we look
 
-<!-- beat 62 -->
+<!-- beat 73 -->
 
 **Write your guess down.** Build a shell in the little world that a signal cannot cross, put a test
 blob inside it, and shove the blob. Does it move further than it would have without the shell?
@@ -42,7 +42,7 @@ to isolate at all? And if the blob does move differently, by how much — a litt
 
 ## First question: does the wall isolate?
 
-<!-- beat 63 -->
+<!-- beat 74 -->
 
 It does, and convincingly.
 
@@ -59,7 +59,7 @@ Which should immediately make you suspicious of something.
 
 ## How do I know it is a shield and not a sponge?
 
-<!-- beat 64 -->
+<!-- beat 75 -->
 
 That is the right question, and it is the reason the run has a control in it.
 
@@ -78,7 +78,7 @@ Now the question the chapter was built for. The blob inside: does it move differ
 
 ## Second question: no, and not marginally
 
-<!-- beat 65 -->
+<!-- beat 76 -->
 
 The blob inside moves exactly as far as it did before.
 
@@ -96,7 +96,7 @@ Why nothing at all, though? Not "why was the effect small" — why was it *absen
 
 ## Where a wall lives in the equations
 
-<!-- beat 66 -->
+<!-- beat 77 -->
 
 Because of where a wall of this kind enters the machinery, and once you look it is not subtle.
 
@@ -113,7 +113,7 @@ So what is that no actually worth?
 
 ## What the no is worth
 
-<!-- beat 67 -->
+<!-- beat 78 -->
 
 Notice first what it does not say. It does not say the coupling idea is wrong.
 
@@ -131,7 +131,7 @@ There is one more route to the same barrier, and it is worth closing before movi
 
 ## Can aimed fields empty a volume?
 
-<!-- beat 68 -->
+<!-- beat 79 -->
 
 Shielding a region isolates it. It does not *empty* it. So try the other thing: arrange ordinary
 fields, several sources carefully aimed, so they cancel one another over a whole volume.
