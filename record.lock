@@ -25,7 +25,7 @@
 version = 1
 repo    = github.com/zacharyelston/UniForge
 ref     = main
-sha     = b2759cda18e160327f5c513183579eb826d6738d
+sha     = db59a2fc3c398095b3e3ec0e1c702272747ca637
 
 # The record files this edition cites or quotes from. Derived from edition.json — do not hand-edit;
 # regenerate with:  python3 -c 'import check_edition as c; [print("path = "+p) for p in c.declared_record_paths(c.load_manifest())]'
