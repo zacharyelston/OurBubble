@@ -1,4 +1,4 @@
-# The wall that worked, and didn't
+# Can you wall a piece off?
 
 > **Scope.** A **toy** computation. The "wall" is a region of the lattice we made hard for a signal to
 > cross; "inertia" is how far a test blob moves under the same push. Nothing here is a shield, a
@@ -9,109 +9,153 @@
   <figcaption><strong>Analogy — not data.</strong> One experiment, two answers: the isolation worked, and the effect people wanted from it did not.</figcaption>
 </figure>
 
-The last chapter ended at a barrier in the argument: a shaped push wants energy below the floor, and
-ordinary fields cannot go below the floor. So the natural next move is to stop asking fields for the
-sign and ask something else instead.
+<!-- beat 61 -->
 
-Here is the something else, and it is a genuinely interesting idea, which is why it is worth taking
-seriously enough to break.
+The last chapter stopped at a barrier. A shaped push wants something below the floor; ordinary
+fields never go below the floor. So stop asking the fields, and look at the other half of the
+problem.
 
-There is a long-standing suggestion — never mainstream, never quite dead — that a thing's resistance
-to being pushed is not a private property of the thing but a relationship between it and everything
-else. Ernst Mach argued something of this shape in the nineteenth century, and Einstein, who named
-the idea after him, took it seriously enough to try to build it in. On that view, mass is a kind of
-bookkeeping about how strongly you are coupled to the rest of the world. If it were true, then
-cutting something off from its surroundings should make it *easier to push*.
+A push has two halves: what you spend, and what you are pushing against. We have been staring at the
+first. Is the second softer than it looks?
 
-That is a testable statement, and we happen to have a world we can wall a region off inside.
+Here is the idea that says it might be, and it deserves to be taken seriously enough to break.
 
-## The experiment, and the two questions it asks
+Ask what a thing's resistance to being pushed actually *is*. The obvious answer is that it is a
+private property — a number the thing carries around, the way it carries a colour. Ernst Mach argued
+in the nineteenth century for something quite different: that the resistance is a *relationship*
+between the thing and everything else there is. Einstein, who named the idea after him, took it
+seriously enough to try to build it into his theory of gravity.
 
-Build an isolating shell in the little world — a region where the field is heavily suppressed, and
-not to be confused with the bubble wall of the last chapter, which was a shape the energy took
-rather than a thing we built. Put a test blob inside it. Then ask two separate questions, and keep
-them separate.
+If that were right, a thing cut off from everything else should get easier to push. And we happen to
+have a world we can cut a region off inside.
 
-**Question one: does the wall actually isolate?** Send a signal from outside and see how much of it
-reaches the inside.
+## ✎ Before we look
 
-**Question two: is the blob inside now easier to push?** Give it a shove and measure how far it
-moves, then compare with the same shove in the same world with no wall.
+<!-- beat 62 -->
 
-Both were registered before the run, with thresholds. They are not the same question and the answers
-did not agree.
+**Write your guess down.** Build a shell in the little world that a signal cannot cross, put a test
+blob inside it, and shove the blob. Does it move further than it would have without the shell?
 
-## Question one: yes, and convincingly
+Two more things worth committing to while you are at it, because they turn out to be separate
+questions and the chapter's whole shape is that they got separate answers. Do you expect the shell
+to isolate at all? And if the blob does move differently, by how much — a little, or a lot?
 
-The wall works. A signal that has to cross the shell arrives on the inside about **half a million
-times** weaker than it would without one. That is not a marginal effect; the interior really is cut
-off.
+## First question: does the wall isolate?
 
-And the control behaves too. A path that goes from outside to outside *without* crossing the shell
-is barely touched — it comes through at about **0.86** of its unobstructed strength. If that number
-had also collapsed, we would not have built a shield; we would have built a machine that damps
-everything, and the isolation figure would have meant nothing.
+<!-- beat 63 -->
 
-So: a real, local, measured imbalance. The inside of the room genuinely does not know what is going
-on outside.
+It does, and convincingly.
+
+Build the shell — a region where the field is heavily suppressed. It is not the bubble wall of the
+last chapter; that was a shape the energy took, and this is a thing we put there on purpose. Then
+send a signal from outside and see how much of it arrives inside.
+
+About **half a million times** weaker than it would have been without the shell. That is not a
+marginal effect. The interior genuinely does not know what is going on outside.
 
 **[Open the data-true shield figure](record/lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html)**
 
-## Question two: no, and not marginally
+Which should immediately make you suspicious of something.
+
+## How do I know it is a shield and not a sponge?
+
+<!-- beat 64 -->
+
+That is the right question, and it is the reason the run has a control in it.
+
+A shell that suppresses everything inside would look identical to a shell that suppresses everything
+everywhere. If we had accidentally built a machine that damps all signals equally, the isolation
+figure would still have come back enormous, and it would have meant nothing at all.
+
+So the same run also measured a path that goes from outside to outside, never crossing the shell. If
+the shell is a genuine local barrier, that path should be barely touched.
+
+It comes through at about **0.86** of its unobstructed strength. Slightly attenuated, essentially
+intact. So what we have is a real, local, measured imbalance — the inside cut off, the outside left
+alone.
+
+Now the question the chapter was built for. The blob inside: does it move differently?
+
+## Second question: no, and not marginally
+
+<!-- beat 65 -->
 
 The blob inside moves exactly as far as it did before.
 
-Not slightly less. The difference between the walled and unwalled cases is down at the level where
-the arithmetic runs out — the same shove, the same displacement, no measurable change at all.
+Not slightly further. Not slightly less. The blob's displacement differs between the walled and
+unwalled cases by about a millionth — far inside the threshold registered for it. The run does not
+claim the two cases are bit-for-bit identical, and says why: the wall reflects a wave of its own
+that leaks back inward at lattice speed. That is a difference in what reaches the blob, and it is
+not a difference in how hard the blob is to push.
 
-And the reason is not subtle once you look at where the wall appears in the machinery. A wall of
-this kind enters as a *potential* — something that pushes back at its own location. It shows up in
-the equations exactly where the shell is, and it contributes precisely nothing at the position of
-the blob in the middle. There is no term for it to change there.
+Go and look at your guess. This is the one the ritual is for, because the idea in the opening is
+genuinely attractive, and half the point of writing a prediction down is to catch yourself having
+found an attractive idea plausible.
 
-If anything, the wall region itself became *harder* to move, not easier. The suppression makes the
-shell more sluggish, which is the opposite of the hoped-for direction, and it is what you would
-expect from a potential rather than from a change in what inertia means.
+Why nothing at all, though? Not "why was the effect small" — why was it *absent*?
 
-## What that result is worth
+## Where a wall lives in the equations
 
-It is a negative, and it is the most useful thing in the chapter.
+<!-- beat 66 -->
 
-Notice what it does *not* say. It does not say the coupling idea is wrong. It says something more
-precise and more useful: **under standard physics, cutting off the information does not cut the
-inertia**, because inertia and potentials live in different places in the equations. To get the
-effect you would need an extra law — a new rule tying mass to environmental coupling — and that rule
-is a separate, contested hypothesis, which this experiment does not assume.
+Because of where a wall of this kind enters the machinery, and once you look it is not subtle.
 
-The experiment answered, and part of the answer was no. It also handed us the price of the
-interesting version: *if* such a law existed, this run's isolation figure would predict a
-spectacularly lighter interior. It does not, so it does not.
+It enters as a *potential*: something that pushes back at its own location. It appears in the
+equations exactly where the shell is, and it contributes precisely nothing at the position of the
+blob in the middle. There is no term there for it to change. The blob is not being told about the
+wall, because the wall is not in the blob's arithmetic.
 
-## And the other way at the same barrier
+If anything, the wall region itself became *harder* to move rather than easier. The suppression
+makes the shell more sluggish — the opposite of the hoped-for direction, and exactly what you would
+expect from a potential rather than from a change in what resistance means.
 
-This is also where the temptation the last chapter named gets its test. Shielding a region isolates
-it; it does not empty it. So: can *interference* empty one — **arranging ordinary fields**, several
-sources carefully aimed, so that they cancel each other out over a whole volume? And note that
-emptying one would only be the first step, because it gets you to zero, and a shaped push asks for
-something below the floor. If you cannot even reach zero over a volume, below it is out of the
-question.
+So what is that no actually worth?
 
-A conjecture, with a threshold. Tested to destruction. **No.**
+## What the no is worth
 
-The energies add. You can cancel a field at a point, and you can cancel it on a surface, but a
-free-space volume where everything is zero is not something you can build out of sources aimed at it
-from outside — and the reason is structural rather than a matter of trying harder.
+<!-- beat 67 -->
+
+Notice first what it does not say. It does not say the coupling idea is wrong.
+
+It says something narrower and more useful:
+**under standard physics, cutting off the information does not cut the resistance**, because
+resistance and potentials live in different places in the equations. To get the effect you would
+need an extra law — a new rule tying mass to environmental coupling — and that rule is a separate,
+contested hypothesis, which this experiment does not assume.
+
+That is a bound rather than a shrug, and the run even priced the interesting version for us: *if*
+such a law existed, this shell's isolation figure would predict a spectacularly lighter interior. It
+does not, so it does not.
+
+There is one more route to the same barrier, and it is worth closing before moving on.
+
+## Can aimed fields empty a volume?
+
+<!-- beat 68 -->
+
+Shielding a region isolates it. It does not *empty* it. So try the other thing: arrange ordinary
+fields, several sources carefully aimed, so they cancel one another over a whole volume.
+
+Note how modest that would be even if it worked: cancelling reaches zero, and a shaped push wants
+below the floor.
+
+A conjecture, with a threshold: the target volume had to hold less than a fifth of the field
+elsewhere. It never came close. Tested to destruction. **No.**
+
+The energies add. You can cancel a field at a point and on a surface, but a volume where everything
+is zero cannot be built out of sources aimed from outside — the reason is structural, not a matter
+of trying harder.
 
 **[Open the data-true null figure](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
 
-Two chapters, three negatives, and the barrier from
-[the bubble and its bill](the-bubble-and-its-bill.md) still standing. This is the point in a project
-where you either stop or you go and find the one place the sign is genuinely allowed.
+Two chapters, three noes, and the barrier from
+[what pushing on it costs](the-bubble-and-its-bill.md) still standing. This is the point in a
+project where you either stop, or you go and find the one place the sign is genuinely allowed.
 
-There is one. It is in the next chapter, and it is not in the fields.
+There is one. It is not in the fields at all — it is in what is left when you take them away.
 
-*The simulations behind this chapter:
+*What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-the-wall-that-worked-and-didnt).*
 
-**Next:** [Where negative energy appears](where-negative-energy-appears.md)—the one place the sign
-is real, and what it costs to get there.
+**Next:** [Can a gap be emptier than empty?](where-negative-energy-appears.md)—the one place the
+sign is real, and what it costs to get there.

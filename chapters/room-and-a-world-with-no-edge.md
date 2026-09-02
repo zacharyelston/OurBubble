@@ -59,10 +59,11 @@ If there is no perfect answer, what did we choose?
 
 Every tetrahedral world is a compromise, and a compromise is a choice with measurable consequences.
 
-Here is ours, with a pencil. Colour a cube's eight corners in two colours so that **no two corners
-joined by an edge ever share a colour**; there is exactly one way. Then **keep one colour and
-discard the other.** The four you kept are joined by diagonals across the cube's faces, so all six
-gaps between them are equal — which makes them one regular tetrahedron. One cube, one tetrahedron.
+Here is ours, with a pencil. Colour a cube's eight corners in two colours so that
+**no two corners joined by an edge ever share a colour**; there is exactly one way. Then
+**keep one colour and discard the other.** The four you kept are joined by diagonals across the
+cube's faces, so all six gaps between them are equal — which makes them one regular tetrahedron. One
+cube, one tetrahedron.
 
 Stack the cubes, same colour throughout. The tetrahedra never meet face to face, and the gaps
 between them are no longer thin wedges: each is an octahedron, centred on a corner you threw away.
@@ -158,22 +159,23 @@ So the world has a grain, and no dot is privileged.
 
 <!-- beat 43 -->
 
-You can now ask the stopwatch question. Poke a dot, count the ticks, and see how far the front has
-gone — then do it again in a different direction and compare.
+You can now ask the stopwatch question: poke a dot, count the ticks, see how far the front has gone,
+then do it again in another direction and compare.
 
-And the grain gives that question teeth: if the two answers disagree, either the world really runs
-faster one way, or you are reading the grain.
+And the grain gives that question teeth: if the two disagree, either the world really runs faster
+one way, or you are reading the grain.
 
-Every step of it was forced but one. Dots, because a number needs somewhere to sit; lines, because
-change lives between; a triangle, because it closes; a tetrahedron, because that is the triangle one
-dimension up and it holds its shape where a cube does not; a clock and one rule, because nothing
-could happen; many tetrahedra, because one had no room; the two-colouring, because tetrahedra will
-not stack alone; a wrap, because edges echo.
+Every step was forced but one. Dots, because a number needs somewhere to sit; lines, because change
+lives between; a triangle, because it closes; a tetrahedron, because that is the triangle one
+dimension up and holds its shape where a cube does not; a clock and one rule, because nothing could
+happen; many tetrahedra, because one had no room; the two-colouring, because tetrahedra will not
+stack alone; a wrap, because edges echo.
 
-The exception is the dial — the only thing anybody chose, and still unset.
+The exception is the dial: the only thing anybody chose, and still unset.
 
-That is the object. Everything from here is this one thing, asked a different question — and the
-first question is whether the ring it makes is actually round.
+That is the object, and it has a name: **The Container**, because everything this book measures
+happens inside it. Everything from here is this one thing asked a different question — and the first
+is whether the ring it makes is actually round.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-room-and-a-world-with-no-edge).*

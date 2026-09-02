@@ -1,4 +1,4 @@
-# A number without the answer key
+# Can it tell me something I didn't tell it?
 
 > **Scope.** *Ising model*, *critical point* and *universality* name lattice models and the
 > dimensionless properties they share with some measured systems. This is a **toy**; agreement with a
@@ -6,126 +6,166 @@
 
 <figure class="chapter-illustration">
   <img src="assets/blind-class-and-its-miss.svg" alt="Two panels. On the left, measured markers sit on a dashed line that marks an answer already known. On the right the dashed line is gone, the markers still form the same trend, and one marker sits outside a band that was drawn before the measurement was taken.">
-  <figcaption><strong>Analogy — not data.</strong> An instrument earns trust on a case whose answer is known, then works where no answer exists — and keeps the one shortfall it said in advance it would have. The numbers are in the figures linked below.</figcaption>
+  <figcaption><strong>Analogy — not data.</strong> An instrument earns trust on a case whose answer is known, then works where no answer exists — and keeps the one shortfall it predicted for itself. The numbers are in the figures linked below.</figcaption>
 </figure>
 
-There is a way to make a toy look profound, and this project used to do it.
+<!-- beat 78 -->
 
-You take a famous constant of nature. You build formulas out of whatever your model happens to
-contain — counts of faces, powers of π, small integers — and you keep going until one of them lands
-close. Then you write it up.
+You now have something that can find a law it was not told. The obvious thing to do with it is point
+it somewhere nobody knows the answer — and the obvious thing is where toys go wrong.
 
-It always works, and it never means anything, because a target you already know the value of will
-attract formulas indefinitely. Closeness is not evidence when you were free to keep searching.
+So start with the failure mode, because it is seductive and this project used to do it.
 
-So: what would count instead?
+There is a way to make a toy look profound. You take a famous constant of nature. You build formulas
+out of whatever your model happens to contain — counts of faces, powers of π, small integers — and
+you keep going until one of them lands close. Then you write it up.
 
-## The shape of an honest version
+It always works, and it never means anything. A target whose value you already know will attract
+formulas indefinitely; closeness is not evidence when you were free to keep searching. The search
+had no way to fail.
 
-You need a number the method was not built to know, with no dial available to tune it toward the
-answer — and, crucially, you need to be unable to check it until after you have committed.
+So what would count instead?
 
-Critical points hand you exactly that.
+## What would count
+
+<!-- beat 79 -->
+
+Three properties, and the third is the one that does the work.
+
+You need a number **the method was not built to know** — not a target it was aimed at. You need
+**no dial available to tune it** toward the answer, because a knob that can reach the right answer
+will be turned until it does, honestly and unconsciously. And you need to be
+**unable to check it until after you have committed**, so that the commitment is real.
+
+That is a demanding list. Notice it rules out almost everything a small model can say about a big
+world. Where would you even find such a number?
+
+## Where nature hands you one
+
+<!-- beat 80 -->
+
+At the edges where things stop being one thing and become another.
 
 When a magnet is on the verge of losing its magnetism, or a fluid is approaching the ridge where
-liquid and gas stop being different things, something strange happens: the microscopic details stop
-mattering. Systems made of completely different stuff — different atoms, different forces, different
-everything — start behaving identically in the ways that count. The numbers describing *how* they
-behave near that edge come out the same.
+liquid and gas stop being different substances, something strange happens: the microscopic details
+stop mattering. Systems made of completely different stuff — different atoms, different forces,
+different everything — begin behaving identically in the ways that count. The numbers describing
+*how* they behave near that edge come out the same.
 
-That is called universality, and it is one of the better facts in physics.
+That is universality, and it is one of the better facts in physics.
 
-For a toy it is a gift, because it means our little world does not have to pretend to be a real
-magnet. It only has to belong to the same class. And which class a thing belongs to is decided by a
-handful of dimensionless numbers that can be measured — by us, and independently, in a laboratory,
-on actual matter.
+For a toy it is a gift, because our little world does not have to pretend to be a real magnet. It
+only has to belong to the same class. And class membership is decided by a handful of dimensionless
+numbers that have been measured independently, in laboratories, on actual matter — numbers nobody
+had to tell us.
 
-## First, make the instrument earn it
+Before we point the instrument at one, though, commit to something.
 
-Before pointing an instrument at something unknown, point it at something known and see whether it
-lies.
+## ✎ Before we look
 
-So the first run used a two-dimensional case that has an exact solution — Lars Onsager's, from 1944,
-one of the results that made universality believable in the first place. The answers are known
-precisely, and they were not given to the machinery. The pipeline saw finite-size data and nothing
-else, and had to produce the class numbers itself.
+<!-- beat 81 -->
 
-It got them, to six and seven digits.
+**Write down your answer.** Would you trust an instrument's report about a case nobody has solved,
+before you had seen it recover a case somebody has?
 
-That is not a discovery. It is a calibration. An instrument that cannot recover a known answer has
-no business reporting an unknown one.
+It is worth answering honestly rather than correctly, because the interesting version of the
+question is *how much* would you trust it, and what exactly would the known case have to get right
+first. Write down the standard you would want met. One line.
+
+## Make the instrument earn it
+
+<!-- beat 82 -->
+
+We used a two-dimensional case that has an exact solution — Lars Onsager's, from 1944, one of the
+results that made universality believable in the first place.
+
+The answers are known precisely, and they were not given to the machinery. The pipeline saw only its
+own runs at a handful of manageable sizes, and had to produce the class numbers itself.
+
+It got them: two of the three to seven digits, the third to four.
+
+That is not a discovery. It is a calibration, and it is the whole reason anything later in this
+chapter is worth reading. An instrument that cannot recover a known answer has no business reporting
+an unknown one.
 
 **[Open the data-true universality figure](record/lab/warp-5-universality/0500-ising-universality/figures/universality.html)**
 
-## Then take the answer key away
+Now take the answer key away.
+
+## The case nobody has solved
+
+<!-- beat 83 -->
 
 The three-dimensional version of the same model has no closed-form solution. Nobody has one. It is
 not that it is hard to look up — it does not exist.
 
 The pipeline ran there unchanged. It reproduced the solved two-dimensional numbers first, as a
-built-in check, and then went to three dimensions and reported what it found.
+built-in check, then went to three dimensions and reported what it found.
 
-It came back with two exponents that agree with the values measured *in real matter* — at the
-liquid–gas critical point, and in uniaxial magnets — to within a few percent. Nobody fitted those
-targets. There was no parameter in which they could have entered.
+Two exponents, agreeing with the values measured *in real matter* — at the liquid–gas critical
+point, and in uniaxial magnets — to within a few percent. Nobody fitted those targets. There was no
+parameter in which they could have entered.
 
-That is the thing worth wanting from a lattice. Not a formula that lands near a famous number, but a
+That is the thing worth wanting from a lattice: not a formula that lands near a famous number, but a
 computation that produces a number nobody supplied, which then agrees with measurement.
 
-There is a dependency here, and it belongs in the same breath. This stage was handed two ingredients
-rather than measuring them: the temperature at which the transition happens, and one of the class
-numbers itself. So the agreement is real, and it rests on two things it was given.
+It was still handed two things, though, and they belong in the same breath.
 
-## Then take the ingredients away too
+## Take the ingredients away too
 
-A later run removed them. It located the critical point from crossings in its own data, and measured
-the rest from scratch — the full blind version, with nothing supplied but the model.
+<!-- beat 84 -->
+
+The two things were the temperature at which the transition happens, and one of the class numbers
+itself. So the agreement above is real, and it rests on two ingredients it was given rather than
+found.
+
+A later run removed both. It found the critical point itself, from where its own curves at different
+sizes cross, and measured the rest from scratch — the fully blind version, with nothing supplied but
+the model.
 
 It found the critical temperature to within about four parts in ten thousand of the published value.
 
-And it missed one quantity, in exactly the direction it had said it would.
+Which is the strongest result in the book, and it is also the moment to ask the question a sceptic
+asks about a strong result: did it miss anything?
 
-That last sentence is the one worth slowing down for. Before the run, the team wrote down that this
-particular quantity was the one the affordable lattice sizes could not pin down, and that its
-estimate would come out *too high*. It came out too high — a prediction the experiment made about
-its own limits, and then met.
+## The miss it called in advance
+
+<!-- beat 85 -->
+
+It did. One quantity, and it came out too high.
+
+Here is the part worth slowing down for. Before the run, the team wrote down that this particular
+quantity was the one the affordable lattice sizes could not pin down — and that its estimate would
+come out *too high*, in that direction, for that reason.
+
+It came out too high.
+
+The band it registered for that quantity was 0.63 to 0.80, chosen in advance to sit high of the
+class value precisely because the affordable sizes could not do better; it landed inside, high, as
+written.
 
 An experiment that announces its own ceiling in advance is doing something different from one that
-explains a shortfall afterwards. Both figures, and the band that was registered, are in the
-appendix.
+explains a shortfall afterwards. The first is a prediction the experiment made about itself and then
+met; the second is a story assembled once the answer was in.
 
-## The part where the mistake was ours
+So the instrument can recover a known answer, work where no answer exists, and state its own limits
+and hit them. What is left for it to prove?
 
-There is one more lesson in this chapter and it is the least comfortable.
+## The one thing left
 
-Two other measurements in the same body of work had been recorded as negatives: quantities that came
-out outside their registered bands. They sat in the record as failures for a long time.
+<!-- beat 86 -->
 
-Then the two were re-analysed, and both misses turned out to come from the same thing — and it was
-not the little world. It was us. The location of the critical point carries its own uncertainty, and
-that uncertainty had not been propagated through into the quantities that depend on it. Once it was,
-both "failures" fell inside their bands.
+That it can tell us we were wrong.
 
-**This is the same move as the star that was never fixed.** Ptolemy looked with the instrument he
-had, recorded honestly that there was nothing to see, and the record stood for seventeen centuries —
-until Bessel's finer instrument found the shift had been there all along. The difference here, and
-it is the whole difference, is that the uncertainty which dissolved these two misses had *already
-been published*. It was sitting in the record, correct, and simply never carried through into the
-numbers that depended on it. Nobody needed a better telescope. They needed to propagate a number
-they already had.
+Everything so far has been the instrument agreeing — with Onsager, with real matter, with its own
+registered expectations. Agreement is cheap in exactly the way the formula-hunting was cheap: a
+method with no way to fail produces agreement whether or not it is measuring anything.
 
-The original rows are still in the record. They were not deleted and rewritten; they carry a note
-saying what later work found, so the original miss is still there to read.
+So the test that matters is the opposite one. Give it a law we are confident about, one we would
+defend, and see whether it has the standing to refuse.
 
-So the method has now shown four things, and the fourth is the rarest: it can recover a known
-answer, work where no answer exists, state its own limits in advance and hit them — and find that a
-failure it had published was its own measuring error rather than a fact about the world.
-
-One ability is still missing, and it is the one that decides whether any of the above counts.
-
-It has to be able to tell us we were wrong.
-
-*The simulations behind this chapter:
+*What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-a-number-without-the-answer-key).*
 
-**Next:** [When the expected law fails](when-the-expected-law-fails.md)—the obvious answer, refused.
+**Next:** [When the world you built says no](when-the-expected-law-fails.md)—the obvious answer,
+refused.

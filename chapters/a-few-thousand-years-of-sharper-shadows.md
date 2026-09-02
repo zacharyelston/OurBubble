@@ -9,161 +9,208 @@
   <figcaption><strong>Analogy — not data.</strong> The same geometry three times over, and the middle and right panels are the same measurement. What changes between them is not the reasoning but how finely the angle can be read — which is the whole of this chapter.</figcaption>
 </figure>
 
-Eratosthenes did not stop at the Earth.
+<!-- beat 93 -->
 
-Having worked out the size of the thing he was standing on, the obvious next question is how far
-away the Sun is. It was not a new question even then — it was older than his answer to the first one
-— and nobody got it for another two thousand years. The reason is the most useful thing in this
-chapter, so it is worth being precise about: **it was not for lack of the idea.**
+You have just watched an instrument refuse a law its owners committed to. That is not a modern
+virtue; it is the oldest habit in measurement, and there is a two-thousand-year case study.
 
-## The gap between knowing how and being able
+Eratosthenes sized the Earth with two posts and one multiplication. The obvious next question is how
+far away the Sun is — asked immediately, and unanswered for another two thousand years.
 
-Aristarchus of Samos, working a generation or so earlier, had the method exactly right. At half moon
-the Sun, the Moon and the Earth stand at a right angle — you can see the geometry in the shape of
-the lit half. Measure the *other* angle, the one at the Earth between the Moon and the Sun, and the
-shape of that triangle is fixed: two angles and the side between them are enough to give you how
-much further away the Sun is than the Moon. That is triangulation, and it is the only piece of
-geometry this chapter needs.
+Why?
+
+## Not for lack of the idea
+
+<!-- beat 93 -->
+
+That is the useful part, so it is worth being precise: **it was not for lack of the idea.**
+
+Aristarchus of Samos, a generation earlier, had the method right. At half moon the Sun, the Moon and
+the Earth stand at a right angle — you can see it in the shape of the lit half. Measure the *other*
+angle, at the Earth between the Moon and the Sun, and the triangle is fixed: two angles and the side
+between them give how much further the Sun is than the Moon.
+
+That is triangulation, and he had it. So how did it give the wrong answer?
+
+## The right method, the wrong answer
+
+<!-- beat 94 -->
 
 Aristarchus measured that angle at about 87 degrees, and concluded the Sun was around twenty times
 further away than the Moon.
 
 It is about four hundred times further.
 
-Now look at where the error came from, because it is not where you would guess. The true angle is
-about 89.85 degrees — that is, **nine minutes of arc short of a right angle**, less than a third of
-the Sun's own width in the sky. Aristarchus read it as three degrees short. He was not sloppy: nine
-minutes of arc is far below what anyone could read off an instrument made of wood and sightlines,
-and the whole answer hangs on it. Push the angle a hair closer to 90 and the distance runs off
-toward infinity; back it off a little and the Sun comes far too close. The calculation amplifies a
-small angular error savagely.
+The error is not where you would guess. The true angle is about 89.85 degrees —
+**nine minutes of arc short of a right angle**, less than a third of the Sun's own width in the sky.
+Aristarchus read it as three degrees short. Nine arcminutes is far below what anyone could read off
+an instrument of wood and sightlines, and the whole answer hangs on it: push the angle a hair closer
+to 90 and the distance runs off toward infinity, back it off and the Sun comes far too close.
 
-So: right method, wrong answer, and the fault is neither in the geometry nor in the man. **The fault
-is in the resolution**, and the resolution is a property of the instrument rather than of the idea.
+So: right method, wrong answer, and the fault is in neither the geometry nor the man.
+**The fault is in the resolution.**
 
-That distinction — between being wrong, and being unable to see yet — is the one this chapter is
-for.
+Which is a distinction worth having a name for.
 
-## What the same method could reach
+## Being wrong, and being unable to see yet
 
-Plenty did work with sticks and shadows and patience.
+<!-- beat 95 -->
 
-Within a century or so of Aristarchus, Hipparchus of Nicaea used the Earth's own shadow — the round
-bite it takes out of the Moon during an eclipse — to get the Moon's distance. That answer was very
-nearly right, and it has stayed right. The difference from the Sun attempt is not cleverness; it is
-that the geometry of that particular measurement does not sit on a knife edge. Nothing amplifies a
-small angular error into a factor of twenty.
+They are not the same thing, and almost everything in this chapter turns on the gap between them.
 
-The same method, the same era, the same tools: one measurement lands, the other cannot. What decides
-it is whether the quantity you want is *resolvable* with what you have.
+Notice how much *did* work with sticks and shadows. Within a century, Hipparchus of Nicaea used the
+Earth's own shadow — the bite it takes out of the Moon in an eclipse — to get the Moon's distance.
+That answer was very nearly right, and has stayed so.
 
-## A failure that was read the wrong way round
+Same era, same tools, same geometry: one lands and the other cannot. What decides it is whether the
+quantity sits on a knife edge, where the smallest misreading is amplified into a factor of twenty.
+Hipparchus' did not. Aristarchus' did.
 
-About three centuries after Hipparchus the interesting question was not a measurement but what to
-make of one that kept coming back empty.
+Which brings us to the most expensive mistake in the chapter.
 
-If the Earth really moves around the Sun, a nearby star should shift slightly against the far ones
-as we swing from one side of our orbit to the other — the way a near tree shifts against a distant
-hill when you move your head. Nobody could see any such shift.
+## The null that was read as an absence
 
-That nothing could mean one of two things. Either the Earth does not move — or the stars are so far
-away that the shift is too small to see.
+<!-- beat 96 -->
 
-Both readings were available in antiquity. Aristarchus of Samos — the same man whose Sun had come
-out twenty times too close — had proposed a moving Earth, and Archimedes records the enormous sphere
-of fixed stars that came with it. Claudius Ptolemy's *Almagest*, around 150 CE, came down the other
-way and argued that the Earth stands still. Most of that case rests on Aristotle's physics rather
-than on the missing shift, but the shift is among his reasons, and it is the one worth looking at
-here. That reading held for well over a thousand years.
+Three centuries later, the question was what to make of a measurement that kept coming back empty.
 
-This is the failure worth dwelling on, and it is not a failure of measurement. The observation was
-fine and the null was real. What went wrong was the *interpretation of a null*. Treating "I cannot
-see it" as "it is not there" — rather than "it is smaller than I can resolve, and here is how small
-that is" — is an error available to anyone who does not state their resolution.
+If the Earth moves around the Sun, a nearby star should shift against the far ones as we swing from
+one side of our orbit to the other — the way a near tree shifts against a distant hill when you move
+your head. Nobody could see it.
 
-A null result is not an absence of information. It is a bound — and a bound is only meaningful if
-you state how tight it is.
+That nothing meant one of two things: the Earth does not move, or the stars are so far away that the
+shift is too small to see. Both readings were available at the time, and the one that won held for
+well over a thousand years.
 
-## The centuries, and what filled them
+## Two readings, and the one that held
 
-Then the long stretch, and this is where the shape of the story shows.
+<!-- beat 96 -->
 
-What changed over the next two thousand years was not the reasoning. Nobody improved on the
-triangle. What arrived was instruments: a telescope, then better telescopes, then clocks good enough
-to carry a time across an ocean.
+Aristarchus had proposed a moving Earth, and Archimedes records the enormous sphere of fixed stars
+that came with it. It was **Aristotle**, in *On the Heavens*, who argued the other way from the
+missing shift itself: no shift, therefore no motion. Ptolemy's *Almagest*, around 150 CE, came down
+the same way for reasons of its own, and that is the version that carried.
 
-And then the questions that had been unanswerable began falling, one after another, in the order of
-how much precision they needed.
+The observation was fine and the null was real. What went wrong was the *interpretation of a null* —
+treating "I cannot see it" as "it is not there", rather than "it is smaller than I can resolve, and
+here is how small that is."
 
-**That light takes time to travel** — Ole Rømer, 1676 — from the fact that Jupiter's moon Io kept
-slipping out of schedule depending on where the Earth happened to be. Rømer put the slippage at
-about twenty-two minutes across the width of our orbit; it is nearer seventeen. He gave the delay,
-not a speed; Christiaan Huygens turned it into one, and because the delay was long the speed came
-out about a quarter low — a real number, honestly out by a knowable amount, and out for a reason you
-can point at.
+A null result is not an absence of information. It is a bound, and a bound is only worth anything if
+you say how tight it is.
 
-**The distance to the Sun**, at last, in the 1760s — two thousand years after Aristarchus tried. Not
-by measuring that impossible angle but by sidestepping it, in a scheme Edmond Halley had set out
-decades before anyone could use it: watch Venus cross the face of the Sun from two places far apart
-on the Earth, and time the crossings. Different vantage points, slightly different timings, and the
-difference gives you the scale. It took telescopes, marine chronometers and expeditions — James Cook
-to Tahiti in 1769, others to Siberia and northern Norway — to be in the right place on the right
-day.
+So what finally moved?
+
+## The instrument, not the idea
+
+<!-- beat 97 -->
+
+Not the reasoning. Nobody improved on the triangle.
+
+What arrived was instruments — a telescope, then better ones, then clocks good enough to carry a
+time across an ocean. The unanswerable questions began falling, in order of the precision needed.
+
+**That light takes time to travel** — Ole Rømer, 1676 — from Jupiter's moon Io slipping out of
+schedule depending on where the Earth was. Rømer put the slippage at about twenty-two minutes across
+our orbit; it is nearer seventeen. He gave the delay, not a speed; Christiaan Huygens turned it into
+one, and because the delay was long the speed came out about a quarter low — honestly out, by a
+knowable amount.
+
+## And then the Sun, and then the star
+
+<!-- beat 97 -->
+
+**The distance to the Sun**, at last, in the 1760s — not by measuring that impossible angle but by
+sidestepping it, in a scheme Edmond Halley set out decades before anyone could use it: watch Venus
+cross the face of the Sun from two places far apart, and time the crossings. It took telescopes,
+tables good enough to find longitude at sea, and expeditions — Cook to Tahiti in 1769, others to
+Siberia and northern Norway.
 
 **The distance to a star** — Friedrich Bessel, 1838 — and with it the answer to that ancient null,
-seventeen centuries late — the first stellar parallax anyone believed. The shift was there. For 61
-Cygni, the star Bessel caught, it is about a third of a second of arc — the width of a coin seen
-from fifteen kilometres away. The stars had never been still. They had been outside the resolution.
+seventeen centuries late, and the first stellar parallax anyone believed. For 61 Cygni the shift is
+about a third of a second of arc — a coin at fifteen kilometres. The stars had never been still.
+They had been outside the resolution.
 
-**A ruler for what parallax could not reach** — Henrietta Swan Leavitt, 1912 — who noticed that a
-certain kind of variable star pulses more slowly when it is intrinsically brighter. Turn a pattern
-into a rule, calibrate the rule against a triangle you can still measure, and you have a way to
-judge distance far past the reach of any triangle.
+Which is exactly the shape of something in our own record.
 
-Each of those is the same move as the two posts. Each of them needed the resolution to catch up
-first.
+## The first: a number already in the record
 
-## The lesson, stated plainly
+<!-- beat 98 -->
 
-Here is the pattern.
+Two measurements here had been recorded as misses — quantities outside their registered bands. They
+sat in the record as failures for a long time, and this book would have reported them so.
 
-- **The geometry was known from the start.** In the case of the Sun's distance, known for two thousand
-years before anyone could execute it.
-- **What changed was the resolution.** Not the ideas — the instruments.
-- **Twice, a published answer did not survive.** The Sun was not twenty times further away, and the
-stars were not fixed. Bessel's was the sharper case: the very same measurement, resolved at last.
-Aristarchus was overturned the other way — not by anyone finally reading his angle, but by a method
-that went around it. Both answers had been in print, by careful people, reasoning correctly from
-what they could see.
-- **A number can only be overturned if it was stated sharply enough to catch.** Aristarchus gave a
-distance and Ptolemy gave a verdict, and both were specific enough that a better instrument could
-come back and disagree. A claim too vague to be contradicted is never overturned, and never
-confirmed either.
+Both were later dissolved, and it is tempting to say they went the same way. They did not.
 
-## Which is why the rest of this book keeps talking about how well it can see
+Both quantities are measured *from* a critical point — where the little world changes character —
+and that point is only located to within a margin. Neither miss was a fact about the little world;
+both were that margin, never carried into the number depending on it. What differs is what it took
+to carry it through.
 
-We are about to build a small world and start measuring things in it. Nothing it produces is a fact
-about nature. But the *method* in this chapter is not about nature either — it is about how to hold
-a measurement honestly — and that part transfers exactly.
+The first miss needed nothing new at all. The rung that recorded it had published its own locator
+margin, and had measured how far the quantity swings when the location moves. Multiply the two and
+the uncertainty comes to about eighty per cent of the band the rung registered. At all three
+candidate locations the miss then falls inside the margin the rung registered to judge it by —
+comfortably at only one. That is what *dissolves* means here, and the rung says so of itself: the
+miss is no longer significant, not the value confirmed.
 
-So watch for these three things in the chapters ahead — they are the same three:
+No new estimator, no new run — two numbers already on the page, multiplied by somebody who thought
+to.
 
-**A stated resolution.** Every experiment in this book says, before it runs, how well it expects to
-be able to see. One of them writes down in advance that a particular quantity is beyond the
-resolution it can afford, and predicts which way it will fail. It fails that way.
+## The one that needed a better instrument
 
-**A null read as a bound.** When something comes back "no", the chapters say how tight the no is. A
-region could not be emptied. A wall did not change inertia. Those are bounds with numbers attached,
-not shrugs.
+<!-- beat 98 -->
 
-**And once — this is the one to wait for — two measurements whose ruler had an error nobody had
-carried into them.** Both were taken from a point in the little world whose position was itself
-known only to within a margin, and that margin had never been carried through into them. Once it
-was, both landed inside the bands they were meant to hit. Nothing was re-run, and nothing in the
-little world had changed.
+The second was not like that, and calling it the same would be flattering ourselves.
 
-When you reach that chapter, you will have met the move already. It is the star that was never
-fixed.
+Its own published numbers do not dissolve it. Closing it took a *new* estimator — written for the
+next rung, for another purpose — and an error bar that did not exist until the re-analysis added it.
+With those the miss closes to within one standard deviation; without them it stands at about five.
+
+And notice what it did *not* take: no new measurement. The curves it re-read were the failing rung's
+own. The observation had been sufficient all along; what nobody had written down was the way to read
+it.
+
+And it still rests on a choice. There are two defensible ways to aggregate the curves it fits, and
+**they give opposite verdicts**. What licenses the choice is a case where the answer is
+independently known — a real argument, and not the same as not having to choose. The next rung says
+outright that it does not generalise.
+
+One miss dissolved into arithmetic already published; the other into an instrument that had to be
+built.
+
+## The star that was never fixed, twice over
+
+<!-- beat 99 -->
+
+Now put them against Ptolemy, because there turn out to be three ways this can go and he is only one
+of them.
+
+**Ptolemy could not have done better.** He looked with the instrument he had, recorded honestly that
+there was nothing to see, and the record stood until a finer one found the shift. Nothing available
+to him was left unused.
+
+**Our first is the opposite, and the uncomfortable one.** The number that dissolved it was already
+in the record, correct, and never multiplied through. The resolution was there and we had not used
+it.
+
+**Our second is neither.** The measurement was good enough; the way to read it had not been written.
+Not a telescope we lacked, not arithmetic we skipped — a method nobody had invented, applied
+afterwards to data that had been waiting.
+
+## Why the rows stay, and what it cost to find them
+
+<!-- beat 99 -->
+
+Which is why the original rows are still there, not deleted and rewritten, carrying a note of what
+later work found — so the miss is still there to read. Both re-analyses are rungs of their own,
+named in the appendix.
+
+And it is why this is the rarest thing an instrument can do. Recovering a known answer is
+calibration; an unknown one is a result; refusing a law you proposed is discipline. Going back to a
+published failure and finding it was the reading rather than the world — the number unused, or the
+method unwritten — cannot be arranged in advance.
+
+There is one step left, and it does not belong to us.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-a-few-thousand-years-of-sharper-shadows).*

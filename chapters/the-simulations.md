@@ -136,7 +136,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 <a id="s-the-round-ripple"></a>
 
-## §05 · The round ripple
+## §05 · Is it round? — the dial, set twice
 
 **The chapter.** [the-round-ripple.md](the-round-ripple.md)
 
@@ -161,6 +161,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
 - [`lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html`](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)
+- [`lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html`](record/lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html)
 - [`lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html`](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)
 
 **Numbers the narrative may quote.**
@@ -189,7 +190,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 <a id="s-the-bubble-and-its-bill"></a>
 
-## §06 · The bubble and its bill
+## §06 · What does pushing on it cost? — the shaped push and its bill
 
 **The chapter.** [the-bubble-and-its-bill.md](the-bubble-and-its-bill.md)
 
@@ -229,7 +230,7 @@ cargo run  --release -p viz     --bin gen_energy
 
 <a id="s-the-wall-that-worked-and-didnt"></a>
 
-## §07 · The wall that worked, and didn't
+## §07 · Can you wall a piece off? — one experiment, one yes and one no
 
 **The chapter.** [the-wall-that-worked-and-didnt.md](the-wall-that-worked-and-didnt.md)
 
@@ -274,7 +275,7 @@ cargo run  --release -p viz     --bin gen_null
 
 <a id="s-where-negative-energy-appears"></a>
 
-## §08 · Where negative energy appears
+## §08 · Can a gap be emptier than empty? — the one place the sign is real
 
 **The chapter.** [where-negative-energy-appears.md](where-negative-energy-appears.md)
 
@@ -321,7 +322,7 @@ cargo run  --release -p viz     --bin gen_casimir
 
 <a id="s-a-number-without-the-answer-key"></a>
 
-## §09 · A number without the answer key
+## §09 · Can it tell me something I didn't tell it? — the answer key taken away
 
 **The chapter.** [a-number-without-the-answer-key.md](a-number-without-the-answer-key.md)
 
@@ -339,15 +340,11 @@ cargo run  --release -p viz     --bin gen_casimir
 - [`lab/warp-5-universality/0501-montecarlo-prediction`](record/lab/warp-5-universality/0501-montecarlo-prediction)
 - [`lab/warp-5-universality/0502-self-contained`](record/lab/warp-5-universality/0502-self-contained)
 - [`lab/warp-5-universality/0503-blind-3d`](record/lab/warp-5-universality/0503-blind-3d)
-- [`lab/warp-5-universality/0509-bond-locator-reprocess`](record/lab/warp-5-universality/0509-bond-locator-reprocess)
-- [`lab/warp-5-universality/0510-site-locator-reprocess`](record/lab/warp-5-universality/0510-site-locator-reprocess)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
 - [`core/uniforge/tests/uf5_universality_gate.rs`](record/core/uniforge/tests/uf5_universality_gate.html)
 - [`core/uniforge/tests/uf5_3_blind3d_gate.rs`](record/core/uniforge/tests/uf5_3_blind3d_gate.html)
-- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html)
-- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -383,7 +380,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §10 · When the expected law fails
+## §10 · When the world you built says no — the obvious answer, refused
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 
@@ -425,22 +422,37 @@ cargo run  --release -p viz     --bin gen_shift_law
 
 <a id="s-a-few-thousand-years-of-sharper-shadows"></a>
 
-## §11 · A few thousand years of sharper shadows — history, and no experiment of ours
+## §11 · A few thousand years of sharper shadows — history, and our own two misses
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
-**What this chapter recounts.** Documented measurement history, not work of ours: no rung, no gate and no figure in this repository corresponds to any of it. It is listed here so a reader can check the chapter against the historical record rather than against ours, in the order the chapter tells them rather than in date order.
+**Registered rungs.**
+
+- warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator
+- warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published
+
+**What this chapter recounts.** Two things, and they are checkable in different places. The measurement history below is not work of ours — no rung, gate or figure here corresponds to any of it, and it is listed so a reader can check the chapter against the historical record rather than against us, in the order the chapter tells it. The chapter's last beats are ours, and the rungs, entries and gates below are theirs.
 
 - ~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.
 - ~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.
 - ~150 BCE · Hipparchus of Nicaea — the Moon's distance, from the Earth's shadow on it during an eclipse. Very nearly right, because that geometry does not amplify a small angular error.
-- ~150 CE · Claudius Ptolemy — stellar parallax sought and not found; the Almagest argues from the absence to a stationary Earth. The null was real; the interpretation was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars.
+- Aristotle, *On the Heavens* II.14 (~350 BCE) — argues from the absence of any stellar shift that the Earth does not move. The null was real; the inference from it was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars. ~150 CE · Claudius Ptolemy's *Almagest* comes down on the same side, and that is the version that carried for over a thousand years.
 - 1676 · Ole Rømer — that light takes time to travel, from Jupiter's moon Io slipping out of schedule with the Earth's distance. Rømer put the slippage at ~22 minutes across the width of Earth's orbit; the modern figure is ~17. Rømer gave the delay; Christiaan Huygens turned it into a speed, ~25% low because the delay was long.
 - 1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.
 - 1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.
 - 1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could.
 
-What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. That thread is picked up by the record's own self-correction in [a number without the answer key](a-number-without-the-answer-key.md).
+What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. This chapter's own last beats put the record's two self-corrections against that history.
+
+**Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
+
+- [`lab/warp-5-universality/0509-bond-locator-reprocess`](record/lab/warp-5-universality/0509-bond-locator-reprocess)
+- [`lab/warp-5-universality/0510-site-locator-reprocess`](record/lab/warp-5-universality/0510-site-locator-reprocess)
+
+**Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
+
+- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html)
+- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html)
 
 **Numbers.** None declared, and none checked here. The dates and angles in the list above are historical: they are checkable against the historical record rather than against this repository, which is the one guarantee this book cannot give you itself.
 

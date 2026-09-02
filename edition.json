@@ -15,7 +15,8 @@
     "the-round-ripple": {
       "sources": [
         "book/chapters/01-the-light-cone/chapter.md",
-        "book/chapters/03-the-shield/chapter.md"
+        "book/chapters/03-the-shield/chapter.md",
+        "lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html"
       ]
     },
     "the-bubble-and-its-bill": {
@@ -88,20 +89,32 @@
         ]
       },
       "a-few-thousand-years-of-sharper-shadows": {
-        "title": "A few thousand years of sharper shadows — history, and no experiment of ours",
+        "title": "A few thousand years of sharper shadows — history, and our own two misses",
         "history": [
           "~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.",
           "~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.",
           "~150 BCE · Hipparchus of Nicaea — the Moon's distance, from the Earth's shadow on it during an eclipse. Very nearly right, because that geometry does not amplify a small angular error.",
-          "~150 CE · Claudius Ptolemy — stellar parallax sought and not found; the Almagest argues from the absence to a stationary Earth. The null was real; the interpretation was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars.",
+          "Aristotle, *On the Heavens* II.14 (~350 BCE) — argues from the absence of any stellar shift that the Earth does not move. The null was real; the inference from it was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars. ~150 CE · Claudius Ptolemy's *Almagest* comes down on the same side, and that is the version that carried for over a thousand years.",
           "1676 · Ole Rømer — that light takes time to travel, from Jupiter's moon Io slipping out of schedule with the Earth's distance. Rømer put the slippage at ~22 minutes across the width of Earth's orbit; the modern figure is ~17. Rømer gave the delay; Christiaan Huygens turned it into a speed, ~25% low because the delay was long.",
           "1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.",
           "1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.",
           "1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could."
+        ],
+        "rungs": [
+          "warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator",
+          "warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published"
+        ],
+        "entries": [
+          "lab/warp-5-universality/0509-bond-locator-reprocess",
+          "lab/warp-5-universality/0510-site-locator-reprocess"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs",
+          "core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs"
         ]
       },
       "the-round-ripple": {
-        "title": "The round ripple",
+        "title": "Is it round? — the dial, set twice",
         "rungs": [
           "warp-1 1.5 — lattice-matched isotropy",
           "warp-1 1.7 — blind dispersion in five directions",
@@ -119,6 +132,7 @@
         ],
         "figures": [
           "lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html",
+          "lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html",
           "lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html"
         ],
         "commands": [
@@ -159,7 +173,7 @@
         ]
       },
       "the-bubble-and-its-bill": {
-        "title": "The bubble and its bill",
+        "title": "What does pushing on it cost? — the shaped push and its bill",
         "rungs": [
           "warp-2 2.0 — the shaped shift's energy structure"
         ],
@@ -192,7 +206,7 @@
         ]
       },
       "the-wall-that-worked-and-didnt": {
-        "title": "The wall that worked, and didn't",
+        "title": "Can you wall a piece off? — one experiment, one yes and one no",
         "rungs": [
           "warp-3 3.0 — shield imbalance and inertia",
           "warp-3 3.4 — the four-source volume null"
@@ -227,7 +241,7 @@
         ]
       },
       "where-negative-energy-appears": {
-        "title": "Where negative energy appears",
+        "title": "Can a gap be emptier than empty? — the one place the sign is real",
         "rungs": [
           "warp-4 4.0 — the Casimir-like negative baseline",
           "warp-4 4.2 — the automated bench that fitted it"
@@ -273,7 +287,7 @@
         ]
       },
       "a-number-without-the-answer-key": {
-        "title": "A number without the answer key",
+        "title": "Can it tell me something I didn't tell it? — the answer key taken away",
         "rungs": [
           "warp-5 5.0 — the solved two-dimensional validation",
           "warp-5 5.1 — the blind three-dimensional swing",
@@ -285,15 +299,11 @@
           "lab/warp-5-universality/0500-ising-universality",
           "lab/warp-5-universality/0501-montecarlo-prediction",
           "lab/warp-5-universality/0502-self-contained",
-          "lab/warp-5-universality/0503-blind-3d",
-          "lab/warp-5-universality/0509-bond-locator-reprocess",
-          "lab/warp-5-universality/0510-site-locator-reprocess"
+          "lab/warp-5-universality/0503-blind-3d"
         ],
         "gates": [
           "core/uniforge/tests/uf5_universality_gate.rs",
-          "core/uniforge/tests/uf5_3_blind3d_gate.rs",
-          "core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs",
-          "core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs"
+          "core/uniforge/tests/uf5_3_blind3d_gate.rs"
         ],
         "figures": [
           "lab/warp-5-universality/0500-ising-universality/figures/universality.html"
@@ -355,7 +365,7 @@
         ]
       },
       "when-the-expected-law-fails": {
-        "title": "When the expected law fails",
+        "title": "When the world you built says no — the obvious answer, refused",
         "rungs": [
           "dna-thz 6.1 — the permittivity shift law, and the falsified square root"
         ],
