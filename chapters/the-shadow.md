@@ -58,16 +58,12 @@ Did he have to be a genius?
 
 Around 240 BCE a man in Alexandria did the next thing, starting from almost exactly this.
 
-Eratosthenes of Cyrene was the chief librarian there — he ran the largest collection of books in the
-world, and he had the job because he was already eminent. A mathematician, a geographer, a poet.
-Nobody was waiting on him to prove himself.
+Eratosthenes of Cyrene ran the library at Alexandria, the largest collection of books in the world.
+The measurement he made used none of that. It takes no new mathematics and no special instrument.
+The arithmetic at the end is one multiplication, and you could do it now, in your head, if you had
+the two numbers. That is what makes it a good first example: you would not have needed to be him.
 
-Which cuts the opposite way to how it sounds. He was exceptional, and the measurement did not use
-any of it. It takes no new mathematics. There is no clever instrument in it. The arithmetic at the
-end is one multiplication, and you could do it now, in your head, if you had the two numbers. That
-is what makes it a good first example: you would not have needed to be him.
-
-What he had instead of cleverness was a discrepancy he could not explain.
+What he had was a discrepancy he could not explain.
 
 ## Two posts, one shadow
 
