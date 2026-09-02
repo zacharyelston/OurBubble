@@ -1,0 +1,487 @@
+{
+  "title": "Our Bubble",
+  "subtitle": "A Reader's Journey Through The Container",
+  "_ordering": "Reading order lives in chapters/SUMMARY.md and nowhere else. This file is keyed by slug and carries no positions; the displayed section numbers in the appendix are derived from SUMMARY order when the appendix is generated.",
+  "chapters": {
+    "the-shadow": {
+      "sources": [
+        "book/LESSON_STANDARD.md",
+        "FIREWALL.md"
+      ]
+    },
+    "a-few-thousand-years-of-sharper-shadows": {
+      "sources": []
+    },
+    "build-the-object": {
+      "sources": [
+        "book/chapters/00-the-object/chapter.md",
+        "book/chapters/README.md",
+        "viz/synthesis.html"
+      ]
+    },
+    "the-round-ripple": {
+      "sources": [
+        "book/chapters/01-the-light-cone/chapter.md",
+        "book/chapters/03-the-shield/chapter.md"
+      ]
+    },
+    "the-bubble-and-its-bill": {
+      "sources": [
+        "book/chapters/02-the-price-of-warp/chapter.md"
+      ]
+    },
+    "the-wall-that-worked-and-didnt": {
+      "sources": [
+        "book/chapters/03-the-shield/chapter.md"
+      ]
+    },
+    "where-negative-energy-appears": {
+      "sources": [
+        "book/chapters/04-the-vacuum/chapter.md"
+      ]
+    },
+    "a-number-without-the-answer-key": {
+      "sources": [
+        "book/chapters/05-universality/chapter.md"
+      ]
+    },
+    "when-the-expected-law-fails": {
+      "sources": [
+        "book/chapters/06-dna-thz/chapter.md"
+      ]
+    },
+    "cast-your-own-shadow": {
+      "sources": [
+        "PREDICTIONS.md",
+        "book/LESSON_STANDARD.md",
+        "docs/DEMOS.md"
+      ]
+    }
+  },
+  "appendix": {
+    "file": "chapters/the-simulations.md",
+    "sections": {
+      "the-shadow": {
+        "title": "The shadow — the method, before any experiment",
+        "standards": [
+          "book/LESSON_STANDARD.md",
+          "FIREWALL.md",
+          "PREDICTIONS.md"
+        ]
+      },
+      "a-few-thousand-years-of-sharper-shadows": {
+        "title": "A few thousand years of sharper shadows — history, and no experiment of ours",
+        "history": [
+          "~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.",
+          "~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.",
+          "~150 BCE · Hipparchus of Nicaea — the Moon's distance, from the Earth's shadow on it during an eclipse. Very nearly right, because that geometry does not amplify a small angular error.",
+          "~150 CE · Claudius Ptolemy — stellar parallax sought and not found; the Almagest argues from the absence to a stationary Earth. The null was real; the interpretation was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars.",
+          "1676 · Ole Rømer — that light takes time to travel, from Jupiter's moon Io slipping out of schedule with the Earth's distance. Rømer put the slippage at ~22 minutes across the width of Earth's orbit; the modern figure is ~17. Rømer gave the delay; Christiaan Huygens turned it into a speed, ~25% low because the delay was long.",
+          "1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.",
+          "1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.",
+          "1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could."
+        ]
+      },
+      "build-the-object": {
+        "title": "Build the object",
+        "rungs": [
+          "The Container, chapter 00 — the eleven-step object ramp"
+        ],
+        "figures": [
+          "viz/synthesis-slow-ramp.html",
+          "viz/synthesis.html"
+        ],
+        "standards": [
+          "book/chapters/00-the-object/chapter.md",
+          "book/chapters/README.md"
+        ],
+        "commands": [
+          "cargo run --release -p viz --bin gen_synthesis -- \"$(git rev-parse --short HEAD)\""
+        ],
+        "record_quotes": [
+          {
+            "text": "70.5288°",
+            "source": "book/chapters/00-the-object/chapter.md",
+            "what": "the angle between two faces of one tetrahedron, meeting along an edge"
+          },
+          {
+            "text": "5.1043",
+            "source": "book/chapters/00-the-object/chapter.md",
+            "what": "how many such tetrahedra it would take to close a full turn around that edge — not a whole number"
+          },
+          {
+            "text": "7.3561°",
+            "source": "book/chapters/00-the-object/chapter.md",
+            "what": "the wedge left over once five are packed in: what no sixth tetrahedron can fill"
+          }
+        ]
+      },
+      "the-round-ripple": {
+        "title": "The round ripple",
+        "rungs": [
+          "warp-1 1.5 — lattice-matched isotropy",
+          "warp-1 1.7 — blind dispersion in five directions",
+          "warp-3 3.5 — the demo's mesh asymmetry, and its repair"
+        ],
+        "entries": [
+          "lab/warp-1-move/0115-lattice-matched-isotropy",
+          "lab/warp-1-move/0117-dispersion-isotropy",
+          "lab/warp-3-shield/0305-doubleslit-mirror"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf1_5_lattice_matched_gate.rs",
+          "core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs",
+          "core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs"
+        ],
+        "figures": [
+          "lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html",
+          "lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html"
+        ],
+        "commands": [
+          "cargo test --release -p uniforge --test uf1_5_lattice_matched_gate -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_isotropy",
+          "cargo test --release -p uniforge --test uf3_5_doubleslit_mirror_gate -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_doubleslit_mirror"
+        ],
+        "record_quotes": [
+          {
+            "text": "22.4%",
+            "source": "book/chapters/01-the-light-cone/chapter.md"
+          },
+          {
+            "text": "2.2%",
+            "source": "book/chapters/01-the-light-cone/chapter.md"
+          },
+          {
+            "text": "10.2",
+            "source": "book/chapters/01-the-light-cone/chapter.md"
+          },
+          {
+            "text": "1.00 ± 0.016",
+            "source": "book/chapters/01-the-light-cone/chapter.md"
+          },
+          {
+            "text": "33.2%",
+            "source": "book/chapters/01-the-light-cone/chapter.md"
+          },
+          {
+            "text": "3.8×",
+            "source": "book/chapters/03-the-shield/chapter.md"
+          },
+          {
+            "text": "5×10⁻¹⁵",
+            "source": "book/chapters/03-the-shield/chapter.md"
+          }
+        ]
+      },
+      "the-bubble-and-its-bill": {
+        "title": "The bubble and its bill",
+        "rungs": [
+          "warp-2 2.0 — the shaped shift's energy structure"
+        ],
+        "entries": [
+          "lab/warp-2-energy/0200-shaped-shift-energy"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf2_energy_structure_gate.rs"
+        ],
+        "figures": [
+          "lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html"
+        ],
+        "commands": [
+          "cargo test --release -p uniforge --test uf2_energy_structure_gate -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_energy"
+        ],
+        "record_quotes": [
+          {
+            "text": "336×",
+            "source": "book/chapters/02-the-price-of-warp/chapter.md"
+          },
+          {
+            "text": "1360×",
+            "source": "book/chapters/02-the-price-of-warp/chapter.md"
+          },
+          {
+            "text": "6.1×",
+            "source": "book/chapters/02-the-price-of-warp/chapter.md"
+          }
+        ]
+      },
+      "the-wall-that-worked-and-didnt": {
+        "title": "The wall that worked, and didn't",
+        "rungs": [
+          "warp-3 3.0 — shield imbalance and inertia",
+          "warp-3 3.4 — the four-source volume null"
+        ],
+        "entries": [
+          "lab/warp-3-shield/0300-shield-imbalance-inertia",
+          "lab/warp-3-shield/0304-four-source-null"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf3_shield_imbalance_gate.rs",
+          "core/uniforge/tests/uf3_4_four_source_null_gate.rs"
+        ],
+        "figures": [
+          "lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html",
+          "lab/warp-3-shield/0304-four-source-null/figures/null.html"
+        ],
+        "commands": [
+          "cargo test --release -p uniforge --test uf3_shield_imbalance_gate -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_shield",
+          "cargo test --release -p uniforge --test uf3_4_four_source_null_gate -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_null"
+        ],
+        "record_quotes": [
+          {
+            "text": "2.0×10⁻⁶",
+            "source": "book/chapters/03-the-shield/chapter.md"
+          },
+          {
+            "text": "0.86",
+            "source": "book/chapters/03-the-shield/chapter.md"
+          }
+        ]
+      },
+      "where-negative-energy-appears": {
+        "title": "Where negative energy appears",
+        "rungs": [
+          "warp-4 4.0 — the Casimir-like negative baseline",
+          "warp-4 4.2 — the automated bench that fitted it"
+        ],
+        "entries": [
+          "lab/warp-4-vacuum/0400-casimir-negative-energy",
+          "lab/warp-4-vacuum/0402-automated-bench"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf4_casimir_energy_gate.rs",
+          "core/uniforge/tests/uf4_casimir_force_gate.rs",
+          "core/uniforge/tests/uf4_automated_bench_gate.rs"
+        ],
+        "figures": [
+          "lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html"
+        ],
+        "commands": [
+          "cargo test --release -p uniforge --test uf4_casimir_energy_gate -- --nocapture",
+          "cargo test --release -p uniforge --test uf4_casimir_force_gate  -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_casimir"
+        ],
+        "record_quotes": [
+          {
+            "text": "−0.13099",
+            "source": "book/chapters/04-the-vacuum/chapter.md"
+          },
+          {
+            "text": "−π/24 = −0.13090",
+            "source": "book/chapters/04-the-vacuum/chapter.md"
+          },
+          {
+            "text": "0.07%",
+            "source": "book/chapters/04-the-vacuum/chapter.md"
+          },
+          {
+            "text": "−0.9997",
+            "source": "book/chapters/04-the-vacuum/chapter.md"
+          },
+          {
+            "text": "−2.007",
+            "source": "book/chapters/04-the-vacuum/chapter.md"
+          }
+        ]
+      },
+      "a-number-without-the-answer-key": {
+        "title": "A number without the answer key",
+        "rungs": [
+          "warp-5 5.0 — the solved two-dimensional validation",
+          "warp-5 5.1 — the blind three-dimensional swing",
+          "warp-5 5.2 — the self-contained pipeline",
+          "warp-5 5.3 — the fully blind close, with its registered limit",
+          "warp-5 5.9 · warp-5 5.10 — the two negatives re-analysed, and traced to the estimator rather than the lattice"
+        ],
+        "entries": [
+          "lab/warp-5-universality/0500-ising-universality",
+          "lab/warp-5-universality/0501-montecarlo-prediction",
+          "lab/warp-5-universality/0502-self-contained",
+          "lab/warp-5-universality/0503-blind-3d",
+          "lab/warp-5-universality/0509-bond-locator-reprocess",
+          "lab/warp-5-universality/0510-site-locator-reprocess"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf5_universality_gate.rs",
+          "core/uniforge/tests/uf5_3_blind3d_gate.rs",
+          "core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs",
+          "core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs"
+        ],
+        "figures": [
+          "lab/warp-5-universality/0500-ising-universality/figures/universality.html"
+        ],
+        "commands": [
+          "cargo test --release -p uniforge --test uf5_universality_gate -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_universality",
+          "cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture"
+        ],
+        "record_quotes": [
+          {
+            "text": "0.4999999",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "1.000000",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "0.9996",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "0.315",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "1.259",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "0.325",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "1.24",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "T_c = 4.5099",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "4.5115",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "0.036%",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "0.630",
+            "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "0.766",
+            "source": "book/chapters/05-universality/chapter.md"
+          }
+        ]
+      },
+      "when-the-expected-law-fails": {
+        "title": "When the expected law fails",
+        "rungs": [
+          "dna-thz 6.1 — the permittivity shift law, and the falsified square root"
+        ],
+        "entries": [
+          "lab/dna-thz/0001-dna-permittivity-shift-law"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf6_1_thz_shift_law_gate.rs"
+        ],
+        "figures": [
+          "lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html"
+        ],
+        "commands": [
+          "cargo test --release -p uniforge --test uf6_1_thz_shift_law_gate -- --nocapture",
+          "cargo run  --release -p viz     --bin gen_shift_law"
+        ],
+        "record_quotes": [
+          {
+            "text": "p = −0.2753",
+            "source": "book/chapters/06-dna-thz/chapter.md"
+          },
+          {
+            "text": "R² = 0.9774",
+            "source": "book/chapters/06-dna-thz/chapter.md"
+          },
+          {
+            "text": "p = −1/2",
+            "source": "book/chapters/06-dna-thz/chapter.md"
+          }
+        ],
+        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got."
+      },
+      "cast-your-own-shadow": {
+        "title": "Cast your own shadow — the reproduce path",
+        "standards": [
+          "PREDICTIONS.md",
+          "book/LESSON_STANDARD.md",
+          "docs/DEMOS.md"
+        ],
+        "commands": [
+          "tools/fetch_record.sh",
+          "python3 check_edition.py",
+          "mdbook build",
+          "python3 check_edition.py --rendered"
+        ]
+      }
+    }
+  },
+  "forbidden_chapter_phrases": [
+    "1/α = 2^7",
+    "7π⁵",
+    "four faces = four forces",
+    "the tetrahedron knows",
+    "the tetrahedron is 4d spacetime",
+    "105 m_pl",
+    "octonions are real",
+    "eight tests. eight passes",
+    "our universe bubbled into existence"
+  ],
+  "forbidden_chapter_patterns": [
+    {
+      "pattern": "four\\s+faces\\b[^.\\n]{0,40}\\bfour\\s+forces",
+      "why": "faces-as-forces correspondence"
+    },
+    {
+      "pattern": "four\\s+forces\\b[^.\\n]{0,40}\\bfour\\s+faces",
+      "why": "faces-as-forces, reversed"
+    },
+    {
+      "pattern": "(fine[-\\s]structure|1\\s*/\\s*(α|alpha))[^.\\n]{0,70}(deriv|deduc|deriving|follows\\s+from|comes\\s+out\\s+of)",
+      "why": "derivation of the fine-structure constant"
+    },
+    {
+      "pattern": "7\\s*(π|pi)\\s*(⁵|\\^\\s*5|\\*\\*\\s*5)",
+      "why": "the 7π⁵ constant formula"
+    },
+    {
+      "pattern": "octonion",
+      "why": "octonion projection structure"
+    },
+    {
+      "pattern": "(m_?pl\\b|planck\\s+(mass|length|scale))",
+      "why": "Planck-scale numerology; also invites reading the lattice as nature"
+    },
+    {
+      "pattern": "\\b(our|the)\\s+universe\\s+(is|was|bubbled|began|emerged|formed)\\b",
+      "why": "cosmological claim about the universe"
+    },
+    {
+      "pattern": "\\b(eight|8)\\s+tests?\\b[^.\\n]{0,40}\\b(eight|8)\\s+pass",
+      "why": "the legacy 'eight tests, eight passes' scorecard"
+    },
+    {
+      "pattern": "tetrahedron\\s+(knows|is\\s+(4|four)-?d|is\\s+spacetime|encodes)",
+      "why": "the tetrahedron as fundamental spacetime"
+    }
+  ],
+  "forbidden_probe_texts": [
+    "The tetrahedron knows its own metric.",
+    "Its four faces are the four forces of nature.",
+    "The four forces sit on the four faces.",
+    "The fine-structure constant is derived from the lattice.",
+    "We find 1/alpha comes out of the geometry.",
+    "The value is 7 pi ^ 5 minus 306.",
+    "Octonions give the projection.",
+    "About 105 m_pl of curvature.",
+    "The Planck scale sets the spacing.",
+    "Our universe bubbled into existence.",
+    "The universe is a bubble.",
+    "Eight tests, eight passes.",
+    "1/α = 2^7 plus a correction."
+  ]
+}

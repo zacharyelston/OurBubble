@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">A round ripple compared with a grid-steered ripple</title>
+  <desc id="desc">A pulse spreads from one point as teal circular rings while a coral dashed diamond suggests directional bias from the grid.</desc>
+  <defs>
+    <radialGradient id="pulse">
+      <stop offset="0" stop-color="#f4c95d"/>
+      <stop offset=".35" stop-color="#f4c95d" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#f4c95d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+  <g stroke="#2b4160" stroke-width="2" opacity=".62">
+    <path d="M100 120 H1100 M100 200 H1100 M100 280 H1100 M100 360 H1100 M100 440 H1100"/>
+    <path d="M200 80 V500 M300 80 V500 M400 80 V500 M500 80 V500 M600 80 V500 M700 80 V500 M800 80 V500 M900 80 V500 M1000 80 V500"/>
+  </g>
+  <path d="M600 105 L1035 290 L600 475 L165 290Z" fill="#f28c78" fill-opacity=".05"
+        stroke="#f28c78" stroke-width="7" stroke-dasharray="20 16" stroke-linejoin="round"/>
+  <g fill="none" stroke="#55c7be" stroke-width="8" opacity=".92">
+    <ellipse cx="600" cy="290" rx="180" ry="105"/>
+    <ellipse cx="600" cy="290" rx="310" ry="180" opacity=".72"/>
+    <ellipse cx="600" cy="290" rx="440" ry="255" opacity=".44"/>
+  </g>
+  <circle cx="600" cy="290" r="84" fill="url(#pulse)"/>
+  <circle cx="600" cy="290" r="15" fill="#f4c95d"/>
+  <g fill="#f4ead8" font-family="system-ui, sans-serif" font-size="20" opacity=".8">
+    <text x="910" y="170">round?</text>
+    <text x="920" y="425" fill="#f28c78">steered?</text>
+  </g>
+  <text x="64" y="548" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · SAME PULSE, TWO SHAPES</text>
+</svg>

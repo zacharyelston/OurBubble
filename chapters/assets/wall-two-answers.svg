@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">One wall gives two different answers</title>
+  <desc id="desc">A strong incoming wave fades across a wall, while two identical carts below show that the hoped-for motion change does not occur.</desc>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+  <rect x="555" y="70" width="90" height="440" rx="22" fill="#f28c78" fill-opacity=".2"
+        stroke="#f28c78" stroke-width="7"/>
+  <path d="M150 205 C205 115 260 295 315 205 S425 115 500 205" fill="none"
+        stroke="#55c7be" stroke-width="11" stroke-linecap="round"/>
+  <path d="M700 205 C725 180 750 230 775 205 S825 180 850 205" fill="none"
+        stroke="#55c7be" stroke-width="6" stroke-linecap="round" opacity=".52"/>
+  <path d="M875 205 H1040" stroke="#55c7be" stroke-width="3" stroke-dasharray="10 12" opacity=".35"/>
+  <g fill="#f4ead8" font-family="system-ui, sans-serif" font-size="22" text-anchor="middle">
+    <text x="325" y="125">outside signal</text><text x="860" y="125">quiet interior</text>
+  </g>
+  <path d="M120 322 H1080" stroke="#2b4160" stroke-width="3"/>
+  <g transform="translate(250 360)">
+    <rect width="170" height="68" rx="18" fill="#20314a" stroke="#f4ead8" stroke-width="5"/>
+    <circle cx="40" cy="78" r="18" fill="#f4c95d"/><circle cx="130" cy="78" r="18" fill="#f4c95d"/>
+    <path d="M190 34 H305" stroke="#55c7be" stroke-width="9" stroke-linecap="round"/>
+    <path d="M305 34 l-28 -18 v36Z" fill="#55c7be"/>
+  </g>
+  <g transform="translate(720 360)">
+    <rect width="170" height="68" rx="18" fill="#20314a" stroke="#f4ead8" stroke-width="5"/>
+    <circle cx="40" cy="78" r="18" fill="#f4c95d"/><circle cx="130" cy="78" r="18" fill="#f4c95d"/>
+    <path d="M190 34 H305" stroke="#55c7be" stroke-width="9" stroke-linecap="round"/>
+    <path d="M305 34 l-28 -18 v36Z" fill="#55c7be"/>
+  </g>
+  <g fill="#f4ead8" font-family="system-ui, sans-serif" font-size="19" text-anchor="middle" opacity=".75">
+    <text x="600" y="480">same response before and inside</text>
+  </g>
+  <text x="64" y="548" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · ISOLATION YES · INERTIA NO</text>
+</svg>

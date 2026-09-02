@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">The observed trend is gentler than the proposed one</title>
+  <desc id="desc">Two lines leave the same starting point. A dashed line falls steeply, marked as the proposed expectation and set aside. A solid line falls much more gently, marked as what was measured and kept. A small shaded inclusion sits inside a larger unchanged region, offered as the reason the gentle trend is the honest one.</desc>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+
+  <!-- shared start -->
+  <circle cx="180" cy="140" r="13" fill="#f4ead8"/>
+  <text x="180" y="106" fill="#f4ead8" font-family="system-ui, sans-serif" font-size="19"
+        text-anchor="middle" opacity=".8">same starting point</text>
+
+  <!-- the measurement: gentle, solid, kept -->
+  <path d="M180 140 C330 176 470 210 620 236 S860 268 1010 282"
+        fill="none" stroke="#55c7be" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="1010" cy="282" r="13" fill="#55c7be"/>
+  <text x="1010" y="248" fill="#55c7be" font-family="system-ui, sans-serif" font-size="20"
+        text-anchor="middle" opacity=".95">measured — and kept</text>
+
+  <!-- the proposal: steep, dashed, refused -->
+  <path d="M180 140 C300 236 372 340 452 402 S560 442 636 434"
+        fill="none" stroke="#2b4160" stroke-width="7" stroke-dasharray="13 15" stroke-linecap="round"/>
+  <g stroke="#f28c78" stroke-width="6" stroke-linecap="round">
+    <path d="M614 412 L658 456"/>
+    <path d="M658 412 L614 456"/>
+  </g>
+  <text x="686" y="441" fill="#f28c78" font-family="system-ui, sans-serif" font-size="20"
+        opacity=".92">proposed — and refused</text>
+
+  <!-- why: a small changed part inside a mostly unchanged whole -->
+  <rect x="180" y="352" width="330" height="112" rx="20" fill="none"
+        stroke="#f4ead8" stroke-width="4" opacity=".45"/>
+  <rect x="212" y="382" width="68" height="52" rx="12" fill="#f4c95d" opacity=".9"/>
+  <text x="180" y="500" fill="#f4ead8" font-family="system-ui, sans-serif" font-size="17"
+        opacity=".7">only a small part was changed; most of it was not</text>
+
+  <text x="180" y="556" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · THE LAW IN THE DATA, NOT THE TITLE</text>
+</svg>

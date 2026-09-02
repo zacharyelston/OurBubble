@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">Building an object one dimension at a time</title>
+  <desc id="desc">Four softly lit panels progress from a point to a line, a triangular patch, and a wireframe tetrahedron.</desc>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+  <g fill="#17243a" stroke="#2b4160" stroke-width="2">
+    <rect x="55" y="100" width="235" height="360" rx="28"/>
+    <rect x="340" y="100" width="235" height="360" rx="28"/>
+    <rect x="625" y="100" width="235" height="360" rx="28"/>
+    <rect x="910" y="100" width="235" height="360" rx="28"/>
+  </g>
+  <g fill="none" stroke="#55c7be" stroke-width="4" stroke-dasharray="8 14" opacity=".65">
+    <path d="M290 280 H340"/><path d="M575 280 H625"/><path d="M860 280 H910"/>
+  </g>
+  <circle cx="173" cy="280" r="18" fill="#f4c95d"/>
+  <g stroke="#f4ead8" stroke-width="8" stroke-linecap="round">
+    <path d="M395 280 H520"/>
+  </g>
+  <g fill="#f4c95d">
+    <circle cx="395" cy="280" r="15"/><circle cx="520" cy="280" r="15"/>
+  </g>
+  <path d="M684 355 L742 205 L802 355Z" fill="#55c7be" fill-opacity=".17"
+        stroke="#55c7be" stroke-width="8" stroke-linejoin="round"/>
+  <g fill="#f4c95d">
+    <circle cx="684" cy="355" r="13"/><circle cx="742" cy="205" r="13"/><circle cx="802" cy="355" r="13"/>
+  </g>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M955 365 L1065 365 L1110 300 L1014 205Z" stroke="#f4ead8" stroke-width="7"/>
+    <path d="M955 365 L1014 205 M1065 365 L1014 205 M955 365 L1110 300 M1065 365 L1110 300"
+          stroke="#55c7be" stroke-width="7"/>
+    <path d="M1014 205 L1110 300" stroke="#f28c78" stroke-width="7"/>
+  </g>
+  <g fill="#f4c95d">
+    <circle cx="955" cy="365" r="12"/><circle cx="1065" cy="365" r="12"/>
+    <circle cx="1110" cy="300" r="12"/><circle cx="1014" cy="205" r="12"/>
+  </g>
+  <g fill="#f4ead8" opacity=".75" font-family="system-ui, sans-serif" font-size="18" text-anchor="middle">
+    <text x="173" y="420">somewhere</text><text x="458" y="420">a difference</text>
+    <text x="742" y="420">a boundary</text><text x="1028" y="420">a volume</text>
+  </g>
+  <text x="64" y="548" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · POINT → OBJECT</text>
+</svg>

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">One angle nobody could read, and the instrument that finally read it</title>
+  <desc id="desc">Three panels of the same triangulation. On the left, a wide angle is easy to read and the measurement succeeds. In the middle, a star's yearly shift is so small that the two candidate lines lie on top of each other and nothing can be concluded. On the right, the very same shift, separated at last by a finer instrument, with the true line marked. A dashed span between the second and third panels stands for the seventeen centuries in between.</desc>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+
+  <g fill="#f4ead8" font-family="system-ui, sans-serif" text-anchor="middle">
+    <text x="196" y="72" font-size="20" opacity=".85">an angle you can read</text>
+    <text x="600" y="72" font-size="20" opacity=".85">a shift too small to read</text>
+    <text x="1004" y="72" font-size="20" opacity=".85">the same shift, resolved</text>
+  </g>
+
+  <!-- PANEL 1 · a wide angle, comfortably measured -->
+  <rect x="58" y="100" width="276" height="330" rx="22" fill="#20314a" opacity=".5"/>
+  <path d="M110 390 H300" stroke="#f4ead8" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <path d="M110 390 L286 168" stroke="#55c7be" stroke-width="8" stroke-linecap="round"/>
+  <path d="M110 390 L110 300" stroke="#f4c95d" stroke-width="7" stroke-linecap="round"/>
+  <path d="M150 390 A40 40 0 0 0 129 355" fill="none" stroke="#55c7be" stroke-width="4"/>
+  <text x="196" y="462" fill="#f4ead8" font-size="17" text-anchor="middle" opacity=".7">the answer comes out right</text>
+
+  <!-- PANEL 2 · two very different answers, one indistinguishable reading -->
+  <rect x="462" y="100" width="276" height="330" rx="22" fill="#20314a" opacity=".5"/>
+  <path d="M514 390 H704" stroke="#f4ead8" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <!-- the two candidates, almost on top of each other -->
+  <path d="M514 390 L700 152" stroke="#f28c78" stroke-width="8" stroke-linecap="round" opacity=".9"/>
+  <path d="M514 390 L690 148" stroke="#2b4160" stroke-width="8" stroke-linecap="round"
+        stroke-dasharray="12 13"/>
+  <path d="M514 390 L514 300" stroke="#f4c95d" stroke-width="7" stroke-linecap="round"/>
+  <text x="600" y="462" fill="#f28c78" font-size="17" text-anchor="middle" opacity=".9">nothing can be</text>
+  <text x="600" y="484" fill="#f28c78" font-size="17" text-anchor="middle" opacity=".9">concluded from it</text>
+
+  <!-- the centuries -->
+  <path d="M760 264 H872" stroke="#f4c95d" stroke-width="4" stroke-dasharray="8 12" stroke-linecap="round"/>
+  <text x="816" y="246" fill="#f4c95d" font-size="17" text-anchor="middle" opacity=".85">17 centuries</text>
+
+  <!-- PANEL 3 · the same angle, resolved -->
+  <rect x="866" y="100" width="276" height="330" rx="22" fill="#20314a" opacity=".5"/>
+  <path d="M918 390 H1108" stroke="#f4ead8" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <path d="M918 390 L1104 152" stroke="#2b4160" stroke-width="7" stroke-linecap="round"
+        stroke-dasharray="12 13"/>
+  <path d="M918 390 L1064 140" stroke="#55c7be" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="1064" cy="140" r="12" fill="#55c7be"/>
+  <path d="M918 390 L918 300" stroke="#f4c95d" stroke-width="7" stroke-linecap="round"/>
+  <text x="1004" y="462" fill="#55c7be" font-size="17" text-anchor="middle" opacity=".95">the two come apart</text>
+
+  <text x="64" y="548" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · THE GEOMETRY WAS ALWAYS THERE; THE PRECISION CAUGHT UP</text>
+</svg>

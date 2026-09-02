@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">Boundaries change which vacuum modes fit</title>
+  <desc id="desc">Many wave shapes surround two gold plates, but only a few wavelengths fit in the space between them, lowering a baseline marker.</desc>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M70 150 C110 100 150 200 190 150 S270 100 310 150" stroke="#55c7be" stroke-width="7" opacity=".78"/>
+    <path d="M70 230 C95 195 120 265 145 230 S195 195 220 230 S270 195 310 230" stroke="#f28c78" stroke-width="5" opacity=".68"/>
+    <path d="M70 315 C125 240 180 390 235 315 S290 240 345 315" stroke="#f4ead8" stroke-width="4" opacity=".55"/>
+    <path d="M890 150 C930 100 970 200 1010 150 S1090 100 1130 150" stroke="#55c7be" stroke-width="7" opacity=".78"/>
+    <path d="M890 230 C915 195 940 265 965 230 S1015 195 1040 230 S1090 195 1130 230" stroke="#f28c78" stroke-width="5" opacity=".68"/>
+    <path d="M855 315 C910 240 965 390 1020 315 S1075 240 1130 315" stroke="#f4ead8" stroke-width="4" opacity=".55"/>
+  </g>
+  <rect x="395" y="85" width="38" height="390" rx="12" fill="#f4c95d"/>
+  <rect x="767" y="85" width="38" height="390" rx="12" fill="#f4c95d"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M445 190 C500 115 555 265 610 190 S720 115 755 190" stroke="#55c7be" stroke-width="8"/>
+    <path d="M445 315 C480 270 515 360 550 315 S620 270 655 315 S725 270 755 315"
+          stroke="#f28c78" stroke-width="6" opacity=".8"/>
+  </g>
+  <path d="M600 355 V440" stroke="#f4ead8" stroke-width="7" stroke-linecap="round"/>
+  <path d="M600 440 l-20 -30 h40Z" fill="#f4ead8"/>
+  <path d="M470 455 H730" stroke="#55c7be" stroke-width="6" stroke-linecap="round"/>
+  <path d="M470 415 H730" stroke="#2b4160" stroke-width="4" stroke-dasharray="10 12"/>
+  <g fill="#f4ead8" font-family="system-ui, sans-serif" font-size="20" text-anchor="middle" opacity=".8">
+    <text x="600" y="65">fewer modes fit between boundaries</text>
+  </g>
+  <text x="64" y="548" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · BOUNDARIES CHANGE THE BASELINE</text>
+</svg>

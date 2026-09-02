@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">A shaped bubble with its cost concentrated at the wall</title>
+  <desc id="desc">A calm teal interior is surrounded by a bright coral belt, while a small balance points attention to the boundary.</desc>
+  <defs>
+    <linearGradient id="inside" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#55c7be" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#55c7be" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+  <g stroke="#2b4160" stroke-width="3" opacity=".62">
+    <path d="M75 185 H240 M70 295 H225 M75 405 H240"/>
+    <path d="M930 185 H1110 M945 295 H1125 M930 405 H1110"/>
+  </g>
+  <g fill="#55c7be" opacity=".7">
+    <path d="M225 185 l-28 -13 v26Z"/><path d="M210 295 l-28 -13 v26Z"/><path d="M225 405 l-28 -13 v26Z"/>
+    <path d="M945 185 l28 -13 v26Z"/><path d="M960 295 l28 -13 v26Z"/><path d="M945 405 l28 -13 v26Z"/>
+  </g>
+  <ellipse cx="600" cy="300" rx="330" ry="205" fill="url(#inside)" stroke="#f4ead8" stroke-width="7"/>
+  <ellipse cx="600" cy="300" rx="286" ry="167" fill="none" stroke="#f28c78" stroke-width="42" opacity=".9"/>
+  <ellipse cx="600" cy="300" rx="255" ry="137" fill="#101a2c" fill-opacity=".36"/>
+  <path d="M325 300 C415 226 785 226 875 300 C785 374 415 374 325 300Z"
+        fill="none" stroke="#f4c95d" stroke-width="7" stroke-dasharray="15 14" opacity=".72"/>
+  <g transform="translate(505 216)" fill="none" stroke="#f4ead8" stroke-width="7" stroke-linecap="round">
+    <path d="M95 0 V115 M30 32 H160 M45 32 L15 90 M45 32 L75 90 M145 32 L115 90 M145 32 L175 90"/>
+    <path d="M2 90 Q45 119 88 90 M102 90 Q145 119 188 90"/>
+  </g>
+  <g fill="#f4ead8" font-family="system-ui, sans-serif" text-anchor="middle">
+    <text x="600" y="402" font-size="22" opacity=".75">the change lives at the wall</text>
+  </g>
+  <text x="64" y="548" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · SHAPE → COST</text>
+</svg>

@@ -1,0 +1,86 @@
+# record.lock — the commit this book quotes from.
+#
+# Our Bubble is narrative; the evidence it rests on lives in another repository, the UniForge
+# engine, and stays there. This file is the contract between them: one repository, one commit, and
+# the exact list of files the edition cites or quotes. `tools/fetch_record.sh` checks that commit
+# out into the ignored `.record/`, and `check_edition.py` verifies every declared quotation against
+# `.record/<path>` — never against anything in this repository.
+#
+# Why a pin and not a branch: a quotation that is verbatim today and paraphrased tomorrow should
+# break the build on the day someone decides to move, not silently on the day the engine changes.
+#
+# BUMPING THE RECORD is a deliberate commit, and it is the only way the book's evidence advances:
+#
+#     1. edit `sha` below to the new UniForge commit
+#     2. `tools/fetch_record.sh`            (re-checks out `.record/` at the new commit)
+#     3. `python3 check_edition.py`         (every quotation re-verified against the new commit)
+#     4. fix whatever moved — or, if nothing moved, commit the one-line SHA change on its own
+#
+# Step 3 is the point. A bump that changes a number the book quotes fails here, by name, with the
+# file it stopped being carried by. `path =` lines are derived from `edition.json` and checked
+# against it on every run, so the footprint below cannot quietly under-declare what is pinned.
+#
+# Format: `key = value`, one per line; `#` comments; repeated keys accumulate.
+
+version = 1
+repo    = github.com/zacharyelston/UniForge
+ref     = main
+sha     = b2759cda18e160327f5c513183579eb826d6738d
+
+# The record files this edition cites or quotes from. Derived from edition.json — do not hand-edit;
+# regenerate with:  python3 -c 'import check_edition as c; [print("path = "+p) for p in c.declared_record_paths(c.load_manifest())]'
+
+path = FIREWALL.md
+path = PREDICTIONS.md
+path = book/LESSON_STANDARD.md
+path = book/chapters/00-the-object/chapter.md
+path = book/chapters/01-the-light-cone/chapter.md
+path = book/chapters/02-the-price-of-warp/chapter.md
+path = book/chapters/03-the-shield/chapter.md
+path = book/chapters/04-the-vacuum/chapter.md
+path = book/chapters/05-universality/chapter.md
+path = book/chapters/06-dna-thz/chapter.md
+path = book/chapters/README.md
+path = core/uniforge/tests/uf1_5_lattice_matched_gate.rs
+path = core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs
+path = core/uniforge/tests/uf2_energy_structure_gate.rs
+path = core/uniforge/tests/uf3_4_four_source_null_gate.rs
+path = core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs
+path = core/uniforge/tests/uf3_shield_imbalance_gate.rs
+path = core/uniforge/tests/uf4_automated_bench_gate.rs
+path = core/uniforge/tests/uf4_casimir_energy_gate.rs
+path = core/uniforge/tests/uf4_casimir_force_gate.rs
+path = core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs
+path = core/uniforge/tests/uf5_3_blind3d_gate.rs
+path = core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs
+path = core/uniforge/tests/uf5_universality_gate.rs
+path = core/uniforge/tests/uf6_1_thz_shift_law_gate.rs
+path = docs/DEMOS.md
+path = lab/dna-thz/0001-dna-permittivity-shift-law
+path = lab/dna-thz/0001-dna-permittivity-shift-law/eval.md
+path = lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html
+path = lab/dna-thz/0001-dna-permittivity-shift-law/spec.md
+path = lab/warp-1-move/0115-lattice-matched-isotropy
+path = lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html
+path = lab/warp-1-move/0117-dispersion-isotropy
+path = lab/warp-2-energy/0200-shaped-shift-energy
+path = lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html
+path = lab/warp-3-shield/0300-shield-imbalance-inertia
+path = lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html
+path = lab/warp-3-shield/0304-four-source-null
+path = lab/warp-3-shield/0304-four-source-null/figures/null.html
+path = lab/warp-3-shield/0305-doubleslit-mirror
+path = lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html
+path = lab/warp-4-vacuum/0400-casimir-negative-energy
+path = lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html
+path = lab/warp-4-vacuum/0402-automated-bench
+path = lab/warp-5-universality/0500-ising-universality
+path = lab/warp-5-universality/0500-ising-universality/figures/universality.html
+path = lab/warp-5-universality/0501-montecarlo-prediction
+path = lab/warp-5-universality/0502-self-contained
+path = lab/warp-5-universality/0503-blind-3d
+path = lab/warp-5-universality/0509-bond-locator-reprocess
+path = lab/warp-5-universality/0510-site-locator-reprocess
+path = viz/doubleslit.html
+path = viz/synthesis-slow-ramp.html
+path = viz/synthesis.html

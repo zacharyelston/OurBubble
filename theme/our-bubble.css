@@ -1,0 +1,32 @@
+.chapter-illustration {
+  margin: 1.75rem 0 2rem;
+}
+
+.chapter-illustration img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 1rem;
+  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 16%);
+}
+
+.chapter-illustration figcaption {
+  max-width: 66ch;
+  margin: 0.7rem auto 0;
+  color: var(--fg);
+  font-size: 0.9em;
+  line-height: 1.45;
+  opacity: 0.82;
+}
+
+.chapter-illustration figcaption strong {
+  color: #55c7be;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 700px) {
+  .chapter-illustration {
+    margin-inline: -0.35rem;
+  }
+}

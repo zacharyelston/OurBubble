@@ -1,0 +1,89 @@
+# Tier 0, on every pull request and every push outside `main`.
+#
+# This runs exactly what `make check` runs locally — one implementation, `tools/check.sh`, so CI and
+# the pre-push pass cannot drift apart. Pushes to `main` are handled by `pages.yml`, which runs the
+# same pass and then publishes; splitting it this way keeps `main` from building the book twice.
+#
+# Runner: `ubuntu-latest`. This repository is public, so GitHub-hosted minutes are free — the
+# no-paid-runners rule that sends UniForge's CI to a self-hosted box does not bind here, and there
+# is no self-hosted runner registered to this repository in any case.
+#
+# THE RECORD, AND THE ONE THING THIS CANNOT CHECK BY ITSELF. The book verifies its quotations against
+# the UniForge engine at the commit `record.lock` pins — and that repository is **private**. CI can
+# only fetch it if a `RECORD_TOKEN` secret exists (a fine-grained PAT with Contents:read on
+# UniForge). Without one, this workflow builds the book and checks everything that does not need the
+# record, and says loudly in the job summary that the record contract went unverified. It does not
+# pretend to have checked it. Set the secret — or make the record repository public — and the
+# quotation check becomes a merge gate with no other change.
+
+name: check
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MDBOOK_VERSION: "0.5.4"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mdBook ${{ env.MDBOOK_VERSION }}
+        run: |
+          set -euo pipefail
+          url="https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL "$url" | tar -xz -C "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch the pinned record
+        id: record
+        env:
+          RECORD_TOKEN: ${{ secrets.RECORD_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${RECORD_TOKEN:-}" ]; then
+            echo "have=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Record contract unverified::RECORD_TOKEN is not set, so the private engine record could not be fetched. Quotations were NOT verified in this run."
+            {
+              echo "### :warning: the record contract was not verified"
+              echo
+              echo "\`RECORD_TOKEN\` is not set on this repository, so \`.record/\` could not be fetched."
+              echo "\`check_edition.py\` needs the record for almost everything it asserts and refuses to run"
+              echo "without it, so **it did not run at all** — no quotation, link, prose or exclusion check."
+              echo "What did run: the book built, and the generated appendix was confirmed to be in step with"
+              echo "\`edition.json\` and the reading order."
+              echo
+              echo "Set \`RECORD_TOKEN\` (a fine-grained PAT with Contents:read on the engine repository), or"
+              echo "make that repository public, and this becomes the full gate with no other change."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "have=true" >> "$GITHUB_OUTPUT"
+          tools/fetch_record.sh
+
+      - name: Tier 0 — check the edition against the record, build, check the built pages
+        if: steps.record.outputs.have == 'true'
+        run: tools/check.sh
+
+      - name: Build and check what does not need the record
+        if: steps.record.outputs.have != 'true'
+        run: |
+          set -euo pipefail
+          mdbook build
+          # The appendix is generated from edition.json and the reading order — no record needed — so
+          # its freshness is checkable here, and it is the check most likely to catch a stale commit.
+          git diff --exit-code -- chapters/the-simulations.md

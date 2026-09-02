@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img"
+     aria-labelledby="title desc" data-status="illustration-study">
+  <title id="title">A reader can walk from question to record without trusting the page</title>
+  <desc id="desc">Four stops joined by a path: the registered question, the data-true figure, the recorded verdict, and the project ledger. A reader walks the path. The page you are reading is drawn faintly to one side, off the path, because nothing on the walk depends on it. The path ends at a new question mark.</desc>
+  <rect width="1200" height="600" rx="34" fill="#101a2c"/>
+
+  <!-- the page, off to one side and off the path -->
+  <g opacity=".3">
+    <rect x="72" y="118" width="140" height="184" rx="16" fill="none" stroke="#f4ead8" stroke-width="4"/>
+    <g stroke="#f4ead8" stroke-width="4" stroke-linecap="round">
+      <path d="M98 160 H186"/><path d="M98 192 H186"/><path d="M98 224 H162"/>
+    </g>
+    <text x="142" y="338" fill="#f4ead8" font-family="system-ui, sans-serif" font-size="17"
+          text-anchor="middle">this page —</text>
+    <text x="142" y="360" fill="#f4ead8" font-family="system-ui, sans-serif" font-size="17"
+          text-anchor="middle">not on the path</text>
+  </g>
+
+  <!-- the path -->
+  <path d="M290 412 H1000" fill="none" stroke="#20314a" stroke-width="16" stroke-linecap="round"/>
+  <path d="M290 412 H880" fill="none" stroke="#55c7be" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- four stops, labels alternating above and below -->
+  <g font-family="system-ui, sans-serif" text-anchor="middle" fill="#f4ead8">
+    <circle cx="340" cy="412" r="20" fill="#f4c95d"/>
+    <text x="340" y="342" font-size="19" opacity=".85">the question,</text>
+    <text x="340" y="364" font-size="19" opacity=".85">written first</text>
+
+    <circle cx="520" cy="412" r="20" fill="#55c7be"/>
+    <text x="520" y="478" font-size="19" opacity=".85">the figure,</text>
+    <text x="520" y="500" font-size="19" opacity=".85">drawn from the run</text>
+
+    <circle cx="700" cy="412" r="20" fill="#f28c78"/>
+    <text x="700" y="342" font-size="19" opacity=".85">the verdict,</text>
+    <text x="700" y="364" font-size="19" opacity=".85">including a no</text>
+
+    <circle cx="880" cy="412" r="20" fill="#f4ead8"/>
+    <text x="880" y="478" font-size="19" opacity=".85">the ledger —</text>
+    <text x="880" y="500" font-size="19" opacity=".85">the same story again</text>
+  </g>
+
+  <!-- the reader, mid-walk between the figure and the verdict -->
+  <g stroke="#f4ead8" stroke-width="6" stroke-linecap="round" fill="none">
+    <circle cx="610" cy="300" r="15" fill="#f4ead8" stroke="none"/>
+    <path d="M610 316 V358"/>
+    <path d="M610 328 L586 348 M610 328 L636 344"/>
+    <path d="M610 358 L592 390 M610 358 L630 390"/>
+  </g>
+
+  <!-- the walk ends by starting again -->
+  <text x="1044" y="428" fill="#f4c95d" font-family="system-ui, sans-serif" font-size="54"
+        text-anchor="middle" opacity=".92">?</text>
+  <text x="1044" y="356" fill="#f4c95d" font-family="system-ui, sans-serif" font-size="18"
+        text-anchor="middle" opacity=".8">choose another</text>
+
+  <text x="72" y="556" fill="#f4ead8" opacity=".72" font-family="system-ui, sans-serif"
+        font-size="18" letter-spacing="4">ILLUSTRATION STUDY · THE TRAIL DOES NOT PASS THROUGH THE PAGE</text>
+</svg>

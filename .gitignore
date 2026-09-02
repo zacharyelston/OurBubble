@@ -1,0 +1,16 @@
+# The rendered book. The SOURCE is chapters/**; `mdbook build` regenerates this.
+/book/
+
+# The record — a read-only checkout of the UniForge engine at the commit record.lock pins.
+# It is fetched, never committed: the pin is the contract, the copy is a build input.
+/.record/
+
+# Python bytecode caches. The checker and the appendix generator run as scripts and import one
+# another, so builds and checks drop these next to the sources. A committed one falsified the
+# edition's own prose, which sells `git status` as the instrument.
+__pycache__/
+*.pyc
+
+# Editor / OS
+.DS_Store
+*.swp

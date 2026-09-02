@@ -1,0 +1,22 @@
+[book]
+title = "Our Bubble"
+description = "A reader's journey through The Container"
+authors = ["UniForge"]
+language = "en"
+src = "chapters"
+
+[build]
+build-dir = "book"
+create-missing = false
+
+# The appendix is generated from edition.json + SUMMARY.md on every build, so it cannot go stale
+# between a change to the record and someone remembering to run the script. See preprocessor.py.
+[preprocessor.appendix]
+command = "python3 preprocessor.py"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+smart-punctuation = true
+git-repository-url = "https://github.com/zacharyelston/OurBubble"
+additional-css = ["theme/our-bubble.css"]
