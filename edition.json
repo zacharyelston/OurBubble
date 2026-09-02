@@ -15,7 +15,8 @@
     "the-round-ripple": {
       "sources": [
         "book/chapters/01-the-light-cone/chapter.md",
-        "book/chapters/03-the-shield/chapter.md"
+        "book/chapters/03-the-shield/chapter.md",
+        "lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html"
       ]
     },
     "the-bubble-and-its-bill": {
@@ -88,7 +89,7 @@
         ]
       },
       "a-few-thousand-years-of-sharper-shadows": {
-        "title": "A few thousand years of sharper shadows — history, and no experiment of ours",
+        "title": "A few thousand years of sharper shadows — history, and our own two misses",
         "history": [
           "~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.",
           "~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.",
@@ -101,7 +102,7 @@
         ]
       },
       "the-round-ripple": {
-        "title": "The round ripple",
+        "title": "Is it round? — the dial, set twice",
         "rungs": [
           "warp-1 1.5 — lattice-matched isotropy",
           "warp-1 1.7 — blind dispersion in five directions",
@@ -119,6 +120,7 @@
         ],
         "figures": [
           "lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html",
+          "lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html",
           "lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html"
         ],
         "commands": [
@@ -159,7 +161,7 @@
         ]
       },
       "the-bubble-and-its-bill": {
-        "title": "The bubble and its bill",
+        "title": "What does pushing on it cost? — the shaped push and its bill",
         "rungs": [
           "warp-2 2.0 — the shaped shift's energy structure"
         ],
@@ -192,7 +194,7 @@
         ]
       },
       "the-wall-that-worked-and-didnt": {
-        "title": "The wall that worked, and didn't",
+        "title": "Can you wall a piece off? — one experiment, one yes and one no",
         "rungs": [
           "warp-3 3.0 — shield imbalance and inertia",
           "warp-3 3.4 — the four-source volume null"
@@ -227,7 +229,7 @@
         ]
       },
       "where-negative-energy-appears": {
-        "title": "Where negative energy appears",
+        "title": "Can a gap be emptier than empty? — the one place the sign is real",
         "rungs": [
           "warp-4 4.0 — the Casimir-like negative baseline",
           "warp-4 4.2 — the automated bench that fitted it"
@@ -273,7 +275,7 @@
         ]
       },
       "a-number-without-the-answer-key": {
-        "title": "A number without the answer key",
+        "title": "Can it tell me something I didn't tell it? — the answer key taken away",
         "rungs": [
           "warp-5 5.0 — the solved two-dimensional validation",
           "warp-5 5.1 — the blind three-dimensional swing",
@@ -355,7 +357,7 @@
         ]
       },
       "when-the-expected-law-fails": {
-        "title": "When the expected law fails",
+        "title": "When the world you built says no — the obvious answer, refused",
         "rungs": [
           "dna-thz 6.1 — the permittivity shift law, and the falsified square root"
         ],

@@ -51,18 +51,17 @@ That walk tests something narrow and important: that the order was question, the
 verdict, then summary — and not the other order, which is how most disappointing results become
 encouraging ones.
 
-## Check this edition against the record
+## What travels with the book
 
 <!-- beat 102 -->
 
-The chapters you have read carry no rung labels and no quotations. That is a deliberate choice. That
-provenance did not go missing. It moved to the appendix.
+The chapters you have read carry no experiment numbers and no quotations. That was a choice, and the
+provenance did not go missing — it moved to the appendix.
 
-Clone the book — `github.com/zacharyelston/OurBubble` — and run these from its root. Everything the
-book quotes travels with it, in `record/`: the registered experiments, their verdicts, the tests,
-the figures, copied out of the engine at the one commit `record.lock` names. So none of this needs
-access to anything but the clone you just made. The second command needs
-[mdBook](https://rust-lang.github.io/mdBook/) installed; the others need only Python.
+And it travels with the book. Clone it — `github.com/zacharyelston/OurBubble` — and everything the
+book quotes is already in `record/`: the registered questions, the verdicts, the tests, the figures,
+copied out of the engine at the one commit `record.lock` names. Nothing here needs access to
+anything but the clone you just made. Then, from its root:
 
 ```sh
 python3 check_edition.py
@@ -70,54 +69,34 @@ mdbook build
 python3 check_edition.py --rendered
 ```
 
-The first command is the book reading itself, and it is worth being exact about what it promises.
+The first is the book reading itself against that record; the second rebuilds it, which regenerates
+the appendix, so if the record has moved the page changes under you and `git status` says so; the
+third re-reads the built pages and follows every link in them. None of it computes any physics. It
+checks that the story and the record still say the same thing.
 
-## What that first command promises
+What exactly each one promises is written down in the appendix rather than here, because the useful
+question at this point is the other one.
 
-<!-- beat 102 -->
-
-**Every figure with a `read from` file beside it in the appendix is checked verbatim** against that
-file — those, and only those, are the ones a program has been over.
-**Every figure a chapter sets in digits and puts in bold is checked too**: it has to be one its own
-appendix section declares that way, so a number cannot be emphasised into your eye without a
-counterpart in the record. Alongside that, it confirms each cited test and figure is still in the
-repository, each chapter still points at its own section, and each chapter still carries its visible
-scope statement.
-
-## And what no program has read
+## And exactly which sentences no program has read
 
 <!-- beat 102 -->
 
-It also holds the whole edition against **the list of retired claims** — the constant-formulas and
-structural correspondences this project's older phase went in for, of the kind
-[a number without the answer key](a-number-without-the-answer-key.md) opens on. If any of them
-reappear, in a chapter or in the appendix, in any wording it recognises, the book is refused. That
-guard is itself tested on every run against sentences it is required to refuse, so it cannot quietly
-stop working.
+A fair amount of this book. It is worth knowing which.
 
-**Everything else is prose, including some of the appendix.** When a chapter says the energy at the
-wall is a few hundred times what sits in the calm middle, or that a signal arrives about half a
-million times weaker, no program has read that sentence — the second one is bold, but it is bold
-*words*, so the digit rule never sees it. Those are numbers we wrote, from runs whose figures are
-linked and whose experiments the appendix names.
+**Checked, verbatim:** every figure the appendix lists with a file beside it, and every number a
+chapter sets in digits and puts in bold — that one has to be declared in its own appendix section,
+so a number cannot be emphasised into your eye without a counterpart in the record. The retired
+claims are checked too: if any of them reappear, in any wording the guard recognises, the book is
+refused, and the guard is itself tested against sentences it must refuse.
 
-## The numbers you can check against the world
+**Not checked:** the prose, including some of the appendix. When a chapter says the energy at the
+wall is a few hundred times what sits in the calm middle, or a signal arrives about half a million
+times weaker, no program has read that sentence. Those are numbers we wrote, from runs whose figures
+are linked and whose experiments the appendix names.
 
-<!-- beat 102 -->
-
-The history chapter's figures are outside it too, and differently: no file is named beside `89.85°`
-or `~0.3 arcseconds` because none of it is ours.
-**Those are the numbers in this book you can check against the world instead of against us** — which
-is a better guarantee than the one a program can give. Knowing exactly where each line falls seems
-more use to you than a larger claim would be.
-
-The second command builds the book — and building it **regenerates the appendix from the record**,
-so the page you read is assembled rather than maintained. If the record has moved, the file changes
-under you and `git status` says so. The third command reads the pages the build produced and follows
-every link in them, which is the only way to catch a link that works in the source and breaks once
-rendered.
-
-None of that computes any physics. It checks that the story and the record still say the same thing.
+**Checkable, but not against us:** the history chapter. No file is named beside the 89.85 degrees or
+the third of a second of arc, because none of it is ours — those you can check against the world
+instead, which is a better guarantee than any program here can give.
 
 ## The check that would actually catch us
 
@@ -132,8 +111,9 @@ Pick a result. Re-run its test — the real one, at full size, and let it
 Nothing should change. If any number in these chapters had been nudged after the fact, tuned to
 taste, or typed in by hand, that is where it appears.
 
-Every appendix section carries the command for its own result. Start with one whose runtime suits
-your machine, and read what the section says about it before you run anything.
+Every appendix section with a result of its own carries the command that re-runs it — the early
+chapters and the history chapter have none, because they have no run. Start with one whose runtime
+suits your machine, and read what the section says before you run anything.
 
 ## ✎ Before you press Return
 
@@ -158,25 +138,27 @@ result's history and worth more than the result.
 
 The shadow was never proof of a sphere. It was an invitation to build a test.
 
-The ripple was not light. It exposed a directional bias, and the one setting that removed it. The
-shaped push was not a drive; it located a sign and the classical obstruction standing in front of
-it. The wall genuinely isolated and genuinely did not change inertia. The attempt to empty a volume
-failed. The vacuum recovered a known law without being told it. Universality gave up its answer key
-and kept its limits. The material bridge refused the easy exponent.
-
-Put together, those do not add up to a discovery. They add up to a method:
+The ripple was not light. It exposed a directional bias, and the one setting that shrank it tenfold.
+The shaped push was not a drive; it located a sign and the classical obstruction standing in front
+of it. The wall genuinely isolated and genuinely did not make what was inside easier to push. The
+attempt to empty a volume failed. The vacuum recovered a known law without being told it.
+Universality gave up its answer key and kept its limits. The lump in the cavity refused the easy
+exponent.
 
 ## What it adds up to
 
 <!-- beat 105 -->
+
+Put together, those do not add up to a discovery. They add up to a method:
 
 1. Notice something you cannot explain.
 2. Propose the smallest structure that would explain it.
 3. Say, in advance, what would prove the proposal wrong.
 4. Check — and keep the answer, especially when it is no.
 
-The container is the object we examined. The bubble is the patch of it we pushed on, and measured,
-and handed back. Neither of them asks for belief, and this book has tried hard not to either.
+The Container is the object we examined — named back where you finished building it. The bubble is
+the patch of it we pushed on, and measured, and handed back. Neither of them asks for belief, and
+this book has tried hard not to either.
 
 So: where is the next shadow?
 

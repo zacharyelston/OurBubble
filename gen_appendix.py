@@ -94,10 +94,12 @@ the chapters link to.
                      "here so a reader can check the chapter against the historical record rather than "
                      "against ours, in the order the chapter tells them rather than in date order.\n")
             L+=[f"- {h}" for h in s['history']]; L.append("")
+            # M16 (proofread, tranche B): this pointed at chapter 9 for the self-correction, which
+            # the outline moved into this chapter's own beats 98-99. It now points at nothing,
+            # because the thing it pointed at is on the same page.
             L.append("What the book carries forward is the **method** — measure, state your resolution, let "
-                     "a finer instrument overturn you — never the discoveries. That thread is picked up by "
-                     "the record's own self-correction in "
-                     "[a number without the answer key](a-number-without-the-answer-key.md).\n")
+                     "a finer instrument overturn you — never the discoveries. This chapter's own last "
+                     "beats put the record's two self-corrections against that history.\n")
         for key,label in (('entries',"**Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.\n"),
                           ('gates',"**Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.\n"),
                           ('figures',"**Data-true figures.** Rendered from the run's own committed output — no analogy art.\n"),

@@ -52,7 +52,7 @@ left over.
 
 That is the most boring result in this chapter, and it is the one that licenses every result after
 it. Because the uniform push is free, whatever we get charged next is being charged for the
-*shaping*, and not for having a grid, or a boundary, or a floating-point number. Without this beat,
+*shaping*, and not for having a grid, or an edge, or arithmetic that rounds. Without this beat,
 every number that follows could be the machinery talking.
 
 Now shape it.
@@ -66,10 +66,10 @@ between the two. That transition is the wall of the bubble.
 
 This is the point to say what we were watching for, because it is the difference between a
 measurement and an anecdote. Miguel Alcubierre wrote down, in 1994, what such a shaped push would
-have to involve if you took the idea seriously in general relativity. Three awkward properties, all
-three consequences of his own arithmetic rather than of anybody's preference: the energy involved
-has to be *negative*; it has to sit in the bubble's *wall* rather than its middle; and it has to
-form a *ring* around the waist rather than spreading evenly over the surface.
+have to involve if you took the idea seriously inside Einstein's theory of gravity. Three awkward
+properties, all three consequences of his own arithmetic rather than of anybody's preference: the
+energy involved has to be *negative*; it has to sit in the bubble's *wall* rather than its middle;
+and it has to form a *ring* around the waist rather than spreading evenly over the surface.
 
 Those are predictions about a situation nobody can build, which makes them an unusually good test of
 a toy. All three were registered here, with thresholds, before the run.

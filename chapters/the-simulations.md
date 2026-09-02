@@ -136,7 +136,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 <a id="s-the-round-ripple"></a>
 
-## §05 · The round ripple
+## §05 · Is it round? — the dial, set twice
 
 **The chapter.** [the-round-ripple.md](the-round-ripple.md)
 
@@ -161,6 +161,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
 - [`lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html`](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)
+- [`lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html`](record/lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html)
 - [`lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html`](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)
 
 **Numbers the narrative may quote.**
@@ -189,7 +190,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 <a id="s-the-bubble-and-its-bill"></a>
 
-## §06 · The bubble and its bill
+## §06 · What does pushing on it cost? — the shaped push and its bill
 
 **The chapter.** [the-bubble-and-its-bill.md](the-bubble-and-its-bill.md)
 
@@ -229,7 +230,7 @@ cargo run  --release -p viz     --bin gen_energy
 
 <a id="s-the-wall-that-worked-and-didnt"></a>
 
-## §07 · The wall that worked, and didn't
+## §07 · Can you wall a piece off? — one experiment, one yes and one no
 
 **The chapter.** [the-wall-that-worked-and-didnt.md](the-wall-that-worked-and-didnt.md)
 
@@ -274,7 +275,7 @@ cargo run  --release -p viz     --bin gen_null
 
 <a id="s-where-negative-energy-appears"></a>
 
-## §08 · Where negative energy appears
+## §08 · Can a gap be emptier than empty? — the one place the sign is real
 
 **The chapter.** [where-negative-energy-appears.md](where-negative-energy-appears.md)
 
@@ -321,7 +322,7 @@ cargo run  --release -p viz     --bin gen_casimir
 
 <a id="s-a-number-without-the-answer-key"></a>
 
-## §09 · A number without the answer key
+## §09 · Can it tell me something I didn't tell it? — the answer key taken away
 
 **The chapter.** [a-number-without-the-answer-key.md](a-number-without-the-answer-key.md)
 
@@ -383,7 +384,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §10 · When the expected law fails
+## §10 · When the world you built says no — the obvious answer, refused
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 
@@ -425,7 +426,7 @@ cargo run  --release -p viz     --bin gen_shift_law
 
 <a id="s-a-few-thousand-years-of-sharper-shadows"></a>
 
-## §11 · A few thousand years of sharper shadows — history, and no experiment of ours
+## §11 · A few thousand years of sharper shadows — history, and our own two misses
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
@@ -440,7 +441,7 @@ cargo run  --release -p viz     --bin gen_shift_law
 - 1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.
 - 1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could.
 
-What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. That thread is picked up by the record's own self-correction in [a number without the answer key](a-number-without-the-answer-key.md).
+What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. This chapter's own last beats put the record's two self-corrections against that history.
 
 **Numbers.** None declared, and none checked here. The dates and angles in the list above are historical: they are checkable against the historical record rather than against this repository, which is the one guarantee this book cannot give you itself.
 

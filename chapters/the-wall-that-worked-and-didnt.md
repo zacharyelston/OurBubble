@@ -24,7 +24,7 @@ Ask what a thing's resistance to being pushed actually *is*. The obvious answer 
 private property — a number the thing carries around, the way it carries a colour. Ernst Mach argued
 in the nineteenth century for something quite different: that the resistance is a *relationship*
 between the thing and everything else there is. Einstein, who named the idea after him, took it
-seriously enough to try to build it into general relativity.
+seriously enough to try to build it into his theory of gravity.
 
 If that were right, a thing cut off from everything else should get easier to push. And we happen to
 have a world we can cut a region off inside.
@@ -82,9 +82,10 @@ Now the question the chapter was built for. The blob inside: does it move differ
 
 The blob inside moves exactly as far as it did before.
 
-Not slightly further. Not slightly less. The difference between the walled and unwalled cases sits
-down at the level where the arithmetic runs out — the same shove, the same displacement, no
-measurable change at all.
+Not slightly further. Not slightly less. The blob's displacement differs between the walled and
+unwalled cases by about a millionth — and the run can say where even that comes from: it is the
+wall's own reflected wave leaking back inward, arriving at lattice speed. A change in the signal
+reaching the blob, not a change in how hard the blob is to push.
 
 Go and look at your guess. This is the one the ritual is for, because the idea in the opening is
 genuinely attractive, and half the point of writing a prediction down is to catch yourself having
@@ -134,14 +135,15 @@ There is one more route to the same barrier, and it is worth closing before movi
 Shielding a region isolates it. It does not *empty* it. So try the other thing: arrange ordinary
 fields, several sources carefully aimed, so they cancel one another over a whole volume.
 
-Note how modest that would be even if it worked. Cancelling gets you to zero, and a shaped push
-wants below the floor.
+Note how modest that would be even if it worked: cancelling reaches zero, and a shaped push wants
+below the floor.
 
-A conjecture, with a threshold. Tested to destruction. **No.**
+A conjecture, with a threshold: the target volume had to hold less than a fifth of the field
+elsewhere. It never came close. Tested to destruction. **No.**
 
-The energies add. You can cancel a field at a point and on a surface, but a free-space volume where
-everything is zero is not something you can build out of sources aimed from outside — and the reason
-is structural, not a matter of trying harder.
+The energies add. You can cancel a field at a point and on a surface, but a volume where everything
+is zero cannot be built out of sources aimed from outside — the reason is structural, not a matter
+of trying harder.
 
 **[Open the data-true null figure](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
 

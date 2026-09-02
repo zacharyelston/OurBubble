@@ -27,8 +27,8 @@ Time you have. Ticks, all the same size, and you can count them — that is what
 
 Distance you do not have. Not because it is hard to measure, but because nothing in the object has
 ever been given a length. The dial exists; you met it on one tetrahedron, six lines and six
-settings, and the last chapter turned one of them and watched the rhythm change. But nobody has ever
-set it from anything real. It has been a knob with no reading on it.
+settings, and two chapters ago you turned one of them and watched the rhythm change. But nobody has
+ever set it from anything real. It has been a knob with no reading on it.
 
 So before the world can be asked how fast, somebody has to say how far.
 
@@ -60,15 +60,15 @@ So choose the obvious one, and guess what happens.
 The obvious setting is to give every line the same weight. It feels like the neutral choice — the
 one that assumes nothing, that plays no favourites among the lines.
 
-**Write your guess down now, before you read on.** If every line counts the same, will the ripple
-come out round?
+**Write your guess down now, before you read on** — and the useful half is not whether it comes out
+round. You have just been told an edge and a diagonal are different lengths and the counting cannot
+tell, so *not round* is the easy call.
 
-Write it somewhere you will still be able to find. One line is enough: *round*, or *not round*, and
-if not round, which directions you think will be fast.
+The live question is **which way**. Along the cube's edges, or across its diagonals: which
+directions will the ripple run fastest in? One line is enough. Commit to a direction.
 
-This is the ritual for the rest of the book, and it is not a teaching trick. It is the only way to
-find out whether a result was surprising, because once you have read a number it is very hard to
-remember not having known it.
+This is the ritual for the rest of the book, and it is not a teaching trick. Once you have read a
+number it is very hard to remember not having known it.
 
 ## The obvious setting
 
@@ -133,14 +133,17 @@ a machine run that test without anyone's thumb on the scale?
 
 It can, and this is where the book acquires the instrument it uses for the rest of its length.
 
-Run the sweep again in five directions at once, and hand the timings to a blind fitter: a fitting
-program that is told nothing about what it is looking at — not the expected law, not which arm was
-which. It must pick a law from a menu written down beforehand, and report how far ahead of the
-runner-up its choice finished.
+Run the sweep again in five directions at once and hand the timings to a blind fitter: a program
+told nothing about what it is looking at — not the expected law, not which arm was which. It picks
+from a menu written down beforehand and reports how far ahead of the runner-up its choice finished.
 
-It picked the straight-line law in all five directions, and returned a speed agreeing across
-directions to within a couple of percent — a spread that *shrinks* as the ripples get gentler. That
-is the signature of a coarse grid.
+It picked the straight-line law in all five directions, and by a wide margin: its score beat the
+runner-up — a square-root law — by about a quarter every time, which for a fit quality is not close.
+The speed it returned agrees across directions to within a couple of percent, and that spread
+*shrinks* as the ripples get gentler. Which is the signature of a coarse grid.
+
+**[Open the data-true fit figure](record/lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html)**
+— the chosen law, the runner-up, and the gap between them, per direction.
 
 Then the same pipeline, unchanged, on the naive setting. The spread there is **33.2%**, and it does
 not shrink. Coarse and broken, told apart, by something with no opinion.
@@ -155,13 +158,13 @@ Yes, and it belongs here rather than in a footnote.
 
 This project has a public demonstration page: a ripple going through two gaps, making the fringes
 you would expect. It ran for months. It was quietly, visibly wrong — about **3.8×** brighter on one
-side of the screen than the other.
+side of the screen than the other, across that same axis.
 
 It looked like optics. Nobody had built any asymmetry into the scene; the two gaps were identical
 and the source was centred. If you wanted to read something profound into it, the material was
 there.
 
-It was the grid, and the reason is the grain the last chapters warned about — though a different
+It was the grid, and the reason is the grain the last chapter warned about — though a different
 grain, in a different place, which is why it took months to find.
 
 ## It was the grid, not the optics
@@ -169,12 +172,11 @@ grain, in a different place, which is why it took months to find.
 <!-- beat 51 -->
 
 Cutting a square region into triangles means choosing which way the diagonals lean. Lean them all
-the same way and the mesh loses a symmetry the *experiment* has: the scene is left-right
-mirror-symmetric, two identical gaps either side of a centred source, and the mesh underneath it is
-not. Reflect the scene and it maps onto itself. Reflect the mesh and it does not. So the mesh was
-quietly asserting a difference between left and right that nothing in the physics asserted, and the
-ripple faithfully reported the shape of the thing it was travelling on rather than the shape of the
-question.
+the same way and the mesh loses a symmetry the *experiment* has: flip the scene about the axis
+through the source and the two gaps, and the scene maps onto itself — two identical gaps, one
+centred source. Flip the mesh the same way and it does not. So the mesh was quietly asserting a
+difference between left and right that nothing in the physics asserted, and the ripple faithfully
+reported the shape of the thing it was travelling on rather than the shape of the question.
 
 Note what this is *not*. It is not the three-way grain of the object itself, which is a fact about
 the little world and comes with a symmetry that carries each kind of place onto the others. This was

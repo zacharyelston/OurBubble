@@ -91,8 +91,8 @@ what does that mean the walls will *do*?
 
 <!-- beat 74 -->
 
-We built the one-dimensional version. Two walls in the lattice, the allowed vibration shapes
-computed directly from the object's own operator, the common bulk contribution subtracted off, and
+We built the one-dimensional version. Two walls in the little world, the allowed vibration shapes
+worked out from the object itself, the part that is the same inside and out subtracted away, and
 then the question: what is left?
 
 Every measured value sits below the free-space line. And as the walls move closer, it goes further
@@ -128,32 +128,32 @@ Neither of those can be guessed. So: did the machine find them without being tol
 
 It did.
 
-We swept the gap over a range of separations and handed the results to the same blind fitter from
-[is it round?](the-round-ripple.md) — told nothing about what it was looking at, picking from a menu
-written down beforehand.
+We swept the gap over a range of separations and fitted the result. It is worth being exact about
+what was assumed and what was not, because the difference is the whole value of the answer.
 
-It came back with the scaling law: the exponent it found was **−0.9997** against a true value of −1,
-with a fit quality of six nines. It separated out the contribution from the two wall edges and got
-essentially exactly the right value for that too. And it returned a coefficient of **−0.13099**
-where the exact answer is **−π/24 = −0.13090** — a match to **0.07%**.
+The *shape* was assumed: the fit was told to look for something falling off as one over the gap,
+which is Casimir's scaling, written in by us. So that much is not a discovery. But the fit was then
+run again with the exponent left **free**, and it came back at **−0.9997** against a true value of
+−1, at a fit quality of seven nines. Nobody had pinned it there.
 
-Nobody typed π into the fitter. Nobody typed the exponent in. It was not told what to look for.
-
-**[Open the data-true Casimir figure](record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)**
-
-## Two things it is not
+## What was assumed, and what was not
 
 <!-- beat 76 -->
 
-Two things this is not, and both matter. **It is not a power source** — the negative number is a
-difference between two baselines, there is nothing to draw on, and arranging boundaries costs more
-than the difference is worth. **It does not rescue the shaped push** — that wants a particular
-amount of the sign, in a particular place, at a particular scale, and what we have is the sign in a
-tiny gap at a magnitude set by the gap. The distance between those is enormous and this chapter does
-not shrink it by a step. It establishes only that the sign is not forbidden, which is a much smaller
-thing than a solution.
+And the coefficient was not assumed at any point. It came out at **−0.13099** where the exact answer
+is **−π/24 = −0.13090** — a match to **0.07%**. Nobody typed π into anything. That is the number
+that makes this the phenomenon rather than a sign, and it was read off, not put in.
 
-Something else changed in this chapter, though, and it is quieter than the physics.
+**[Open the data-true Casimir figure](record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)**
+
+Two things it is not, before anyone gets ideas. **Not a power source**: the negative number is a
+difference between two baselines, there is nothing to draw on, and arranging the boundaries costs
+more than the difference is worth. **Not a rescue for the shaped push**: that wants a particular
+amount of the sign, in a particular place, at a particular scale, and what we have is the sign in a
+tiny gap at a magnitude the gap itself sets. This chapter establishes that the sign is not
+forbidden, which is a much smaller thing than a solution.
+
+Something else changed here, though, and it is quieter than the physics.
 
 ## What quietly changed
 
@@ -161,10 +161,10 @@ Something else changed in this chapter, though, and it is quieter than the physi
 
 Up to now, a person set up each experiment, ran it, and read off the answer.
 
-Here the *machine* swept a parameter, fitted the results, chose between candidate laws, and reported
-a coefficient — and a person only checked its working afterwards. Read the two paragraphs above
-again with that in mind: the exponent and the coefficient were not confirmed by us, they were
-*found*, by something that could not have wanted them.
+Here the *machine* swept a parameter, fitted the results and reported a coefficient — and a person
+only checked its working afterwards. Read the paragraphs above again with that in mind: the exponent
+and the coefficient were not confirmed by us. They were produced, by arithmetic that could not have
+wanted them to come out right.
 
 That is a different kind of instrument, and it changes what the next question can be. Once you have
 something that can find a law it was not told, you can point it at a place where nobody knows the

@@ -31,9 +31,9 @@ Put a small region inside a resonating cavity and make it harder for the field t
 lump of denser material, in effect.
 
 The resonance drops in frequency. That much is not in question, and the experiment shows it plainly:
-place the weighted region near a driven edge, sweep the drive frequency, find the peak. As the
-region gets denser the peak moves down, smoothly and repeatably. There is no ambiguity about whether
-there is an effect, or about its direction.
+put the weighted region near the side of the cavity being shaken, sweep the shaking rate, find the
+pitch it answers loudest at. As the region gets denser the peak moves down, smoothly and repeatably.
+There is no ambiguity about whether there is an effect, or about its direction.
 
 The question is *by how much*, as the lump is made denser. Which is a law, and laws can be refused.
 
@@ -63,34 +63,36 @@ told nothing, picking from a menu written down beforehand.
 
 It came back with **p = −0.2753**, at a fit quality of **R² = 0.9774**.
 
-The expectation was −1/2. The measurement is a little over half that steep. Look at the gap: this is
-not a near miss inside an error bar, and no reasonable reading of the uncertainty reaches from one
-to the other. **The law we proposed is the wrong law for this geometry, and it is refused.**
+The expectation was −1/2. The measurement is a little over half that steep — a gap of about 0.22,
+against a threshold of 0.10 registered before the run to decide exactly this. And it is not an
+artefact of one fitting choice: refit it a different way and the exponent moves to −0.3247, still
+nowhere near −1/2. **The law we proposed is the wrong law for this geometry, and it is refused.**
 
 **[Open the data-true shift-law figure](record/lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html)**
 
 Go and look at your guess. If you wrote *square root*, you are in good company — so did we, in
 writing, in advance.
 
-## Why — and why the reason is a new prediction
+## Why — and what the reason is worth
 
 <!-- beat 91 -->
 
 The square-root argument assumes the material weight governs the whole resonating volume. Here it
-does not. The lump occupies a small part of the cavity and most of the vibration is still sitting in
-unchanged space. A local change should not inherit the scaling of a global one — which, said
-plainly, means the mistake was in the argument rather than in the run.
+does not: the lump is a small part of the cavity and most of the vibration sits in unchanged space.
+A local change should not inherit the scaling of a global one — so the mistake was in the argument
+rather than in the run.
 
 That explanation is comfortable, which is exactly when to be careful. A comfortable explanation
 arrives after the answer and costs nothing, and there is no way to tell a good one from a
 face-saving one except by making it pay.
 
-So it is written down as a **new prediction** rather than a patch: if the reason is really the
-volume fraction, then increasing the lump's share of the cavity should move the exponent toward
-−1/2. If it does not, the explanation is wrong too, and it will be a registered miss exactly like
-the first one.
+So it is written down where the next experiments queue up: if the volume fraction is really the
+reason, giving the lump a bigger share of the cavity should move the exponent toward −1/2. Testable,
+and named on the record as the thing to do next.
 
-That is the difference between an explanation and an excuse. An explanation makes a new commitment.
+Be exact about its standing, though, because the chapter's own point applies to us.
+**It is not yet a prediction.** Nothing is registered and nothing is run — no spec, no gate. Until
+there is, it is an explanation that has not paid: better than an excuse, and less than a commitment.
 
 ## What a refusal is worth
 

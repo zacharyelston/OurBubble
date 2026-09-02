@@ -79,10 +79,10 @@ first. Write down the standard you would want met. One line.
 We used a two-dimensional case that has an exact solution — Lars Onsager's, from 1944, one of the
 results that made universality believable in the first place.
 
-The answers are known precisely, and they were not given to the machinery. The pipeline saw
-finite-size data and nothing else, and had to produce the class numbers itself.
+The answers are known precisely, and they were not given to the machinery. The pipeline saw only its
+own runs at a handful of manageable sizes, and had to produce the class numbers itself.
 
-It got them, to six and seven digits.
+It got them: two of the three to seven digits, the third to four.
 
 That is not a discovery. It is a calibration, and it is the whole reason anything later in this
 chapter is worth reading. An instrument that cannot recover a known answer has no business reporting
@@ -119,8 +119,9 @@ The two things were the temperature at which the transition happens, and one of 
 itself. So the agreement above is real, and it rests on two ingredients it was given rather than
 found.
 
-A later run removed both. It located the critical point from crossings in its own data and measured
-the rest from scratch — the fully blind version, with nothing supplied but the model.
+A later run removed both. It found the critical point itself, from where its own curves at different
+sizes cross, and measured the rest from scratch — the fully blind version, with nothing supplied but
+the model.
 
 It found the critical temperature to within about four parts in ten thousand of the published value.
 
@@ -139,10 +140,13 @@ come out *too high*, in that direction, for that reason.
 
 It came out too high.
 
+The band it registered for that quantity was 0.63 to 0.80, chosen in advance to sit high of the
+class value precisely because the affordable sizes could not do better; it landed inside, high, as
+written.
+
 An experiment that announces its own ceiling in advance is doing something different from one that
 explains a shortfall afterwards. The first is a prediction the experiment made about itself and then
-met; the second is a story assembled once the answer was in. Both figures, and the band that was
-registered, are in the appendix.
+met; the second is a story assembled once the answer was in.
 
 So the instrument can recover a known answer, work where no answer exists, and state its own limits
 and hit them. What is left for it to prove?
