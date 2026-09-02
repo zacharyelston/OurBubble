@@ -215,20 +215,27 @@ def laplacian(values: Sequence[Fraction], weights: Dict[Tuple[int, ...], Fractio
 
 
 def slosh(weights: Dict[Tuple[int, ...], Fraction], lines: Sequence[Tuple[int, ...]],
-          ticks: int = TICKS) -> List[List[Fraction]]:
+          ticks: int = TICKS, initial: Sequence[Fraction] | None = None,
+          k: Fraction = TICK_K) -> List[List[Fraction]]:
     """The engine's leapfrog scalar wave, started from rest, `ticks` times.
 
     Started from rest (`φ_old = φ_0`) for a reason that matters to the chapter: the rows of `Δ₀` sum
     to zero, so `Σφ` obeys `S' = 2S − S_prev`, and beginning with `S_prev = S_0` makes the total
     *exactly* constant for ever. The conserved total is not a property of the wave in general — it
     is a property of this rule started this way, and the assertion below is what holds us to it.
+
+    `initial` and `k` default to the chapter's own four corners and tick size, so the tokens above
+    are unchanged. They exist so that a *larger* object can be run through this same rule rather
+    than through a second copy of it: `tools/octahedron.py` runs the octahedron and the stella
+    octangula here, and a second leapfrog written next door would be the one place the book could
+    disagree with itself about what one step is.
     """
-    current = [Fraction(v) for v in CORNERS]
+    current = [Fraction(v) for v in (CORNERS if initial is None else initial)]
     previous = list(current)
     history = [list(current)]
     for _ in range(ticks):
         lap = laplacian(current, weights, lines)
-        nxt = [2 * c - p - TICK_K * l for c, p, l in zip(current, previous, lap)]
+        nxt = [2 * c - p - k * l for c, p, l in zip(current, previous, lap)]
         previous, current = current, nxt
         history.append(list(current))
     total = sum(history[0])
