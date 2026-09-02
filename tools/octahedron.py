@@ -265,6 +265,21 @@ def line_audit(n: int = TORUS, cut=screw111) -> Dict[str, object]:
         f"the tetrahedron-provided lines per dot are {set(tet_degree.values())}, not 12"
     )
 
+    # The other half of "the octahedron is the only thing joining them": it is NOT, on the lines.
+    # Every tetrahedron edge is shared by exactly two tetrahedra, so a number crosses from one
+    # tetrahedron to the next in a single step, with no octahedron dot in between to wait for.
+    tet_line_uses: Dict[Tuple[Point, Point], int] = {}
+    for tet in t.cube_tets:
+        for line in t.edges_of(tet):
+            tet_line_uses[line] = tet_line_uses.get(line, 0) + 1
+    assert set(tet_line_uses.values()) == {2}, (
+        f"a tetrahedron edge is used by {sorted(set(tet_line_uses.values()))} tetrahedra, not "
+        f"exactly 2 — the line-level claim in the notes depends on this"
+    )
+    assert 6 * len(t.cube_tets) == 2 * len(tet_lines), (
+        f"{6 * len(t.cube_tets)} edge-slots over {len(tet_lines)} lines is not a clean pairing"
+    )
+
     dots = n ** 3 // 2
     assert len(degree) == dots, f"{len(degree)} dots carry lines, expected {dots}"
     assert len(diagonals) == len(t.octahedra), "an octahedron did not contribute exactly one cut"
@@ -277,6 +292,7 @@ def line_audit(n: int = TORUS, cut=screw111) -> Dict[str, object]:
         "cut_share": Fraction(len(diagonals), len(mesh_lines)),
         "octahedra_per_edge": 2,
         "octahedra_per_cut": 1,
+        "tets_per_tet_line": 2,
     }
 
 
@@ -1157,7 +1173,9 @@ def report() -> str:
         f"({lines['cut_share']} of every line). Every dot has 14 lines: 12 a tetrahedron provides, "
         f"2 only the cut does.")
     say(f"  each octahedron edge belongs to {lines['octahedra_per_edge']} octahedra; each cut to "
-        f"{lines['octahedra_per_cut']}.")
+        f"{lines['octahedra_per_cut']}. And each tetrahedron edge is shared by exactly "
+        f"{lines['tets_per_tet_line']} TETRAHEDRA — so on the lines, where numbers actually live, "
+        f"a transfer crosses from one tetrahedron to the next in a single step.")
     hull = hull_audit()
     overlap = stella_overlap()
     say(f"  one octahedron + its 8 face-neighbours IS a stella octangula, hull a cube: volume "
