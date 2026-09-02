@@ -10,8 +10,11 @@
 #          byte for byte. This is what makes the committed copy evidence rather than a copy.
 #        · quotations, always: every declared number verbatim in `record/`. Needs no engine access,
 #          so a clean clone and the published site are gated exactly as strongly as a dev box.
-#   3. build the book — which regenerates the appendix from the record
-#   4. check the built pages, including that every record link resolves
+#   3. the two guards the edition check does not reach — `tools/octahedron.py`'s own assertions
+#      (the geometry the octahedron chapter's appendix note rests on) and `tools/beat_coverage.py`
+#      (the prose against OUTLINE.md's beats). Both were previously run by hand only.
+#   4. build the book — which regenerates the appendix from the record
+#   5. check the built pages, including that every record link resolves
 #
 # The build can legitimately rewrite `chapters/the-simulations.md`, so the last thing this does is
 # ask git whether it did: a dirty tree after a build means the record moved and the committed
@@ -43,17 +46,30 @@ else
   echo "       Quotations are still gated, against the committed record/ snapshot." >&2
 fi
 
-step "2/4 · check the edition (snapshot integrity + quotations)"
+step "2/5 · check the edition (snapshot integrity + quotations)"
 python3 -B check_edition.py
 
-step "3/4 · build the book"
+step "3/5 · the two guards the edition check does not reach"
+# Why these are here (a proofreader, 2026-09-02): both were run by nothing automated, and both
+# back claims the book makes. `octahedron.py` asserts the geometry the octahedron chapter's
+# appendix note rests on — the 1:1 face pairing, one line in seven, 13/7×, "never comes home" —
+# and eight of its audit functions could be gutted with tier 0 staying green, because
+# `check_edition.py` only reaches the seven functions the napkin tokens call. `beat_coverage.py`
+# is the only thing that checks the prose against OUTLINE.md's beats at all, and it is what
+# caught a double-applied renumbering that `renumber_beats.py`'s own self-check waved through.
+# Together they cost under a second.
+python3 -B tools/octahedron.py > /dev/null
+python3 -B tools/beat_coverage.py > /dev/null
+echo "octahedron.py: every audit asserted · beat_coverage.py: every beat claimed, in order"
+
+step "4/5 · build the book"
 command -v mdbook >/dev/null 2>&1 || {
   echo "check: mdbook is not installed — see the README (cargo install mdbook, or a release tarball)" >&2
   exit 1
 }
 mdbook build
 
-step "4/4 · check the rendered pages and every record link"
+step "5/5 · check the rendered pages and every record link"
 python3 -B check_edition.py --rendered
 
 step "the generated appendix is in step with the record"

@@ -1560,13 +1560,32 @@ BOOK_TICK = Fraction(1, 2)      # `napkin.TICK_K`: the chapters' own tick size
 LEAPFROG_BOUND = 4              # the leapfrog holds while (tick × biggest stiffness) < 4
 
 
+def _peak(size: int, lines: Sequence[Tuple[int, int]], k: Fraction, ticks: int,
+          source: int = 0) -> Fraction:
+    """The biggest number anywhere in the world at any tick of a one-dot poke. Exact."""
+    start = [Fraction(1) if index == source else Fraction(0) for index in range(size)]
+    history = slosh(unit_weights(list(lines)), list(lines), ticks=ticks, initial=start, k=k)
+    return max(abs(value) for row in history for value in row)
+
+
+CEILING_TICKS = 40
+
+
 def napkin_ceilings() -> Dict[str, object]:
-    """Which of the three objects the chapters' own tick size can be run on: two of them.
+    """The tick each of the three objects must stay UNDER — and the strictness is the point.
 
     One number decides it for each object, and it is exact. A mode of `Δ₀` with eigenvalue `λ` obeys
     `x' = (2 − kλ)x − x_prev`, which stays bounded exactly while `kλ < 4`; so the largest eigenvalue
-    fixes the largest tick. They are certified without an eigensolver — `spectrum_below` is
+    fixes the bound. The eigenvalues are certified without an eigensolver — `spectrum_below` is
     Sylvester's criterion on exact rationals, asked either side of each claimed value.
+
+    **The inequality is strict, and this asserts it by running the thing.** `4/λ_max` is not a tick
+    that works; it is the tick that does not, and a reader who tried it on the tetrahedron — where
+    it is exactly 1, and the run goes 1, 2, 4, 5, 7, 8 … in whole numbers — would catch any wording
+    that said otherwise. So each object is run twice here: at its own bound, where it must grow, and
+    at half of it, where it must not. A proofreader found the chapter's table headed "the biggest
+    tick it will hold" over these three values (2026-09-02); the numbers were right and the heading
+    was wrong, and the assertions below are what stop that coming back.
     """
     objects = (("the tetrahedron", 4, tetra_lines(), Fraction(4)),
                ("the octahedron", 6, octahedron_lines(), Fraction(6)),
@@ -1579,18 +1598,31 @@ def napkin_ceilings() -> Dict[str, object]:
             f"{name}: λ_max is above {claimed}"
         )
         product_ = BOOK_TICK * claimed
+        bound = Fraction(LEAPFROG_BOUND) / claimed
+        at_the_bound = _peak(size, lines, bound, CEILING_TICKS)
+        under_it = _peak(size, lines, bound / 2, CEILING_TICKS)
+        assert at_the_bound > 4, (
+            f"{name}: at k = {bound} the poke only reached {float(at_the_bound)}, so the bound is "
+            f"not strict and 'the tick it must stay under' is the wrong wording"
+        )
+        assert under_it < 2, (
+            f"{name}: at k = {bound / 2} the poke reached {float(under_it)}, so staying under the "
+            f"bound is not enough after all"
+        )
         rows.append({
             "object": name,
             "dots": size,
             "stiffest": claimed,
             "book_tick_product": product_,
             "holds": product_ < LEAPFROG_BOUND,
-            "ceiling": Fraction(LEAPFROG_BOUND) / claimed,
+            "bound": bound,
+            "peak_at_the_bound": at_the_bound,
+            "peak_under_it": under_it,
         })
     assert [row["holds"] for row in rows] == [True, True, False], (
         f"the verdicts came out {[row['holds'] for row in rows]}"
     )
-    assert rows[2]["ceiling"] == Fraction(2, 5), f"the stella's ceiling is {rows[2]['ceiling']}"
+    assert rows[2]["bound"] == Fraction(2, 5), f"the stella's bound is {rows[2]['bound']}"
     return {"tick": BOOK_TICK, "bound": LEAPFROG_BOUND, "rows": tuple(rows)}
 
 
@@ -1649,19 +1681,20 @@ RUNAWAY_TICKS = 20
 RUNAWAY_LOOK = (0, 1, 2, 3, 10, RUNAWAY_TICKS)
 
 
-def _decade_floor(value: Fraction) -> int:
-    """The largest of 1, 2, 5 × 10ⁿ at or below `value`. Exact, integer, and deterministic."""
+def _round_floor(value: Fraction) -> int:
+    """The value floored to two significant digits — a round number that is honestly below it.
+
+    The first version of this floored to one of 1, 2 or 5 × 10ⁿ, which turned 8,504 into "past
+    5,000" and 123,534,961 into "past 100,000,000": true, and 40% and 20% short. A proofreader
+    called it (2026-09-02). Two digits keeps the number round enough to read and close enough to
+    mean something, and the assertion below keeps it a floor rather than a rounding.
+    """
     assert value >= 1
-    best = 1
-    power = 1
-    while True:
-        for step in (1, 2, 5):
-            candidate = step * power
-            if candidate <= value:
-                best = candidate
-            else:
-                return best
-        power *= 10
+    digits = len(str(int(value)))
+    unit = 10 ** max(digits - 2, 0)
+    floored = (int(value) // unit) * unit
+    assert floored <= value, f"{floored} is not below {float(value)}"
+    return floored
 
 
 def stella_runaway(k: Fraction = BOOK_TICK) -> Dict[str, object]:
@@ -1700,6 +1733,23 @@ def stella_runaway(k: Fraction = BOOK_TICK) -> Dict[str, object]:
         assert repeat == 0, f"k = {candidate} came home after {repeat} steps"
         tried.append({"k": candidate, "printable": rows, "period": repeat})
 
+    # And what a tick that DOES hold costs instead, worked on the one the chapter shows: a fifth.
+    # The push at a poked middle is its eight lines, so the poke lands on fifths at tick 1 and on
+    # twenty-fifths at tick 2 — the denominators square, which is why a smaller tick is not a
+    # rescue. Asserted, because the chapter says these two words.
+    example_k = Fraction(1, 5)
+    start_row = [Fraction(1)] + [Fraction(0)] * 13
+    rows = slosh(unit_weights(lines), lines, ticks=2, initial=start_row, k=example_k)
+    push = 8
+    assert {value.denominator for value in rows[1]} == {1, 5}, (
+        f"tick 1 at k = {example_k} is in {sorted({v.denominator for v in rows[1]})}, not fifths"
+    )
+    assert {value.denominator for value in rows[2]} == {25}, (
+        f"tick 2 at k = {example_k} is in {sorted({v.denominator for v in rows[2]})}, not "
+        f"twenty-fifths"
+    )
+    assert rows[1][0] == 1 - example_k * push, "the first push is not the poked dot's line count"
+
     matrix = laplacian_matrix(14, stella_lines(cut=False))
     excited = excited_polynomial(matrix, [Fraction(1) if i == 0 else Fraction(0)
                                           for i in range(14)])
@@ -1710,9 +1760,11 @@ def stella_runaway(k: Fraction = BOOK_TICK) -> Dict[str, object]:
     return {
         "k": k,
         "look": tuple((tick, biggest[tick]) for tick in RUNAWAY_LOOK),
-        "bounds": tuple((tick, _decade_floor(biggest[tick])) for tick in RUNAWAY_LOOK),
+        "bounds": tuple((tick, _round_floor(biggest[tick])) for tick in RUNAWAY_LOOK),
         "printable_rows": printable,
         "stable_tried": tuple(tried),
+        "push_at_a_middle": push,
+        "example": {"k": example_k, "first_denominator": 5, "second_denominator": 25},
         "never_returns": True,
     }
 
@@ -1865,7 +1917,8 @@ def report() -> str:
         say(f"  {row['object']:<18} {row['dots']:>2} dots · stiffest {number(row['stiffest'])} · "
             f"× the book's tick = {number(row['book_tick_product'])} · "
             f"{'under 4, holds' if row['holds'] else 'over 4, RUNS AWAY'} · "
-            f"biggest tick that holds {float_free(row['ceiling'])}")
+            f"must stay under {float_free(row['bound'])} "
+            f"(at it, the poke reaches {float(row['peak_at_the_bound']):.0f})")
     runaway = stella_runaway()
     say(f"  poke a middle of the stella at k = {runaway['k']}: the biggest number goes "
         + ", ".join(f"{tick}→{float_free(value)}" for tick, value in runaway["look"])

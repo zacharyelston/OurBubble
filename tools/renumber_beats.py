@@ -19,8 +19,11 @@ applied twice to the same number (renumbering in place, low to high, is the clas
 
 Usage:
 
-    tools/renumber_beats.py --beats-from 36 --by 11 --chapters-from 4 --apply
+    tools/renumber_beats.py --beats-from 36 --by 11 --chapters-from 4 --expect-last 105 --apply
     tools/renumber_beats.py --beats-from 36 --by 11                       # a dry run: prints only
+
+`--expect-last` is the outline's highest beat number *before* the shift, and it is required to
+write. It is what makes a second run of the same command impossible rather than merely unwise.
 
 It prints a self-check afterwards and refuses to write if it fails: the outline's beats must still
 run consecutively — apart from the one hole a positive shift opens on purpose, which it names — and
@@ -100,12 +103,30 @@ def main() -> int:
     parser.add_argument("--chapters-from", type=int, default=None,
                         help="also move outline chapter headings from this number, by one")
     parser.add_argument("--chapter-by", type=int, default=1)
+    parser.add_argument("--expect-last", type=int, default=None,
+                        help="the highest beat number the outline has NOW, before the shift; "
+                             "required with --apply")
     parser.add_argument("--apply", action="store_true", help="write the files (otherwise dry run)")
     args = parser.parse_args()
 
     outline = OUTLINE.read_text(encoding="utf-8")
     chapters = {path: path.read_text(encoding="utf-8")
                 for path in sorted(CHAPTERS.glob("*.md"))}
+
+    # The re-run guard, and why it is not optional (a proofreader, 2026-09-02): running the same
+    # command twice on an already-shifted tree reopens *exactly* the hole the self-check expects,
+    # so a fully double-shifted outline came out at exit 0 and only `beat_coverage.py` noticed.
+    # Nothing in the file distinguishes the second run from the first — so the operator states what
+    # they believe the file contains, and the second run cannot make that statement truthfully.
+    last = max(outline_beats(outline))
+    if args.apply and args.expect_last is None:
+        print(f"refusing to write without --expect-last: the outline's last beat is {last} now. "
+              f"Pass --expect-last {last} if that is the tree you meant to shift.")
+        return 1
+    if args.expect_last is not None and args.expect_last != last:
+        print(f"--expect-last {args.expect_last} but the outline's last beat is {last} — this tree "
+              f"is not the one you meant to shift (a shift already applied?). Nothing written.")
+        return 1
 
     new_outline, beat_moves = shifted(outline, BEAT_LINE, args.beats_from, args.by)
     chapter_moves = 0

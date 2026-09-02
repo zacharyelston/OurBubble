@@ -12,11 +12,9 @@
 <!-- NOTE(figure): (b) alt — "Two tetrahedra of the same size interpenetrating, one pointing up and one down, with the eight-faced shape they share picked out at the centre and the eight tips falling on the corners of a cube." -->
 <!-- NOTE(figure): (b) brief — both tetrahedra must be legibly the same size, and the shared centre must read as the same shape as study (a)'s centre. Show the cube only as eight faint corner marks; it is where the tips land, not a box the object sits in. -->
 
-You need room, and the obvious way to get it is to go and fetch more tetrahedra.
-
-Hold that thought for one chapter. There is somewhere cheaper to look — a place you have been
-carrying around since [one tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md)
-without opening it.
+It is not. The cheapest room in this book has been in your hands, unopened, since you
+[counted the tetrahedron](one-tetrahedron-is-a-whole-world.md) — and it is not beside that
+tetrahedron. It is inside it.
 
 ## Divide it instead of adding to it
 
@@ -86,7 +84,8 @@ Read the second row and then the third. At tick 1 the poke has spread onto the f
 its neighbours, and the dot you poked has gone negative. At tick 2 there is nothing anywhere except
 on CD — the one dot that was not its neighbour. The whole of it has crossed, and it took two ticks.
 
-At tick 3 it is home again, and the total across the row has not moved once.
+At tick 3 it is home again, and the total across the row has not moved once. Below that it keeps
+going — home again at 8 and 11 — and only at 12 does it repeat the pair of rows it began from.
 
 Notice what did *not* travel. No stuff went anywhere; there is no stuff. What crossed was the poke
 itself — a pattern of numbers, handed on by the rule twice. That is worth having a plain name for,
@@ -99,8 +98,8 @@ Now put numbers on its lines instead, the way you did on the tetrahedron.
 
 <!-- beat 40 -->
 
-Twelve lines, twelve arrows of your own choosing, and each of the eight faces gets a number: how
-much goes round it. Then walk all eight the way they face from outside, and add.
+Twelve arrows of your own choosing, one to a line. Then walk the eight faces the way they face
+from outside, and add up what goes round each.
 
 {{napkin:octa_face_sum}}
 
@@ -126,9 +125,8 @@ them at all.
 They are the same shape and size as the faces the tips sit on. So the same thing fits: one more
 tetrahedron on each, the size of a tip, pointing outward.
 
-There is no choice being made here and nothing being invented. The four bare faces were produced by
-the cutting; a tip-sized tetrahedron is the one piece that fits a tip-sized face; and putting one on
-each is the only way to finish what the cut left open.
+There is no choice being made here. A tip-sized tetrahedron is the one piece that fits a tip-sized
+face, and putting one on each bare face is the only way to finish what the cut left open.
 
 Do it. Four more tetrahedra, and stand back.
 
@@ -142,16 +140,17 @@ The four you just added are not a decoration on the outside. Their tips are the 
 second tetrahedron, the same size as the one you cut, pointing the other way — and its own six
 middles are the same six middles. The two of them share the shape between them.
 
-Mathematicians call the pair a *stella octangula*, an eight-pointed star. The plainer description is
-the useful one: two tetrahedra, threaded through one another, with one eight-faced shape in the
-middle where they overlap.
+Mathematicians call the pair a *stella octangula*, an eight-pointed star. The plainer name is the
+useful one: two tetrahedra, threaded through one another, overlapping in the shape between them.
 
 It is still small. Fourteen dots, and you have met every one of them. It has room in it, which the
-tetrahedron did not. So there is only one thing left to do with it.
+tetrahedron did not — though room is only a *there*, and not yet a direction, so the stopwatch
+question you were left holding in [make it move](make-it-move.md) is still waiting on more than
+this. Which leaves one thing to do with it.
 
 Make it move.
 
-## Make it move
+## The tick that stops working
 
 <!-- beat 43 -->
 
@@ -176,10 +175,10 @@ So bring a smaller tick.
 
 You can. It stops running away. And then you cannot write the table down.
 
-The trouble is the arithmetic underneath. Poke one dot here and the push it gets is eight, against
-one at each of its eight neighbours — and with a tick of a half, that turns halves into quarters and
-quarters into eighths within three rows. Make the tick smaller still and the fractions get worse
-faster, not better.
+The trouble is the arithmetic underneath. Poke one dot here and the push it gets is eight — one for
+each of its lines. So take a fifth, safely under the bound: the first row comes out in fifths and
+the row after it in twenty-fifths. What is underneath the numbers squares itself every tick or so,
+and a smaller tick makes it square faster, not slower.
 
 Every tick size that keeps this world from running away gives you two rows at most before the
 numbers stop being the kind you can write on a napkin. And at no tick size that can be written as a
@@ -218,9 +217,9 @@ stops being something inside one tetrahedron and becomes the thing that sits bet
 Then the arithmetic, which is only the same tick repeated more times than a hand can manage.
 
 And then the part that is not ours to decide. Everything from here comes back as a number, and a
-number that comes back is a shadow: the same kind of thing the child got when she scratched a mark
-at the end of hers. We do not get to say in advance what this world's shadow looks like. We get to
-point a test at it, write down first what we expect, and keep whatever comes back.
+number that comes back is a shadow — the same kind of thing the child got when she scratched her
+mark. Nobody gets to say in advance what this world's shadow will look like. We point a test at it,
+write down what we expect first, and keep whatever comes back.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-the-shape-between).*

@@ -13,7 +13,7 @@ One triangle, then one tetrahedron, for as long as they can carry the idea. Ever
 tetrahedra, to a world with no edge — is the answer to something she just asked, never a change of
 subject. By the time the first result appears, she owns the whole vocabulary from a napkin.
 
-**The grain, decided once (2026-09-02):** a beat is 100–200 words, hard ceiling 220, no hard floor. Any section over 200 is listed in the PR with its one-idea reason; the excess does not migrate between chapters. **✎ beats are exempt from the band by design** — a prompt to write your guess down is supposed to be short. Any other section under 100 is listed with its reason the same way. Every section — including a chapter's opening prose — carries a `<!-- beat N -->` marker; nothing is inferred.
+**The grain, decided once (2026-09-02):** a beat is 100–200 words, hard ceiling 220, no hard floor. Any section over 200 is listed in the PR with its one-idea reason; the excess does not migrate between chapters. **✎ beats are exempt from the band by design** — a prompt to write your guess down is supposed to be short. Any other section under 100 is listed with its reason the same way. Every `##` section carries a `<!-- beat N -->` marker. A chapter's opening prose carries one only when it is the prose that answers a beat — `tools/beat_coverage.py` reads a marker there as a declared excusal and otherwise skips the preamble, so nothing is ever inferred from a count.
 
 **Two rules for reading this:** mark any beat that arrives before its predecessor has earned it —
 that is the only kind of "too fast" there is. And mark any beat whose question you would not

@@ -203,8 +203,8 @@ scale, centred on a hole.
 
 ## What these numbers were spent on
 
-*Beat numbers below are the outline's current ones. This section was written before the outline
-changed; the last paragraph records what the change actually was.*
+*Beat numbers below were brought up to the outline's current ones when the change landed, so they
+are correct as they stand; the last section records what the change was.*
 
 Beat 49 already tells her the tetrahedra never meet face to face and that octahedra sit between them;
 the computed fact worth adding is the exact 1:1 pairing — 864 tetrahedron faces, 864 octahedron

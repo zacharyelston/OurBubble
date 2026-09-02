@@ -199,8 +199,8 @@ And there is a sharper version of the question hiding behind it, which is the on
 actually going to spend a chapter on. Not just *how fast*, but: **is it the same speed in every
 direction?** Because that question needs directions, and directions need somewhere to go.
 
-So you need room. The obvious way to get it is a second tetrahedron — but there is a cheaper place
-to look first, and it is inside the one you already have.
+So you need room. The obvious way to get it is a second tetrahedron — but is that really the
+cheapest place to look?
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-make-it-move).*
