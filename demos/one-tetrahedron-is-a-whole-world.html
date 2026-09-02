@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One tetrahedron is a whole world · Our Bubble demo</title>
+<meta name="description" content="Beats 19 to 26 of Our Bubble, computed in your browser: four dots, six lines, four faces, one inside — and both coming-home facts, walked in front of you.">
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Our Bubble · a demo, beats 19–26</p>
+  <h1>One tetrahedron is a whole world</h1>
+  <p class="lede">The chapter's own questions, one at a time. The census, the six differences, the
+  four face loops and the sum round the inside are all worked out here, in your browser, exactly.</p>
+  <div class="bar">
+    <a href="../one-tetrahedron-is-a-whole-world.html">← read the chapter</a>
+    <span id="theme"></span>
+  </div>
+</header>
+
+<blockquote class="scope">
+  <p><strong>Scope.</strong> A <strong>toy</strong>, still on a napkin: one tetrahedron, and every
+  count and every walk on it worked out while the page is running. Nothing here is a claim about
+  nature.</p>
+</blockquote>
+
+<main id="demo"></main>
+
+<noscript>
+  <p><strong>This page computes its numbers as you read it</strong>, so with scripting turned off
+  there is nothing to show. The chapter itself carries every one of these numbers in its text —
+  <a href="../one-tetrahedron-is-a-whole-world.html">read it there</a>.</p>
+</noscript>
+
+<footer class="foot">
+  <p>Use ← and → to walk the beats. Every number is in a table as well as on the drawing, so the
+  page reads with the pictures ignored entirely.</p>
+  <p>The tetrahedron is always the flat unfolded net: the triangle ABC in the middle with the other
+  three folded out from its sides, all four panels the same, every label upright, and the diagram
+  never rotated. The dot D appears three times because flat paper puts one corner of the solid in
+  three places. No colour means anything.</p>
+  <p>No script is loaded from anywhere, and nothing about your visit is recorded.</p>
+</footer>
+
+</div>
+<script type="module">
+  import { mount, themeSwitch } from "./core.mjs";
+  themeSwitch(document.querySelector("#theme"));
+  mount("one-tetrahedron-is-a-whole-world");
+</script>
+</body>
+</html>

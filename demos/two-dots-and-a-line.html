@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two dots, a line, and the first thing that closes · Our Bubble demo</title>
+<meta name="description" content="Beats 9 to 18 of Our Bubble, computed in your browser: a dot, a line, the triangle, and the first walk that comes home to nothing.">
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Our Bubble · a demo, beats 9–18</p>
+  <h1>Two dots, a line, and the first thing that closes</h1>
+  <p class="lede">The chapter's own questions, one at a time. Every number on this page is worked
+  out here, in your browser, from the same rules the book's napkin uses — not fetched, and not
+  looked up.</p>
+  <div class="bar">
+    <a href="../two-dots-and-a-line.html">← read the chapter</a>
+    <span id="theme"></span>
+  </div>
+</header>
+
+<blockquote class="scope">
+  <p><strong>Scope.</strong> Everything here is a <strong>toy</strong> you can draw on a napkin, and
+  every number in it is worked out while the page is running rather than quoted from anywhere.
+  Nothing here is a claim about nature.</p>
+</blockquote>
+
+<main id="demo"></main>
+
+<noscript>
+  <p><strong>This page computes its numbers as you read it</strong>, so with scripting turned off
+  there is nothing to show. The chapter itself carries every one of these numbers in its text —
+  <a href="../two-dots-and-a-line.html">read it there</a>.</p>
+</noscript>
+
+<footer class="foot">
+  <p>Use ← and → to walk the beats. Every number is in a table as well as in the drawing, so the
+  page reads with the pictures ignored entirely.</p>
+  <p>The drawings follow one standard: the triangle is drawn where the tetrahedron's flat unfolded
+  net will later put it, with the same names, so nothing has to be learned twice. No colour in a
+  drawing means anything.</p>
+  <p>No script is loaded from anywhere, and nothing about your visit is recorded.</p>
+</footer>
+
+</div>
+<script type="module">
+  import { mount, themeSwitch } from "./core.mjs";
+  themeSwitch(document.querySelector("#theme"));
+  mount("two-dots-and-a-line");
+</script>
+</body>
+</html>

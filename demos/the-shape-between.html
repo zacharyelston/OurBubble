@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The shape between · Our Bubble demo</title>
+<meta name="description" content="Beats 36 to 46 of Our Bubble, computed in your browser: cut one tetrahedron at its six middles, poke the shape between the tips, and watch the napkin run out.">
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Our Bubble · a demo, beats 36–46</p>
+  <h1>The shape between</h1>
+  <p class="lede">The chapter's own questions, one at a time. The cut, the crossing, the eight-face
+  sum, and the point where the arithmetic leaves the napkin — all of it worked out here, in your
+  browser, and the last of it refused rather than rounded.</p>
+  <div class="bar">
+    <a href="../the-shape-between.html">← read the chapter</a>
+    <span id="theme"></span>
+  </div>
+</header>
+
+<blockquote class="scope">
+  <p><strong>Scope.</strong> A <strong>toy</strong>, still on a napkin: one tetrahedron, cut open,
+  and what turns out to be inside it. Every count and every table here is worked out while the page
+  is running, so you can check any of it with a pencil. Nothing in it is a claim about nature.</p>
+</blockquote>
+
+<main id="demo"></main>
+
+<noscript>
+  <p><strong>This page computes its numbers as you read it</strong>, so with scripting turned off
+  there is nothing to show. The chapter itself carries every one of these numbers in its text —
+  <a href="../the-shape-between.html">read it there</a>.</p>
+</noscript>
+
+<footer class="foot">
+  <p>Use ← and → to walk the beats. Every number is in a table as well as on the drawing, so the
+  page reads with the pictures ignored entirely.</p>
+  <p>Two drawings and no third. The tetrahedron is the flat unfolded net, the same one the previous
+  chapters used. The shape between the tips — and the two tetrahedra threaded through it — is drawn
+  on a ring: six dots on two circles, each on the same line through the centre as the one dot no
+  line joins it to, so <em>opposite</em> is literally straight through the middle. Its twelve lines
+  are drawn once each and none of them crosses another, which the page checks before it draws rather
+  than trusting. When the eight tips arrive, four of them have to sit outside the ring, and their
+  lines in are the only lines that cross anything. No colour means anything.</p>
+  <p>Where a number cannot be written down in halves, this page says so instead of rounding it.
+  That refusal is the chapter's finding, not a formatting problem.</p>
+  <p>No script is loaded from anywhere, and nothing about your visit is recorded.</p>
+</footer>
+
+</div>
+<script type="module">
+  import { mount, themeSwitch } from "./core.mjs";
+  themeSwitch(document.querySelector("#theme"));
+  mount("the-shape-between");
+</script>
+</body>
+</html>

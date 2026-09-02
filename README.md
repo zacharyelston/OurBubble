@@ -99,6 +99,29 @@ renders anything. The tokens and the scope of their one exemption from the appen
 are specified in [`EDITION_STANDARD.md`](EDITION_STANDARD.md); the backend is
 [`tools/napkin.py`](tools/napkin.py).
 
+## The demos
+
+Chapters 1–4 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
+numbers in the reader's browser** and walks her through the chapter's beats one at a time. They are
+plain static pages — one shared vanilla-JS module, one stylesheet, nothing loaded from anywhere — and
+they are published beside the book, at `…/OurBubble/demos/`, through the `chapters/demos` symlink
+that mdBook copies.
+
+The rule they live under is the book's own, one layer out: **every number a demo shows is one it
+computed, it equals the napkin's to the last digit, and no number is typed into a demo by hand.**
+`tools/napkin_export.py` dumps the napkin's data (not its prose) to `demos/data/napkin.json` on every
+build; `node demos/core.test.mjs` runs the browser's arithmetic and compares it to that export value
+by value as exact rational strings, refuses any numeric token the export does not contain on any
+surface a reader meets — cell, caption, title, prose, note or drawing — and refuses any digit typed
+into the step definitions at all. Both run inside `make check`, and when node is not installed the
+line says `unverified — node absent` rather than passing. What no such check can catch is a number
+computed correctly and put in the wrong place; `demos/DEMOS.md` says so rather than implying
+otherwise.
+
+[`demos/DEMOS.md`](demos/DEMOS.md) is the full statement: the cross-check, the two drawing
+conventions and why the octahedron does not get a net, and how the stills these pages produce are
+meant to replace the illustration studies.
+
 ## The record contract
 
 **The evidence is produced in another repository.** The lab entries, the gates, the data-true
@@ -154,6 +177,7 @@ records the SHA it was taken at, and it must match the lock.
 | `record.lock` · `record/` · `tools/fetch_record.sh` · `tools/snapshot_record.sh` | the record contract: the pin, the committed snapshot, and the two scripts that derive it |
 | `tools/napkin.py` · `tools/octahedron.py` · `preprocessor.py` | the numbers chapters 1–4 compute at build time, the object the later ones are computed on, and the mdBook hook that runs them |
 | `tools/renumber_beats.py` | moves beat numbers through `OUTLINE.md` and every chapter's markers together, when a beat is inserted |
+| `demos/` · `tools/napkin_export.py` | the demos: one page per chapter of the napkin world, recomputing its numbers in the reader's browser, and the export they are checked against — `demos/DEMOS.md` |
 | `CANON.md` · `tools/canon.py` | the one labeling of the tetrahedron, derived from the napkin, and the only code that draws its net |
 | `tools/check.sh` · `Makefile` | tier 0 |
 | `ART_DIRECTION.md` · `EDITION_STANDARD.md` · `LEGACY_MIGRATION.md` | the illustration contract, the writing contract, and what was and was not carried over from each earlier source |

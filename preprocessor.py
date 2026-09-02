@@ -40,6 +40,7 @@ import sys
 import gen_appendix
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent / "tools"))
 import napkin  # noqa: E402  (needs the path above)
+import napkin_export  # noqa: E402  (needs the path above)
 import reader_note  # noqa: E402  (needs the path above)
 
 # `{{napkin:NAME}}` — the Rewrite lane writes these in chapter prose; this replaces each with the
@@ -180,6 +181,17 @@ def main() -> int:
         return 0  # every renderer: the substitution is renderer-agnostic
 
     _context, book = json.load(sys.stdin)
+
+    # The demos' oracle, written on every build for exactly the reason the appendix is: it puts
+    # `demos/data/napkin.json` under `git status`, so a change to the napkin that moves a number a
+    # demo shows becomes a dirty tree rather than a page that quietly disagrees with the book.
+    # `check_edition.py` compares the committed copy against a fresh derivation and fails by name.
+    if napkin_export.write():
+        print(
+            f"napkin export: rewrote {napkin_export.TARGET.name} — the napkin's numbers moved",
+            file=sys.stderr,
+        )
+
     markdown, changed = gen_appendix.write()
     slug = gen_appendix.TARGET.stem
 

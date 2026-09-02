@@ -1,0 +1,263 @@
+/* Our Bubble demos — one stylesheet, no font loaded, no image, nothing fetched.
+ *
+ * Two colours do the work: ink and paper. There is one accent, and it marks *the thing this step is
+ * about* — never a kind of thing, never a piece of the object. That is CANON.md's rule 5 kept
+ * honestly: a colour in these drawings encodes nothing, because there is no colour spare to encode
+ * with. Light and dark are the same drawing with ink and paper exchanged.
+ */
+
+:root {
+  color-scheme: light dark;
+  --paper: #f7f3ea;
+  --card: #fffdf8;
+  --ink: #20314a;
+  --ink-soft: #5c6a80;
+  --rule: #d8d0bf;
+  --accent: #20314a;
+  --panel: #f0e6d2;
+  --measure: 34rem;
+}
+
+:root[data-theme="dark"],
+html:not([data-theme="light"]) {
+  --paper: #101a2c;
+  --card: #16233a;
+  --ink: #eae3d4;
+  --ink-soft: #a3b0c4;
+  --rule: #2c3d59;
+  --accent: #eae3d4;
+  --panel: #1d2c46;
+}
+
+:root[data-theme="light"] {
+  --paper: #f7f3ea;
+  --card: #fffdf8;
+  --ink: #20314a;
+  --ink-soft: #5c6a80;
+  --rule: #d8d0bf;
+  --accent: #20314a;
+  --panel: #f0e6d2;
+}
+
+@media (prefers-color-scheme: light) {
+  html:not([data-theme="dark"]) {
+    --paper: #f7f3ea;
+    --card: #fffdf8;
+    --ink: #20314a;
+    --ink-soft: #5c6a80;
+    --rule: #d8d0bf;
+    --accent: #20314a;
+    --panel: #f0e6d2;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.6 ui-serif, Georgia, "Times New Roman", serif;
+  padding: 1.5rem 1rem 4rem;
+}
+
+.wrap { max-width: 62rem; margin: 0 auto; }
+
+header.masthead { border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
+
+header.masthead .kicker {
+  font: 600 0.78rem/1.4 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 0.35rem;
+}
+
+header.masthead h1 { font-size: 1.7rem; line-height: 1.25; margin: 0 0 0.5rem; font-weight: 600; }
+
+header.masthead .lede { margin: 0; max-width: var(--measure); color: var(--ink-soft); }
+
+header.masthead .bar {
+  display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center;
+  margin-top: 0.9rem;
+  font: 0.85rem/1.5 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+
+a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+
+blockquote.scope {
+  margin: 1.25rem 0 0;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--rule);
+  background: var(--card);
+  font-size: 0.92rem;
+  max-width: var(--measure);
+}
+
+blockquote.scope p { margin: 0; }
+
+/* ── the layout: the beats down the side, one step in the middle ─────────────────────────────── */
+
+#demo {
+  display: grid;
+  grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+  margin-top: 1.75rem;
+}
+
+nav.steps { position: sticky; top: 1rem; }
+
+nav.steps ol {
+  list-style: none;
+  margin: 0; padding: 0;
+  counter-reset: none;
+  border-top: 1px solid var(--rule);
+}
+
+nav.steps li { border-bottom: 1px solid var(--rule); }
+
+nav.steps button {
+  display: block; width: 100%;
+  background: none; border: 0; padding: 0.55rem 0.4rem;
+  text-align: left; cursor: pointer;
+  color: var(--ink-soft);
+  font: 0.85rem/1.35 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+
+nav.steps button:hover { color: var(--ink); background: var(--card); }
+nav.steps button[aria-current="step"] {
+  color: var(--ink); font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: var(--card);
+}
+
+.stage h2 { font-size: 1.3rem; line-height: 1.3; font-weight: 600; margin: 0 0 0.6rem; }
+.stage p.body { margin: 0 0 1.25rem; max-width: var(--measure); }
+
+.drawing {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  padding: 1rem;
+  display: flex; justify-content: center;
+}
+
+.drawing svg { width: 100%; height: auto; max-width: 34rem; display: block; }
+
+/* The drawings. One panel fill, one stroke, one heavier stroke for the piece a step is about. */
+.net .panel polygon, .ring .panel polygon { fill: var(--panel); stroke: none; }
+.net .stroke, .ring .stroke {
+  stroke: var(--ink); stroke-width: 3; fill: none;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.ring .stroke { stroke-width: 2; }
+.net .stroke .strong, .ring .stroke .strong { stroke-width: 6; }
+.ring .stroke .tip-line { stroke-width: 1.2; }
+.net .stroke .cut polygon {
+  fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 7 6;
+}
+.net .walk .head { fill: var(--ink); stroke: none; }
+.net .middle circle { fill: var(--ink); stroke: none; }
+.ring .absent line { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.45; }
+.ring .dots circle { fill: var(--ink); stroke: none; }
+.ring .dots circle.tip { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+.net .labels, .ring .labels {
+  fill: var(--ink);
+  font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+.net .labels .value, .ring .labels .value { font-weight: 600; }
+.ring .labels .tip { font-style: italic; }
+.ring .labels .note { fill: var(--ink-soft); font-style: italic; }
+
+/* ── the controls ──────────────────────────────────────────────────────────────────────────────── */
+
+.controls, .walkers, .still {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+  font: 0.85rem/1.4 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+
+.controls { margin-top: 0.75rem; }
+.controls .tick-label { min-width: 8rem; color: var(--ink-soft); }
+
+button, select {
+  font: inherit;
+  font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+}
+
+button:disabled { opacity: 0.4; cursor: default; }
+button:focus-visible, select:focus-visible, nav.steps button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+.walkers { margin-top: 1.5rem; border-top: 1px solid var(--rule); padding-top: 1rem; }
+.walkers .place { margin: 0; color: var(--ink-soft); flex: 1; }
+
+.still { margin-top: 1.25rem; }
+.still details { flex-basis: 100%; }
+.still pre {
+  overflow-x: auto; background: var(--card); border: 1px solid var(--rule);
+  padding: 0.75rem; font-size: 0.7rem; line-height: 1.4; max-height: 22rem;
+}
+
+/* ── the numbers, as text ──────────────────────────────────────────────────────────────────────── */
+
+.tables { margin-top: 1.5rem; display: grid; gap: 1.5rem; }
+
+figure.numbers { margin: 0; }
+figure.numbers figcaption {
+  font: 0.82rem/1.4 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink-soft);
+  margin-bottom: 0.4rem;
+}
+
+figure.numbers table {
+  border-collapse: collapse;
+  width: 100%;
+  font: 0.85rem/1.5 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  display: block;
+  overflow-x: auto;
+}
+
+figure.numbers th, figure.numbers td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.3rem 0.6rem 0.3rem 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+figure.numbers thead th { color: var(--ink-soft); font-weight: 600; }
+figure.numbers tbody th { font-weight: 400; }
+
+.notes {
+  margin-top: 1.25rem; max-width: var(--measure);
+  font-size: 0.88rem; color: var(--ink-soft);
+}
+.notes p { margin: 0 0 0.6rem; }
+
+footer.foot {
+  margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+  font: 0.82rem/1.6 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.index { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 1rem; }
+.index li { border-top: 1px solid var(--rule); padding-top: 0.75rem; }
+.index a { font-size: 1.05rem; font-weight: 600; text-decoration: none; }
+.index a:hover { text-decoration: underline; }
+.index p { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 0.9rem; }
+
+@media (max-width: 52rem) {
+  #demo { grid-template-columns: minmax(0, 1fr); }
+  nav.steps { position: static; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

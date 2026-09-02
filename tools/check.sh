@@ -5,16 +5,20 @@
 # The order matters, and it is the order of trust:
 #
 #   1. fetch the pinned engine, if it is reachable at all  (soft: no engine access is not a failure)
-#   2. check the edition — two layers in one run:
+#   2. check the edition — the record's two layers, plus the demos:
 #        · snapshot integrity, when step 1 succeeded: `record/` is the engine at the pinned commit,
 #          byte for byte. This is what makes the committed copy evidence rather than a copy.
 #        · quotations, always: every declared number verbatim in `record/`. Needs no engine access,
 #          so a clean clone and the published site are gated exactly as strongly as a dev box.
+#        · the demos, in two lines: `demos/data/napkin.json` is what the napkin now exports, and the
+#          arithmetic the demo pages run in a browser equals it value for value. The second needs
+#          node; without it that line reads "unverified" rather than passing. See demos/DEMOS.md.
 #   3. the two guards the edition check does not reach — `tools/octahedron.py`'s own assertions
 #      (the geometry the octahedron chapter's appendix note rests on) and `tools/beat_coverage.py`
 #      (the prose against OUTLINE.md's beats). Both were previously run by hand only.
 #   4. build the book — which regenerates the appendix from the record
-#   5. check the built pages, including that every record link resolves
+#   5. check the built pages, including that every record link resolves and that the built site
+#      actually carries demos/ — the one piece of wiring nothing else would notice breaking
 #
 # The build can legitimately rewrite `chapters/the-simulations.md`, so the last thing this does is
 # ask git whether it did: a dirty tree after a build means the record moved and the committed
