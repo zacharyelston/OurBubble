@@ -51,47 +51,21 @@ If there is no perfect answer, what did we choose?
 
 ## The compromise we chose
 
-Every tetrahedral world is a compromise, and a compromise is a *choice* — which has consequences,
-which can be measured.
+Every tetrahedral world is a compromise, and a compromise is a choice with measurable consequences.
 
 Here is ours, with a pencil. Colour a cube's eight corners in two colours so that **no two corners
-joined by an edge ever share a colour**. There is exactly one way, and you will find it in seconds:
-opposite corners of each face match, neighbouring ones never do.
+joined by an edge ever share a colour**; there is exactly one way. Then **keep one colour and
+discard the other.** The four you kept are joined by diagonals across the cube's faces, so all six
+gaps between them are equal — which makes them one regular tetrahedron. One cube, one tetrahedron.
 
-Now throw half away. **Keep one colour, discard the other.** The four you kept are joined to one
-another by diagonals across the cube's faces, so all six gaps between them are equal — which makes
-them one regular tetrahedron. One cube, one tetrahedron.
+Stack the cubes, same colour throughout. The tetrahedra never meet face to face, and the gaps
+between them are no longer thin wedges: each is an octahedron, centred on a corner you threw away.
+Cut one along a long diagonal and it falls into four tetrahedra. Do that to every hole and space is
+filled — entirely with tetrahedra, not all the same shape, and no wedge anywhere.
 
-Stack the cubes, keeping the same colour throughout. The tetrahedra never meet face to face, and the
-gaps between them are not thin wedges any more: each is shaped like an octahedron, and each is
-centred on one of the corners you threw away.
-
-Octahedra are easy. Pick one of the three long diagonals, cut along it, and the octahedron falls
-into four tetrahedra. Do that to every hole and space is filled entirely with tetrahedra — not all
-the same shape, which is the compromise, and no wedge left anywhere.
-
-## Is any dot special?
-
-One detail in that recipe matters more than it looks, and it is not your choice. Which of the three
-diagonals gets cut is decided by a rule of ours, and the rule **twists on purpose**: add up a hole's
-three coordinates, and the pick cycles as that total goes up. You will see in a moment what the
-twist buys.
-
-A twisting rule is exactly the kind that could leave seams — dots in the thick of it, dots where the
-rule changed its mind. If poking one dot were not the same experiment as poking another, no
-comparison between directions would mean anything.
-
-None is singled out. But the twist leaves its mark, and this is what it buys: there are **three
-kinds of place** here rather than one.
-
-{{napkin:vertex_classes}}
-
-Counted while the page was built: three kinds, in exact thirds. And the three are copies of one
-another — turn one a third of the way round and step it sideways, and it lands exactly on the next
-kind.
-
-So the world has a grain, and no dot is privileged. Remember the grain when a ripple comes out
-lopsided, because a grain is one place lopsidedness can hide.
+Which of the three diagonals gets cut is fixed by a rule of ours, and that rule **twists on
+purpose** — number each hole by how far it sits along the three directions, add those up, and the
+pick cycles as the total does.
 
 Now you have room. So poke a dot in the middle of a great many, and watch.
 
@@ -148,19 +122,41 @@ there from here on: with no walls, nothing bounces, so the ring is only ever the
 
 Which means the question you have been unable to ask is finally available.
 
+## Now that the world has no edge — is any dot special?
+
+The object is finished, so the question can finally be asked honestly: standing on one dot of this
+wrapped world, does it look like standing on any other?
+
+It matters because of that twisting cut rule. A rule that twists is exactly the kind that could
+leave seams — dots in the thick of it, dots where the rule changed its mind. If poking one dot were
+not the same experiment as poking another, no comparison between directions would mean anything.
+
+None is singled out. But the twist does leave a mark, and here it is.
+
+{{napkin:vertex_classes}}
+
+Three kinds of place, in exact thirds, counted while the page was built — and cut the holes all the
+same way instead and there would be just one. The three are copies of one another: turn one a third
+of the way round and step it over, and it lands exactly on the next kind.
+
+So the world has a grain, and no dot is privileged.
+
 ## The object, and the only question left
 
 You can now ask the stopwatch question. Poke a dot, count the ticks, and see how far the front has
-gone — and then do it again in a different direction and compare.
+gone — then do it again in a different direction and compare.
+
+And the grain gives that question teeth: if the two answers disagree, either the world really runs
+faster one way, or you are reading the grain.
 
 Take stock, because the list is short and all but one item was forced. Dots, because a number needs
-somewhere to sit. Lines, because change lives between. A triangle, because it was the first thing
-that closed. A tetrahedron, because that is the triangle one dimension up — and, once stacking came
-up, because it holds its shape where a cube does not. A clock and one rule, because nothing could
-happen. Many tetrahedra, because one had no room. The two-colouring and the discarded half, because
-tetrahedra will not stack alone. A wrap, because edges echo.
+somewhere to sit. Lines, because change lives between. A triangle, because it closes. A tetrahedron,
+because that is the triangle one dimension up, and because it holds its shape where a cube does not.
+A clock and one rule, because nothing could happen. Many tetrahedra, because one had no room. The
+two-colouring and the discarded half, because tetrahedra will not stack alone. A wrap, because edges
+echo.
 
-The exception is the dial — the only thing anybody chose. Nothing has forced a setting yet.
+The exception is the dial — the only thing anybody chose, and still unset.
 
 That is the object. Everything from here is this one thing, asked a different question — and the
 first question is whether the ring it makes is actually round.

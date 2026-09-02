@@ -133,11 +133,9 @@ off the object. The object does not contain it. You are choosing how much each o
 counts — whether a long line and a short line are worth the same when something *travels* along
 them, or whether the long one should be the slower crossing.
 
-Call it the dial. Six lines, six settings, each giving a different world with the same dots in it.
-
-And notice what it never touches. The dial weights the *journey*, not the numbers: the difference on
-a line is what it always was, whatever length you give the line. So the promise the last chapter
-made is kept — turn the dial however you like and **both zeros survive**.
+Call it the dial. Six lines, six settings, each giving a different world with the same dots in it —
+and each weighting the *journey* along a line rather than the number sitting on it, which is why
+**both zeros survive** whatever you set it to.
 
 Nothing so far has needed the dial, which is why you have not met it until now. Almost every result
 later in this book depends on it, and one whole chapter is about what happens when it is set
