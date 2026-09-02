@@ -77,11 +77,12 @@ The first command is the book reading itself, and it is worth being exact about 
 <!-- beat 102 -->
 
 **Every figure with a `read from` file beside it in the appendix is checked verbatim** against that
-file — those, and only those, are the ones a program has been over. **Every figure a chapter sets in
-digits and puts in bold is checked too**: it has to be one its own appendix section declares that
-way, so a number cannot be emphasised into your eye without a counterpart in the record. Alongside
-that, it confirms each cited test and figure is still in the repository, each chapter still points
-at its own section, and each chapter still carries its visible scope statement.
+file — those, and only those, are the ones a program has been over.
+**Every figure a chapter sets in digits and puts in bold is checked too**: it has to be one its own
+appendix section declares that way, so a number cannot be emphasised into your eye without a
+counterpart in the record. Alongside that, it confirms each cited test and figure is still in the
+repository, each chapter still points at its own section, and each chapter still carries its visible
+scope statement.
 
 ## And what no program has read
 
@@ -105,9 +106,10 @@ linked and whose experiments the appendix names.
 <!-- beat 102 -->
 
 The history chapter's figures are outside it too, and differently: no file is named beside `89.85°`
-or `~0.3 arcseconds` because none of it is ours. **Those are the numbers in this book you can check
-against the world instead of against us** — which is a better guarantee than the one a program can
-give. Knowing exactly where each line falls seems more use to you than a larger claim would be.
+or `~0.3 arcseconds` because none of it is ours.
+**Those are the numbers in this book you can check against the world instead of against us** — which
+is a better guarantee than the one a program can give. Knowing exactly where each line falls seems
+more use to you than a larger claim would be.
 
 The second command builds the book — and building it **regenerates the appendix from the record**,
 so the page you read is assembled rather than maintained. If the record has moved, the file changes
@@ -124,8 +126,8 @@ None of that computes any physics. It checks that the story and the record still
 The commands above verify bookkeeping. Here is the one that verifies the science, and it is the
 reason this project can make the claims it does.
 
-Pick a result. Re-run its test — the real one, at full size, and let it **overwrite the committed
-data this book quotes**. Then ask git whether anything changed.
+Pick a result. Re-run its test — the real one, at full size, and let it
+**overwrite the committed data this book quotes**. Then ask git whether anything changed.
 
 Nothing should change. If any number in these chapters had been nudged after the fact, tuned to
 taste, or typed in by hand, that is where it appears.

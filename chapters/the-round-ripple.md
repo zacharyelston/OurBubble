@@ -202,10 +202,11 @@ So what did the chapter settle?
 
 Not that the little world has light in it. It does not.
 
-Two things, both of which everything after this depends on. **One setting decides whether the world
-behaves the same way in every direction** — and that setting is a choice somebody makes, not a fact
-the object hands over. And **we can tell a coarse grid from a broken geometry**, by whether the
-disagreement shrinks when the ripples get gentler.
+Two things, both of which everything after this depends on.
+**One setting decides whether the world behaves the same way in every direction** — and that setting
+is a choice somebody makes, not a fact the object hands over. And
+**we can tell a coarse grid from a broken geometry**, by whether the disagreement shrinks when the
+ripples get gentler.
 
 Go and look at your guess now. Whichever way it went, you know something about the dial that you
 could not have known by being told.

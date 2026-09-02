@@ -32,10 +32,10 @@ So what would count instead?
 
 Three properties, and the third is the one that does the work.
 
-You need a number **the method was not built to know** — not a target it was aimed at. You need **no
-dial available to tune it** toward the answer, because a knob that can reach the right answer will
-be turned until it does, honestly and unconsciously. And you need to be **unable to check it until
-after you have committed**, so that the commitment is real.
+You need a number **the method was not built to know** — not a target it was aimed at. You need
+**no dial available to tune it** toward the answer, because a knob that can reach the right answer
+will be turned until it does, honestly and unconsciously. And you need to be
+**unable to check it until after you have committed**, so that the commitment is real.
 
 That is a demanding list. Notice it rules out almost everything a small model can say about a big
 world. Where would you even find such a number?

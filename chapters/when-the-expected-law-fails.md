@@ -50,8 +50,8 @@ should still be a square root.
 
 **Write down your guess.** Does a partial lump obey the whole-cavity law?
 
-We registered ours before running, and it was the obvious one: the exponent should come out at **p =
-−1/2**. Written down, committed, with the run still ahead of it.
+We registered ours before running, and it was the obvious one: the exponent should come out at
+**p = −1/2**. Written down, committed, with the run still ahead of it.
 
 ## What came back
 

@@ -115,10 +115,11 @@ So what is that no actually worth?
 
 Notice first what it does not say. It does not say the coupling idea is wrong.
 
-It says something narrower and more useful: **under standard physics, cutting off the information
-does not cut the resistance**, because resistance and potentials live in different places in the
-equations. To get the effect you would need an extra law — a new rule tying mass to environmental
-coupling — and that rule is a separate, contested hypothesis, which this experiment does not assume.
+It says something narrower and more useful:
+**under standard physics, cutting off the information does not cut the resistance**, because
+resistance and potentials live in different places in the equations. To get the effect you would
+need an extra law — a new rule tying mass to environmental coupling — and that rule is a separate,
+contested hypothesis, which this experiment does not assume.
 
 That is a bound rather than a shrug, and the run even priced the interesting version for us: *if*
 such a law existed, this shell's isolation figure would predict a spectacularly lighter interior. It

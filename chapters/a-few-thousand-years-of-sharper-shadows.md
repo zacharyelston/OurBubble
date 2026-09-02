@@ -53,8 +53,9 @@ answer hangs on it. Push the angle a hair closer to 90 and the distance runs off
 back it off a little and the Sun comes far too close. The calculation amplifies a small angular
 error savagely.
 
-So: right method, wrong answer, and the fault is neither in the geometry nor in the man. **The fault
-is in the resolution**, and the resolution is a property of the instrument rather than of the idea.
+So: right method, wrong answer, and the fault is neither in the geometry nor in the man.
+**The fault is in the resolution**, and the resolution is a property of the instrument rather than
+of the idea.
 
 Which is a distinction worth having a name for.
 
