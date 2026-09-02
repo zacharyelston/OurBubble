@@ -998,6 +998,7 @@ export function netLabels() {
         cell: [dotAt.get(position.join(","))],
         text: NAMES[dotAt.get(position.join(","))],
         at: ringAdd(position, ringScale(ringSub(centroid, position), VERTEX_INSET)),
+        panelCentre: centroid,
       });
     }
   }
@@ -1011,10 +1012,14 @@ export function netLabels() {
     out.push({
       kind: "line", cell: line, text: cellName(line),
       at: ringAdd(midpoint, ringScale(ringSub(centroid, midpoint), LINE_INSET)),
+      panelCentre: centroid,
     });
   }
   for (const { face, positions } of panels) {
-    out.push({ kind: "face", cell: face, text: cellName(face), at: ringCentroid(positions) });
+    out.push({
+      kind: "face", cell: face, text: cellName(face),
+      at: ringCentroid(positions), panelCentre: ringCentroid(positions),
+    });
   }
   return out;
 }
@@ -1027,6 +1032,14 @@ export function netLabels() {
  * panels. The scale, the padding and the flip are the same in both, which is what keeps the
  * triangle in the place the net will later put it: `AB` horizontal, `A` on the left, `C` above.
  */
+/** A fixed step of `distance` from `from` toward `to`, in projected coordinates. */
+function stepToward(from, to, distance) {
+  const dx = to[0] - from[0];
+  const dy = to[1] - from[1];
+  const length = Math.hypot(dx, dy) || 1;
+  return [from[0] + (dx / length) * distance, from[1] + (dy / length) * distance];
+}
+
 function netFrame(positions, pad = NET_PAD) {
   const xs = positions.map((p) => p[0]);
   const us = positions.map((p) => p[1]);
@@ -1106,15 +1119,27 @@ export function drawNet({ values = {}, emphasis = [], panels = true, midpoints =
 
   body.push('  <g class="labels">');
   for (const label of netLabels()) {
+    // The NAME never moves: its position is CANON.md's, and a number is not a reason to shift it.
+    // The number goes a fixed step from it, into the panel the name belongs to — which is why it
+    // never lands on a stroke, and why four labels on one panel do not pile onto its middle. An
+    // earlier version moved the pair inward together and did exactly that.
     const [x, y] = netProject(label.at);
+    const [cx, cy] = netProject(label.panelCentre);
     const size = label.kind === "dot" ? 34 : (label.kind === "face" ? 28 : 24);
-    const weight = label.kind === "dot" ? ' font-weight="700"' : "";
     const value = values[label.text];
-    const dy = value === undefined ? 0 : -size * 0.35;
     const heavy = strong.has(label.text) ? ' class="strong"' : "";
-    body.push(`    <text${heavy}${weight} x="${d2(x)}" y="${d2(y + dy)}" font-size="${size}" text-anchor="middle" dominant-baseline="central">${esc(label.text)}</text>`);
+    const weight = label.kind === "dot" ? ' font-weight="700"' : "";
+    body.push(`    <text${heavy}${weight} x="${d2(x)}" y="${d2(y)}" font-size="${size}" text-anchor="middle" dominant-baseline="central">${esc(label.text)}</text>`);
     if (value !== undefined) {
-      body.push(`    <text class="value" x="${d2(x)}" y="${d2(y - dy + size * 0.55)}" font-size="${size * 0.85}" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+      // A line's or a face's number goes straight under its name — a fixed drop, the same every
+      // time. Stepping a line's number further into the panel put three of them on the face's name,
+      // and stepping it sideways put one on the next line's name across the fold; a face's name is
+      // AT the panel's middle, so there is no "further in" for it to step to at all, and the number
+      // landed on top of the name. Down is none of those.
+      const [vx, vy] = label.kind === "dot"
+        ? stepToward([x, y], [cx, cy], size * 0.95)
+        : [x, y + size * 1.05];
+      body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="${size * 0.85}" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
     }
   }
   body.push("  </g>");
@@ -1159,6 +1184,17 @@ export function drawTriangle({ dots = 3, values = {}, showLine = true, showFace 
   }
   body.push("  </g>");
 
+  // Chapter 1's dots are drawn as dots. That reads like a triviality and is not one: the first
+  // picture in the book answers "where could you put a number?", and it answered it with a letter
+  // floating in an empty box, because the net this drawing borrows its positions from has no dot
+  // marks — in the net a corner is where lines meet, and there is always a line. Here there is not.
+  body.push('  <g class="middle">');
+  for (const position of used) {
+    const [x, y] = at(position);
+    body.push(`    <circle cx="${d2(x)}" cy="${d2(y)}" r="10"/>`);
+  }
+  body.push("  </g>");
+
   // The walk, when a step asks for it. A small fixed-size head three-quarters of the way along each
   // step, pointing the way the walk goes — and nothing else. It says "this way round"; it does not
   // say anything about the line it sits on.
@@ -1181,15 +1217,20 @@ export function drawTriangle({ dots = 3, values = {}, showLine = true, showFace 
 
   body.push('  <g class="labels">');
   used.forEach((position, index) => {
-    const inset = dots === 1
-      ? position
-      : ringAdd(position, ringScale(ringSub(centroid, position), VERTEX_INSET));
-    const [x, y] = at(inset);
     const value = values[NAMES[index]];
-    const dy = value === undefined ? 0 : -12;
-    body.push(`    <text font-weight="700" x="${d2(x)}" y="${d2(y + dy)}" font-size="34" text-anchor="middle" dominant-baseline="central">${NAMES[index]}</text>`);
+    // With one dot and no lines there is no inside to sit in, so the name sits above the dot; with
+    // three there is, and the name takes the canonical inset. Either way the number goes a fixed
+    // step further in, so neither lands on a stroke and neither lands on the dot.
+    const [dx, dy] = at(position);
+    const [ax, ay] = dots === 1
+      ? [dx, dy - 34]
+      : at(ringAdd(position, ringScale(ringSub(centroid, position), VERTEX_INSET)));
+    body.push(`    <text font-weight="700" x="${d2(ax)}" y="${d2(ay)}" font-size="34" text-anchor="middle" dominant-baseline="central">${NAMES[index]}</text>`);
     if (value !== undefined) {
-      body.push(`    <text class="value" x="${d2(x)}" y="${d2(y + dy + 32)}" font-size="30" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+      const [vx, vy] = dots === 1
+        ? [dx, dy + 36]
+        : stepToward([ax, ay], at(centroid), 32);
+      body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="30" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
     }
   });
   if (showLine) {
@@ -1198,10 +1239,10 @@ export function drawTriangle({ dots = 3, values = {}, showLine = true, showFace 
       const midpoint = ringMid(used[pair[0]], used[pair[1]]);
       const [x, y] = at(ringAdd(midpoint, ringScale(ringSub(centroid, midpoint), LINE_INSET)));
       const value = values[name];
-      const dy = value === undefined ? 0 : -11;
-      body.push(`    <text x="${d2(x)}" y="${d2(y + dy)}" font-size="24" text-anchor="middle" dominant-baseline="central">${name}</text>`);
+      body.push(`    <text x="${d2(x)}" y="${d2(y)}" font-size="24" text-anchor="middle" dominant-baseline="central">${name}</text>`);
       if (value !== undefined) {
-        body.push(`    <text class="value" x="${d2(x)}" y="${d2(y + dy + 25)}" font-size="24" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+        const [vx, vy] = [x, y + 26];
+        body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="24" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     }
   }
@@ -1442,7 +1483,11 @@ export function drawRing({ values = {}, emphasis = [], face = null, tips = false
   // size whether or not the tips are shown — a reader is looking at one object, not two — and the
   // picture has no empty margin where the tips would have been.
   const frame = ringFrame([
-    ...MID_NAMES.map((name) => at[name]),
+    ...MID_NAMES.flatMap((name) => {
+      const away = Math.hypot(...at[name]) || 1;
+      const label = at[name].map((v) => v + (v / away) * 26);
+      return [at[name], label, [label[0], label[1] + 22], [label[0], label[1] - 22]];
+    }),
     ...(places ? places.map((entry) => entry.at) : []),
   ]);
   const place = (point) => [point[0] - frame.minX, point[1] - frame.minY];
@@ -1520,7 +1565,9 @@ export function drawRing({ values = {}, emphasis = [], face = null, tips = false
   body.push('  <g class="labels">');
   for (const name of MID_NAMES) {
     const [x, y] = place(at[name]);
-    const away = Math.hypot(...at[name]) > (RING_OUTER + RING_INNER) / 2 ? 26 : -24;
+    // Outward, for every middle. Inward for the inner three put their names in the middle of the
+    // drawing, which is exactly where the tip over the inner face sits.
+    const away = 26;
     const ux = at[name][0] === 0 ? 0 : Math.sign(at[name][0]);
     const uy = at[name][1] === 0 ? 0 : Math.sign(at[name][1]);
     const lx = x + ux * away * 0.9;
@@ -1538,12 +1585,22 @@ export function drawRing({ values = {}, emphasis = [], face = null, tips = false
     }
   }
   if (face !== null && face === outerFace) {
-    body.push(`    <text class="note" x="${d2(frame.width / 2)}" y="26" font-size="16" text-anchor="middle">${esc(faces[face].map((i) => MID_NAMES[i]).join(" · "))} — the outside of the paper</text>`);
+    body.push(`    <text class="note" x="${d2(frame.width / 2)}" y="${d2(frame.height - 14)}" font-size="16" text-anchor="middle">${esc(faces[face].map((i) => MID_NAMES[i]).join(" · "))} — the outside of the paper</text>`);
   }
   body.push("  </g>");
   body.push("</svg>");
   return body.join("\n");
 }
+
+// The three numbers these pages write that are not values of the object at all, each with its
+// reason. They are declared HERE, above the step definitions, because the rule that governs those
+// definitions is absolute: no digit may appear in any piece of text a step produces — a table cell,
+// a caption, a heading, its own title, its prose, its notes, or anything it draws. Naming these
+// three is what lets the rule be absolute rather than approximate. A fourth means writing down what
+// it counts, here and in `core.test.mjs`, which checks that the two lists still agree.
+const NONE = "0";   // how many exceptions, edges, clocks, lengths and assumptions there are: none
+const ONLY = "1";   // how many rules the law has
+const PAIR = "2";   // the two coming-home facts, and the two shapes chapter 4 ends with
 
 // ── the steps ─────────────────────────────────────────────────────────────────────────────────────
 //
@@ -1558,16 +1615,6 @@ const table = (caption, head, rows) => ({ caption, head, rows });
 
 /** How many k-cells a complex has — including none, which is the answer chapter 1 needs twice. */
 const rung = (complex, k) => (complex.cells[k] ?? []).length;
-
-/** How much a line counts once the dial has been turned: the chapter's one doubled line. */
-const dialWeight = (name) => (name === DIALED_LINE ? new Frac(2n) : ONE);
-
-// The three numbers on these pages that are not values of the object, each with its reason. They are
-// declared here, and `core.test.mjs` refuses any other bare number typed into a step — so a count
-// that ought to be computed cannot arrive as a literal instead.
-const NONE = "0";   // how many exceptions, edges, clocks, lengths and assumptions there are: none
-const ONLY = "1";   // how many rules the law has
-const PAIR = "2";   // the two coming-home facts, and the two shapes chapter 4 ends with
 
 function walkRows(names, terms, totals) {
   return names.map((name, i) => [name, terms[i].map(signedText).join(" "), numberText(totals[i])]);
@@ -1725,8 +1772,8 @@ function chapterOne() {
       beat: 15,
       title: "Would any three numbers do that?",
       body: "Every time. Here are three others, as unlike the first three as you like, and the walk "
-        + "still finishes at nothing. It is not something about 2, 5 and 1. It is something about "
-        + "coming home.",
+        + "still finishes at nothing. It is not something about the three numbers you started with. "
+        + "It is something about coming home.",
       render: () => ({
         drawing: drawTriangle({
           dots: 3, showFace: true, arrows: walk,
@@ -1938,12 +1985,16 @@ function chapterTwo() {
       title: "Now give the six lines lengths — is a long line worth the same as a short one?",
       body: "That is a choice, not a fact. Somewhere you have to say how much each line counts, and "
         + "nothing in the object says it for you. Here is the dial in miniature: one number per line, "
-        + "six of them, all set to one until you move one.",
+        + "six of them, and every one of them set the same until somebody moves one.",
       render: () => ({
-        drawing: drawNet({ values: Object.fromEntries(t.lineNames.map((n) => [n, numberText(dialWeight(n))])), emphasis: [DIALED_LINE], title: "The dial, one number per line" }),
+        drawing: drawNet({
+          values: Object.fromEntries(t.lineNames.map((n) => [n, numberText(ONE)])),
+          title: "The dial, one number per line",
+        }),
         tables: [table("how much each line counts", ["line", "counts"],
-          t.lineNames.map((n) => [n, numberText(dialWeight(n))]))],
-        notes: [`Nothing has moved yet — a dial with nothing running is just a setting. ${DIALED_LINE} is set to 2 so that the next chapter has something to show.`],
+          t.lineNames.map((n) => [n, numberText(ONE)]))],
+        notes: ["Nothing is moving yet, and nothing has been turned: a dial with nothing running is "
+          + "just a setting. Turning one is the next chapter's business."],
       }),
     },
     {
@@ -2062,7 +2113,7 @@ function chapterThree() {
           ["exceptions", NONE],
           ["edges to treat specially", NONE],
           ["how much one tick counts for", fracText(TICK_K)],
-          ["how much each line counts", "1 each, until you turn the dial"],
+          ["how much each line counts", `${numberText(ONE)} each, until you turn the dial`],
         ])],
         notes: [],
       }),
@@ -2093,8 +2144,8 @@ function chapterThree() {
         tables: [
           historyTable("every tick, and its total", NAMES, runs.plain),
           table("the total", ["what", "value"], [
-            ["the total at tick 0", numberText(sum(runs.plain[0]))],
-            [`the total at tick ${runs.plain.length - 1}`, numberText(sum(runs.plain[runs.plain.length - 1]))],
+            ["the total at the first tick", numberText(sum(runs.plain[0]))],
+            ["the total at the last", numberText(sum(runs.plain[runs.plain.length - 1]))],
             ["how many different totals in the whole run", String(new Set(runs.plain.map((row) => sum(row).toString())).size)],
           ]),
         ],
@@ -2206,7 +2257,8 @@ function chapterFour() {
         drawing: drawNet({ midpoints: true, medials: true, title: "The cut, on the flat paper" }),
         tables: [
           table("what falls out", ["what", "how many", "how big"], [
-            ["dots — the 4 corners and the 6 middles", String(cut.dots), "—"],
+            [`dots — the ${cut.corners} corners and the ${cut.middles} middles`,
+              String(cut.dots), "—"],
             ["tetrahedra, one at each tip", String(cut.tips), `half the side, ${fracText(cut.tipShare)} of the whole`],
             ["the shape left between them", String(cut.octahedra), `${fracText(cut.coreShare)} of the whole`],
           ]),
@@ -2214,10 +2266,6 @@ function chapterFour() {
             [`${cut.tips} tips at ${fracText(cut.tipShare)}`, fracText(cut.tipShare.mul(new Frac(BigInt(cut.tips))))],
             ["the shape between", fracText(cut.coreShare)],
             ["all of it", fracText(cut.tipShare.mul(new Frac(BigInt(cut.tips))).add(cut.coreShare))],
-          ]),
-          table("its eight faces divide in two", ["where the face looks", "how many", "which"], [
-            ["straight at a tip", String(cut.facesAtATip.length), cut.facesAtATip.join(" · ")],
-            ["flat in a face of the tetrahedron you cut", String(cut.facesInAFace.length), cut.facesInAFace.join(" · ")],
           ]),
         ],
         notes: ["Every volume here is worked out from the four corners' positions, exactly, in this page."],
@@ -2248,7 +2296,7 @@ function chapterFour() {
     {
       beat: 39,
       title: "Same rule, same tick, one dot poked: what happens?",
-      body: `Put 1 on ${poke.poked} and nothing anywhere else. At tick ${poke.crossingTicks} the whole `
+      body: `Put ${numberText(ONE)} on ${poke.poked} and nothing anywhere else. At tick ${poke.crossingTicks} the whole `
         + `of it is on ${poke.opposite} — the dot no line joins it to — and nowhere else. At `
         + `tick ${poke.homeTicks} it is home. A here and a there at last, and the total still never `
         + "moves.",
@@ -2265,7 +2313,7 @@ function chapterFour() {
               .concat([["the six, added", numberText(sum(poke.history[tick]))]])),
           historyTable("every tick, computed here", MID_NAMES, poke.history),
           table("what the run does", ["what", "value"], [
-            ["poked", `1 on ${poke.poked}`],
+            ["poked", `${numberText(ONE)} on ${poke.poked}`],
             ["how much one tick counts for", fracText(poke.k)],
             ["the tick the whole of it is on the opposite dot", String(poke.crossingTicks)],
             ["the tick it is home", String(poke.homeTicks)],
@@ -2320,8 +2368,14 @@ function chapterFour() {
       render: () => ({
         drawing: drawRing({ tips: true, title: "The four flat faces filled, and the four tips they add" }),
         tables: [
-          table("what was added", ["what", "how many", "how big"], [
-            ["tetrahedra, one on each flat face", String(twin.added), `${fracText(twin.apexShare)} of the whole — the same as a tip`],
+          table("its eight faces divide in two", ["where the face looks", "how many", "which"], [
+            ["straight at a tip", String(cut.facesAtATip.length), cut.facesAtATip.join(" · ")],
+            ["flat in a face of the tetrahedron you cut", String(cut.facesInAFace.length),
+              cut.facesInAFace.join(" · ")],
+          ]),
+          table("what fits on the flat ones", ["what", "how many", "how big"], [
+            ["tetrahedra, one on each flat face", String(twin.added),
+              `${fracText(twin.apexShare)} of the whole — the same as a tip`],
           ]),
           table("where each new corner came from", ["new corner", "it sits over the face", "it is this old corner, pushed through the middle"],
             twin.apexNames.map((name) => [name, twin.apexes[name].over, name.replace("′", "")])),
