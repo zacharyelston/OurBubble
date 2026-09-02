@@ -85,6 +85,24 @@ Three properties are guaranteed, and each is enforced rather than intended:
 
 Every rendered block ends with one line: *computed while this page was built — <what>.*
 
+**Three rules the captions and the prose around them answer to**, each of them a defect that shipped
+once and was caught by a reader rather than a check (2026-09-02):
+
+1. **A caption is a caption.** `tools/napkin.py` refuses one over 70 words as it renders, and the
+   checker refuses a chapter whose captions come to more than 300 words between them, printing both
+   numbers on every run. The grain band reads a chapter's *source*, where a token is one word, so
+   without this the captions were the only reader-facing prose in the book that nothing measured —
+   and one of them reached 118 words and took over the following section's argument.
+2. **A claim is checked where it is made.** A token asserts that its rendered block contains the
+   values it computed, and separately that its *caption* contains the ones the caption claims. A
+   number present in the table does not license a caption that contradicts it.
+3. **A chapter may not say what its own tokens disprove.** `napkin.REFUSED_IN_PROSE` lets a token
+   name the phrasings its arithmetic refuses; the checker looks for them in the chapter's prose, not
+   in the token. It also refuses, in every chapter, the readings the record's own computation
+   refuted — those belong to the appendix. This is the only check in the repository that reads what
+   the *author* wrote rather than what the tool wrote, and it exists because a corrected table sat
+   two paragraphs above prose still making the disproved claim.
+
 ### The exemption, and exactly how far it reaches
 
 A napkin's numbers are **not** in the appendix, and must not be: they are computed, not quoted. So
