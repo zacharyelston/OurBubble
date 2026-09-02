@@ -12,9 +12,9 @@
 <!-- NOTE(figure): (b) alt — "Two tetrahedra of the same size interpenetrating, one pointing up and one down, with the eight-faced shape they share picked out at the centre and the eight tips falling on the corners of a cube." -->
 <!-- NOTE(figure): (b) brief — both tetrahedra must be legibly the same size, and the shared centre must read as the same shape as study (a)'s centre. Show the cube only as eight faint corner marks; it is where the tips land, not a box the object sits in. -->
 
-It is not. The cheapest room in this book has been in your hands, unopened, since you
-[counted the tetrahedron](one-tetrahedron-is-a-whole-world.md) — and it is not beside that
-tetrahedron. It is inside it.
+No — the cheapest room in this book is not a second tetrahedron. It has been in your hands,
+unopened, since you [counted the first one](one-tetrahedron-is-a-whole-world.md): not beside that
+tetrahedron. Inside it.
 
 ## Divide it instead of adding to it
 
