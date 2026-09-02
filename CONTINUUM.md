@@ -9,6 +9,11 @@ This is the book's ledger. The engine's is in UniForge's own `CONTINUUM.md`, and
 disjoint by repository: a lane here never edits the record, and a lane there never edits the prose.
 
 Rules of the ledger:
+- **The contract lives on `main`, and drafts read it from there.** `OUTLINE.md` (and any other
+  document a draft is written against) is edited only on `main`; a draft branch merges `origin/main`
+  before every proof-read, and the reader reads the contract from `origin/main` after a fetch — never
+  from a branch's stale copy (learned 2026-09-02: a read HELD on an outline the coordinator had
+  already fixed).
 - **The checkout stays on `main`; every lane works in its own worktree under `/private/tmp`** — including
   the coordinator. A shared working copy is a hazard: a concurrent branch switch strands or mixes
   uncommitted work (learned 2026-09-02).
