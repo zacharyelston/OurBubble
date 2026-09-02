@@ -26,7 +26,7 @@ Every one of them names a feature of the model:
 | *light cone* | how fast a disturbance can spread across the structure we built |
 | *vacuum* | the model's lowest-energy state, with nothing added to it |
 | *material*, *permittivity* | numbers we set on the structure to stand in for a substance |
-| *bubble* | a bounded region inside the model — and the shared viewpoint of you and us, standing inside one experiment |
+| *bubble* | a bounded region inside the model: a patch of it that is pushed on, measured, and handed back |
 | *Ising*, *universality* | a pattern of numbers this model shares with a family of well-studied models |
 
 None of them is being used to say something about the world outside the computer.

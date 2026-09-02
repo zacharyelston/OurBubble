@@ -11,9 +11,9 @@
 
 There is a way to make a toy look profound, and this project used to do it.
 
-You take a famous constant of nature. You build formulas out of whatever your model happens to contain
-— counts of faces, powers of π, small integers — and you keep going until one of them lands close. Then
-you write it up.
+You take a famous constant of nature. You build formulas out of whatever your model happens to
+contain — counts of faces, powers of π, small integers — and you keep going until one of them lands
+close. Then you write it up.
 
 It always works, and it never means anything, because a target you already know the value of will
 attract formulas indefinitely. Closeness is not evidence when you were free to keep searching.
@@ -37,8 +37,8 @@ That is called universality, and it is one of the better facts in physics.
 
 For a toy it is a gift, because it means our little world does not have to pretend to be a real
 magnet. It only has to belong to the same class. And which class a thing belongs to is decided by a
-handful of dimensionless numbers that can be measured — by us, and independently, in a laboratory, on
-actual matter.
+handful of dimensionless numbers that can be measured — by us, and independently, in a laboratory,
+on actual matter.
 
 ## First, make the instrument earn it
 
@@ -52,26 +52,25 @@ else, and had to produce the class numbers itself.
 
 It got them, to six and seven digits.
 
-That is not a discovery. It is a calibration. An instrument that cannot recover a known answer has no
-business reporting an unknown one.
+That is not a discovery. It is a calibration. An instrument that cannot recover a known answer has
+no business reporting an unknown one.
 
 **[Open the data-true universality figure](record/lab/warp-5-universality/0500-ising-universality/figures/universality.html)**
 
 ## Then take the answer key away
 
-The three-dimensional version of the same model has no closed-form solution. Nobody has one. It is not
-that it is hard to look up — it does not exist.
+The three-dimensional version of the same model has no closed-form solution. Nobody has one. It is
+not that it is hard to look up — it does not exist.
 
 The pipeline ran there unchanged. It reproduced the solved two-dimensional numbers first, as a
 built-in check, and then went to three dimensions and reported what it found.
 
-It came back with two exponents that agree with the values measured *in real matter* — at the liquid–gas
-critical point, and in uniaxial magnets — to within a few percent. Nobody fitted those targets. There
-was no parameter in which they could have entered.
+It came back with two exponents that agree with the values measured *in real matter* — at the
+liquid–gas critical point, and in uniaxial magnets — to within a few percent. Nobody fitted those
+targets. There was no parameter in which they could have entered.
 
-Not a formula that lands
-near a famous number, but a computation that produces a number nobody supplied and then agrees with
-measurement.
+That is the thing worth wanting from a lattice. Not a formula that lands near a famous number, but a
+computation that produces a number nobody supplied, which then agrees with measurement.
 
 There is a dependency here, and it belongs in the same breath. This stage was handed two ingredients
 rather than measuring them: the temperature at which the transition happens, and one of the class
@@ -87,12 +86,13 @@ It found the critical temperature to within about four parts in ten thousand of 
 And it missed one quantity, in exactly the direction it had said it would.
 
 That last sentence is the one worth slowing down for. Before the run, the team wrote down that this
-particular quantity was the one the affordable lattice sizes could not pin down, and that its estimate
-would come out *too high*. It came out too high — a prediction the experiment made about its own
-limits, and then met.
+particular quantity was the one the affordable lattice sizes could not pin down, and that its
+estimate would come out *too high*. It came out too high — a prediction the experiment made about
+its own limits, and then met.
 
 An experiment that announces its own ceiling in advance is doing something different from one that
-explains a shortfall afterwards.
+explains a shortfall afterwards. Both figures, and the band that was registered, are in the
+appendix.
 
 ## The part where the mistake was ours
 
@@ -101,10 +101,10 @@ There is one more lesson in this chapter and it is the least comfortable.
 Two other measurements in the same body of work had been recorded as negatives: quantities that came
 out outside their registered bands. They sat in the record as failures for a long time.
 
-Then the two were re-analysed, and both misses turned out to come from the same thing — and it was not
-the little world. It was us. The location of the critical point carries its own uncertainty, and that
-uncertainty had not been propagated through into the quantities that depend on it. Once it was, both
-"failures" fell inside their bands.
+Then the two were re-analysed, and both misses turned out to come from the same thing — and it was
+not the little world. It was us. The location of the critical point carries its own uncertainty, and
+that uncertainty had not been propagated through into the quantities that depend on it. Once it was,
+both "failures" fell inside their bands.
 
 **This is the same move as the star that was never fixed.** Ptolemy looked with the instrument he had,
 recorded honestly that there was nothing to see, and the record stood for seventeen centuries — until
@@ -116,9 +116,9 @@ a better telescope. They needed to propagate a number they already had.
 The original rows are still in the record. They were not deleted and rewritten; they carry a note
 saying what later work found, so the original miss is still there to read.
 
-So the method has now shown four things, and the fourth is the rarest: it can recover a known answer,
-work where no answer exists, state its own limits in advance and hit them — and find that a failure it
-had published was its own measuring error rather than a fact about the world.
+So the method has now shown four things, and the fourth is the rarest: it can recover a known
+answer, work where no answer exists, state its own limits in advance and hit them — and find that a
+failure it had published was its own measuring error rather than a fact about the world.
 
 One ability is still missing, and it is the one that decides whether any of the above counts.
 

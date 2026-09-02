@@ -10,8 +10,8 @@
 </figure>
 
 Most explanations of a simulation begin in the middle. *Here is the mesh, here is the equation, here
-is the result.* That is efficient if you already know why the mesh has the shape it does. For everyone
-else it turns the most important decision in the whole project into scenery.
+is the result.* That is efficient if you already know why the mesh has the shape it does. For
+everyone else it turns the most important decision in the whole project into scenery.
 
 So we will build it instead. Each step below exists because the step before it left something
 missing, and the object itself does not appear until near the end — because it is the *answer* to a
@@ -23,8 +23,8 @@ The mathematics physics is written in assumes you can always look closer. Betwee
 there are infinitely many more, and between any two of those, infinitely many more again.
 
 No measurement has ever seen that. Every measurement anyone has ever made is a finite list of
-numbers. Whether space itself is like the mathematics is an old, open, genuinely interesting question
-— and we do not need the answer, which is a relief, because we are not going to get one.
+numbers. Whether space itself is like the mathematics is an old, open, genuinely interesting
+question — and we do not need the answer, which is a relief, because we are not going to get one.
 
 So do not start from a smooth world and chop it up. Start from nothing and ask what the least is.
 
@@ -38,20 +38,20 @@ that, this is higher than that, this is later than that.
 And a difference is never *at* a place. It is *between* two places. So it needs its own home: the
 **line** joining them.
 
-A point and a line. That is the starting kit, and it is worth pausing on how little it is. There is no
-distance yet. No direction. No time. Nothing but places, and connections between places.
+A point and a line. That is the starting kit, and it is worth pausing on how little it is. There is
+no distance yet. No direction. No time. Nothing but places, and connections between places.
 
-And here is the thing worth holding on to: **that is not a crude version of something
-better.** It is a small world, complete in itself, and everything we do on it will be exact. When a
-textbook formula turns up later in these pages, it turns up as a *comparison* — never as the standard
-this little world is failing to meet.
+And here is the thing worth holding on to: **that is not a crude version of something better.** It
+is a small world, complete in itself, and everything we do on it will be exact. When a textbook
+formula turns up later in these pages, it turns up as a *comparison* — never as the standard this
+little world is failing to meet.
 
 ## Walk in a circle and come back
 
 Now something surprising, and it costs nothing.
 
-Take a loop of lines. Start at a point, walk around the loop adding up the differences as you go, and
-come back to where you began. What must the total be?
+Take a loop of lines. Start at a point, walk around the loop adding up the differences as you go,
+and come back to where you began. What must the total be?
 
 Zero. It has to be — you are back at the number you started from.
 
@@ -60,12 +60,12 @@ points, so they cancel the way integers cancel, not the way careful measurements
 
 This is the reason a machine built this way can be trusted before any physics goes into it. Most
 simulation error is the slow decay of something that was only ever approximately true: it holds at
-this resolution, in these units, for this many steps, and then it quietly stops. Here the cancellation
-is a fact about counting. It holds at any size, in any units, however long you run — or the thing you
-built is not a mesh at all.
+this resolution, in these units, for this many steps, and then it quietly stops. Here the
+cancellation is a fact about counting. It holds at any size, in any units, however long you run — or
+the thing you built is not a mesh at all.
 
-And it is not something you have to take on trust. Walk every loop in the object, add the totals up,
-and they come back zero — exactly zero, as integers, at any size.
+And it is checkable by counting rather than by argument. Walk every loop in the object, add the
+totals up, and they come back zero — exactly zero, as integers, at any size.
 
 ## Nothing yet knows how long a line is
 
@@ -95,16 +95,16 @@ that one rule, run.
 
 Start everything at rest. Poke one point — lift its number, then let go.
 
-Its neighbours notice, because the differences on their lines just changed. Their neighbours notice on
-the next tick. What you get is a ring, spreading outward, exactly like a stone dropped in a pond.
+Its neighbours notice, because the differences on their lines just changed. Their neighbours notice
+on the next tick. What you get is a ring, spreading outward, exactly like a stone dropped in a pond.
 
 Nobody wrote "wave" anywhere. There is no wave in the rule; the rule is one sentence about
 neighbours. **The ring is what that sentence does** — and that is the pattern for everything ahead.
 We never tell the little world what to produce. We tell it how neighbours settle, and the behaviour
 is the consequence.
 
-Which raises the first real question in this whole project, and it is the kind a stopwatch asks: *how
-fast is that ring travelling, and is it the same speed in every direction?*
+Which raises the first real question in this whole project, and it is the kind a stopwatch asks:
+*how fast is that ring travelling, and is it the same speed in every direction?*
 
 ## "How fast" needs "how far"
 
@@ -112,10 +112,10 @@ Speed is distance over time. The time half is easy — it is ticks, and every ti
 
 The distance half we do not have. Three sections ago that was a virtue.
 
-Counting steps does not rescue it. A step along the edge of a cube and a step across its diagonal are
-both *one step*, and nothing anywhere in the structure says otherwise. If they genuinely do not
-differ, then "how fast" has no answer — only "how many steps", which is a different question, and not
-one a stopwatch can settle.
+Counting steps does not rescue it. A step along the edge of a cube and a step across its diagonal
+are both *one step*, and nothing anywhere in the structure says otherwise. If they genuinely do not
+differ, then "how fast" has no answer — only "how many steps", which is a different question, and
+not one a stopwatch can settle.
 
 So sizes have to be written in somewhere. Length is not something this object *has*. It is something
 we must **give** it — through exactly one place, because the two results above hold precisely
@@ -130,8 +130,8 @@ Everything so far holds for *any* arrangement. Now the choice.
 
 Squares look like the obvious building block and they are the wrong one. Pin the four corners of a
 square and it can still flex — it leans over into a diamond without any corner leaving its pin,
-because nothing fixes the diagonals. A triangle cannot do that. Fix three corners and the triangle is
-finished. It is the smallest patch that holds its own shape, and one step up, the tetrahedron is
+because nothing fixes the diagonals. A triangle cannot do that. Fix three corners and the triangle
+is finished. It is the smallest patch that holds its own shape, and one step up, the tetrahedron is
 rigid for the same reason.
 
 So: tetrahedra. Except for one old surprise.
@@ -146,11 +146,11 @@ Which means there is no perfect answer, and **every tetrahedral lattice is a com
 matters more than it sounds. A compromise is a *choice*, a choice has consequences, and the
 consequences can be measured.
 
-Here is the choice we made. Take the eight corners of a cube and sort them into two groups by whether
-their coordinates add up to an even or an odd number. Each group of four spans a regular tetrahedron.
-The two tetrahedra pass through each other and never share an edge. Tile that, and the wedge from
-above shows up honestly, as gaps between the tetrahedra — filled in their turn, each split into four
-more.
+Here is the choice we made. Take the eight corners of a cube and sort them into two groups by
+whether their coordinates add up to an even or an odd number. Each group of four spans a regular
+tetrahedron. The two tetrahedra pass through each other and never share an edge. Tile that, and the
+wedge from above shows up honestly, as gaps between the tetrahedra — filled in their turn, each
+split into four more.
 
 The two families are mirror images. So handedness is not a feature we added later; it is present in
 the object before a single number is stored on it, which is why it keeps coming up.

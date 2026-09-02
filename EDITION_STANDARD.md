@@ -51,10 +51,10 @@ adds the protection that keeps “give it shape” from becoming a post-hoc patt
 
 ## Meaning of “our bubble”
 
-The phrase has two deliberately modest meanings:
-
-- the bounded region being shaped, shielded, or measured inside the toy; and
-- the temporary shared viewpoint of author and reader standing inside one experiment.
+The phrase has one deliberately modest meaning: the bounded region being shaped, shielded, or
+measured inside the toy. It had a second — the shared viewpoint of author and reader — which was
+retired on the owner's note of 2026-09-02, because a title word that means two things means neither
+of them reliably.
 
 It never means that the stella octangula is the universe, that its combinatorics derive constants of
 nature, or that a toy result establishes a physical technology.
