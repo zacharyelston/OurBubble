@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""The napkin backend: the book's chapters 1–3 numbers, computed while the page is built.
+"""The napkin backend: the book's chapters 1–4 numbers, computed while the page is built.
 
-Chapters 1–3 live on one triangle and one tetrahedron, and every number in them is finger-countable
-— four dots, six lines, three differences, ten ticks. Quoting such numbers from a record would be
+Chapters 1–4 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+and every number in them is finger-countable — four dots, six lines, three differences, ten ticks,
+and then a crossing that takes two of those ticks. Quoting such numbers from a record would be
 theatre: the reader can check them on a napkin, so the book should do the same thing in front of her
 rather than cite itself. Each `{{napkin:NAME}}` token in a chapter is replaced at build time by the
 result of running the arithmetic here, and every rendered block says so.
+
+Chapter 4 is where the napkin runs out, on purpose, and that is its finding: the arithmetic for the
+shapes bigger than one tetrahedron lives in `tools/octahedron.py`, and the last of those shapes
+cannot be run at the chapters' own tick size at all. `number()` refusing to print it is not a
+formatting problem — it is the chapter's point, arriving in the one place it cannot be argued with.
 
 **Everything is exact.** `fractions.Fraction` throughout, and each value is rendered by
 `number()`, which refuses anything it cannot write down exactly and briefly. There is no floating
