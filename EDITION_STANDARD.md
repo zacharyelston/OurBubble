@@ -51,10 +51,13 @@ adds the protection that keeps “give it shape” from becoming a post-hoc patt
 
 ## Meaning of “our bubble”
 
-The phrase has two deliberately modest meanings:
+Two words, two jobs. **Bubble** has one deliberately modest meaning: the bounded region being
+shaped, shielded, or measured inside the toy. **Our** names who builds it — the book is written
+together with its reader.
 
-- the bounded region being shaped, shielded, or measured inside the toy; and
-- the temporary shared viewpoint of author and reader standing inside one experiment.
+*Bubble* used to carry a second meaning as well, the shared viewpoint of author and reader. That one
+is retired per owner note 5 on PR #3 (2026-09-01/02 UTC), applied on the coordinator's call, because
+a title word that means two things means neither of them reliably.
 
 It never means that the stella octangula is the universe, that its combinatorics derive constants of
 nature, or that a toy result establishes a physical technology.
