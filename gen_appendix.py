@@ -120,6 +120,16 @@ the chapters link to.
                      "list above are historical: they are checkable against the historical record "
                      "rather than against this repository, which is the one guarantee this book "
                      "cannot give you itself.\n")
+        elif s.get('computed'):
+            # The napkin chapters quote nothing and yet are full of numbers: they recompute them
+            # while the book is built. Saying "None" here is literally true and useless — a reader
+            # checking the provenance of the ten-tick table would land on a section telling her
+            # there is no table. Say where the numbers come from instead.
+            L.append("**Numbers.** None quoted. Every number in this section's chapter is worked "
+                     "out while the book is built, by "
+                     "[`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so "
+                     "the thing to check is not a file but the arithmetic, which the chapter shows "
+                     "you.\n")
         else:
             L.append("**Numbers.** None. This section's chapter carries no quoted measurement.\n")
         if s.get('commands'):

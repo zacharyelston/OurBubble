@@ -52,34 +52,56 @@ the chapters link to.
 
 ---
 
-<a id="s-a-few-thousand-years-of-sharper-shadows"></a>
+<a id="s-two-dots-and-a-line"></a>
 
-## §01 · A few thousand years of sharper shadows — history, and no experiment of ours
+## §01 · Two dots, a line, and the first thing that closes — the object, from nothing
 
-**The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
+**The chapter.** [two-dots-and-a-line.md](two-dots-and-a-line.md)
 
-**What this chapter recounts.** Documented measurement history, not work of ours: no rung, no gate and no figure in this repository corresponds to any of it. It is listed here so a reader can check the chapter against the historical record rather than against ours, in the order the chapter tells them rather than in date order.
+**Standards and record this section rests on.**
 
-- ~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.
-- ~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.
-- ~150 BCE · Hipparchus of Nicaea — the Moon's distance, from the Earth's shadow on it during an eclipse. Very nearly right, because that geometry does not amplify a small angular error.
-- ~150 CE · Claudius Ptolemy — stellar parallax sought and not found; the Almagest argues from the absence to a stationary Earth. The null was real; the interpretation was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars.
-- 1676 · Ole Rømer — that light takes time to travel, from Jupiter's moon Io slipping out of schedule with the Earth's distance. Rømer put the slippage at ~22 minutes across the width of Earth's orbit; the modern figure is ~17. Rømer gave the delay; Christiaan Huygens turned it into a speed, ~25% low because the delay was long.
-- 1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.
-- 1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.
-- 1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could.
+- [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. That thread is picked up by the record's own self-correction in [a number without the answer key](a-number-without-the-answer-key.md).
-
-**Numbers.** None declared, and none checked here. The dates and angles in the list above are historical: they are checkable against the historical record rather than against this repository, which is the one guarantee this book cannot give you itself.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
-<a id="s-build-the-object"></a>
+<a id="s-one-tetrahedron-is-a-whole-world"></a>
 
-## §02 · Build the object
+## §02 · One tetrahedron is a whole world — every kind of number, on a napkin
 
-**The chapter.** [build-the-object.md](build-the-object.md)
+**The chapter.** [one-tetrahedron-is-a-whole-world.md](one-tetrahedron-is-a-whole-world.md)
+
+**Standards and record this section rests on.**
+
+- [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
+
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+
+---
+
+<a id="s-make-it-move"></a>
+
+## §03 · Make it move — the one rule, and what one tick does
+
+**The chapter.** [make-it-move.md](make-it-move.md)
+
+**Standards and record this section rests on.**
+
+- [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
+
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+
+---
+
+<a id="s-room-and-a-world-with-no-edge"></a>
+
+## §04 · Room, and a world with no edge — why tetrahedra need a compromise
+
+**The chapter.** [room-and-a-world-with-no-edge.md](room-and-a-world-with-no-edge.md)
 
 **Registered rungs.**
 
@@ -114,7 +136,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 <a id="s-the-round-ripple"></a>
 
-## §03 · The round ripple
+## §05 · The round ripple
 
 **The chapter.** [the-round-ripple.md](the-round-ripple.md)
 
@@ -167,7 +189,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 <a id="s-the-bubble-and-its-bill"></a>
 
-## §04 · The bubble and its bill
+## §06 · The bubble and its bill
 
 **The chapter.** [the-bubble-and-its-bill.md](the-bubble-and-its-bill.md)
 
@@ -207,7 +229,7 @@ cargo run  --release -p viz     --bin gen_energy
 
 <a id="s-the-wall-that-worked-and-didnt"></a>
 
-## §05 · The wall that worked, and didn't
+## §07 · The wall that worked, and didn't
 
 **The chapter.** [the-wall-that-worked-and-didnt.md](the-wall-that-worked-and-didnt.md)
 
@@ -252,7 +274,7 @@ cargo run  --release -p viz     --bin gen_null
 
 <a id="s-where-negative-energy-appears"></a>
 
-## §06 · Where negative energy appears
+## §08 · Where negative energy appears
 
 **The chapter.** [where-negative-energy-appears.md](where-negative-energy-appears.md)
 
@@ -299,7 +321,7 @@ cargo run  --release -p viz     --bin gen_casimir
 
 <a id="s-a-number-without-the-answer-key"></a>
 
-## §07 · A number without the answer key
+## §09 · A number without the answer key
 
 **The chapter.** [a-number-without-the-answer-key.md](a-number-without-the-answer-key.md)
 
@@ -361,7 +383,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §08 · When the expected law fails
+## §10 · When the expected law fails
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 
@@ -401,9 +423,32 @@ cargo run  --release -p viz     --bin gen_shift_law
 
 ---
 
+<a id="s-a-few-thousand-years-of-sharper-shadows"></a>
+
+## §11 · A few thousand years of sharper shadows — history, and no experiment of ours
+
+**The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
+
+**What this chapter recounts.** Documented measurement history, not work of ours: no rung, no gate and no figure in this repository corresponds to any of it. It is listed here so a reader can check the chapter against the historical record rather than against ours, in the order the chapter tells them rather than in date order.
+
+- ~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.
+- ~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.
+- ~150 BCE · Hipparchus of Nicaea — the Moon's distance, from the Earth's shadow on it during an eclipse. Very nearly right, because that geometry does not amplify a small angular error.
+- ~150 CE · Claudius Ptolemy — stellar parallax sought and not found; the Almagest argues from the absence to a stationary Earth. The null was real; the interpretation was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars.
+- 1676 · Ole Rømer — that light takes time to travel, from Jupiter's moon Io slipping out of schedule with the Earth's distance. Rømer put the slippage at ~22 minutes across the width of Earth's orbit; the modern figure is ~17. Rømer gave the delay; Christiaan Huygens turned it into a speed, ~25% low because the delay was long.
+- 1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.
+- 1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.
+- 1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could.
+
+What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. That thread is picked up by the record's own self-correction in [a number without the answer key](a-number-without-the-answer-key.md).
+
+**Numbers.** None declared, and none checked here. The dates and angles in the list above are historical: they are checkable against the historical record rather than against this repository, which is the one guarantee this book cannot give you itself.
+
+---
+
 <a id="s-cast-your-own-shadow"></a>
 
-## §09 · Cast your own shadow — the reproduce path
+## §12 · Cast your own shadow — the reproduce path
 
 **The chapter.** [cast-your-own-shadow.md](cast-your-own-shadow.md)
 
