@@ -51,12 +51,12 @@ cuts, and four are the middle triangles of the original's own faces — eight fa
 tetrahedron has.
 
 And nothing went missing in the cutting. Four tips at an eighth each account for half of it, and the
-shape between them is the other half exactly. It is not a gap or a leftover. It is the larger of the
-two things a tetrahedron is made of.
+shape between them is the other half exactly. It is not a gap or a leftover. It is the biggest
+single piece a tetrahedron is made of.
 
 So count it, the way you counted the tetrahedron.
 
-## Six dots, and the first two places that are not neighbours
+## Six dots, and the first two that are not neighbours
 
 <!-- beat 38 -->
 
@@ -82,9 +82,9 @@ Same rule, same tick size. Poke one dot.
 
 {{napkin:octa_poke_table}}
 
-Read the second row and then the third. At tick 1 the poke has spread onto the four dots around the
-middle and the dot you poked has gone negative. At tick 2 there is nothing anywhere except on CD —
-the one dot that was not its neighbour. The whole of it has crossed, and it took two ticks to do it.
+Read the second row and then the third. At tick 1 the poke has spread onto the four dots that are
+its neighbours, and the dot you poked has gone negative. At tick 2 there is nothing anywhere except
+on CD — the one dot that was not its neighbour. The whole of it has crossed, and it took two ticks.
 
 At tick 3 it is home again, and the total across the row has not moved once.
 
