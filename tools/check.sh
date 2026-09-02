@@ -21,6 +21,12 @@
 
 set -euo pipefail
 
+# No bytecode cache, anywhere in this pass. Python invalidates a .pyc on source mtime+size only, so a
+# same-size edit landing in the same clock second is read from stale bytecode — a checker importing
+# napkin.py or canon.py could then pass against a module the tree no longer contains (issue #31).
+# Exported, so the preprocessor mdbook spawns in step 3 inherits it too.
+export PYTHONDONTWRITEBYTECODE=1
+
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
@@ -38,7 +44,7 @@ else
 fi
 
 step "2/4 · check the edition (snapshot integrity + quotations)"
-python3 check_edition.py
+python3 -B check_edition.py
 
 step "3/4 · build the book"
 command -v mdbook >/dev/null 2>&1 || {
@@ -48,7 +54,7 @@ command -v mdbook >/dev/null 2>&1 || {
 mdbook build
 
 step "4/4 · check the rendered pages and every record link"
-python3 check_edition.py --rendered
+python3 -B check_edition.py --rendered
 
 step "the generated appendix is in step with the record"
 if ! git diff --quiet -- chapters/the-simulations.md; then
