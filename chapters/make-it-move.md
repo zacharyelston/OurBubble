@@ -41,15 +41,21 @@ So the clock is ready and the object is ready. One tick passes. What should it *
 
 Here is the rule, and it is the only one in the book.
 
-**On each tick, every dot moves toward its neighbours, by the differences on the lines that join
-them.**
+**Every dot keeps changing the way it was already changing — and the differences on its lines bend
+how fast that change is happening.**
 
-Read it again, because it is doing everything. A dot looks along each of its lines. Each line already
-carries a difference — how much bigger the dot on the other end is. The dot moves that way, by some
-share of that difference, for every line at once. Then the next tick.
+That is worth unpacking slowly, because there is a simpler rule nearby that is not the one we use.
+The simpler rule would be: *move toward your neighbours.* A dot looks along its lines, sees that its
+neighbours are higher, and goes up a bit. Perfectly reasonable, and it is the rule for something
+spreading out and levelling off — a drop of ink in water.
 
-That is it. Nothing chooses a direction, because a dot has no directions, only lines. Nothing
-consults a force. The rule uses only the difference that was already sitting on the line.
+Ours is one step less obedient. A dot does not move toward its neighbours; its *rate of change* does.
+The differences on the lines do not say where the dot goes, they say how its motion is being pulled
+around. So a dot that is already rising keeps rising for a while even once its neighbours have
+dropped below it, because the rule has to turn the motion around before it can reverse it.
+
+Which means a dot needs to remember one thing: not just where it is now, but where it was a tick ago.
+That is the difference between a drop of ink and a plucked string, and it is the whole difference.
 
 Is that really the whole law?
 
@@ -69,49 +75,67 @@ So run it. Four numbers on four corners: what do they do?
 
 ## Ten ticks
 
-Put four different numbers on the four corners, apply the rule, and write down what you get. Ten
-ticks is enough to see the whole story.
+Put four different numbers on the four corners, start them at rest, apply the rule ten times, and
+write down what you get.
 
 {{napkin:slosh_table}}
 
-They slosh. The high ones come down, the low ones come up, they overshoot each other a little and
-then they settle, and where they settle is level — all four the same.
+They slosh — and then they come back. Look at the corner values at tick 0 and at tick 4: not close,
+not nearly. The same four numbers, in the same places. The world visits one other arrangement and
+returns to exactly where it began, every four ticks, and it will keep doing that forever.
 
-Nobody told the rule to do that. There is no instruction anywhere saying *tend toward equal*. It
-falls out of "move toward your neighbours by the difference", because a difference is only zero when
-things are equal, so the motion only stops when it has flattened everything.
+This is the beat to be surprised at, so let it land. **Nothing settles.** Nothing spreads out, nothing
+levels off, nothing runs down. If the rule had been *move toward your neighbours*, the four numbers
+would have converged on their average and stayed there — that is what ink in water does. This is what
+a plucked string does instead: it goes, it comes back, and with nothing to damp it, it does that
+again.
 
-Now add up the four numbers at each tick and look down that column.
+Nobody told it to be periodic. There is no clock inside the rule and no instruction to return. It
+comes out of the rule needing to turn a motion around before it can reverse it, and of there being
+nowhere for anything to leak away to.
+
+Now add up the four numbers at each tick and look down that last column.
 
 ## The total never moves
 
-It does not change. Not on any tick, not by a little.
+It does not change. Not on any tick, not by a little — the same number, eleven times.
 
 And you can see why in one step, which is the pleasure of a world this small. Whatever one dot gains
-along a line, the dot at the other end loses along the same line. Every line moves something from one
-end to the other. Nothing enters the world and nothing leaves it, so the total is untouched.
+along a line, the dot at the other end loses along the same line. Every line is a transfer between
+its two ends. Nothing enters the world and nothing leaves it, so the total is untouched.
 
-That is the same balancing act as walking around a triangle, except now it is happening in time
-rather than around a shape. Then the sum came home to zero because you returned to where you started;
-now the total holds steady because every transfer is a matched pair.
+That is the same balancing act as walking around a triangle, except now it is happening in time rather
+than around a shape. Then the sum came home to zero because you returned to where you started; now
+the total holds steady because every transfer is a matched pair.
+
+Hold on to the pairing, because it is the thing a later chapter takes away. Nothing here leaks. When
+we eventually build a world where something *can* leak away, the sloshing stops coming back — and
+what happens instead is a different chapter's subject.
 
 You have one thing left to play with. What does the dial do?
 
 ## Turn the dial
 
-Take one of the six lines and say it counts for more — that a difference along that line moves twice
-as much per tick as a difference along the others. Then run the same ten ticks again.
+Take one of the six lines and say it counts double, so a difference along that line pulls twice as
+hard as a difference along the others. Then run the same ten ticks again.
 
 {{napkin:slosh_table_dialed}}
 
-Two things happen, and the second is more interesting than the first.
+Three things to notice, and the third is the one to keep.
 
-The sloshing along that line gets faster: the two dots it joins come together sooner than they did
-before. That is unsurprising, and it is what you set the dial to do.
+The motion along that line got faster and more violent. The two dots it joins swing further and
+sooner — one of them now goes *below every number the world started with*, which is worth a second
+look, because a levelling-off process could never do that. Overshooting past everything you began
+with is a wave's signature.
 
-The level they all settle at does not change. The dial decided how fast things got there. It did not
-decide where "there" was. Hold on to that, because a later chapter is entirely about a dial that was
-set badly, and the tell was never in the final answer — it was always in how things got there.
+The rhythm changed too. The world still comes home — but not on the same beat. It is back at its
+starting numbers at tick 3 rather than tick 4, and then not again until tick 8. Count it off in the
+table. The tidy pulse is gone because the world now has two speeds in it instead of one.
+
+And the total never moved, and neither did the average. The dial changed *how* the world moves. It
+did not change how much there is, or what it is moving around. Hold on to that: a later chapter is
+entirely about a dial set badly, and the tell was never in the totals — it was always in the
+motion.
 
 Now stop being gentle. Poke one dot hard — put a big number on it and leave the others alone. Watch.
 
@@ -121,8 +145,8 @@ There isn't one.
 
 You know what you were expecting, because you have dropped a stone in a pond. A disturbance at one
 spot, then a ring spreading outward, and behind the ring a place it has already passed. Poke this
-tetrahedron and the big number simply drains into the other three at once, all of them together, and
-settles.
+tetrahedron and the big number simply sloshes into the other three at once, all of them together, and
+back again.
 
 The reason is embarrassingly simple. On a tetrahedron, every dot is joined to every other dot.
 There is no "outward", because there is nowhere that is further away than anywhere else. There is

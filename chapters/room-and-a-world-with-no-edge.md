@@ -83,7 +83,7 @@ There is a ring.
 
 A big number on one dot, and on the next tick it has moved to that dot's immediate neighbours, and on
 the tick after that to theirs. There is now a front — a place the disturbance has reached — with
-quiet ahead of it and settled water behind. Exactly the pond.
+untouched quiet ahead of it and, behind it, water still moving. Exactly the pond.
 
 Nothing new was added to get this. The rule is the same sentence from the last chapter, unchanged:
 each dot moves toward its neighbours by the differences on its lines. All that changed is that a dot
