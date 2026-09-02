@@ -12,6 +12,7 @@ from typing import Dict, Iterable, List, Sequence
 
 
 EDITION_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(EDITION_DIR / "tools"))
 
 # THE RECORD, IN TWO LAYERS.
 #
@@ -49,6 +50,15 @@ SUMMARY_LINK = re.compile(r"^- \[[^\]]+\]\(([^)]+\.md)\)\s*$", re.MULTILINE)
 WORD = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿ0-9]+(?:[’'][A-Za-zÀ-ÖØ-öø-ÿ0-9]+)?")
 SENTENCE_END = re.compile(r"[.!?]+(?:[\"'”’)]*)\s+")
 BOLD_NUMBER = re.compile(r"\*\*([^*\n]*\d[^*\n]*)\*\*")
+
+# `{{napkin:NAME}}` — a token the Rewrite lane writes in chapter prose for the build to replace with
+# arithmetic it runs itself (`tools/napkin.py`). Two rules follow from that, both below: one left
+# unexpanded is a published brace-literal, and the digits inside an expanded one are computed rather
+# than quoted, so they answer to a different rule than the rest of the prose.
+NAPKIN_TOKEN = re.compile(r"\{\{napkin:([a-z0-9_]+)\}\}")
+NAPKIN_SPAN = re.compile(r"<!--\s*napkin:([a-z0-9_]+)\s*-->.*?<!--\s*/napkin:\1\s*-->", re.DOTALL)
+RENDERED_BOLD = re.compile(r"<strong>(.*?)</strong>", re.DOTALL)
+TAG = re.compile(r"<[^>]+>")
 
 
 def forbidden_hits(
@@ -167,7 +177,11 @@ def check_links(chapter_path: Path, markdown: str, errors: List[str]) -> None:
             errors.append(f"{chapter_path.relative_to(EDITION_DIR)}: dead link {target!r}")
 
 
-def check_rendered(order: Sequence[str], errors: List[str]) -> None:
+def check_rendered(
+    order: Sequence[str],
+    sections: Dict[str, object],
+    errors: List[str],
+) -> None:
     if not RENDER_DIR.exists():
         errors.append(
             "rendered book is absent; run `mdbook build` before --rendered"
@@ -181,6 +195,22 @@ def check_rendered(order: Sequence[str], errors: List[str]) -> None:
             continue
 
         html = rendered_path.read_text(encoding="utf-8")
+
+        # Every built page: no token may survive the build.
+        check_napkin_tokens(str(rendered_path.relative_to(EDITION_DIR)), html, errors)
+
+        # Narrative pages only — the same scope as the source rule this extends. The appendix's
+        # numbers are generated from the manifest and checked verbatim against the record, so the
+        # anchoring rule has never applied to it.
+        if slug in sections:
+            anchored = [
+                str(dict(quote)["text"])
+                for quote in dict(sections[slug]).get("record_quotes", [])
+            ]
+            check_rendered_bold(
+                str(rendered_path.relative_to(EDITION_DIR)), html, anchored, errors
+            )
+
         for raw_target in HTML_LINK.findall(html):
             target = raw_target.strip().strip("<>")
             if not target or target.startswith(
@@ -201,6 +231,100 @@ def check_rendered(order: Sequence[str], errors: List[str]) -> None:
             errors.append(
                 f"{rendered_path.relative_to(EDITION_DIR)}: dead rendered link {target!r}"
             )
+
+
+def check_napkin_tokens(label: str, text: str, errors: List[str]) -> None:
+    """No `{{napkin:…}}` survives into a built page.
+
+    The preprocessor already fails on an unknown token name, so this catches the other half: a token
+    the preprocessor never saw — in a file it does not walk, or written with a typo'd delimiter that
+    the token pattern misses on one side. Either way the reader would be shown braces where a number
+    belongs, which is the single most embarrassing way this arrangement could fail.
+    """
+    for found in NAPKIN_TOKEN.finditer(text):
+        errors.append(
+            f"{label}: unresolved napkin token {found.group(0)!r} — the build did not compute it. "
+            f"Check the name against tools/napkin.py's TOKENS and that the page is in "
+            f"chapters/SUMMARY.md"
+        )
+
+
+def check_rendered_bold(label: str, html: str, anchored: Sequence[str], errors: List[str]) -> None:
+    """Emphasised numbers in a **built** narrative page: anchored in the appendix, or computed here.
+
+    The source rule (`check_chapter`) cannot see either side of this. Napkin blocks do not exist in
+    the chapter source — they are substituted at build time — so their numbers never reach that rule,
+    and the numbers *this* file computes are legitimately not in the appendix: they are checkable on
+    a napkin, which is the entire reason they are computed in front of the reader instead of quoted.
+
+    So the exemption lives here and is **bounded by the block**. Everything between a napkin's
+    fence comments is exempt; every other emphasised number on the page answers to the appendix
+    exactly as before. Excising the spans first — rather than allow-listing values — is what keeps
+    the boundary honest: a computed `0` cannot license an unanchored `0` three paragraphs later.
+    """
+    outside = NAPKIN_SPAN.sub(" ", html)
+    for found in RENDERED_BOLD.findall(outside):
+        text = TAG.sub("", found).strip()
+        if not any(character.isdigit() for character in text):
+            continue
+        if any(quote in text for quote in anchored):
+            continue
+        errors.append(
+            f"{label}: emphasised number {text!r} in the built page is neither anchored in this "
+            f"chapter's appendix section nor inside a napkin block — quote a value the appendix "
+            f"carries, compute it in a napkin, or drop the emphasis"
+        )
+
+
+def check_napkin_determinism(errors: List[str]) -> str:
+    """Every token, computed twice, must come out identical — and its own assertions must hold.
+
+    Two builds of one commit have to agree, or "computed while this page was built" is a liability
+    rather than a guarantee: a reader who rebuilds and sees a different table has caught the book
+    inventing numbers. The tokens use exact rational arithmetic and no clock, seed or dict ordering,
+    but *intending* determinism is not the same as testing it, and this is cheap enough to run on
+    every check rather than in a suite someone remembers to run.
+
+    It doubles as the invariant test. Each token asserts its own claims — loop sums zero, total
+    conserved, the average unmoved, every face non-zero — before it returns anything, so calling
+    them all here means a broken invariant fails the check even if no chapter uses that token yet.
+    """
+    try:
+        import napkin
+    except ImportError as failure:
+        errors.append(f"napkin self-test: cannot import tools/napkin.py ({failure})")
+        return "unavailable"
+
+    before = len(errors)
+    for name in sorted(napkin.TOKENS):
+        try:
+            first = napkin.render(name)
+            second = napkin.render(name)
+        except AssertionError as failure:
+            errors.append(f"napkin self-test: {name} failed its own invariant — {failure}")
+            continue
+        except Exception as failure:  # noqa: BLE001 - any failure here must surface, not crash
+            errors.append(f"napkin self-test: {name} raised {type(failure).__name__}: {failure}")
+            continue
+        if first != second:
+            errors.append(
+                f"napkin self-test: {name} is not deterministic — two runs in one process differ"
+            )
+        if not NAPKIN_SPAN.fullmatch(first.strip()):
+            errors.append(
+                f"napkin self-test: {name} is not fenced by its napkin comments, so the "
+                f"computed-on-build exemption could not be bounded to it"
+            )
+        if "computed while this page was built" not in first:
+            errors.append(f"napkin self-test: {name} does not say it was computed on build")
+
+    # The status line reports the outcome, never the attempt. Exactly the defect the snapshot
+    # integrity line shipped with once: a headline reading "recomputed and identical" above its own
+    # error list. Caught here by mutation-testing the guard rather than by reading it.
+    failures = len(errors) - before
+    if failures:
+        return f"FAILED — {failures} problem(s) across {len(napkin.TOKENS)} tokens"
+    return f"{len(napkin.TOKENS)} tokens, recomputed and identical"
 
 
 def appendix_sections(markdown: str) -> Dict[str, str]:
@@ -788,6 +912,11 @@ def main() -> int:
     # The guard is tested before it is trusted, on every run — not only under --self-test.
     self_test(manifest, errors)
 
+    # So is the napkin arithmetic. Reported on its own line: "computed while this page was built" is
+    # a promise about every build, so the check that keeps it should be visible in every run.
+    napkins = check_napkin_determinism(errors)
+    print(f"napkin self-test: {napkins}", flush=True)
+
     appendix_file = str(manifest["appendix"]["file"])
     if appendix_file != APPENDIX_FILE:
         errors.append(
@@ -843,7 +972,7 @@ def main() -> int:
         )
 
     if args.rendered:
-        check_rendered(order, errors)
+        check_rendered(order, sections, errors)
 
     return report(errors, narrative, sections, manifest, args)
 
