@@ -320,6 +320,35 @@ def check_napkin_determinism(errors: List[str]) -> str:
     return f"{len(napkin.TOKENS)} tokens, recomputed and identical"
 
 
+def check_canon(errors: List[str]) -> str:
+    """The canonical tetrahedron labeling still agrees with the napkin it is derived from.
+
+    `CANON.md` says the book draws the tetrahedron one way, and `tools/canon.py` is that standard as
+    data: the names, the six lines, the four faces, the net's coordinates, and the drawing itself,
+    all computed from `napkin.simplices`. Derived is only worth something if the derivation is
+    checked, so it is checked here rather than in a suite someone remembers to run — a change to the
+    napkin's object that the canon has not followed fails this build, and so does a drawing whose
+    labels have stopped being the napkin's simplices.
+
+    The self-test's own headline is used verbatim when it passes, because it is written from what its
+    assertions counted; when it fails there is no headline at all, only the raise, so `status()`
+    reports the failure. Same discipline, one layer down.
+    """
+    try:
+        import canon
+    except ImportError as failure:
+        errors.append(f"canon self-test: cannot import tools/canon.py ({failure})")
+        return "unavailable"
+
+    try:
+        return canon.self_test()
+    except AssertionError as failure:
+        errors.append(f"canon self-test: the canon failed one of its own assertions — {failure}")
+    except Exception as failure:  # noqa: BLE001 - any failure here must surface, not crash
+        errors.append(f"canon self-test: raised {type(failure).__name__}: {failure}")
+    return "unavailable"
+
+
 def appendix_sections(markdown: str) -> Dict[str, str]:
     """The appendix split into its per-chapter sections, keyed by **slug**.
 
@@ -1018,6 +1047,11 @@ def main() -> int:
     # So is the napkin arithmetic. Reported on its own line: "computed while this page was built" is
     # a promise about every build, so the check that keeps it should be visible in every run.
     status(errors, "napkin self-test", lambda: check_napkin_determinism(errors))
+
+    # And so is the canonical labeling. `CANON.md` promises the book draws the tetrahedron one way,
+    # derived from the napkin; this is the line that makes drift between the two fail the build
+    # rather than reach a reader as a second, differently-labelled picture of the same object.
+    status(errors, "canon self-test", lambda: check_canon(errors))
 
     appendix_file = str(manifest["appendix"]["file"])
     if appendix_file != APPENDIX_FILE:
