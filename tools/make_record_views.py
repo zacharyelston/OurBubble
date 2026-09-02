@@ -27,6 +27,7 @@ from __future__ import annotations
 import html
 import sys
 from pathlib import Path
+from typing import Dict
 
 ROOT = Path(__file__).resolve().parent.parent
 SNAPSHOT = ROOT / "record"
@@ -125,6 +126,9 @@ def main() -> int:
     verbatim = {path for path in SNAPSHOT.rglob("*") if path.is_file()}
 
     views = 0
+    # view path -> the record file it shows. Written into `.generated` so the checker can treat a
+    # link to a view as a link to the file it renders, rather than as an undeclared dependency.
+    sources: Dict[str, str] = {}
 
     # 1 · a view beside every text file, at the path mdBook's rewrite points to.
     for path in sorted(verbatim):
@@ -134,6 +138,7 @@ def main() -> int:
         if target in verbatim:
             continue
         rel = path.relative_to(SNAPSHOT).as_posix()
+        sources[target.relative_to(SNAPSHOT).as_posix()] = rel
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
@@ -180,12 +185,16 @@ def main() -> int:
     # file names — skip `index.html`, skip an `.html` with a text sibling, skip dotfiles. An audit
     # caught that guess excluding thirteen real engine files (`data/.gitkeep`) from the comparison:
     # not a wrong answer, but thirteen files nobody was checking. A list beats a heuristic.
+    # Each line is the generated path, and — for a view — a tab and the record file it shows. The
+    # second field is what lets the appendix link a view (a `.rs` gate renders in a browser; the raw
+    # file downloads) without that link looking like a dependency on a file the record does not have.
     manifest = sorted(
         path.relative_to(SNAPSHOT).as_posix()
         for path in SNAPSHOT.rglob("*")
         if path.is_file() and path not in verbatim
     )
-    (SNAPSHOT / ".generated").write_text("\n".join(manifest) + "\n", encoding="utf-8")
+    lines = [f"{rel}\t{sources[rel]}" if rel in sources else rel for rel in manifest]
+    (SNAPSHOT / ".generated").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print(f"make_record_views: {views} file views, {indexes} directory indexes, "
           f"{len(manifest)} generated files listed in record/.generated")

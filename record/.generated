@@ -1,137 +1,137 @@
-FIREWALL.html
-PREDICTIONS.html
-README.html
-book/LESSON_STANDARD.html
-book/chapters/00-the-object/chapter.html
-book/chapters/01-the-light-cone/chapter.html
-book/chapters/02-the-price-of-warp/chapter.html
-book/chapters/03-the-shield/chapter.html
-book/chapters/04-the-vacuum/chapter.html
-book/chapters/05-universality/chapter.html
-book/chapters/06-dna-thz/chapter.html
-book/chapters/README.html
-core/uniforge/tests/uf1_5_lattice_matched_gate.html
-core/uniforge/tests/uf1_7_dispersion_isotropy_gate.html
-core/uniforge/tests/uf2_energy_structure_gate.html
-core/uniforge/tests/uf3_4_four_source_null_gate.html
-core/uniforge/tests/uf3_5_doubleslit_mirror_gate.html
-core/uniforge/tests/uf3_shield_imbalance_gate.html
-core/uniforge/tests/uf4_automated_bench_gate.html
-core/uniforge/tests/uf4_casimir_energy_gate.html
-core/uniforge/tests/uf4_casimir_force_gate.html
-core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html
-core/uniforge/tests/uf5_3_blind3d_gate.html
-core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html
-core/uniforge/tests/uf5_universality_gate.html
-core/uniforge/tests/uf6_1_thz_shift_law_gate.html
-docs/DEMOS.html
-lab/dna-thz/0001-dna-permittivity-shift-law/PROVENANCE.html
-lab/dna-thz/0001-dna-permittivity-shift-law/data/probe_shift_law.html
-lab/dna-thz/0001-dna-permittivity-shift-law/data/shift_law.html
-lab/dna-thz/0001-dna-permittivity-shift-law/eval.html
+FIREWALL.html	FIREWALL.md
+PREDICTIONS.html	PREDICTIONS.md
+README.html	README.md
+book/LESSON_STANDARD.html	book/LESSON_STANDARD.md
+book/chapters/00-the-object/chapter.html	book/chapters/00-the-object/chapter.md
+book/chapters/01-the-light-cone/chapter.html	book/chapters/01-the-light-cone/chapter.md
+book/chapters/02-the-price-of-warp/chapter.html	book/chapters/02-the-price-of-warp/chapter.md
+book/chapters/03-the-shield/chapter.html	book/chapters/03-the-shield/chapter.md
+book/chapters/04-the-vacuum/chapter.html	book/chapters/04-the-vacuum/chapter.md
+book/chapters/05-universality/chapter.html	book/chapters/05-universality/chapter.md
+book/chapters/06-dna-thz/chapter.html	book/chapters/06-dna-thz/chapter.md
+book/chapters/README.html	book/chapters/README.md
+core/uniforge/tests/uf1_5_lattice_matched_gate.html	core/uniforge/tests/uf1_5_lattice_matched_gate.rs
+core/uniforge/tests/uf1_7_dispersion_isotropy_gate.html	core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs
+core/uniforge/tests/uf2_energy_structure_gate.html	core/uniforge/tests/uf2_energy_structure_gate.rs
+core/uniforge/tests/uf3_4_four_source_null_gate.html	core/uniforge/tests/uf3_4_four_source_null_gate.rs
+core/uniforge/tests/uf3_5_doubleslit_mirror_gate.html	core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs
+core/uniforge/tests/uf3_shield_imbalance_gate.html	core/uniforge/tests/uf3_shield_imbalance_gate.rs
+core/uniforge/tests/uf4_automated_bench_gate.html	core/uniforge/tests/uf4_automated_bench_gate.rs
+core/uniforge/tests/uf4_casimir_energy_gate.html	core/uniforge/tests/uf4_casimir_energy_gate.rs
+core/uniforge/tests/uf4_casimir_force_gate.html	core/uniforge/tests/uf4_casimir_force_gate.rs
+core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html	core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs
+core/uniforge/tests/uf5_3_blind3d_gate.html	core/uniforge/tests/uf5_3_blind3d_gate.rs
+core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html	core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs
+core/uniforge/tests/uf5_universality_gate.html	core/uniforge/tests/uf5_universality_gate.rs
+core/uniforge/tests/uf6_1_thz_shift_law_gate.html	core/uniforge/tests/uf6_1_thz_shift_law_gate.rs
+docs/DEMOS.html	docs/DEMOS.md
+lab/dna-thz/0001-dna-permittivity-shift-law/PROVENANCE.html	lab/dna-thz/0001-dna-permittivity-shift-law/PROVENANCE.md
+lab/dna-thz/0001-dna-permittivity-shift-law/data/probe_shift_law.html	lab/dna-thz/0001-dna-permittivity-shift-law/data/probe_shift_law.csv
+lab/dna-thz/0001-dna-permittivity-shift-law/data/shift_law.html	lab/dna-thz/0001-dna-permittivity-shift-law/data/shift_law.csv
+lab/dna-thz/0001-dna-permittivity-shift-law/eval.html	lab/dna-thz/0001-dna-permittivity-shift-law/eval.md
 lab/dna-thz/0001-dna-permittivity-shift-law/index.html
-lab/dna-thz/0001-dna-permittivity-shift-law/spec.html
-lab/warp-1-move/0115-lattice-matched-isotropy/PROVENANCE.html
-lab/warp-1-move/0115-lattice-matched-isotropy/data/isotropy.html
-lab/warp-1-move/0115-lattice-matched-isotropy/eval.html
+lab/dna-thz/0001-dna-permittivity-shift-law/spec.html	lab/dna-thz/0001-dna-permittivity-shift-law/spec.md
+lab/warp-1-move/0115-lattice-matched-isotropy/PROVENANCE.html	lab/warp-1-move/0115-lattice-matched-isotropy/PROVENANCE.md
+lab/warp-1-move/0115-lattice-matched-isotropy/data/isotropy.html	lab/warp-1-move/0115-lattice-matched-isotropy/data/isotropy.csv
+lab/warp-1-move/0115-lattice-matched-isotropy/eval.html	lab/warp-1-move/0115-lattice-matched-isotropy/eval.md
 lab/warp-1-move/0115-lattice-matched-isotropy/index.html
-lab/warp-1-move/0115-lattice-matched-isotropy/spec.html
-lab/warp-1-move/0117-dispersion-isotropy/PROVENANCE.html
-lab/warp-1-move/0117-dispersion-isotropy/data/answer_key.html
-lab/warp-1-move/0117-dispersion-isotropy/data/candidates.html
-lab/warp-1-move/0117-dispersion-isotropy/data/discovery.html
-lab/warp-1-move/0117-dispersion-isotropy/data/dispersion_directions.html
-lab/warp-1-move/0117-dispersion-isotropy/data/isotropy.html
-lab/warp-1-move/0117-dispersion-isotropy/eval.html
+lab/warp-1-move/0115-lattice-matched-isotropy/spec.html	lab/warp-1-move/0115-lattice-matched-isotropy/spec.md
+lab/warp-1-move/0117-dispersion-isotropy/PROVENANCE.html	lab/warp-1-move/0117-dispersion-isotropy/PROVENANCE.md
+lab/warp-1-move/0117-dispersion-isotropy/data/answer_key.html	lab/warp-1-move/0117-dispersion-isotropy/data/answer_key.csv
+lab/warp-1-move/0117-dispersion-isotropy/data/candidates.html	lab/warp-1-move/0117-dispersion-isotropy/data/candidates.csv
+lab/warp-1-move/0117-dispersion-isotropy/data/discovery.html	lab/warp-1-move/0117-dispersion-isotropy/data/discovery.csv
+lab/warp-1-move/0117-dispersion-isotropy/data/dispersion_directions.html	lab/warp-1-move/0117-dispersion-isotropy/data/dispersion_directions.csv
+lab/warp-1-move/0117-dispersion-isotropy/data/isotropy.html	lab/warp-1-move/0117-dispersion-isotropy/data/isotropy.csv
+lab/warp-1-move/0117-dispersion-isotropy/eval.html	lab/warp-1-move/0117-dispersion-isotropy/eval.md
 lab/warp-1-move/0117-dispersion-isotropy/index.html
-lab/warp-1-move/0117-dispersion-isotropy/spec.html
-lab/warp-2-energy/0200-shaped-shift-energy/PROVENANCE.html
-lab/warp-2-energy/0200-shaped-shift-energy/data/energy_by_angle.html
-lab/warp-2-energy/0200-shaped-shift-energy/data/energy_by_band.html
-lab/warp-2-energy/0200-shaped-shift-energy/eval.html
+lab/warp-1-move/0117-dispersion-isotropy/spec.html	lab/warp-1-move/0117-dispersion-isotropy/spec.md
+lab/warp-2-energy/0200-shaped-shift-energy/PROVENANCE.html	lab/warp-2-energy/0200-shaped-shift-energy/PROVENANCE.md
+lab/warp-2-energy/0200-shaped-shift-energy/data/energy_by_angle.html	lab/warp-2-energy/0200-shaped-shift-energy/data/energy_by_angle.csv
+lab/warp-2-energy/0200-shaped-shift-energy/data/energy_by_band.html	lab/warp-2-energy/0200-shaped-shift-energy/data/energy_by_band.csv
+lab/warp-2-energy/0200-shaped-shift-energy/eval.html	lab/warp-2-energy/0200-shaped-shift-energy/eval.md
 lab/warp-2-energy/0200-shaped-shift-energy/index.html
-lab/warp-2-energy/0200-shaped-shift-energy/spec.html
-lab/warp-3-shield/0300-shield-imbalance-inertia/PROVENANCE.html
-lab/warp-3-shield/0300-shield-imbalance-inertia/data/inertia.html
-lab/warp-3-shield/0300-shield-imbalance-inertia/data/shield.html
-lab/warp-3-shield/0300-shield-imbalance-inertia/eval.html
+lab/warp-2-energy/0200-shaped-shift-energy/spec.html	lab/warp-2-energy/0200-shaped-shift-energy/spec.md
+lab/warp-3-shield/0300-shield-imbalance-inertia/PROVENANCE.html	lab/warp-3-shield/0300-shield-imbalance-inertia/PROVENANCE.md
+lab/warp-3-shield/0300-shield-imbalance-inertia/data/inertia.html	lab/warp-3-shield/0300-shield-imbalance-inertia/data/inertia.csv
+lab/warp-3-shield/0300-shield-imbalance-inertia/data/shield.html	lab/warp-3-shield/0300-shield-imbalance-inertia/data/shield.csv
+lab/warp-3-shield/0300-shield-imbalance-inertia/eval.html	lab/warp-3-shield/0300-shield-imbalance-inertia/eval.md
 lab/warp-3-shield/0300-shield-imbalance-inertia/index.html
-lab/warp-3-shield/0300-shield-imbalance-inertia/spec.html
-lab/warp-3-shield/0304-four-source-null/PROVENANCE.html
-lab/warp-3-shield/0304-four-source-null/data/null_configs.html
-lab/warp-3-shield/0304-four-source-null/data/phase_sweep.html
-lab/warp-3-shield/0304-four-source-null/data/radial.html
-lab/warp-3-shield/0304-four-source-null/eval.html
+lab/warp-3-shield/0300-shield-imbalance-inertia/spec.html	lab/warp-3-shield/0300-shield-imbalance-inertia/spec.md
+lab/warp-3-shield/0304-four-source-null/PROVENANCE.html	lab/warp-3-shield/0304-four-source-null/PROVENANCE.md
+lab/warp-3-shield/0304-four-source-null/data/null_configs.html	lab/warp-3-shield/0304-four-source-null/data/null_configs.csv
+lab/warp-3-shield/0304-four-source-null/data/phase_sweep.html	lab/warp-3-shield/0304-four-source-null/data/phase_sweep.csv
+lab/warp-3-shield/0304-four-source-null/data/radial.html	lab/warp-3-shield/0304-four-source-null/data/radial.csv
+lab/warp-3-shield/0304-four-source-null/eval.html	lab/warp-3-shield/0304-four-source-null/eval.md
 lab/warp-3-shield/0304-four-source-null/index.html
-lab/warp-3-shield/0304-four-source-null/spec.html
-lab/warp-3-shield/0305-doubleslit-mirror/PROVENANCE.html
-lab/warp-3-shield/0305-doubleslit-mirror/data/arms.html
-lab/warp-3-shield/0305-doubleslit-mirror/data/screen_intensity.html
-lab/warp-3-shield/0305-doubleslit-mirror/eval.html
+lab/warp-3-shield/0304-four-source-null/spec.html	lab/warp-3-shield/0304-four-source-null/spec.md
+lab/warp-3-shield/0305-doubleslit-mirror/PROVENANCE.html	lab/warp-3-shield/0305-doubleslit-mirror/PROVENANCE.md
+lab/warp-3-shield/0305-doubleslit-mirror/data/arms.html	lab/warp-3-shield/0305-doubleslit-mirror/data/arms.csv
+lab/warp-3-shield/0305-doubleslit-mirror/data/screen_intensity.html	lab/warp-3-shield/0305-doubleslit-mirror/data/screen_intensity.csv
+lab/warp-3-shield/0305-doubleslit-mirror/eval.html	lab/warp-3-shield/0305-doubleslit-mirror/eval.md
 lab/warp-3-shield/0305-doubleslit-mirror/index.html
-lab/warp-3-shield/0305-doubleslit-mirror/spec.html
-lab/warp-4-vacuum/0400-casimir-negative-energy/PROVENANCE.html
-lab/warp-4-vacuum/0400-casimir-negative-energy/data/energy_sweep.html
-lab/warp-4-vacuum/0400-casimir-negative-energy/data/fit.html
-lab/warp-4-vacuum/0400-casimir-negative-energy/data/spectrum.html
-lab/warp-4-vacuum/0400-casimir-negative-energy/eval.html
+lab/warp-3-shield/0305-doubleslit-mirror/spec.html	lab/warp-3-shield/0305-doubleslit-mirror/spec.md
+lab/warp-4-vacuum/0400-casimir-negative-energy/PROVENANCE.html	lab/warp-4-vacuum/0400-casimir-negative-energy/PROVENANCE.md
+lab/warp-4-vacuum/0400-casimir-negative-energy/data/energy_sweep.html	lab/warp-4-vacuum/0400-casimir-negative-energy/data/energy_sweep.csv
+lab/warp-4-vacuum/0400-casimir-negative-energy/data/fit.html	lab/warp-4-vacuum/0400-casimir-negative-energy/data/fit.csv
+lab/warp-4-vacuum/0400-casimir-negative-energy/data/spectrum.html	lab/warp-4-vacuum/0400-casimir-negative-energy/data/spectrum.csv
+lab/warp-4-vacuum/0400-casimir-negative-energy/eval.html	lab/warp-4-vacuum/0400-casimir-negative-energy/eval.md
 lab/warp-4-vacuum/0400-casimir-negative-energy/index.html
-lab/warp-4-vacuum/0400-casimir-negative-energy/spec.html
-lab/warp-4-vacuum/0402-automated-bench/PROVENANCE.html
-lab/warp-4-vacuum/0402-automated-bench/data/fits.html
-lab/warp-4-vacuum/0402-automated-bench/data/heat_kernel.html
-lab/warp-4-vacuum/0402-automated-bench/eval.html
+lab/warp-4-vacuum/0400-casimir-negative-energy/spec.html	lab/warp-4-vacuum/0400-casimir-negative-energy/spec.md
+lab/warp-4-vacuum/0402-automated-bench/PROVENANCE.html	lab/warp-4-vacuum/0402-automated-bench/PROVENANCE.md
+lab/warp-4-vacuum/0402-automated-bench/data/fits.html	lab/warp-4-vacuum/0402-automated-bench/data/fits.csv
+lab/warp-4-vacuum/0402-automated-bench/data/heat_kernel.html	lab/warp-4-vacuum/0402-automated-bench/data/heat_kernel.csv
+lab/warp-4-vacuum/0402-automated-bench/eval.html	lab/warp-4-vacuum/0402-automated-bench/eval.md
 lab/warp-4-vacuum/0402-automated-bench/index.html
-lab/warp-4-vacuum/0402-automated-bench/spec.html
-lab/warp-5-universality/0500-ising-universality/PROVENANCE.html
-lab/warp-5-universality/0500-ising-universality/data/exponents.html
-lab/warp-5-universality/0500-ising-universality/data/fss.html
-lab/warp-5-universality/0500-ising-universality/data/nu.html
-lab/warp-5-universality/0500-ising-universality/eval.html
+lab/warp-4-vacuum/0402-automated-bench/spec.html	lab/warp-4-vacuum/0402-automated-bench/spec.md
+lab/warp-5-universality/0500-ising-universality/PROVENANCE.html	lab/warp-5-universality/0500-ising-universality/PROVENANCE.md
+lab/warp-5-universality/0500-ising-universality/data/exponents.html	lab/warp-5-universality/0500-ising-universality/data/exponents.csv
+lab/warp-5-universality/0500-ising-universality/data/fss.html	lab/warp-5-universality/0500-ising-universality/data/fss.csv
+lab/warp-5-universality/0500-ising-universality/data/nu.html	lab/warp-5-universality/0500-ising-universality/data/nu.csv
+lab/warp-5-universality/0500-ising-universality/eval.html	lab/warp-5-universality/0500-ising-universality/eval.md
 lab/warp-5-universality/0500-ising-universality/index.html
-lab/warp-5-universality/0500-ising-universality/spec.html
-lab/warp-5-universality/0501-montecarlo-prediction/PROVENANCE.html
-lab/warp-5-universality/0501-montecarlo-prediction/data/exponents.html
-lab/warp-5-universality/0501-montecarlo-prediction/data/fss_2d.html
-lab/warp-5-universality/0501-montecarlo-prediction/data/fss_3d.html
-lab/warp-5-universality/0501-montecarlo-prediction/eval.html
+lab/warp-5-universality/0500-ising-universality/spec.html	lab/warp-5-universality/0500-ising-universality/spec.md
+lab/warp-5-universality/0501-montecarlo-prediction/PROVENANCE.html	lab/warp-5-universality/0501-montecarlo-prediction/PROVENANCE.md
+lab/warp-5-universality/0501-montecarlo-prediction/data/exponents.html	lab/warp-5-universality/0501-montecarlo-prediction/data/exponents.csv
+lab/warp-5-universality/0501-montecarlo-prediction/data/fss_2d.html	lab/warp-5-universality/0501-montecarlo-prediction/data/fss_2d.csv
+lab/warp-5-universality/0501-montecarlo-prediction/data/fss_3d.html	lab/warp-5-universality/0501-montecarlo-prediction/data/fss_3d.csv
+lab/warp-5-universality/0501-montecarlo-prediction/eval.html	lab/warp-5-universality/0501-montecarlo-prediction/eval.md
 lab/warp-5-universality/0501-montecarlo-prediction/index.html
-lab/warp-5-universality/0501-montecarlo-prediction/spec.html
-lab/warp-5-universality/0502-self-contained/PROVENANCE.html
-lab/warp-5-universality/0502-self-contained/data/binder.html
-lab/warp-5-universality/0502-self-contained/data/fss.html
-lab/warp-5-universality/0502-self-contained/data/results.html
-lab/warp-5-universality/0502-self-contained/eval.html
+lab/warp-5-universality/0501-montecarlo-prediction/spec.html	lab/warp-5-universality/0501-montecarlo-prediction/spec.md
+lab/warp-5-universality/0502-self-contained/PROVENANCE.html	lab/warp-5-universality/0502-self-contained/PROVENANCE.md
+lab/warp-5-universality/0502-self-contained/data/binder.html	lab/warp-5-universality/0502-self-contained/data/binder.csv
+lab/warp-5-universality/0502-self-contained/data/fss.html	lab/warp-5-universality/0502-self-contained/data/fss.csv
+lab/warp-5-universality/0502-self-contained/data/results.html	lab/warp-5-universality/0502-self-contained/data/results.csv
+lab/warp-5-universality/0502-self-contained/eval.html	lab/warp-5-universality/0502-self-contained/eval.md
 lab/warp-5-universality/0502-self-contained/index.html
-lab/warp-5-universality/0502-self-contained/spec.html
-lab/warp-5-universality/0503-blind-3d/PROVENANCE.html
-lab/warp-5-universality/0503-blind-3d/data/binder3d.html
-lab/warp-5-universality/0503-blind-3d/data/fss3d.html
-lab/warp-5-universality/0503-blind-3d/data/results.html
-lab/warp-5-universality/0503-blind-3d/eval.html
+lab/warp-5-universality/0502-self-contained/spec.html	lab/warp-5-universality/0502-self-contained/spec.md
+lab/warp-5-universality/0503-blind-3d/PROVENANCE.html	lab/warp-5-universality/0503-blind-3d/PROVENANCE.md
+lab/warp-5-universality/0503-blind-3d/data/binder3d.html	lab/warp-5-universality/0503-blind-3d/data/binder3d.csv
+lab/warp-5-universality/0503-blind-3d/data/fss3d.html	lab/warp-5-universality/0503-blind-3d/data/fss3d.csv
+lab/warp-5-universality/0503-blind-3d/data/results.html	lab/warp-5-universality/0503-blind-3d/data/results.csv
+lab/warp-5-universality/0503-blind-3d/eval.html	lab/warp-5-universality/0503-blind-3d/eval.md
 lab/warp-5-universality/0503-blind-3d/index.html
-lab/warp-5-universality/0503-blind-3d/spec.html
-lab/warp-5-universality/0509-bond-locator-reprocess/PROVENANCE.html
-lab/warp-5-universality/0509-bond-locator-reprocess/data/crossing_pairs.html
-lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_estimates.html
-lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_ladder.html
-lab/warp-5-universality/0509-bond-locator-reprocess/data/probe_log.html
-lab/warp-5-universality/0509-bond-locator-reprocess/data/seeds.html
-lab/warp-5-universality/0509-bond-locator-reprocess/data/verdict.html
-lab/warp-5-universality/0509-bond-locator-reprocess/data/w_scan.html
-lab/warp-5-universality/0509-bond-locator-reprocess/eval.html
+lab/warp-5-universality/0503-blind-3d/spec.html	lab/warp-5-universality/0503-blind-3d/spec.md
+lab/warp-5-universality/0509-bond-locator-reprocess/PROVENANCE.html	lab/warp-5-universality/0509-bond-locator-reprocess/PROVENANCE.md
+lab/warp-5-universality/0509-bond-locator-reprocess/data/crossing_pairs.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/crossing_pairs.csv
+lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_estimates.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_estimates.csv
+lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_ladder.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_ladder.csv
+lab/warp-5-universality/0509-bond-locator-reprocess/data/probe_log.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/probe_log.txt
+lab/warp-5-universality/0509-bond-locator-reprocess/data/seeds.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/seeds.csv
+lab/warp-5-universality/0509-bond-locator-reprocess/data/verdict.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/verdict.csv
+lab/warp-5-universality/0509-bond-locator-reprocess/data/w_scan.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/w_scan.csv
+lab/warp-5-universality/0509-bond-locator-reprocess/eval.html	lab/warp-5-universality/0509-bond-locator-reprocess/eval.md
 lab/warp-5-universality/0509-bond-locator-reprocess/index.html
-lab/warp-5-universality/0509-bond-locator-reprocess/spec.html
-lab/warp-5-universality/0510-site-locator-reprocess/PROVENANCE.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/crossing_pairs.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/locator_estimates.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/locator_ladder.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/probe_log.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/seeds.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/sensitivity_table.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/verdict.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/verdict_by_locator.html
-lab/warp-5-universality/0510-site-locator-reprocess/data/w_scan.html
-lab/warp-5-universality/0510-site-locator-reprocess/eval.html
+lab/warp-5-universality/0509-bond-locator-reprocess/spec.html	lab/warp-5-universality/0509-bond-locator-reprocess/spec.md
+lab/warp-5-universality/0510-site-locator-reprocess/PROVENANCE.html	lab/warp-5-universality/0510-site-locator-reprocess/PROVENANCE.md
+lab/warp-5-universality/0510-site-locator-reprocess/data/crossing_pairs.html	lab/warp-5-universality/0510-site-locator-reprocess/data/crossing_pairs.csv
+lab/warp-5-universality/0510-site-locator-reprocess/data/locator_estimates.html	lab/warp-5-universality/0510-site-locator-reprocess/data/locator_estimates.csv
+lab/warp-5-universality/0510-site-locator-reprocess/data/locator_ladder.html	lab/warp-5-universality/0510-site-locator-reprocess/data/locator_ladder.csv
+lab/warp-5-universality/0510-site-locator-reprocess/data/probe_log.html	lab/warp-5-universality/0510-site-locator-reprocess/data/probe_log.txt
+lab/warp-5-universality/0510-site-locator-reprocess/data/seeds.html	lab/warp-5-universality/0510-site-locator-reprocess/data/seeds.csv
+lab/warp-5-universality/0510-site-locator-reprocess/data/sensitivity_table.html	lab/warp-5-universality/0510-site-locator-reprocess/data/sensitivity_table.csv
+lab/warp-5-universality/0510-site-locator-reprocess/data/verdict.html	lab/warp-5-universality/0510-site-locator-reprocess/data/verdict.csv
+lab/warp-5-universality/0510-site-locator-reprocess/data/verdict_by_locator.html	lab/warp-5-universality/0510-site-locator-reprocess/data/verdict_by_locator.csv
+lab/warp-5-universality/0510-site-locator-reprocess/data/w_scan.html	lab/warp-5-universality/0510-site-locator-reprocess/data/w_scan.csv
+lab/warp-5-universality/0510-site-locator-reprocess/eval.html	lab/warp-5-universality/0510-site-locator-reprocess/eval.md
 lab/warp-5-universality/0510-site-locator-reprocess/index.html
-lab/warp-5-universality/0510-site-locator-reprocess/spec.html
+lab/warp-5-universality/0510-site-locator-reprocess/spec.html	lab/warp-5-universality/0510-site-locator-reprocess/spec.md

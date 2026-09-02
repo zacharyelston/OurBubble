@@ -132,9 +132,9 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf1_5_lattice_matched_gate.rs`](record/core/uniforge/tests/uf1_5_lattice_matched_gate.rs)
-- [`core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs`](record/core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs)
-- [`core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs`](record/core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs)
+- [`core/uniforge/tests/uf1_5_lattice_matched_gate.rs`](record/core/uniforge/tests/uf1_5_lattice_matched_gate.html)
+- [`core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs`](record/core/uniforge/tests/uf1_7_dispersion_isotropy_gate.html)
+- [`core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs`](record/core/uniforge/tests/uf3_5_doubleslit_mirror_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -181,7 +181,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf2_energy_structure_gate.rs`](record/core/uniforge/tests/uf2_energy_structure_gate.rs)
+- [`core/uniforge/tests/uf2_energy_structure_gate.rs`](record/core/uniforge/tests/uf2_energy_structure_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -223,8 +223,8 @@ cargo run  --release -p viz     --bin gen_energy
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf3_shield_imbalance_gate.rs`](record/core/uniforge/tests/uf3_shield_imbalance_gate.rs)
-- [`core/uniforge/tests/uf3_4_four_source_null_gate.rs`](record/core/uniforge/tests/uf3_4_four_source_null_gate.rs)
+- [`core/uniforge/tests/uf3_shield_imbalance_gate.rs`](record/core/uniforge/tests/uf3_shield_imbalance_gate.html)
+- [`core/uniforge/tests/uf3_4_four_source_null_gate.rs`](record/core/uniforge/tests/uf3_4_four_source_null_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -268,9 +268,9 @@ cargo run  --release -p viz     --bin gen_null
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf4_casimir_energy_gate.rs`](record/core/uniforge/tests/uf4_casimir_energy_gate.rs)
-- [`core/uniforge/tests/uf4_casimir_force_gate.rs`](record/core/uniforge/tests/uf4_casimir_force_gate.rs)
-- [`core/uniforge/tests/uf4_automated_bench_gate.rs`](record/core/uniforge/tests/uf4_automated_bench_gate.rs)
+- [`core/uniforge/tests/uf4_casimir_energy_gate.rs`](record/core/uniforge/tests/uf4_casimir_energy_gate.html)
+- [`core/uniforge/tests/uf4_casimir_force_gate.rs`](record/core/uniforge/tests/uf4_casimir_force_gate.html)
+- [`core/uniforge/tests/uf4_automated_bench_gate.rs`](record/core/uniforge/tests/uf4_automated_bench_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -322,10 +322,10 @@ cargo run  --release -p viz     --bin gen_casimir
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf5_universality_gate.rs`](record/core/uniforge/tests/uf5_universality_gate.rs)
-- [`core/uniforge/tests/uf5_3_blind3d_gate.rs`](record/core/uniforge/tests/uf5_3_blind3d_gate.rs)
-- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs)
-- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs)
+- [`core/uniforge/tests/uf5_universality_gate.rs`](record/core/uniforge/tests/uf5_universality_gate.html)
+- [`core/uniforge/tests/uf5_3_blind3d_gate.rs`](record/core/uniforge/tests/uf5_3_blind3d_gate.html)
+- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html)
+- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -377,7 +377,7 @@ The chapter guards the vocabulary it actually uses — cavity, resonance, materi
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf6_1_thz_shift_law_gate.rs`](record/core/uniforge/tests/uf6_1_thz_shift_law_gate.rs)
+- [`core/uniforge/tests/uf6_1_thz_shift_law_gate.rs`](record/core/uniforge/tests/uf6_1_thz_shift_law_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
