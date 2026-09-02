@@ -8,7 +8,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, Iterable, List, Sequence
+from typing import Dict, Iterable, List, Sequence, Tuple
 
 
 EDITION_DIR = Path(__file__).resolve().parent
@@ -295,7 +295,6 @@ def check_napkin_determinism(errors: List[str]) -> str:
         errors.append(f"napkin self-test: cannot import tools/napkin.py ({failure})")
         return "unavailable"
 
-    before = len(errors)
     for name in sorted(napkin.TOKENS):
         try:
             first = napkin.render(name)
@@ -318,12 +317,6 @@ def check_napkin_determinism(errors: List[str]) -> str:
         if "computed while this page was built" not in first:
             errors.append(f"napkin self-test: {name} does not say it was computed on build")
 
-    # The status line reports the outcome, never the attempt. Exactly the defect the snapshot
-    # integrity line shipped with once: a headline reading "recomputed and identical" above its own
-    # error list. Caught here by mutation-testing the guard rather than by reading it.
-    failures = len(errors) - before
-    if failures:
-        return f"FAILED — {failures} problem(s) across {len(napkin.TOKENS)} tokens"
     return f"{len(napkin.TOKENS)} tokens, recomputed and identical"
 
 
@@ -687,6 +680,108 @@ def declared_record_paths(manifest: Dict[str, object]) -> List[str]:
     return sorted(paths)
 
 
+# Every status line this checker prints goes through `status()` below, and the log is what lets
+# `report()` re-assert the property afterwards rather than trusting that it held.
+_STATUS_LOG: List[Tuple[str, str, int]] = []
+
+
+def status(errors: List[str], label: str, run, quiet: bool = False) -> str:
+    """Run a check, then print its status line — with the verdict derived from what it *did*.
+
+    This exists because the same defect shipped twice. A check that appends to `errors` and also
+    returns a human-readable headline computed its headline without consulting whether it had just
+    failed, so `snapshot integrity: verified — 150 files byte-for-byte` printed directly above its
+    own drift error, and `napkin self-test: 6 tokens, recomputed and identical` above five of them.
+    Both were correct in their errors and wrong in the line a reader actually skims.
+
+    Fixing the two call sites twice would have been fixing the instances. The class is *a status a
+    check narrates about itself*, so the narration is taken away from the check: `run()` returns only
+    what it observed, and the verdict comes from the error-count delta, which cannot be fibbed.
+    A check that fails now cannot report clean — not by discipline, but because it no longer holds
+    the pen.
+
+    The mirror case is caught too: a check that announces failure without appending an error has
+    also lied, and its errors would be invisible to `report()`'s exit code.
+    """
+    before = len(errors)
+    detail = run()
+    added = len(errors) - before
+
+    if added:
+        # The check's own detail is discarded here on purpose: it was computed on the assumption
+        # that things were fine. The specifics are already in the ERROR lines, by name.
+        headline = f"FAILED — {added} problem(s)"
+    else:
+        headline = str(detail)
+        assert "FAILED" not in headline, (
+            f"{label} reports failure but appended no error, so nothing would fail the run: "
+            f"{headline!r}"
+        )
+
+    # `quiet` is for the self-test probe below and nothing else: its deliberate failure must not
+    # be logged as one of this run's checks, nor printed, or every clean run would show a FAILED
+    # line and teach the reader to ignore them.
+    if not quiet:
+        _STATUS_LOG.append((label, headline, added))
+        print(f"{label}: {headline}", flush=True)
+    return headline
+
+
+def check_status_discipline(errors: List[str]) -> None:
+    """Two guards on the pattern itself, so it stays a property and does not decay into a habit.
+
+    First, the log must be self-consistent: a `FAILED` headline exactly when that check appended
+    errors. Given `status()` that is nearly a tautology — which is the point, since it is what
+    catches a later edit that computes a headline some other way.
+
+    Second, and the one that actually stops the habit returning: no status line may be printed
+    outside `status()`. That is a source-level check, because the defect was never in the logic — it
+    was in someone reaching for `print()` and writing the headline by hand. A new check that does
+    the same thing fails here rather than in six months' reading.
+    """
+    for label, headline, added in _STATUS_LOG:
+        if bool(added) != headline.startswith("FAILED"):
+            errors.append(
+                f"status discipline: {label!r} reported {headline!r} having appended {added} "
+                f"error(s) — the headline and the outcome disagree"
+            )
+
+    # The whole file, not the part after `status()`: an earlier draft scanned only from the helper
+    # downwards, which would have let a status line added above it through. `status()`'s own print
+    # is not a match because its format string opens with `{label}`, not a literal.
+    source = Path(__file__).read_text(encoding="utf-8")
+    stray = re.findall(r'^\s*print\(f"[a-z][a-z .-]*: \{', source, re.MULTILINE)
+    if stray:
+        errors.append(
+            f"status discipline: {len(stray)} status line(s) printed outside status() — route them "
+            f"through it so the verdict is derived from the error count, not written by hand"
+        )
+
+
+def _status_self_test(errors: List[str]) -> None:
+    """Prove the choke point overrides a lying check, on a check written to lie.
+
+    The mutation the fix is worth: a check that appends an error and then claims everything is fine
+    — the exact shape that shipped twice. Expressed here deliberately, against a throwaway error
+    list, and asserted to come out `FAILED`. If someone rewrites `status()` so the detail wins, this
+    is what stops it.
+    """
+    scratch: List[str] = []
+
+    def liar() -> str:
+        scratch.append("a real problem")
+        return "all good — 100 things verified"
+
+    headline = status(scratch, "status self-test", liar, quiet=True)
+    if not headline.startswith("FAILED"):
+        errors.append(
+            f"status self-test: a check that appended an error still reported {headline!r} — the "
+            f"choke point is not deriving the verdict from the error count"
+        )
+    if "all good" in headline:
+        errors.append("status self-test: the lying check's own wording survived into the headline")
+
+
 def generated_manifest() -> Dict[str, str]:
     """`record/.generated`, as `{generated path: the record file it shows, or ""}`.
 
@@ -759,28 +854,20 @@ def check_snapshot_integrity(cited: Sequence[str], errors: List[str]) -> str:
     engine = snapshot_files(FETCHED_DIR, cited)
     committed = snapshot_files(RECORD_DIR, cited, skip=generated_paths())
 
-    drifted = 0
     for rel in sorted(set(engine) | set(committed)):
         if rel not in committed:
             errors.append(f"snapshot integrity: {rel} is in the engine but missing from record/")
-            drifted += 1
         elif rel not in engine:
             errors.append(f"snapshot integrity: record/{rel} is not in the engine at this commit")
-            drifted += 1
         elif engine[rel] != committed[rel]:
             errors.append(
                 f"snapshot integrity: record/{rel} differs from the engine at the pinned commit — "
                 f"re-run `tools/snapshot_record.sh`; if the bytes changed on purpose, that is a "
                 f"record bump and belongs in record.lock"
             )
-            drifted += 1
 
-    # The status line has to be the *outcome*, not the fact that the comparison happened. A tamper
-    # test caught this reading "verified — 150 files byte-for-byte" on the same run that reported
-    # drift: the errors were correct and the headline contradicted them, which is the one thing a
-    # status line must never do.
-    if drifted:
-        return f"FAILED — {drifted} of {len(committed)} files differ from the engine"
+    # Only what was observed. Whether that counts as a pass is `status()`'s call, derived from the
+    # errors above — this function no longer gets to characterise its own run.
     return f"verified — {len(committed)} files byte-for-byte"
 
 
@@ -899,23 +986,25 @@ def main() -> int:
     # The record contract first, and it short-circuits: with no snapshot every declared entry, gate,
     # figure and quotation source is "missing", and a hundred errors saying that would bury the one
     # that explains why.
-    pin = check_record(manifest, errors)
-    print(f"record: {pin}", flush=True)
+    _status_self_test(errors)
+    pin = status(errors, "record", lambda: check_record(manifest, errors))
     if not RECORD_DIR.exists():
         return report(errors, [], {}, manifest, args)
 
     # Layer 2. Reported on its own line, always — including when it could not run, because a reader
     # of this output should never have to guess which half of the contract was checked.
-    integrity = check_snapshot_integrity(declared_record_paths(manifest), errors)
-    print(f"snapshot integrity: {integrity}", flush=True)
+    status(
+        errors,
+        "snapshot integrity",
+        lambda: check_snapshot_integrity(declared_record_paths(manifest), errors),
+    )
 
     # The guard is tested before it is trusted, on every run — not only under --self-test.
     self_test(manifest, errors)
 
     # So is the napkin arithmetic. Reported on its own line: "computed while this page was built" is
     # a promise about every build, so the check that keeps it should be visible in every run.
-    napkins = check_napkin_determinism(errors)
-    print(f"napkin self-test: {napkins}", flush=True)
+    status(errors, "napkin self-test", lambda: check_napkin_determinism(errors))
 
     appendix_file = str(manifest["appendix"]["file"])
     if appendix_file != APPENDIX_FILE:
@@ -1001,6 +1090,11 @@ def report(
     manifest: Dict[str, object],
     args: argparse.Namespace,
 ) -> int:
+    # Last thing before the verdict: audit the status lines this run printed. `check_status_discipline`
+    # can itself add errors, so it runs before they are counted — a checker that could not police its
+    # own output would be an odd one to trust about a book's.
+    check_status_discipline(errors)
+
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
