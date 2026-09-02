@@ -63,6 +63,16 @@ Building can legitimately modify a tracked file: `chapters/the-simulations.md` i
 to the record and someone remembering to run a script. `git status` is therefore part of the check —
 a clean tree after a build means the appendix and the record agree.
 
+The build also **computes some of the book's numbers**. Chapters 1–3 live on one triangle and one
+tetrahedron, where every number is finger-countable, so rather than quote them the chapters carry
+`{{napkin:…}}` tokens that the preprocessor replaces with arithmetic it runs at build time — the
+census, the loop sums, the ten-tick table. Each rendered block says so on its last line. The
+arithmetic is exact (rational, no floating point), recomputed twice on every check to prove it is
+deterministic, and each token asserts its own invariant — loop sums zero, total conserved — before it
+renders anything. The tokens and the scope of their one exemption from the appendix-anchoring rule
+are specified in [`EDITION_STANDARD.md`](EDITION_STANDARD.md); the backend is
+[`tools/napkin.py`](tools/napkin.py).
+
 ## The record contract
 
 **The evidence is produced in another repository.** The lab entries, the gates, the data-true
@@ -116,6 +126,7 @@ records the SHA it was taken at, and it must match the lock.
 | `check_edition.py` | the checker |
 | `gen_appendix.py` · `preprocessor.py` | the appendix generator, and the mdBook hook that runs it on every build |
 | `record.lock` · `record/` · `tools/fetch_record.sh` · `tools/snapshot_record.sh` | the record contract: the pin, the committed snapshot, and the two scripts that derive it |
+| `tools/napkin.py` · `preprocessor.py` | the numbers chapters 1–3 compute at build time, and the mdBook hook that runs them |
 | `tools/check.sh` · `Makefile` | tier 0 |
 | `ART_DIRECTION.md` · `EDITION_STANDARD.md` · `LEGACY_MIGRATION.md` | the illustration contract, the writing contract, and what was and was not carried over from the legacy manuscript |
 | `FIREWALL.md` | scope of claims |

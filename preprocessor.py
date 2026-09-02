@@ -25,9 +25,17 @@ prevent.
 from __future__ import annotations
 
 import json
+import re
 import sys
 
 import gen_appendix
+sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent / "tools"))
+import napkin  # noqa: E402  (needs the path above)
+
+# `{{napkin:NAME}}` — the Rewrite lane writes these in chapter prose; this replaces each with the
+# arithmetic run at build time. The token is the whole contract between the two lanes: the lane that
+# writes chapters never touches this file, and this file never touches a chapter's prose.
+NAPKIN = re.compile(r"\{\{napkin:([a-z0-9_]+)\}\}")
 
 
 def substitute(item, slug: str, markdown: str) -> bool:
@@ -56,6 +64,38 @@ def book_items(book: dict) -> list:
     return []
 
 
+def expand_napkins(item, report: list) -> None:
+    """Replace every `{{napkin:…}}` in the book tree with its computed block.
+
+    Walks the whole tree rather than a named chapter, because any chapter may use a token and the
+    preprocessor should not need telling which. An unknown name is fatal: a typo that silently left
+    `{{napkin:tetra_conts}}` in the prose would ship a page with a brace-literal in it, and the
+    checker's unresolved-token rule would then be the *second* line of defence rather than the only
+    one.
+    """
+    if not isinstance(item, dict):
+        return
+    chapter = item.get("Chapter")
+    if chapter is None:
+        return
+    content = chapter.get("content") or ""
+    if NAPKIN.search(content):
+        def replace(match):
+            name = match.group(1)
+            if name not in napkin.TOKENS:
+                raise KeyError(
+                    f"unknown napkin token {{{{napkin:{name}}}}} in "
+                    f"{chapter.get('path') or '?'} — known tokens: "
+                    f"{', '.join(sorted(napkin.TOKENS))}"
+                )
+            report.append((chapter.get("path") or "?", name))
+            return napkin.render(name)
+
+        chapter["content"] = NAPKIN.sub(replace, content)
+    for child in chapter.get("sub_items", []):
+        expand_napkins(child, report)
+
+
 def main() -> int:
     if len(sys.argv) > 1 and sys.argv[1] == "supports":
         return 0  # every renderer: the substitution is renderer-agnostic
@@ -77,6 +117,25 @@ def main() -> int:
             f"appendix preprocessor: regenerated chapters/{slug}.md from the record",
             file=sys.stderr,
         )
+
+    # The napkin pass runs after the appendix substitution so a generated page could carry a token
+    # too. Failure is loud for the same reason the appendix's is: a build that quietly renders an
+    # unexpanded token has published a brace-literal where a number should be.
+    report: list = []
+    try:
+        for item in book_items(book):
+            expand_napkins(item, report)
+    except (KeyError, AssertionError) as failure:
+        print(f"napkin preprocessor: {failure}", file=sys.stderr)
+        return 1
+
+    if report:
+        counts = ", ".join(
+            f"{name}×{sum(1 for _, n in report if n == name)}"
+            for name in sorted({n for _, n in report})
+        )
+        print(f"napkin preprocessor: computed {len(report)} block(s) — {counts}", file=sys.stderr)
+
     json.dump(book, sys.stdout)
     return 0
 
