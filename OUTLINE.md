@@ -32,7 +32,7 @@ reader every time instead of explained to her once.
 1. Why is my shadow short at noon and long in the evening?
 2. If I scratch a mark where it ends and come back in an hour — what do I have?  *(two marks: a number from the world, not from me)*
 3. So what is a measurement, exactly, and why is it not yet an answer?
-4. Who first did the next thing with a shadow — and did you have to be a genius?  *(Eratosthenes: chief librarian, already eminent, one multiplication)*
+4. Who first did the next thing with a shadow — and did you have to be a genius?  *(Eratosthenes: he ran the library at Alexandria; the measurement used none of it — one multiplication)*
 5. Two posts, same noon, one shadow: what does that rule out?  *(a flat world)*
 6. And how much does the ground curve — what did he actually do, step by step?  *(a fiftieth of a turn; the looked-up distance; fifty times five thousand)*
 7. What was the order he did things in — and which step do people skip?  *(notice · smallest shape · say what would prove it wrong · check, keep the no)*
