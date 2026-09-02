@@ -89,10 +89,17 @@ the chapters link to.
         if s.get('note'):
             L.append(s['note']+"\n")
         if s.get('history'):
-            L.append("**What this chapter recounts.** Documented measurement history, not work of ours: no "
-                     "rung, no gate and no figure in this repository corresponds to any of it. It is listed "
-                     "here so a reader can check the chapter against the historical record rather than "
-                     "against ours, in the order the chapter tells them rather than in date order.\n")
+            # N8 (proofread, tranche B round 2): this said "no rung, no gate and no figure
+            # corresponds to any of it", which stopped being true when the outline moved the two
+            # self-corrections into this chapter's beats 98-99. The history is still not ours; the
+            # chapter's last two beats are, and they carry rungs, so the sentence now says which
+            # half is which instead of denying the second half exists.
+            L.append("**What this chapter recounts.** Two things, and they are checkable in different "
+                     "places. The measurement history below is not work of ours — no rung, gate or "
+                     "figure here corresponds to any of it, and it is listed so a reader can check the "
+                     "chapter against the historical record rather than against us, in the order the "
+                     "chapter tells it. The chapter's last beats are ours, and the rungs, entries and "
+                     "gates below are theirs.\n")
             L+=[f"- {h}" for h in s['history']]; L.append("")
             # M16 (proofread, tranche B): this pointed at chapter 9 for the self-correction, which
             # the outline moved into this chapter's own beats 98-99. It now points at nothing,

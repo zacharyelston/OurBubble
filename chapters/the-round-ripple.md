@@ -60,12 +60,12 @@ So choose the obvious one, and guess what happens.
 The obvious setting is to give every line the same weight. It feels like the neutral choice — the
 one that assumes nothing, that plays no favourites among the lines.
 
-**Write your guess down now, before you read on** — and the useful half is not whether it comes out
-round. You have just been told an edge and a diagonal are different lengths and the counting cannot
-tell, so *not round* is the easy call.
+**Write your guess down now** — and the useful half is not whether it comes out round. You have just
+been told an edge and a diagonal differ in length and the counting cannot tell, so *not round* is
+the easy call.
 
-The live question is **which way**. Along the cube's edges, or across its diagonals: which
-directions will the ripple run fastest in? One line is enough. Commit to a direction.
+The live question is **which way**: along the cube's edges, or across its diagonals? One line is
+enough. Commit to a direction.
 
 This is the ritual for the rest of the book, and it is not a teaching trick. Once you have read a
 number it is very hard to remember not having known it.
@@ -76,13 +76,14 @@ number it is very hard to remember not having known it.
 
 Set every line to the same weight and the ring comes out **lopsided**.
 
-It runs faster along some directions than others. What ought to be a circle is a squashed thing, and
-if you tried to aim anything in this world, it would drift.
+It runs faster across the cube's diagonals than along its edges — so if you guessed the diagonals,
+you were right, and for the reason the last section gave: the counting treats a long step and a
+short one alike, so the long one covers more ground per tick. What ought to be a circle is stretched
+along the diagonals, and anything you aimed in this world would drift.
 
-Notice what happened, because it is the point of the beat. Weighting all the lines equally *looked*
-like assuming nothing. It was in fact a strong assumption, quietly made: it claims that an edge and
-a diagonal are the same length. The object never said that. We did, by choosing the setting that
-felt neutral.
+Notice what happened. Weighting all the lines equally *looked* like assuming nothing; it was a
+strong assumption, quietly made — that an edge and a diagonal are the same length. The object never
+said that. We did, by choosing the setting that felt neutral.
 
 The number is what makes this more than a story, so here it is. Send a pulse from the middle, time
 its arrival along an edge direction, time its arrival along a diagonal, and compare the two speeds.
@@ -113,11 +114,10 @@ But 2.2% is not zero. What is it?
 
 <!-- beat 49 -->
 
-A sceptic should push on the residual, and there are exactly two things it could be. Either the
-world really is slightly uneven, or the grid is simply too coarse to draw a smooth circle on.
+A sceptic should push on the residual, and there are exactly two things it could be: the world
+really is slightly uneven, or the grid is too coarse to draw a smooth circle on.
 
-Those sound like the same complaint. They are not, and telling them apart needs no eye and no
-judgement.
+Those sound like the same complaint. They are not, and telling them apart needs no judgement.
 
 A coarse grid gets *better* as you use bigger, gentler ripples: a long, lazy wave stops noticing the
 graininess underneath it, the way a wide boat stops noticing small chop. A genuine unevenness does
@@ -158,7 +158,7 @@ Yes, and it belongs here rather than in a footnote.
 
 This project has a public demonstration page: a ripple going through two gaps, making the fringes
 you would expect. It ran for months. It was quietly, visibly wrong — about **3.8×** brighter on one
-side of the screen than the other, across that same axis.
+side of the screen than the other, across that same mirror.
 
 It looked like optics. Nobody had built any asymmetry into the scene; the two gaps were identical
 and the source was centred. If you wanted to read something profound into it, the material was
@@ -172,11 +172,12 @@ grain, in a different place, which is why it took months to find.
 <!-- beat 51 -->
 
 Cutting a square region into triangles means choosing which way the diagonals lean. Lean them all
-the same way and the mesh loses a symmetry the *experiment* has: flip the scene about the axis
-through the source and the two gaps, and the scene maps onto itself — two identical gaps, one
-centred source. Flip the mesh the same way and it does not. So the mesh was quietly asserting a
-difference between left and right that nothing in the physics asserted, and the ripple faithfully
-reported the shape of the thing it was travelling on rather than the shape of the question.
+the same way and the mesh loses a symmetry the *experiment* has: flip the scene about the axis that
+runs through the source and between the two gaps, and the scene maps onto itself — two identical
+gaps, one centred source. Flip the mesh the same way and it does not. So the mesh was quietly
+asserting a difference between left and right that nothing in the physics asserted, and the ripple
+faithfully reported the shape of the thing it was travelling on rather than the shape of the
+question.
 
 Note what this is *not*. It is not the three-way grain of the object itself, which is a fact about
 the little world and comes with a symmetry that carries each kind of place onto the others. This was

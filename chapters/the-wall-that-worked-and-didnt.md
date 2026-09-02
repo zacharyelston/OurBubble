@@ -83,9 +83,10 @@ Now the question the chapter was built for. The blob inside: does it move differ
 The blob inside moves exactly as far as it did before.
 
 Not slightly further. Not slightly less. The blob's displacement differs between the walled and
-unwalled cases by about a millionth — and the run can say where even that comes from: it is the
-wall's own reflected wave leaking back inward, arriving at lattice speed. A change in the signal
-reaching the blob, not a change in how hard the blob is to push.
+unwalled cases by about a millionth — far inside the threshold registered for it. The run does not
+claim the two cases are bit-for-bit identical, and says why: the wall reflects a wave of its own
+that leaks back inward at lattice speed. That is a difference in what reaches the blob, and it is
+not a difference in how hard the blob is to push.
 
 Go and look at your guess. This is the one the ritual is for, because the idea in the opening is
 genuinely attractive, and half the point of writing a prediction down is to catch yourself having

@@ -57,9 +57,10 @@ We registered ours before running, and it was the obvious one: the exponent shou
 
 <!-- beat 90 -->
 
-We handed the peak positions and the weights to the same blind fitter from
-[is it round?](the-round-ripple.md) and [the vacuum chapter](where-negative-energy-appears.md) —
-told nothing, picking from a menu written down beforehand.
+We handed the peak positions and the weights to a fitter and asked it for one thing: the power the
+pitch follows as the lump gets denser. No menu this time, and no runner-up — one law, fitted, with
+the exponent left free to come out wherever the data put it. Which is all this beat needs, because
+the number we had committed to was a specific one.
 
 It came back with **p = −0.2753**, at a fit quality of **R² = 0.9774**.
 
@@ -98,10 +99,11 @@ there is, it is an explanation that has not paid: better than an excuse, and les
 
 <!-- beat 92 -->
 
-The same instrument that selected a straight-line law for the ripple, recovered a coefficient with a
-π in it from the vacuum, and produced an exponent nobody supplied for the critical point — that same
-instrument, unchanged, refused the most natural material-scaling analogy anyone would have reached
-for.
+The same *kind* of instrument — a fitter told nothing — found the ripple's law, the vacuum's
+coefficient and the class numbers. Here it refused the most natural material-scaling analogy anyone
+would have reached for. Not the same code each time: the ripple's fitter picks from a menu, the
+vacuum's is bespoke to its own gate, this one fits a single free exponent. The same discipline every
+time: no answer supplied.
 
 It returned the law that was in the data rather than the law in the chapter title.
 

@@ -132,17 +132,18 @@ We swept the gap over a range of separations and fitted the result. It is worth 
 what was assumed and what was not, because the difference is the whole value of the answer.
 
 The *shape* was assumed: the fit was told to look for something falling off as one over the gap,
-which is Casimir's scaling, written in by us. So that much is not a discovery. But the fit was then
-run again with the exponent left **free**, and it came back at **−0.9997** against a true value of
-−1, at a fit quality of seven nines. Nobody had pinned it there.
+which is Casimir's scaling, written in by us. So that much is not a discovery. But the exponent was
+then measured again with nothing pinning it — read straight off the slope, free to come out anywhere
+— and it came back at **−0.9997** against a true value of −1.
 
-## What was assumed, and what was not
+## And the part nobody put in
 
 <!-- beat 76 -->
 
 And the coefficient was not assumed at any point. It came out at **−0.13099** where the exact answer
-is **−π/24 = −0.13090** — a match to **0.07%**. Nobody typed π into anything. That is the number
-that makes this the phenomenon rather than a sign, and it was read off, not put in.
+is **−π/24 = −0.13090** — a match to **0.07%**, on a fit that tracks the measured curve to seven
+nines. Nobody typed π into anything. That is the number that makes this the phenomenon rather than a
+sign, and it was read off, not put in.
 
 **[Open the data-true Casimir figure](record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)**
 
