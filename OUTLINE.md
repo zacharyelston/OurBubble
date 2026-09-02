@@ -127,7 +127,7 @@ reader every time instead of explained to her once.
 74. What did the little world do?  *(below the line everywhere, deeper as the gap narrows — the walls pull together)*  [picture: the curve]
 75. A sign is easy — what would make this the phenomenon and not a sign?  *(the scaling law and its coefficient with a π in it)*
 76. Did the machine find them without being told?  *(−0.9997 vs −1; −0.13099 vs −π/24; nobody typed π)*
-77. What quietly changed in this chapter?  *(the machine swept, fitted, chose, reported; a person only checked afterwards — an instrument that can find a law it wasn't told)*
+77. What quietly changed in this chapter?  *(the machine swept and fitted — the exponent free, the coefficient never assumed — and reported; a person only checked afterwards. The instrument that picks a law from a written menu is the ripple's, not this one's)*
 
 ## 9 · Can it tell me something I didn't tell it?
 
@@ -148,7 +148,7 @@ reader every time instead of explained to her once.
 89. ✎ *Before we look:* the whole-cavity rule is a square root — should a partial lump obey it too?  *(we registered p = −½)*
 90. What came back?  *(p = −0.2753 — not a near miss; the law is refused)*  [picture: the two slopes]
 91. Why — and why is the explanation written as a *new* prediction rather than an excuse?  *(the lump is a fraction of the volume; if that is the reason, a bigger lump moves p toward −½ — a new commitment)*
-92. What does a refusal from the same instrument that found the ripple, the vacuum and the class numbers tell us?  *(that its yeses meant something)*
+92. What does a refusal tell us, coming from the same kind of instrument — a fitter told nothing — that found the ripple's law, the vacuum's coefficient and the class numbers?  *(that its yeses meant something. Not the same code each time; the same discipline: no answer supplied)*
 
 ## 11 · A few thousand years of sharper shadows
 
