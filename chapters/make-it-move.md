@@ -14,6 +14,8 @@ What is missing?
 
 ## A clock
 
+<!-- beat 27 -->
+
 Time. And it is worth being suspicious of that word, because time is the thing people smuggle the
 most into a small model without noticing.
 
@@ -26,6 +28,8 @@ That is all a clock has to provide: a before and an after, and then another one.
 What is the least a clock needs to be?
 
 ## Ticks, all the same
+
+<!-- beat 28 -->
 
 A tick. One indivisible step from now to next, and another one after that, and every one of them the
 same size as every other.
@@ -69,6 +73,8 @@ needs no memory. A plucked string does.
 Is that really the whole law?
 
 ## Nothing else, ever
+
+<!-- beat 30 -->
 
 Yes. Everything the rest of this book measures is that sentence, run.
 
@@ -115,6 +121,8 @@ Now add up the four numbers at each tick and look down that last column.
 
 ## The total never moves
 
+<!-- beat 32 -->
+
 It does not change. Not on any tick, not by a little — the same number, eleven times.
 
 Two things have to be true for that, and both are worth having.
@@ -134,6 +142,8 @@ that conserves its total has nowhere to put anything it loses.
 You have one thing left to play with. What does the dial do?
 
 ## Turn the dial
+
+<!-- beat 33 -->
 
 Take one of the six lines and say it counts double, so a difference along that line pulls twice as
 hard as a difference along the others. Then run the same ten ticks again.
@@ -158,6 +168,8 @@ Now stop being gentle. Poke one dot hard — put a big number on it and leave th
 
 ## Where is the ring?
 
+<!-- beat 34 -->
+
 There isn't one.
 
 You know what you were expecting, because you have dropped a stone in a pond. A disturbance at one
@@ -172,6 +184,8 @@ behind-the-ring, because nothing is behind anything. The object has no *room* in
 Which means there is a question you cannot ask here.
 
 ## The question this world cannot answer
+
+<!-- beat 35 -->
 
 You cannot ask how fast.
 

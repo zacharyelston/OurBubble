@@ -20,6 +20,8 @@ But suppose she does. What is the smallest next thing she could possibly do?
 
 ## Two marks in the ground
 
+<!-- beat 2 -->
+
 She pushes a stick into the ground and scratches a line in the dirt where its shadow ends. An hour
 later she comes back and scratches another.
 
@@ -33,6 +35,8 @@ something that changes, and someone willing to record by how much.
 So she has a number. Does she have an answer?
 
 ## A number is not yet an answer
+
+<!-- beat 3 -->
 
 No. And it is worth being exact about why, because this is the gap the rest of the book lives in.
 
@@ -48,6 +52,8 @@ Did he have to be a genius?
 
 ## What Eratosthenes did next
 
+<!-- beat 4 -->
+
 Around 240 BCE a man in Alexandria did the next thing, starting from almost exactly this.
 
 Eratosthenes of Cyrene was the chief librarian there — he ran the largest collection of books in the
@@ -62,6 +68,8 @@ is what makes it a good first example: you would not have needed to be him.
 What he had instead of cleverness was a discrepancy he could not explain.
 
 ## Two posts, one shadow
+
+<!-- beat 5 -->
 
 The discrepancy was a story about a well. At Syene, far to the south, at noon on the longest day of
 the year, sunlight was said to fall straight down a deep well and light the water at the bottom.
@@ -79,6 +87,8 @@ has no shadow, none of them do.
 The ground between the two towns is therefore not flat. It curves. But by how much?
 
 ## How much it curves
+
+<!-- beat 6 -->
 
 Here is where he turned a shape into a number, and the number is what made the shape able to be
 wrong.
@@ -100,6 +110,8 @@ He was close. That is not the interesting part.
 
 ## The order he did things in
 
+<!-- beat 7 -->
+
 Notice what he did *not* do. He did not begin with a beautiful idea about spheres and then go
 hunting for shadows that fitted it. He began with something he could not explain, proposed the
 smallest shape that would explain it, and then committed to a number — a number that could have come
@@ -120,6 +132,8 @@ So put the child back in the yard, with her stick and her two marks, and ask wha
 missing.
 
 ## Back to the child
+
+<!-- beat 8 -->
 
 Go back to her, and to the two marks in the ground.
 

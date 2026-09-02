@@ -16,6 +16,8 @@ Here is the first thing you need, and it is smaller than you would expect.
 
 ## Somewhere to put a number
 
+<!-- beat 9 -->
+
 You need somewhere a number can sit. Call it a dot.
 
 That is not a philosophical claim about the nature of space. It is a bookkeeping requirement: if you
@@ -31,6 +33,8 @@ it, ever.
 So where does change live?
 
 ## Change lives between
+
+<!-- beat 10 -->
 
 Not at a dot — and this is the piece most people carry a wrong picture of.
 
@@ -54,6 +58,8 @@ dots and a line?
 
 ## Nothing closes yet
 
+<!-- beat 11 -->
+
 Try to go somewhere and come back.
 
 Start at the first dot, cross the line to the second, and then — there is nowhere to go but back the
@@ -69,6 +75,8 @@ So add a third dot. What is the smallest thing that closes?
 
 ## The triangle
 
+<!-- beat 12 -->
+
 Three dots. Join each to both of the others: three lines. And the moment you draw the third line,
 something appears that was not there before and that you did not ask for.
 
@@ -82,6 +90,8 @@ and almost everything that follows is the consequence of it closing.
 Put a number on each corner. How many differences do you now have?
 
 ## Three corners, three differences
+
+<!-- beat 13 -->
 
 Three. One per line, and no more, because a difference belongs to a pair and there are exactly three
 pairs.
@@ -98,6 +108,8 @@ What do you get?
 
 ## Walk it and add
 
+<!-- beat 14 -->
+
 Do it with real numbers rather than in the abstract.
 
 {{napkin:triangle_loop_example}}
@@ -111,6 +123,8 @@ every number in the walk appears twice with opposite signs. The books balance be
 But is that special to those three numbers?
 
 ## Any three numbers at all
+
+<!-- beat 15 -->
 
 No. Try it with any three. Try it with numbers you pick to be awkward — enormous ones, negative
 ones, the same one three times. It comes back zero every time, and it is not luck.
@@ -128,6 +142,8 @@ Why exactly zero, and not nearly?
 
 ## Why it is exact and not approximate
 
+<!-- beat 16 -->
+
 Because nothing was measured, and nothing was rounded.
 
 That sentence is doing a lot of work, so here it is slowly. When a simulation says a quantity is
@@ -142,6 +158,8 @@ record every payment twice.
 Which raises a question you may already have asked: what did you never use?
 
 ## What you never used
+
+<!-- beat 17 -->
 
 Length.
 
@@ -161,6 +179,8 @@ comes home to zero. Hold on to that, because the next chapter does hand the line
 So what have you actually assumed, all told?
 
 ## Nothing at all
+
+<!-- beat 18 -->
 
 Take the inventory. It is short.
 

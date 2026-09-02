@@ -22,6 +22,8 @@ Do they stack?
 
 ## They do not stack
 
+<!-- beat 36 -->
+
 No, and the way they fail is one of the better stories in mathematics.
 
 Aristotle wrote that tetrahedra all of one size and shape will fill space, and the mistake stood for
@@ -37,6 +39,8 @@ Which raises a fair question: why insist on tetrahedra at all?
 
 ## What a square can do that a triangle cannot
 
+<!-- beat 37 -->
+
 Because triangles are rigid and squares are not, and rigidity is the property you cannot do without.
 
 Pin the four corners of a square and it can still flex. It leans over into a diamond without any
@@ -51,6 +55,8 @@ If there is no perfect answer, what did we choose?
 
 ## The compromise we chose
 
+<!-- beat 38 -->
+
 Every tetrahedral world is a compromise, and a compromise is a choice with measurable consequences.
 
 Here is ours, with a pencil. Colour a cube's eight corners in two colours so that **no two corners
@@ -63,13 +69,11 @@ between them are no longer thin wedges: each is an octahedron, centred on a corn
 Cut one along a long diagonal and it falls into four tetrahedra. Do that to every hole and space is
 filled — entirely with tetrahedra, not all the same shape, and no wedge anywhere.
 
-Which of the three diagonals gets cut is fixed by a rule of ours, and that rule **twists on
-purpose** — number each hole by how far it sits along the three directions, add those up, and the
-pick cycles as the total does.
-
 Now you have room. So poke a dot in the middle of a great many, and watch.
 
 ## The pond
+
+<!-- beat 39 -->
 
 There is a ring.
 
@@ -90,6 +94,8 @@ Watch it a little longer, though, and it does something a pond in a field does n
 
 ## It hits the edge
 
+<!-- beat 40 -->
+
 It reaches the outermost dots and comes back.
 
 Of course it does. Our stack of tetrahedra stops somewhere, and the dots at the boundary have fewer
@@ -103,6 +109,8 @@ You could build a bigger box, but a bigger box has the same problem further away
 world with no edge at all — and there is a cheap trick for that.
 
 ## Wrap it
+
+<!-- beat 41 -->
 
 Glue the far side to the near side.
 
@@ -120,16 +128,22 @@ meet itself gives you one. Ours wraps in three directions rather than two, so it
 done once more, and the name comes along for the ride. What matters is not the word but why we live
 there from here on: with no walls, nothing bounces, so the ring is only ever the ring.
 
-Which means the question you have been unable to ask is finally available.
+Which leaves one thing to check before the question you have been unable to ask is worth asking.
 
 ## Now that the world has no edge — is any dot special?
+
+<!-- beat 42 -->
 
 The object is finished, so the question can finally be asked honestly: standing on one dot of this
 wrapped world, does it look like standing on any other?
 
-It matters because of that twisting cut rule. A rule that twists is exactly the kind that could
-leave seams — dots in the thick of it, dots where the rule changed its mind. If poking one dot were
-not the same experiment as poking another, no comparison between directions would mean anything.
+There is one reason to doubt it, back in the cutting. Which of the three diagonals gets cut was
+never left to you: it is fixed by a rule of ours, and that rule **twists on purpose** — number each
+hole by how far it sits along the three directions, add those up, and the pick cycles as the total
+does.
+
+A twisting rule is exactly the kind that could leave seams. If poking one dot were not the same
+experiment as poking another, no comparison between directions would mean anything.
 
 None is singled out. But the twist does leave a mark, and here it is.
 
@@ -143,18 +157,19 @@ So the world has a grain, and no dot is privileged.
 
 ## The object, and the only question left
 
+<!-- beat 43 -->
+
 You can now ask the stopwatch question. Poke a dot, count the ticks, and see how far the front has
 gone — then do it again in a different direction and compare.
 
 And the grain gives that question teeth: if the two answers disagree, either the world really runs
 faster one way, or you are reading the grain.
 
-Take stock, because the list is short and all but one item was forced. Dots, because a number needs
-somewhere to sit. Lines, because change lives between. A triangle, because it closes. A tetrahedron,
-because that is the triangle one dimension up, and because it holds its shape where a cube does not.
-A clock and one rule, because nothing could happen. Many tetrahedra, because one had no room. The
-two-colouring and the discarded half, because tetrahedra will not stack alone. A wrap, because edges
-echo.
+Every step of it was forced but one. Dots, because a number needs somewhere to sit; lines, because
+change lives between; a triangle, because it closes; a tetrahedron, because that is the triangle one
+dimension up and it holds its shape where a cube does not; a clock and one rule, because nothing
+could happen; many tetrahedra, because one had no room; the two-colouring, because tetrahedra will
+not stack alone; a wrap, because edges echo.
 
 The exception is the dial — the only thing anybody chose, and still unset.
 

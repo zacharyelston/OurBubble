@@ -19,6 +19,8 @@ What have you got?
 
 ## Four dots, and everything you can draw between them
 
+<!-- beat 19 -->
+
 You have a tetrahedron: a little pyramid with a triangle for a base and a triangle for each of its
 three sides.
 
@@ -33,6 +35,8 @@ four of them fence off between them, and that is the one to count.
 
 ## The whole inventory
 
+<!-- beat 20 -->
+
 {{napkin:tetra_counts}}
 
 That is the entire object. Not the interesting part of the object, not a simplified version of it —
@@ -46,6 +50,8 @@ Now put it to work. Put a number on each of the four corners. What do the lines 
 faces say?
 
 ## Four numbers on the corners, four faces, four zeros
+
+<!-- beat 21 -->
 
 The lines say what they said before. Each line joins two corners, so each line carries the
 difference between them: six lines, six differences, none of them chosen.
@@ -64,6 +70,8 @@ Because so far the line-numbers were *differences*. What if they were not?
 
 ## What if the lines came first
 
+<!-- beat 22 -->
+
 Everything so far started at the corners. The lines only ever carried what the corners already said.
 But nothing forces that. You can put six numbers straight onto the six lines and never mention the
 corners at all — six little arrows, each saying "along this line, this much, in this direction".
@@ -78,6 +86,8 @@ pair.
 Four faces, four such numbers. Which raises the same question one rung higher.
 
 ## Round the inside
+
+<!-- beat 23 -->
 
 The four faces are the boundary of the inside, the way the three lines were the boundary of the
 triangle's face. So do to the faces what you did to the lines — add the four face-numbers up around
@@ -105,6 +115,8 @@ So how many kinds of number can this world hold?
 
 ## Four kinds, and that is all there will ever be
 
+<!-- beat 24 -->
+
 You have now met the same fact twice — walk the boundary of a closed thing and the total comes home
 to zero — and it cost nothing either time.
 
@@ -125,6 +137,8 @@ tell you.
 
 ## The one choice: what a line is worth
 
+<!-- beat 25 -->
+
 Still nothing has a length. The six lines join things; none of them is long or short. So suppose you
 now decide to say how long each one is, because you want to.
 
@@ -144,6 +158,8 @@ carelessly.
 Is that really enough to call a world?
 
 ## Enough for a world
+
+<!-- beat 26 -->
 
 Take the inventory again, and this time notice that it is finished.
 
