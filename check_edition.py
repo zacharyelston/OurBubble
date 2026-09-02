@@ -366,6 +366,19 @@ def check_appendix(
        the repository does not have.
     4. **Every declared quotation is verbatim in its own section AND carried by its canonical
        source.**
+
+    **The scope of obligation 4, written down because it was discovered rather than read** (a
+    proofreader, 2026-09-02). The verbatim test reads the **appendix section's body** and the record
+    file. It does not read the chapter prose, and that is by design: the chapters carry no
+    quotations at all — moving the provenance to a boundary is the entire point of the appendix, and
+    `check_chapter` asks the narrower question that remains, that any number a chapter *emphasises*
+    is one its own appendix section anchored.
+
+    The consequence follows and is worth stating before someone relies on the opposite: a chapter
+    can *lose* the prose that earned its numbers with nothing here objecting. The appendix still
+    carries them, they still verify against the record, and parity stays at 35/13 with tier 0 green.
+    Whether each chapter still says what it was written to say is `tools/beat_coverage.py`'s job,
+    and above that a reader's — never this function's.
     """
     appendix = manifest.get("appendix")
     if not isinstance(appendix, dict):
