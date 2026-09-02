@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-4-vacuum/0400-casimir-negative-energy/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-4-vacuum/0400-casimir-negative-energy/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0400 — Warp-4.0: the Casimir vacuum is negative — and the lattice discovers the law
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf4_casimir_energy_gate.rs` · **Status:** CONFIRMED (see [`eval.md`](eval.md))
+
+## Goal (one paragraph)
+
+The warp wall needs `ρ &lt; 0`; classical fields can&#x27;t (ch. 2) and shields only reach zero (ch. 3). The one
+mechanism that genuinely gives negative energy is the **quantum vacuum with boundaries** — the Casimir
+effect. We build it as the zero-point energy `E₀ = ½Σℏωₖ` of a toy scalar field on a fixed–fixed lattice
+chain (the engine&#x27;s Dirichlet Laplacian `d†d`; `ωₖ² = 4sin²(kπ/2(N+1))` are its eigenvalues). The lattice
+spectrum is its own UV cutoff, so `E₀` is finite with no zeta regularization. Subtracting the bulk vacuum
+leaves a genuinely **negative** confined energy. This rung is also the chapter&#x27;s automation proof: the gate
+does not check a hardcoded number — it **sweeps the plate separation, least-squares-fits the law, and
+discovers** both the exponent (`E_Casimir ∝ 1/a`) and the coefficient (`−π/24`), then holds them against
+theory.
+
+## Firewall (R3)
+
+`vacuum, Casimir, plate, mode, energy` name the zero-point energy `½Σℏωₖ` of a **toy** scalar field (a
+fixed–fixed oscillator chain = the engine&#x27;s 1-D Dirichlet Laplacian) with prescribed boundaries on a **toy**
+lattice. `ℏ` is a dimensionless bookkeeping constant; standard QFT zero-point bookkeeping, **not** a real
+device, spacetime claim, or free energy. c = 1.
+
+## Predictions (registered before the run)
+
+- **P0 (the spectrum is the engine&#x27;s Laplacian):** the mode frequencies satisfy `ωₖ² = ` eigenvalues of the
+  1-D Dirichlet Laplacian — *gate:* `Σωₖ² = tr(Δ) = 2N` to `&lt; 1e-9` (we sum the zero-point energy of the
+  right operator).
+- **P1 (the confined vacuum energy is NEGATIVE):** after removing the bulk vacuum density `ε∞ = 2/π`, the
+  confined energy `E_C(a) = ½Σωₖ − ε∞·a &lt; 0` for every tested separation — *gate:* `E_C(a) &lt; 0` for all `a`
+  in the sweep.
+- **P2 (the lattice DISCOVERS the Casimir law):** a two-parameter least-squares fit `E_C(a) = c₀ + c₁/a`
+  recovers the surface term `c₀ → −1/2` and the **Casimir coefficient** `c₁ → −π/24 ≈ −0.13090` — *gate:*
+  fit `R² &gt; 0.999`, `|c₀ + 0.5| &lt; 0.02`, and `|c₁ − (−π/24)| / (π/24) &lt; 0.03` (discovered coefficient within
+  3% of theory).
+- **P3 (attractive — the plates are pulled together):** the Casimir energy deepens as the plates approach,
+  `∂E_C/∂a &gt; 0` throughout the sweep (energy rises toward the bulk value as `a` grows) — *gate:* `E_C(a)` is
+  strictly increasing in `a`.
+
+## Method (sketch)
+
+Fixed–fixed chain of `N = a−1` interior sites (plates at `0` and `a`); mode frequencies
+`ωₖ = 2 sin(kπ/2(N+1))`, `k=1..N` (closed form of the Dirichlet-Laplacian spectrum; `ωₖ²` verified against
+`tr Δ`). Zero-point energy `E₀(a) = ½Σωₖ`. Bulk density `ε∞ = (1/π)∫₀^π sin(q/2)dq = 2/π`. Confined energy
+`E_C(a) = E₀(a) − ε∞·a`. Sweep `a ∈ {8,…,64}`; fit `E_C = c₀ + c₁/a` by normal equations in the basis
+`{1, 1/a}`, report `c₀, c₁, R²`, and the discovered exponent (slope of `log|E_C−c₀|` vs `log a → −1`). Emit
+`data/spectrum.csv` (ωₖ for one a), `data/energy_sweep.csv` (a, E₀, E_C), `data/fit.csv` (c₀, c₁, R², exponent).
+
+## What would falsify this
+
+If `E_C(a) ≥ 0` anywhere (P1), the boundary vacuum would not be negative and the Casimir claim fails. If the
+fit did not select `1/a` (`R²` low, or exponent ≠ −1) or the coefficient missed `−π/24` (P2), the lattice
+would not reproduce the known Casimir law — the automated bench would be untrustworthy. Either is recorded
+honestly (R5).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

@@ -1,0 +1,9 @@
+quantity,value
+m_eff_open,1
+m_eff_shielded,1
+interior_field_maxdiff,8.855937e-6
+packet_disp_open,0.391403
+packet_disp_shielded,0.391402
+m2_centre,0.000000e0
+m2_wall,40.000000
+coupling_ratio_interior,0.000002

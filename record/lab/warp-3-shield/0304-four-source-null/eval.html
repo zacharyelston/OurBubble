@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-3-shield/0304-four-source-null/eval.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-3-shield/0304-four-source-null/eval.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0304 — Warp-3.4: the four-source null — evaluation
+
+**Verdict:** CONFIRMED (R5/R10) · **Gate:** `uf3_4_four_source_null_gate` (green: yes) · **Commit:** `2f81902` (registered `530a325`)
+
+## Result
+
+**The conjecture is backwards — orthogonal polarizations cannot empty a volume, and the reason is exact.**
+Energy density is `⟨ρ⟩ = ¼(|Ê|²+|B̂|²)`; for orthogonally-polarized fields the cross term vanishes, so their
+energies **add** rather than cancel. Orthogonality is precisely the wrong tool for a null. The lattice
+confirms it to machine precision, and pins down the only way superposition ever empties a region (the
+trivial one).
+
+| prediction | expected | measured | pass |
+|---|---|---|---|
+| P0 single wave: uniform energy | `CoV&lt;1%`, residual≈1 | **CoV 0, residual 1.00** | ✅ |
+| P1 standing wave: E-nodes, energy uniform | `CoV&lt;2%`, residual∈[0.95,1.05] | **CoV 0, residual 1.00** | ✅ |
+| P2 orthogonal set: phase-independent | phase-sweep `CoV&lt;0.1%` | **CoV 1.1×10⁻¹⁶** | ✅ |
+| P2 orthogonal set: energies add | `=` sum-of-parts `&lt;1%` | **3.00 = 3×1.00, err 0** | ✅ |
+| P2 orthogonal set: can&#x27;t null | cube residual `&gt;0.8` | **1.00** | ✅ |
+| P3 only volume null is trivial | antiphase `max⟨ρ⟩&lt;1e-9` | **1.8×10⁻³⁰** (field ≡ 0) | ✅ |
+
+The numbers are analytic, not noisy: a standing wave&#x27;s `cos²(kz)+sin²(kz)=1` makes `⟨ρ⟩` *exactly* uniform
+(a node in E is an antinode in B — the energy just sloshes, it never disappears); the three
+perpendicular pairs deposit their six field components on six distinct axes, so their energies sum with **no
+interference term** and the center value `3.0` is completely independent of all three pair phases; and the
+only way to drive `⟨ρ⟩→0` over a region is to make the field identically zero everywhere (parallel antiphase
+waves), which is no shield at all. Data: [`data/null_configs.csv`](data/null_configs.csv),
+[`data/phase_sweep.csv`](data/phase_sweep.csv), [`data/radial.csv`](data/radial.csv). Figure:
+`core/viz gen_null`.
+
+## What it rules in / out
+
+- **Rules OUT the &quot;orthogonal polarizations null a region&quot; conjecture (R5):** orthogonal fields don&#x27;t
+  interfere — `|ΣÊ|² = Σ|Ê|²` — so stacking orthogonal polarizations *raises* the energy (it adds sources),
+  it never cancels. To cancel you need **parallel** (non-orthogonal) fields.
+- **Rules OUT a free-space volume null (unique continuation):** parallel fields *can* cancel, but a
+  non-trivial Maxwell field that vanishes on an open set vanishes on the whole connected source-free region.
+  So the only superposition null over a volume is the trivial field-zero-everywhere case — darkness, not a
+  shield. A null over a finite region with field outside is impossible without sources inside/around it.
+- **Rules OUT &quot;complete shield → negative energy&quot; (ties to rung 2.4):** even a perfect null is `⟨ρ⟩ = 0`,
+  never `&lt; 0`. EM energy is sign-locked non-negative (2.4/2.5); a shield can empty a region but cannot make
+  it exotic. Negative energy needs the quantum vacuum (Casimir / squeezed light), which is Ford–Roman
+  bounded (2.9) — not a classical polarization trick.
+- **Names the achievable route:** a genuine interior null *is* possible — with a **boundary of real
+  currents** (a Faraday cage / a Huygens equivalent-source surface enclosing the region), exactly the
+  boundary-shield picture of rungs 3.0–3.2. The null is a *boundary* phenomenon, not a free-space
+  superposition, and it costs real sources.
+
+## Deferred / next
+
+Feed the chapter menu: the **Huygens/Faraday boundary null** (surround the target with equivalent surface
+sources and show the interior field cancels — the achievable complete shield, and its current budget); and
+close the loop to chapter 2 by stating plainly that the shield program tops out at `⟨ρ⟩ ≥ 0` — the exotic
+(negative) demand stays with the quantum vacuum.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

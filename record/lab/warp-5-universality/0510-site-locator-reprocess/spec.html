@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0510-site-locator-reprocess/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0510-site-locator-reprocess/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0510 — Warp-5.10: reprocess 5.6&#x27;s SITE `d_f` negative — and settle #305&#x27;s ordering fork
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs` ·
+**Status:** REGISTERED (R1) — predictions below are committed before any run for record
+
+Origin: issue **#306** (opened by rung 5.9 as its own deferred item), which asks the obvious
+question 5.9 raised and could not answer: rung 5.6&#x27;s `d_f` negative has the *same shape* as 5.7&#x27;s,
+and 5.6 never computed its locator&#x27;s standard error either — **does it dissolve too?** This rung also
+carries the decisive extra evidence for issue **#305** (the estimator-ordering fork), because site
+percolation has **two** answer keys — one of them exact — where 5.9 had only one.
+
+## Goal (one paragraph)
+
+Rung 5.6 registered a first-class negative: on the stella tet-oct graph under **site** dilution,
+`d_f` at the crossing-located threshold came out `2.43782`, missing its registered band
+`2.52295 ± 0.06`, and the miss was locked with a post-hoc diagnosis (`∂d_f/∂p ≈ 117`; `d_f = 2.52498`
+at its pre-registered constant `0.1752`). Rung 5.9 showed for **bond** that such a miss can be
+entirely the locator, once the locator&#x27;s own error is quantified and propagated. This rung applies
+the same two-outcome design to 5.6 — with a stronger control set than 5.9 had, because 2-D site
+percolation has an **exact** threshold (`1/2`) *and* an **exact** class exponent (`91/48`), so the
+zero-location-error control has no literature uncertainty at either end. **Both outcomes are results
+and both are written down below before the run.**
+
+## Firewall (R3)
+
+*Percolation, cluster, threshold, wrapping, fractal dimension* name properties of site-diluted
+**toy graphs**: a vertex is &quot;occupied&quot; with probability `p` under a seeded RNG, clusters are
+connected components of the induced subgraph, `R_L(p)` is the probability a component winds a
+periodic torus, and `d_f` is the fitted exponent of `s_max(L) ~ L^{d_f}`. `p_c(stella-site)` is **a
+constant of this complex** (bucket 🔵): exact mathematics of a toy graph, never a property of matter.
+`d_f` is a dimensionless universal invariant of the percolation class, shared with real disordered
+media — this rung claims **class-membership resolution, computed**, and (where it lands) that a
+*previous* class-membership miss was an artefact of **our own estimator**, not a statement about
+nature. Toy DEC computation; `c = G = 1`, dimensionless throughout.
+
+## Answer keys (independent of anything this repo computed)
+
+- **2-D, EXACT at both ends — the strongest control in this chapter.** Triangular-site
+  `p_c = 1/2` exactly (Sykes &amp; Essam 1964; rigorous: Kesten 1980/82), and the 2-D percolation class
+  is exactly solved: `d_f = 91/48 = 1.8958333…` (den Nijs 1979; SLE₆). Measuring `d_f` *at* `1/2`
+  removes the locator from the experiment with **no literature uncertainty anywhere**.
+- **3-D, published.** FCC-site `p_c = 0.1992365(10)` — Lorenz &amp; Ziff, J. Stat. Phys. **98**, 961
+  (2000). Class exponent `β/ν = 0.47705(15)` ⇒ `d_f = 3 − β/ν = 2.52295(15)` — Wang, Zhou, Zhang,
+  Garoni, Deng, Phys. Rev. E **87**, 052107 (2013).
+
+## The immutable inputs (5.6&#x27;s committed record — read-only, never modified)
+
+| quantity | value | source |
+|---|---|---|
+| stella-site located `p_c` (5.6&#x27;s naive per-batch estimator) | `0.174453 ± 0.000410` | `0506-…/data/percolation_summary.csv` |
+| `d_f` there (the locked miss) | `2.43782` | same |
+| 5.6&#x27;s pre-registered constant / its `d_f` (the diagnosis arm) | `0.1752` / `2.52498` | same |
+| 5.6&#x27;s registered `d_f` tolerance | `± 0.06` | `0506-…/spec.md` P3 |
+| 5.6&#x27;s registered miss | `\|2.43782 − 2.52295\| = 0.08513` | derived |
+| triangular / FCC-site located `p_c` | `0.500986 ± 0.001348` / `0.199457 ± 0.000296` | committed summary |
+| the wrapping curves (K=5-batch aggregate, 3 families) | `0506-…/data/rw_curves.csv` | 5.6, PR #174 |
+
+## Method (sketch)
+
+The percolation machinery — `Rng` (splitmix64), the triangular / FCC / stella torus edge lists, the
+union-find-with-displacement wrapping detector, `sample`/`measure`, `sweep_batch`, `crossing_estimate`
+and the `measure_at` seed scheme (`SEED_MEAS ^ (l&lt;&lt;40) ^ (rep&lt;&lt;2)`, **independent of `p`**, so two
+`p`-points are a *paired* comparison) — is **copied verbatim** from
+`uf5_6_stella_percolation_gate.rs`. Copy fidelity is not assumed; it is P0a/P0b. The locator is
+`kinematics::crossing_extrapolate` (5.8&#x27;s tool) with `p_c_stderr` (added by 5.9).
+
+Registered grids, stated explicitly per the 5.6 lesson — **5.6&#x27;s own windows, unchanged**:
+triangular `p ∈ [0.485, 0.515]` (7 pts, step 0.005), `L ∈ {16,24,32,48,64,96}` ⇒ 5 pair crossings;
+FCC-site `p ∈ [0.193, 0.205]` (7 pts, step 0.002) and stella-site `p ∈ [0.170, 0.184]` (8 pts, step
+0.002), both `L ∈ {12,18,24,36,48}` ⇒ 4 pair crossings; fixed class drift exponent `w = 2`
+(`= 1/ν + θ`). FSS measurement `L ∈ {18,24,36,48}` (3-D) / `{24,32,48,64,96}` (2-D), `R = 2400`,
+largest three sizes fitted (the 5.1 rule); `d_f`&#x27;s own statistical error from the 4 independent seed
+stripes (`kinematics::replica_stats` — the 5.5 rule). Paired central difference for `∂d_f/∂p`:
+`±0.0006` in 3-D, `±0.005` in 2-D (the 2-D amplification is ~10× gentler, so the step must be ~10×
+wider to clear the statistical noise — probed).
+
+Skipped deliberately: the engine-mesh-`d0`-vs-rule graph identity walk (5.6&#x27;s own P2a proved it at
+365 vertices and the graph is unchanged); reproducing 5.6&#x27;s committed batch estimates *and* both of
+its committed `d_f` values is a strictly stronger check that this is the same machinery.
+
+## Predictions (registered before the run)
+
+Every threshold was measured first by the committed probe
+(`core/uniforge/examples/uf5_10_site_locator_probe.rs`; full log in
+[`data/probe_log.txt`](data/probe_log.txt)). The re-analysis arms are deterministic functions of
+committed data and the MC arms are seeded, so the gate *reproduces* these numbers rather than
+discovering them — stated plainly.
+
+### P0 — controls. If any fails, nothing about stella can be claimed.
+
+- **P0a (sweep copy fidelity, all three families):** re-running 5.6&#x27;s sweeps with 5.6&#x27;s seeds
+  reproduces its committed per-batch naive estimator to `1e-6` (the paper trail&#x27;s own 6-decimal
+  resolution) in both mean and `σ_mean`: triangular `0.500986 / 0.001348`, FCC `0.199457 / 0.000296`,
+  stella `0.174453 / 0.000410`. *Probed: reproduced at all 6 decimals, batch by batch.*
+- **P0b (measurement copy fidelity, both of 5.6&#x27;s quoted `d_f` values):**
+  `|d_f(stella, 0.174453) − 2.43782| &lt; 1e-3` *(probed `1.15e-4`)* **and**
+  `|d_f(stella, 0.1752) − 2.52498| &lt; 1e-3` *(probed `7.2e-7` — 5.6&#x27;s pre-registered constant is
+  exact in the paper trail, so this arm is essentially bit-exact; the located-`p_c` arm&#x27;s larger
+  residue is `113 ×` the 6-decimal rounding of the committed threshold)*.
+- **P0c (the EXACT zero-location-error control — no literature uncertainty at either end):**
+  triangular-site at **exactly** `p = 1/2`, `|d_f − 91/48| &lt; 0.02`. *Probed `1.89613 ± 0.00722`,
+  `|Δ| = 3.0e-4` = **0.04 σ_stat**.* This is the arm that decides &quot;is `d_f` broken, or is it the
+  locator?&quot;, and here it is decided against an exactly known answer.
+- **P0d (the published zero-location-error control, 3-D):** FCC-site at `0.1992365`,
+  `|d_f − 2.52295| &lt; 0.05`. *Probed `2.50814 ± 0.01334`, `|Δ| = 0.0148` (1.1 σ_stat) — measured
+  slightly **low**, the corrections-to-scaling direction 5.6 pre-registered as **high**; registered
+  as a two-sided bound and discussed in the eval rather than smoothed over.*
+
+### P1 — the locator and its error bar, calibrated against TWO keys
+
+- **P1a:** `|p̂_c(stella-site, aggregate, w=2) − 0.174911| &lt; 1e-5`, and it sits **above** 5.6&#x27;s
+  located `0.174453` (registered direction; probed gap `+0.00046`). This is 5.8&#x27;s own committed
+  value, recomputed here — 5.8 located it and never re-measured `d_f` there.
+- **P1b (the fit is honest about itself):** `p_c_stderr(stella) ∈ [3.0e-4, 8.0e-4]` *(probed
+  `5.14e-4`)*, and `r² &lt; 0.50` for **all three** families *(probed `0.2424 / 0.4050 / 0.1758`)* — the
+  drift is weakly resolved at best, so this locator is not being sold as a better fit.
+- **P1c (error-bar calibration on both keys):** for **triangular** and **FCC** independently,
+  `|p̂_c − key| &lt; 1.5 × p_c_stderr` **and** `|p̂_c − key| &gt; 2.0 × (w∈[1.6,2.4] spread)`.
+  *Probed: triangular `0.81 × se`, `5.28 × spread`; FCC `0.55 × se`, `2.25 × spread`.* This is 5.9&#x27;s
+  P1c re-tested on two more keys, one exact: the OLS standard error **covers** the real error, the
+  `w`-scan spread **does not**.
+
+### P2 — the systematics that set the band (probed BEFORE the band, per the 5.6/5.7/5.9 lesson)
+
+- **P2a (verify the amplification, do not assume it):** paired central difference at the new locator,
+  `∂d_f/∂p ∈ [80, 150]`. *Probed `113.4`; `lab/LESSONS.md`&#x27;s `~117` and 5.6&#x27;s own secant (`116.7`,
+  recomputed here) both land in that band — so the LESSONS number is **verified**, which is the point:
+  5.7 found the amplitude is dilution-rule-dependent, so it must be re-measured per variant.*
+- **P2b (the ordering systematic):** `|p̂_c(aggregate-then-extrapolate) − p̂_c(extrapolate-then-average)|`
+  for stella-site `∈ [3e-4, 9e-4]`, aggregate **higher**. *Probed `5.42e-4`.*
+- **P2c (#305&#x27;s answer — the fork has NO universal licence, and this is the falsifiable form):** on
+  **both** site answer keys the **per-batch** ordering is closer:
+  `|per-batch − key| &lt; |aggregate − key|` for triangular **and** FCC.
+  *Probed: triangular `7.66e-4 &lt; 2.530e-3` (3.3×); FCC `7.9e-5 &lt; 3.88e-4` (4.9×).* This is the
+  **opposite** of 5.9&#x27;s single-key bond verdict (where aggregate was closer, `3.60e-4 &lt; 5.88e-4`).
+  Registering it this way makes the correction to 5.9 falsifiable: if the site keys agreed with the
+  bond key, 5.9&#x27;s licence would generalise and P2c would fail. **They do not, so #305&#x27;s honest answer
+  is that the ordering must be registered per rung, not licensed once.**
+- **P2d (the band — and 5.6&#x27;s registered tolerance was too narrow for its own locator):**
+  `band = √((sens × p_c_stderr)² + σ_stat(d_f)²) ∈ [0.045, 0.090]` *(probed `0.0623`)*; **and**
+  `sens × σ_mean(5.6&#x27;s own quoted replica error) &gt; 0.70 × 0.06` — i.e. 5.6&#x27;s **own published
+  `± 0.000410`**, propagated through the amplification 5.6 **itself measured**, already fills at
+  least 70% of the `± 0.06` band it registered. *Probed `0.0478` = 80%.* This is the crux: the
+  ingredients to compute the band were in 5.6&#x27;s own record.
+
+### P3 — the verdict. Two outcomes, both registered now — and made ordering-robust.
+
+- **P3a (reproducibility):** `|d_f(stella, p̂_c) − 2.49050| &lt; 0.01`.
+- **P3b (the improvement claim — falsifiable and directional):**
+  `|d_f(p̂_c) − 2.52295| &lt; 0.5 × 0.08513 = 0.0426` **and** `d_f(p̂_c) &gt; 2.43782` (upward, the sign the
+  positive amplification demands). *Probed `2.49050`, miss `0.0325` — 62% of 5.6&#x27;s miss closed, and
+  inside 5.6&#x27;s own registered `± 0.06` band.*
+- **P3c (dissolve or certify — evaluated at ALL THREE candidate locators, each with its own quoted
+  error, so the verdict cannot hinge on #305&#x27;s fork):** for each of 5.6&#x27;s own located `p_c`, the
+  per-batch-extrapolated locator, and the aggregate-extrapolated locator,
+  `z = |d_f − 2.52295| / √((sens × loc_err)² + σ_stat²) &lt; 2`.
+  - **Registered branch — H-DISSOLVE:** 5.6&#x27;s `d_f` miss was **the locator&#x27;s error, unpropagated**.
+    Its registered scope-statement stands verbatim (its windows, sizes, numbers and its locked
+    diagnosis all held and are reproduced here) while its *interpretation* is upgraded — written into
+    5.6&#x27;s own `eval.md` as a dated marked note, never silently. *Probed `z = 1.69 / 1.73 / 0.52`.*
+    Note this is a **stronger** dissolve than 5.9&#x27;s: there, the two orderings gave opposite verdicts;
+    here every candidate locator dissolves, including 5.6&#x27;s own.
+  - **Pre-registered alternative — H-CERTIFY (`z ≥ 2` at the licensed locator):** the miss survives a
+    propagated band, which would be a genuine finding about **this family and this graph at
+    `L ≤ 48`** (never about nature), and the next discriminator is named in advance: `L` up to
+    ~96–128 at a fixed locator, since the amplification is `~L^{1/ν}` and must shrink if it is
+    finite-size in origin.
+  - *gate:* assert the registered branch for all three locators. If the run returns the alternative,
+    the R5 negative-lock path applies — the rung is **not** re-narrated after the fact either way.
+
+### P4 — the inverted locator, now with an EXACT key at both ends
+
+- **P4a (2-D, exact):** anchoring `d_f` at the exact class value and dividing by the measured local
+  sensitivity, `p_c(d_f-anchored) = 1/2 + (91/48 − d_f(1/2))/sens_tri`, recovers the **exact**
+  threshold `1/2` to `|Δ| &lt; 2e-4`. *Probed `0.4999708`, `−2.92e-5`, with `sens_tri = 10.3`.* No
+  literature uncertainty enters anywhere — the tightest form of this check that exists.
+- **P4b (3-D, published):** the same inversion on FCC-site recovers `0.1992365` to `|Δ| &lt; 3e-4`.
+  *Probed `0.1993855`, `+1.49e-4`.* The residual is the finite-size `d_f` bias (`0.0148`) divided by
+  the sensitivity (`99.4`) — identically so by construction, which is why it is reported as a
+  *mechanism* rather than as independent evidence.
+- **Bucket honesty (unchanged from 5.9):** the inversion consumes the literature (or exact) class
+  exponent as an input, so it is a 🔵 method/cross-check and can **never** be 🟢 prediction-grade.
+
+**Report-only (written to `data/`, not gated):** the full 6-point `d_f`-vs-locator ladder; the
+`w`-scans; the per-batch tables for all three families; the naive-vs-extrapolated accuracy comparison
+on both keys (where, as in 5.9, the **naive** estimator is the more accurate one — triangular
+`2.2e-4` vs `2.53e-3`, FCC-excl-smallest `4.8e-5` vs `3.88e-4`); the **cross-rung sensitivity table**
+(2-D site `10.3` · 3-D site `99.4`/`113.4` · 3-D bond `275.7`/`340.1` from 5.9&#x27;s committed record ⇒
+bond ≈ 3× site, site ≈ 10× 2-D); and the observation that the `d_f`-anchored stella locator
+(`0.175197`) lands within `3e-6` of 5.6&#x27;s **pre-registered constant** `0.1752` — which is not
+independent evidence (it is 5.6&#x27;s diagnosis arm restated) but does explain *why* that arm recovered
+the class value.
+
+## What would falsify this
+
+- **P0a/P0b failing** ⇒ the copied machinery is not 5.6&#x27;s; every number is void and the rung reports
+  an inconclusive re-analysis (R5), not a verdict on 5.6.
+- **P0c failing** ⇒ `d_f` is not sound at these sizes even against an **exactly** known threshold and
+  an **exactly** known exponent. Then no locator story survives and the follow-on is an `L`-ladder on
+  the FSS fit itself, not another estimator. This is the arm most able to kill the rung.
+- **P0d failing with P0c green** ⇒ the 3-D FSS fit carries a corrections-to-scaling bias larger than
+  registered; the dissolve claim would then need that bias in the band too, and the eval must say so.
+- **P1c failing** ⇒ either the standard error does not cover the real error (the band is untrustworthy
+  and no dissolve claim can be made) or the `w`-spread is a fair error bar after all (5.9&#x27;s
+  methodological correction is withdrawn). Reported either way.
+- **P2c failing** ⇒ the site keys agree with the bond key, the aggregate ordering *is* universally
+  licensed, and 5.9&#x27;s plank was fine — a correction **to this rung**, reported as such.
+- **P2d failing** ⇒ 5.6&#x27;s registered `± 0.06` was in fact wide enough for its own locator error, and
+  the &quot;it was inside an error bar you could have computed&quot; framing is wrong.
+- **P3b failing with P0–P2 green** ⇒ the better-centred locator does not move `d_f` toward the class
+  value: a first-class negative about the locator-error explanation itself.
+- **P3c returning `z ≥ 2`** at the licensed locator ⇒ H-CERTIFY, above. Not a failure — the other
+  registered outcome.
+- **P4a failing** ⇒ the inverted locator is not licensed even against an exact key; it is withdrawn
+  (reported, not widened) and the derived stella number is deleted rather than quoted.
+
+## Determinism
+
+Seeded splitmix64 throughout, all seeds compile-time constants echoed into `data/seeds.csv` (sweep
+base `0x5EED ⊕ k·2⁵⁰`, measurement base `0xABCD`, `K=5` batches × `R=300` sweep samples, `R=2400`
+measurement samples, fixed 4-way thread striping so accumulation order is independent of core count).
+The re-analysis arms read a committed CSV and are closed-form least squares. Pure `f64`, no
+wall-clock, no unseeded RNG — the same numbers on every machine, every run. Probe runtime 24 s; the
+gate is budgeted at ~25–30 s (tier 2).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

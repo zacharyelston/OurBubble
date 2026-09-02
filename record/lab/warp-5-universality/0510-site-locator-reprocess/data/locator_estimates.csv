@@ -1,0 +1,34 @@
+family,kind,estimator,p_c_or_width,error_bar,r2,err_vs_key
+triangular,threshold,aggregate-extrapolated (w=2),0.5025295,0.003137,0.2424,0.002530
+triangular,threshold,aggregate-naive (all pairs),0.5002226,,,0.000223
+triangular,threshold,aggregate-naive (excl smallest),0.5017219,,,0.001722
+triangular,threshold,per-batch-extrapolated,0.5007659,0.001591,,0.000766
+triangular,threshold,per-batch-naive (5.6's registered),0.5009859,0.001348,,0.000986
+triangular,error_bar_candidate,OLS intercept standard error,0.0031369,,,
+triangular,error_bar_candidate,w-scan spread over w in [1.6..2.4] (5.8's yardstick),0.0004793,,,
+triangular,error_bar_candidate,per-batch replica sigma,0.0015912,,,
+fcc_site,threshold,aggregate-extrapolated (w=2),0.1988483,0.000704,0.4050,0.000388
+fcc_site,threshold,aggregate-naive (all pairs),0.1995167,,,0.000280
+fcc_site,threshold,aggregate-naive (excl smallest),0.1991889,,,0.000048
+fcc_site,threshold,per-batch-extrapolated,0.1993157,0.000209,,0.000079
+fcc_site,threshold,per-batch-naive (5.6's registered),0.1994570,0.000296,,0.000220
+fcc_site,error_bar_candidate,OLS intercept standard error,0.0007042,,,
+fcc_site,error_bar_candidate,w-scan spread over w in [1.6..2.4] (5.8's yardstick),0.0001728,,,
+fcc_site,error_bar_candidate,per-batch replica sigma,0.0002091,,,
+stella_site,threshold,aggregate-extrapolated (w=2),0.1749109,0.000514,0.1758,
+stella_site,threshold,aggregate-naive (all pairs),0.1751841,,,
+stella_site,threshold,aggregate-naive (excl smallest),0.1749835,,,
+stella_site,threshold,per-batch-extrapolated,0.1743689,0.000446,,
+stella_site,threshold,per-batch-naive (5.6's registered),0.1744533,0.000410,,
+stella_site,error_bar_candidate,OLS intercept standard error,0.0005141,,,
+stella_site,error_bar_candidate,w-scan spread over w in [1.6..2.4] (5.8's yardstick),0.0000415,,,
+stella_site,error_bar_candidate,per-batch replica sigma,0.0004464,,,
+triangular,threshold,EXACT (Sykes-Essam 1964 / Kesten 1980),0.5000000,,,0.000000
+fcc_site,threshold,published (Lorenz-Ziff 2000),0.1992365,,,0.000000
+triangular,threshold,d_f-anchored inversion,0.4999708,,,0.000029
+fcc_site,threshold,d_f-anchored inversion,0.1993855,,,0.000149
+stella_site,threshold,d_f-anchored inversion,0.1751971,,,
+triangular,error_bar_candidate,actual error of the aggregate-extrapolated fit vs the key,0.0025295,,,
+fcc_site,error_bar_candidate,actual error of the aggregate-extrapolated fit vs the key,0.0003882,,,
+stella_site,error_bar_candidate,aggregate-vs-per-batch ordering systematic,0.0005419,,,
+stella_site,error_bar_candidate,5.6's own replica sigma propagated through its own sensitivity,0.0478388,,,

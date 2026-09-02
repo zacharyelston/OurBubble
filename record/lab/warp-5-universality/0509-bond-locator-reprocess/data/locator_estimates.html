@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_estimates.csv · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_estimates.csv</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../../index.html">Our Bubble</a>.</div><pre>family,kind,estimator,p_c_or_width,error_bar,r2,err_vs_key
+stella_bond,threshold,aggregate-extrapolated (w=2),0.1006479,0.000518,0.0022,
+stella_bond,threshold,aggregate-naive (all pairs),0.1006196,,,
+stella_bond,threshold,aggregate-naive (excl smallest),0.1005334,,,
+stella_bond,threshold,per-batch-extrapolated,0.0993182,0.000364,,
+stella_bond,threshold,per-batch-naive (5.7&#x27;s registered),0.0996406,0.000312,,
+stella_bond,error_bar_candidate,OLS intercept standard error,0.0005184,,,
+stella_bond,error_bar_candidate,w-scan spread over w in [1.6..2.4] (5.8&#x27;s yardstick),0.0000641,,,
+stella_bond,error_bar_candidate,per-batch replica sigma,0.0003636,,,
+fcc_bond,threshold,aggregate-extrapolated (w=2),0.1198036,0.000326,0.1527,0.000360
+fcc_bond,threshold,aggregate-naive (all pairs),0.1199627,,,0.000201
+fcc_bond,threshold,aggregate-naive (excl smallest),0.1198887,,,0.000275
+fcc_bond,threshold,per-batch-extrapolated,0.1195750,0.000622,,0.000588
+fcc_bond,threshold,per-batch-naive (5.7&#x27;s registered),0.1197238,0.000471,,0.000440
+fcc_bond,error_bar_candidate,OLS intercept standard error,0.0003258,,,
+fcc_bond,error_bar_candidate,w-scan spread over w in [1.6..2.4] (5.8&#x27;s yardstick),0.0000591,,,
+fcc_bond,error_bar_candidate,per-batch replica sigma,0.0006221,,,
+fcc_bond,threshold,published (Lorenz-Ziff 1998),0.1201635,,,0.000000
+fcc_bond,threshold,d_f-anchored inversion,0.1201763,,,0.000013
+stella_bond,threshold,d_f-anchored inversion,0.1010686,,,
+fcc_bond,error_bar_candidate,actual error of the aggregate-extrapolated fit vs the key,0.0003599,,,
+stella_bond,error_bar_candidate,aggregate-vs-per-batch ordering systematic,0.0013297,,,
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../../README.html">What this directory is</a>.</footer></main></body></html>

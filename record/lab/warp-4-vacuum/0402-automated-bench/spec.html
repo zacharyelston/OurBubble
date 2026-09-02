@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-4-vacuum/0402-automated-bench/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-4-vacuum/0402-automated-bench/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0402 — Warp-4.2: the automated bench — one law-finder, many laws
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf4_automated_bench_gate.rs` · **Status:** CONFIRMED (see [`eval.md`](eval.md))
+
+## Goal (one paragraph)
+
+The chapter&#x27;s meta-claim: *the lattice is a cheap virtual workbench whose value-add is automation.* Rungs 4.0
+and 4.1 each ran an ad-hoc fit inside their gate; this rung factors that into a **reusable engine capability**
+(`kinematics::power_law_fit`) and shows the **same** function discovering laws across **different**
+experiments — proving the automation reads physics, not a hardcoded per-gate answer. It rediscovers the
+Casimir force scaling, and — with `kinematics::heat_kernel_line` — *measures the lattice&#x27;s own spatial
+dimension* from the Laplacian heat-kernel decay `K(t) ∝ t^{−d/2}`, for `d = 1, 2, 3`.
+
+## Firewall (R3)
+
+`fit, exponent, dimension, heat kernel` name pure data-analysis of lattice outputs — a log–log least-squares
+power-law fit and the periodic graph-Laplacian heat-kernel trace. No physical claim beyond the fit; the
+&quot;dimension&quot; is the spectral dimension of the toy lattice, not a claim about nature. Dimensionless; c = 1.
+
+## Predictions (registered before the run)
+
+- **P0 (the tool is correct):** on synthetic data `y = 3·x⁻²` the fitter returns exponent `−2`, coefficient
+  `3`, `R² = 1` — *gate:* `|p+2| &lt; 1e-9`, `|C−3| &lt; 1e-9`, `R² &gt; 1−1e-9`.
+- **P1 (it rediscovers the Casimir force law):** `power_law_fit` on the lattice piston force `|F|` vs `a`
+  returns exponent `≈ −2` — *gate:* `|p+2| &lt; 0.10` with `R² &gt; 0.999`.
+- **P2 (it measures the lattice dimension):** fitting the heat-kernel trace `Kd(t)=line^d` vs `t` gives
+  slope `−d/2`, so measured dimension `−2·p` recovers `1, 2, 3` — *gate:* `|dim−d| &lt; 0.03` for each of
+  `d=1,2,3`, each `R² &gt; 0.999`.
+- **P3 (one reusable tool):** every result above comes from the **same** `kinematics::power_law_fit` (a
+  crate-level export with its own unit tests), and all fits are high quality — *gate:* all `R² &gt; 0.99`.
+
+## Method (sketch)
+
+Reusable `kinematics::discover`: `power_law_fit(xs, ys) -&gt; {exponent, coefficient, r2}` (OLS on
+`ln x`, `ln|y|`) and `heat_kernel_line(n, t) = Σₖ e^{−t(2−2cos 2πk/n)}` (periodic Laplacian spectrum;
+d-D kernel `= line^d`). The gate: (0) fit synthetic `3x⁻²`; (1) build the piston force `F(a)` (as rung 4.1)
+over `a∈{8..64}` and fit `|F|`; (2) for `d∈{1,2,3}` build `Kd(t)=heat_kernel_line(4000,t)^d` over
+`t∈{16..512}`, fit, report `dim=−2p`. Emit `data/fits.csv` (experiment, exponent, coeff, R², theory) and
+`data/heat_kernel.csv` (t, line, K1, K2, K3).
+
+## What would falsify this
+
+If the fitter missed the synthetic law (P0) the tool is broken. If it did not return `≈ −2` for the force
+(P1) or the correct dimension for `d=1,2,3` (P2), the automation would not generalize across experiments —
+the &quot;automated bench&quot; claim fails. Recorded honestly either way (R5).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

@@ -6,9 +6,11 @@
 check:
 	@tools/check.sh
 
-## record — check the pinned UniForge commit out into .record/ (see record.lock).
+## record — re-derive the committed record/ snapshot from the pinned commit (needs engine access).
+## This is step 2+3 of a record bump; see record.lock's header.
 record:
 	@tools/fetch_record.sh
+	@tools/snapshot_record.sh
 
 ## build — regenerate the appendix from the record and render the book into book/.
 build:

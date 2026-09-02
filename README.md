@@ -40,18 +40,17 @@ with a single link into its own section.
 
 ## How to build it
 
-You need Python 3 and [mdBook](https://rust-lang.github.io/mdBook/), plus read access to the record
-repository (see below).
+You need Python 3 and [mdBook](https://rust-lang.github.io/mdBook/). Nothing else — the record the
+book quotes is committed here, so no engine access is required to build or check it.
 
 ```sh
-make check          # the whole pass: fetch record → check → build → check the built pages
+make check          # the whole pass: integrity → quotations → build → rendered links
 ```
 
 or the steps by hand, from the repository root:
 
 ```sh
-tools/fetch_record.sh          # check the pinned engine commit out into .record/
-python3 check_edition.py       # the edition against the record
+python3 check_edition.py       # the edition against the committed record snapshot
 mdbook build                   # regenerates the appendix, then renders into book/
 python3 check_edition.py --rendered
 ```
@@ -66,34 +65,46 @@ a clean tree after a build means the appendix and the record agree.
 
 ## The record contract
 
-**The evidence is not in this repository.** It lives in the UniForge engine — the lab entries, the
-gates, the data-true figures, the predictions file — and it stays there, because that is where it is
-produced and where it is authoritative.
+**The evidence is produced in another repository.** The lab entries, the gates, the data-true
+figures and the predictions file live in the UniForge engine — that is where they are made and where
+they are authoritative — and that repository is private.
 
-What this repository holds instead is a pin:
+So the book carries two things: a pin, and a copy.
 
-- [`record.lock`](record.lock) names the record repository, one **commit SHA**, and the exact list of
-  record files this edition cites or quotes. The path list is derived from `edition.json` and the
-  chapters' own links, and the checker refuses a lock that has drifted from either.
-- [`tools/fetch_record.sh`](tools/fetch_record.sh) shallow-fetches that single commit into the
-  ignored `.record/`.
-- [`check_edition.py`](check_edition.py) verifies **every declared quotation verbatim against
-  `.record/<path>`** — never against anything in this repository. There is nothing here to quote.
+- [`record.lock`](record.lock) names the engine, one **commit SHA**, and the exact list of record
+  files this edition cites or quotes. The path list is derived from `edition.json` **and the
+  chapters' own links**, and the checker refuses a lock that has drifted from either.
+- [`record/`](record) is the **committed snapshot**: those files, verbatim, copied out of a checkout
+  of that commit by [`tools/snapshot_record.sh`](tools/snapshot_record.sh). It is derived, never
+  hand-edited, and it is why a reader on the published site can click from a number in the appendix
+  straight through to the `eval.md` it came from.
 
-So a number in this book is true in a checkable sense: it is carried, character for character, by a
-named file at a named commit of the engine.
+### The two layers, and why there are two
+
+1. **Quotations, against `record/`.** Every declared number is verified verbatim in the snapshot.
+   This layer needs nothing but a clone, so it holds identically on a dev box, in CI, and for a
+   stranger with no engine access.
+2. **Snapshot integrity, against the engine.** A committed copy is, by itself, only a copy — it
+   could be edited to agree with the prose and layer 1 would pass against the edit. So whenever the
+   engine is reachable ([`tools/fetch_record.sh`](tools/fetch_record.sh) checks the pinned commit
+   out into the ignored `.record/`), every snapshotted file is diffed against the real repository at
+   that commit, byte for byte, and any drift fails by name.
+
+The checker prints both, on their own lines, every run — including `snapshot integrity: unverified`
+when layer 2 could not run. It never lets a green tick imply a check that did not happen.
 
 ### Bumping the record
 
-Advancing the book's evidence is a deliberate commit, and it looks like this:
+Advancing the book's evidence is a deliberate commit, and it is the only way the evidence moves:
 
-1. edit `sha` in `record.lock` to the new UniForge commit;
-2. `tools/fetch_record.sh` — re-checks `.record/` out at the new commit;
-3. `python3 check_edition.py` — every quotation re-verified against it;
-4. fix whatever moved, or, if nothing moved, commit the one-line SHA change on its own.
+1. edit `sha` in `record.lock` to the new engine commit;
+2. `tools/fetch_record.sh` — check the new commit out;
+3. `tools/snapshot_record.sh` — re-derive `record/` from it;
+4. `python3 check_edition.py` — quotations re-verified, drift reported by file;
+5. fix whatever moved, or commit the SHA and the re-derived snapshot together.
 
-Step 3 is the point. If a bump changes a number the book quotes, the check fails by name and tells
-you which file stopped carrying it. A record bump that goes green is a record bump you can trust.
+All five land in **one** commit. Bumping the pin without re-snapshotting is refused: the snapshot
+records the SHA it was taken at, and it must match the lock.
 
 ## Layout
 
@@ -104,7 +115,7 @@ you which file stopped carrying it. A record bump that goes green is a record bu
 | `edition.json` | the manifest: per-chapter sources, the appendix's sections, the declared quotations, and the excluded-claims guard with the probe sentences that test it |
 | `check_edition.py` | the checker |
 | `gen_appendix.py` · `preprocessor.py` | the appendix generator, and the mdBook hook that runs it on every build |
-| `record.lock` · `tools/fetch_record.sh` | the record contract |
+| `record.lock` · `record/` · `tools/fetch_record.sh` · `tools/snapshot_record.sh` | the record contract: the pin, the committed snapshot, and the two scripts that derive it |
 | `tools/check.sh` · `Makefile` | tier 0 |
 | `ART_DIRECTION.md` · `EDITION_STANDARD.md` · `LEGACY_MIGRATION.md` | the illustration contract, the writing contract, and what was and was not carried over from the legacy manuscript |
 | `FIREWALL.md` | scope of claims |
@@ -112,7 +123,7 @@ you which file stopped carrying it. A record bump that goes green is a record bu
 | `PROVENANCE.md` | where this edition came from |
 
 `book/` (the rendered site) and `.record/` (the fetched engine) are build outputs and are not
-committed.
+committed. `record/` **is** committed — it is the evidence, and `record/README.md` says what it is.
 
 ## Publishing
 
@@ -120,17 +131,16 @@ committed.
 Pages at <https://zacharyelston.github.io/OurBubble/>. It runs the same `tools/check.sh` that
 `make check` runs — one implementation, so CI and the pre-push pass cannot drift.
 
-**Two honest caveats, while the engine record is a private repository.**
+**The published site carries the record.** `chapters/record` is a symlink to `record/`, so mdBook
+copies the snapshot into the built book, and every citation in the appendix is a live link: the lab
+entry, its `spec.md` and `eval.md`, the gate, the data-true figure. The `--rendered` check confirms
+every one of them resolves before anything is deployed. A reader needs no access to the engine, and
+the engine stays private.
 
-1. CI can only fetch the record if a `RECORD_TOKEN` secret exists (a fine-grained PAT with
-   Contents:read on UniForge). Without one the checker cannot run at all, and the workflow builds
-   and publishes while saying so, loudly, in the job summary of every run. It does not pretend to
-   have checked. Set the secret — or make the record repository public — and the quotation check
-   becomes a publish gate with no other change.
-2. The published site does not carry the record, so the appendix's links into `.record/…` — the lab
-   entries, the gates, the data-true figures — resolve only for a reader who has fetched it. A
-   reader on the public site can see exactly which file each number comes from, and cannot yet click
-   through to it.
+One caveat worth stating plainly: CI can only run the **snapshot-integrity** layer if a
+`RECORD_TOKEN` secret exists (a fine-grained PAT with Contents:read on the engine). Without one the
+quotation gate still runs in full, and the workflow says `snapshot integrity unverified —
+RECORD_TOKEN not set` in the job summary of every run rather than implying it checked.
 
 ## Working on it
 

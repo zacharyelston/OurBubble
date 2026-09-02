@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp-5.10 · the miss was inside an error bar we could have drawn</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#34d399}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:940px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 12px}
+  canvas{width:100%;height:auto;display:block;background:#0a0d12;border:1px solid var(--line);border-radius:8px}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:6px}
+  .tile{background:#0a0d12;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  .tile .k{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  .tile .v{font-size:18px;font-variant-numeric:tabular-nums;margin-top:2px}
+  .tile .n{font-size:11px;color:var(--faint)}
+  .pass{color:var(--green)} .fail{color:var(--red)}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+  table.disp{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums;margin-top:6px}
+  table.disp th{color:var(--faint);font-weight:500;text-align:right;padding:4px 8px;border-bottom:1px solid var(--line)}
+  table.disp td{text-align:right;padding:4px 8px;color:var(--mute)}
+  table.disp th:first-child,table.disp td:first-child{text-align:left}
+  table.disp tr.rep td{color:var(--faint);font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The miss was inside an error bar we could have drawn</h1>
+  <p class="sub">Rung 5.6 registered a <b>negative</b>: the fractal dimension of the critical cluster came
+     out <code>2.43782</code> against the 3-D percolation class value <code>2.52295</code>, missing a
+     registered <code>±0.06</code> band, and the miss was locked with a diagnosis. What 5.6 never did was
+     compute the standard error of its own <em>threshold</em> — so that band was never propagated through
+     the steepness 5.6 itself had measured. This rung does that, and adds the one control that settles it:
+     measuring the exponent at a threshold that is known <b>exactly</b>.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Site-diluted <b>toy</b> graphs. <code>p_c(stella-site)</code> is a 🔵
+     constant of this complex — graph mathematics, exact and un-tuned — <b>never</b> a property of matter.
+     <code>d_f</code> is a dimensionless invariant of the percolation class: what is claimed is
+     class-membership <em>resolution</em>, computed. Where a previous miss dissolves, it dissolves into a
+     statement about <b>our own estimator</b>, not about nature. Triangular (exact) and FCC-site
+     (published) are independent answer keys used to license method, not discoveries. Every number below
+     comes from the run's committed <code>data/</code>.</div>
+
+  <div class="panel">
+    <h2>The verdict, made ordering-robust — every candidate locator, its own error bar</h2>
+    <p class="q">Rung 5.9 dissolved the <em>bond</em> version of this negative, but its verdict flipped
+       depending on an unregistered choice in the estimator. So here the test is run at <b>all three</b>
+       candidate thresholds — 5.6's own, and both orderings of the newer estimator — each carrying
+       <em>its own</em> quoted error, propagated through the measured steepness
+       (<code>∂d_f/∂p = 113.4</code>). Grey bars are those propagated bands; the green line is the
+       class value. A locator "dissolves" when the class value falls inside its bar.</p>
+    <canvas id="verdict3" width="880" height="300"></canvas>
+    <div class="take" id="v3take"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The control that settles it — an <em>exactly</em> known threshold and an <em>exactly</em> known exponent</h2>
+    <p class="q">2-D triangular site percolation is the rare case where nothing is approximate:
+       <code>p_c = 1/2</code> exactly (Sykes–Essam 1964; Kesten 1980) and <code>d_f = 91/48</code> exactly
+       (den Nijs 1979 / SLE₆). Measure the exponent <em>at</em> the exact threshold and the locator leaves
+       the experiment entirely, with no literature uncertainty at either end. The dashed ladder shows how
+       fast the answer moves when the threshold is wrong — the same mechanism, 10× gentler than in 3-D.</p>
+    <canvas id="exact" width="880" height="290"></canvas>
+    <div class="take" id="extake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>An unregistered fork in the estimator — and it flips between lattices</h2>
+    <p class="q">With five independent simulation batches you can average the curves and fit once, or fit
+       each batch and average the answers. Nobody had written down which. Rung 5.9 found the two differ by
+       more than the systematic the estimator was built to remove, and picked the ordering its single answer
+       key preferred. Site percolation has <b>two</b> keys — one exact. Bars are each ordering's distance
+       from the key, so <b>shorter is better</b>.</p>
+    <canvas id="fork" width="880" height="250"></canvas>
+    <div class="take" id="forktake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Why this keeps happening: how hard the exponent leans on the threshold</h2>
+    <p class="q">All of it comes back to one number — how much <code>d_f</code> moves per unit of
+       threshold error. It is not a constant of percolation: it grows with dimension and again with the
+       dilution rule, so it has to be re-measured for every variant rather than carried over.</p>
+    <canvas id="sens" width="880" height="200"></canvas>
+    <div class="take" id="senstake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Against the registered predictions (R1)</h2>
+    <table class="disp" id="verdict"></table>
+    <div class="tiles" id="tiles" style="margin-top:12px"></div>
+    <div class="take" id="vtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"ladder":[{"family":"stella_site","label":"5.6-located","p":0.174453,"d_f":2.43793,"sigma_df":0.01956},{"family":"stella_site","label":"5.6-registered-constant","p":0.175200,"d_f":2.52498,"sigma_df":0.01932},{"family":"stella_site","label":"per-batch-extrap","p":0.174369,"d_f":2.42851,"sigma_df":0.02046},{"family":"stella_site","label":"extrap-minus-delta","p":0.174311,"d_f":2.42190,"sigma_df":0.01935},{"family":"stella_site","label":"extrap (5.8 locator)","p":0.174911,"d_f":2.49050,"sigma_df":0.02197},{"family":"stella_site","label":"extrap-plus-delta","p":0.175511,"d_f":2.55795,"sigma_df":0.01737},{"family":"triangular","label":"exact key p=1/2 (0 loc err)","p":0.500000,"d_f":1.89613,"sigma_df":0.00722},{"family":"triangular","label":"exact key minus delta","p":0.495000,"d_f":1.83392,"sigma_df":null},{"family":"triangular","label":"exact key plus delta","p":0.505000,"d_f":1.93692,"sigma_df":null},{"family":"fcc_site","label":"published key (0 loc err)","p":0.1992365,"d_f":2.50814,"sigma_df":0.01334},{"family":"fcc_site","label":"extrap (5.8 locator)","p":0.1988483,"d_f":2.46954,"sigma_df":null}],"estimates":[{"family":"triangular","kind":"threshold","estimator":"aggregate-extrapolated (w=2)","p_c_or_width":0.5025295,"error_bar":0.003137,"r2":0.2424,"err_vs_key":0.002530},{"family":"triangular","kind":"threshold","estimator":"aggregate-naive (all pairs)","p_c_or_width":0.5002226,"error_bar":null,"r2":null,"err_vs_key":0.000223},{"family":"triangular","kind":"threshold","estimator":"aggregate-naive (excl smallest)","p_c_or_width":0.5017219,"error_bar":null,"r2":null,"err_vs_key":0.001722},{"family":"triangular","kind":"threshold","estimator":"per-batch-extrapolated","p_c_or_width":0.5007659,"error_bar":0.001591,"r2":null,"err_vs_key":0.000766},{"family":"triangular","kind":"threshold","estimator":"per-batch-naive (5.6's registered)","p_c_or_width":0.5009859,"error_bar":0.001348,"r2":null,"err_vs_key":0.000986},{"family":"triangular","kind":"error_bar_candidate","estimator":"OLS intercept standard error","p_c_or_width":0.0031369,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"triangular","kind":"error_bar_candidate","estimator":"w-scan spread over w in [1.6..2.4] (5.8's yardstick)","p_c_or_width":0.0004793,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"triangular","kind":"error_bar_candidate","estimator":"per-batch replica sigma","p_c_or_width":0.0015912,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_site","kind":"threshold","estimator":"aggregate-extrapolated (w=2)","p_c_or_width":0.1988483,"error_bar":0.000704,"r2":0.4050,"err_vs_key":0.000388},{"family":"fcc_site","kind":"threshold","estimator":"aggregate-naive (all pairs)","p_c_or_width":0.1995167,"error_bar":null,"r2":null,"err_vs_key":0.000280},{"family":"fcc_site","kind":"threshold","estimator":"aggregate-naive (excl smallest)","p_c_or_width":0.1991889,"error_bar":null,"r2":null,"err_vs_key":0.000048},{"family":"fcc_site","kind":"threshold","estimator":"per-batch-extrapolated","p_c_or_width":0.1993157,"error_bar":0.000209,"r2":null,"err_vs_key":0.000079},{"family":"fcc_site","kind":"threshold","estimator":"per-batch-naive (5.6's registered)","p_c_or_width":0.1994570,"error_bar":0.000296,"r2":null,"err_vs_key":0.000220},{"family":"fcc_site","kind":"error_bar_candidate","estimator":"OLS intercept standard error","p_c_or_width":0.0007042,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_site","kind":"error_bar_candidate","estimator":"w-scan spread over w in [1.6..2.4] (5.8's yardstick)","p_c_or_width":0.0001728,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_site","kind":"error_bar_candidate","estimator":"per-batch replica sigma","p_c_or_width":0.0002091,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"threshold","estimator":"aggregate-extrapolated (w=2)","p_c_or_width":0.1749109,"error_bar":0.000514,"r2":0.1758,"err_vs_key":null},{"family":"stella_site","kind":"threshold","estimator":"aggregate-naive (all pairs)","p_c_or_width":0.1751841,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"threshold","estimator":"aggregate-naive (excl smallest)","p_c_or_width":0.1749835,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"threshold","estimator":"per-batch-extrapolated","p_c_or_width":0.1743689,"error_bar":0.000446,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"threshold","estimator":"per-batch-naive (5.6's registered)","p_c_or_width":0.1744533,"error_bar":0.000410,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"error_bar_candidate","estimator":"OLS intercept standard error","p_c_or_width":0.0005141,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"error_bar_candidate","estimator":"w-scan spread over w in [1.6..2.4] (5.8's yardstick)","p_c_or_width":0.0000415,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"error_bar_candidate","estimator":"per-batch replica sigma","p_c_or_width":0.0004464,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"triangular","kind":"threshold","estimator":"EXACT (Sykes-Essam 1964 / Kesten 1980)","p_c_or_width":0.5000000,"error_bar":null,"r2":null,"err_vs_key":0.000000},{"family":"fcc_site","kind":"threshold","estimator":"published (Lorenz-Ziff 2000)","p_c_or_width":0.1992365,"error_bar":null,"r2":null,"err_vs_key":0.000000},{"family":"triangular","kind":"threshold","estimator":"d_f-anchored inversion","p_c_or_width":0.4999708,"error_bar":null,"r2":null,"err_vs_key":0.000029},{"family":"fcc_site","kind":"threshold","estimator":"d_f-anchored inversion","p_c_or_width":0.1993855,"error_bar":null,"r2":null,"err_vs_key":0.000149},{"family":"stella_site","kind":"threshold","estimator":"d_f-anchored inversion","p_c_or_width":0.1751971,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"triangular","kind":"error_bar_candidate","estimator":"actual error of the aggregate-extrapolated fit vs the key","p_c_or_width":0.0025295,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_site","kind":"error_bar_candidate","estimator":"actual error of the aggregate-extrapolated fit vs the key","p_c_or_width":0.0003882,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"error_bar_candidate","estimator":"aggregate-vs-per-batch ordering systematic","p_c_or_width":0.0005419,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_site","kind":"error_bar_candidate","estimator":"5.6's own replica sigma propagated through its own sensitivity","p_c_or_width":0.0478388,"error_bar":null,"r2":null,"err_vs_key":null}],"verdict":[{"prediction":"P0a","quantity":"per-batch naive mean/sigma vs 5.6's committed (3 families)","measured":"tri 0.500986/0.001348 fcc 0.199457/0.000296 st 0.174453/0.000410","registered":"5.6's committed values (±0.000001)","pass":"true"},{"prediction":"P0b","quantity":"d_f at 5.6's two quoted thresholds","measured":"2.43793 | 2.52498","registered":"2.43782 | 2.52498 (±0.001)","pass":"true"},{"prediction":"P0c","quantity":"d_f (triangular) at the EXACT 1/2","measured":"1.89613","registered":"1.895833 exact (±0.02)","pass":"true"},{"prediction":"P0d","quantity":"d_f (fcc) at the PUBLISHED threshold","measured":"2.50814","registered":"2.52295 (±0.05)","pass":"true"},{"prediction":"P1a","quantity":"p_c (stella aggregate-extrapolated)","measured":"0.174911","registered":"0.174911 (±0.00001) and > 0.174453","pass":"true"},{"prediction":"P1b","quantity":"OLS se (stella) | r2 tri/fcc/stella","measured":"0.000514 | 0.2424/0.4050/0.1758","registered":"se in [0.0003..0.0008] and all r2 < 0.5","pass":"true"},{"prediction":"P1c","quantity":"key error in units of (se | w-spread)","measured":"tri 0.81|5.28  fcc 0.55|2.25","registered":"< 1.5 and > 2 on BOTH keys","pass":"true"},{"prediction":"P2a","quantity":"local d(d_f)/dp | 5.6's secant","measured":"113.4 | 116.7","registered":"both in [80..150]","pass":"true"},{"prediction":"P2b","quantity":"ordering systematic (stella)","measured":"0.000542","registered":"[0.0003..0.0009] aggregate higher","pass":"true"},{"prediction":"P2c","quantity":"ordering licence on BOTH site keys","measured":"tri 0.000766 vs 0.002530 | fcc 0.000079 vs 0.000388","registered":"PER-BATCH closer on both (opposite to 5.9's bond key)","pass":"true"},{"prediction":"P2d","quantity":"propagated band | 5.6's own sigma propagated","measured":"0.0623 | 0.0478","registered":"band in [0.045..0.09] and 5.6's own > 0.7 x 0.06","pass":"true"},{"prediction":"P3a","quantity":"d_f at the 5.8 locator","measured":"2.49050","registered":"2.4905 (±0.01)","pass":"true"},{"prediction":"P3b","quantity":"|d_f − class| vs 5.6's miss","measured":"0.0325 vs 0.08513","registered":"< 0.5 x 5.6's miss and upward","pass":"true"},{"prediction":"P3c","quantity":"z at ALL THREE locators (ordering-robust)","measured":"1.69 | 1.73 | 0.52","registered":"all < 2 (H-DISSOLVE branch)","pass":"true"},{"prediction":"P4a","quantity":"d_f-anchored inversion (triangular) vs the EXACT 1/2","measured":"-0.0000292","registered":"±0.0002","pass":"true"},{"prediction":"P4b","quantity":"d_f-anchored inversion (fcc) vs the published key","measured":"+0.0001490","registered":"±0.0003","pass":"true"},{"prediction":"report-only","quantity":"d_f at the per-batch-extrapolated locator","measured":"2.42851","registered":"—","pass":""},{"prediction":"report-only","quantity":"inversion (stella) vs 5.6's pre-registered constant","measured":"0.175197 vs 0.1752","registered":"— (not independent)","pass":""},{"prediction":"report-only","quantity":"naive-vs-extrapolated accuracy on the keys","measured":"tri 0.000223 vs 0.002530 | fcc 0.000048 vs 0.000388","registered":"— (naive closer on both)","pass":""}],"by_locator":[{"locator":"5.6's own located p_c","p":0.174453,"d_f":2.43793,"loc_err":0.000410,"band":0.0504,"abs_delta":0.0850,"z":1.69,"dissolves":"true"},{"locator":"per-batch extrapolated","p":0.174369,"d_f":2.42851,"loc_err":0.000446,"band":0.0546,"abs_delta":0.0944,"z":1.73,"dissolves":"true"},{"locator":"aggregate extrapolated","p":0.174911,"d_f":2.49050,"loc_err":0.000514,"band":0.0623,"abs_delta":0.0325,"z":0.52,"dissolves":"true"}],"sensitivity":[{"dimension":"2","dilution":"site","lattice":"triangular","sensitivity":10.3,"source":"this run (paired ±0.005)"},{"dimension":"3","dilution":"site","lattice":"fcc","sensitivity":99.4,"source":"this run"},{"dimension":"3","dilution":"site","lattice":"stella","sensitivity":113.4,"source":"this run (paired ±0.0006)"},{"dimension":"3","dilution":"site","lattice":"stella (5.6's secant)","sensitivity":116.7,"source":"recomputed from 5.6's committed record"},{"dimension":"3","dilution":"bond","lattice":"fcc","sensitivity":275.7,"source":"rung 5.9's committed record"},{"dimension":"3","dilution":"bond","lattice":"stella","sensitivity":340.1,"source":"rung 5.9's committed record"}],"fork":[{"label":"triangular site","key":"EXACT p_c = 1/2","aggregate":0.002530,"per_batch":0.000766},{"label":"FCC site","key":"published 0.1992365","aggregate":0.000388,"per_batch":0.000079},{"label":"FCC bond (rung 5.9)","key":"published 0.1201635","aggregate":0.000360,"per_batch":0.000588}],"source":{"commit":"4334cff"}};
+const fmt=(v,d)=>Number(v).toFixed(d===undefined?6:d);
+const DF_3D = 2.52295;              // 3 − β/ν, Wang et al. PRE 87, 052107 (2013)
+const DF_2D = 91/48;                // EXACT: den Nijs 1979 / SLE₆
+const PC_TRI = 0.5;                 // EXACT: Sykes–Essam 1964 / Kesten 1980
+const MISS_56 = 0.08513;            // rung 5.6's registered miss (its committed record)
+const TOL_56 = 0.06;                // rung 5.6's own registered d_f tolerance
+const C={st:'#c084fc', tri:'#06b6d4', fcc:'#eab308', key:'#34d399', old:'#ef4444', mid:'#94a3b8'};
+
+const lad  = f => D.ladder.filter(r=>r.family===f);
+const ladl = (f,pre) => lad(f).find(r=>r.label.startsWith(pre));
+const est  = (f,k,pre) => { const r=D.estimates.find(x=>x.family===f&&x.kind===k&&x.estimator.startsWith(pre)); return r?r.p_c_or_width:null; };
+const vrow = p => D.verdict.find(r=>r.prediction===p);
+const sens = D.sensitivity;
+const SENS_ST = Number((sens.find(s=>s.lattice==='stella'&&s.dilution==='site')||{}).sensitivity);
+
+function tile(el,k,v,n,cls){
+  const d=document.createElement('div'); d.className='tile';
+  d.innerHTML='<div class="k">'+k+'</div><div class="v'+(cls?' '+cls:'')+'">'+v+'</div>'+(n?'<div class="n">'+n+'</div>':'');
+  document.getElementById(el).appendChild(d);
+}
+
+// ---------- Panel 1: the three-locator verdict ----------
+(function(){
+  const c=document.getElementById('verdict3'), x=c.getContext('2d');
+  const W=c.width,H=c.height,L=210,R=120,T=34,B=64;
+  const rows=D.by_locator;
+  const dmin=Math.min(DF_3D, ...rows.map(r=>r.d_f-r.band))-0.02;
+  const dmax=Math.max(DF_3D, ...rows.map(r=>r.d_f+r.band))+0.02;
+  const X=v=>L+((v-dmin)/(dmax-dmin))*(W-L-R);
+  const rh=(H-T-B)/rows.length;
+  // 5.6's own registered tolerance, for scale (clamped to the plot area — the band is wider than
+  // the data range, and a fill running under the z column would read as part of the axis)
+  const clamp=v=>Math.max(L,Math.min(W-R,X(v)));
+  x.fillStyle='rgba(239,68,68,.10)';
+  x.fillRect(clamp(DF_3D-TOL_56),T-8,clamp(DF_3D+TOL_56)-clamp(DF_3D-TOL_56),H-T-B+16);
+  x.strokeStyle='rgba(239,68,68,.5)'; x.setLineDash([3,3]);
+  for(const v of [DF_3D-TOL_56,DF_3D+TOL_56]){
+    if(X(v)<L||X(v)>W-R) continue; // off-scale edge of the band: drawn as the shaded region only
+    x.beginPath(); x.moveTo(X(v),T-8); x.lineTo(X(v),H-B+8); x.stroke();
+  }
+  x.setLineDash([]);
+  x.fillStyle='rgba(239,68,68,.85)'; x.font='10px system-ui'; x.textAlign='center';
+  x.fillText("5.6's registered ±"+TOL_56+" band", X(DF_3D), T-14);
+  // the class value
+  x.strokeStyle=C.key; x.lineWidth=1.8;
+  x.beginPath(); x.moveTo(X(DF_3D),T-8); x.lineTo(X(DF_3D),H-B+8); x.stroke();
+  x.fillStyle=C.key; x.font='11px system-ui'; x.textAlign='left';
+  x.fillText('class '+DF_3D, X(DF_3D)+6, H-B+22);
+  // rows
+  rows.forEach((r,i)=>{
+    const y=T+i*rh+rh/2;
+    const col = r.locator.startsWith("5.6") ? C.old : (r.locator.startsWith('aggregate') ? C.st : C.mid);
+    x.strokeStyle=col; x.lineWidth=7; x.globalAlpha=.30;
+    x.beginPath(); x.moveTo(X(r.d_f-r.band),y); x.lineTo(X(r.d_f+r.band),y); x.stroke(); x.globalAlpha=1;
+    x.lineWidth=1.5;
+    for(const s of [-1,1]){ x.beginPath(); x.moveTo(X(r.d_f+s*r.band),y-8); x.lineTo(X(r.d_f+s*r.band),y+8); x.stroke(); }
+    x.fillStyle=col; x.beginPath(); x.arc(X(r.d_f),y,5,0,7); x.fill();
+    x.font='11px system-ui'; x.textAlign='right'; x.fillStyle='#9fb0c3';
+    x.fillText(r.locator, L-12, y-3);
+    x.fillStyle=C.faint||'#6b7c90'; x.font='10px system-ui';
+    x.fillText('p = '+fmt(r.p)+'   loc. err ±'+fmt(r.loc_err), L-12, y+11);
+    x.textAlign='left'; x.font='11px system-ui'; x.fillStyle=col;
+    x.fillText('d_f = '+fmt(r.d_f,4), X(r.d_f)+9, y-8);
+    x.fillStyle=String(r.dissolves)==='true'?C.key:C.old; x.font='600 11px system-ui';
+    x.fillText('z = '+fmt(r.z,2), W-R+14, y+4);
+  });
+  x.fillStyle='#6b7c90'; x.font='10px system-ui'; x.textAlign='center';
+  x.fillText('measured  d_f   (bars = the locator’s own error propagated through ∂d_f/∂p)', (L+W-R)/2, H-14);
+  x.textAlign='left'; x.fillStyle='#9fb0c3'; x.font='10px system-ui';
+  x.fillText('dissolves if', W-R+14, T-14); x.fillText('z < 2', W-R+14, T-3);
+
+  const own = rows.find(r=>r.locator.startsWith("5.6"));
+  const agg = rows.find(r=>r.locator.startsWith('aggregate'));
+  const p2d = vrow('P2d').measured.split(' | ');
+  document.getElementById('v3take').innerHTML =
+    'All three dissolve — so the conclusion does <b>not</b> hinge on the estimator choice, which is the '+
+    'part 5.9 could not claim. And notice the top row: at <b>5.6’s own threshold</b>, with 5.6’s own '+
+    'published error bar, the class value is already inside (z = <b>'+fmt(own.z,2)+'</b>). That is the '+
+    'result in one line — 5.6’s own quoted ±0.000410, pushed through the steepness 5.6 itself measured, '+
+    'is <b>±'+p2d[1]+'</b>, about <b>80%</b> of the ±'+TOL_56+' band it registered. The better locator '+
+    '(bottom row, z = <b>'+fmt(agg.z,2)+'</b>) sharpens the picture but is not what decides it: the miss '+
+    'was inside an error bar that could have been drawn from numbers already on the page.';
+})();
+
+// ---------- Panel 2: the exact control ----------
+(function(){
+  const c=document.getElementById('exact'), x=c.getContext('2d');
+  const W=c.width,H=c.height,L=70,R=250,T=26,B=56;
+  const key=ladl('triangular','exact key p'), lo=ladl('triangular','exact key minus'), hi=ladl('triangular','exact key plus');
+  const pts=[lo,key,hi].filter(Boolean);
+  const xlo=Math.min(...pts.map(p=>p.p))-0.0015, xhi=Math.max(...pts.map(p=>p.p))+0.0015;
+  const ylo=Math.min(DF_2D,...pts.map(p=>p.d_f))-0.02, yhi=Math.max(DF_2D,...pts.map(p=>p.d_f))+0.02;
+  const X=v=>L+((v-xlo)/(xhi-xlo))*(W-L-R), Y=v=>H-B-((v-ylo)/(yhi-ylo))*(H-T-B);
+  x.strokeStyle=C.key; x.lineWidth=1.8;
+  x.beginPath(); x.moveTo(L,Y(DF_2D)); x.lineTo(W-R,Y(DF_2D)); x.stroke();
+  x.fillStyle=C.key; x.font='11px system-ui'; x.textAlign='left';
+  x.fillText('EXACT  d_f = 91/48 = '+DF_2D.toFixed(6), L+6, Y(DF_2D)-7);
+  x.strokeStyle='#233042'; x.lineWidth=1;
+  x.beginPath(); x.moveTo(L,T); x.lineTo(L,H-B); x.lineTo(W-R,H-B); x.stroke();
+  x.fillStyle='#6b7c90'; x.font='11px system-ui'; x.textAlign='right';
+  for(let v=Math.ceil(ylo*20)/20; v<=yhi; v+=0.05) x.fillText(v.toFixed(2), L-8, Y(v)+4);
+  x.textAlign='center';
+  pts.forEach(p=>x.fillText(p.p.toFixed(3), X(p.p), H-B+17));
+  x.fillText('threshold used for the measurement,  p', (L+W-R)/2, H-14);
+  // the exact threshold marker
+  x.strokeStyle=C.key; x.globalAlpha=.45; x.setLineDash([2,4]);
+  x.beginPath(); x.moveTo(X(PC_TRI),T); x.lineTo(X(PC_TRI),H-B); x.stroke();
+  x.setLineDash([]); x.globalAlpha=1;
+  // the ladder
+  x.strokeStyle='rgba(6,182,212,.5)'; x.lineWidth=1.4; x.setLineDash([3,3]);
+  x.beginPath(); pts.forEach((p,i)=> i? x.lineTo(X(p.p),Y(p.d_f)) : x.moveTo(X(p.p),Y(p.d_f))); x.stroke(); x.setLineDash([]);
+  pts.forEach(p=>{
+    const isKey=Math.abs(p.p-PC_TRI)<1e-12, col=isKey?C.key:C.tri;
+    if(p.sigma_df){ x.strokeStyle=col; x.lineWidth=1.5;
+      x.beginPath(); x.moveTo(X(p.p),Y(p.d_f-p.sigma_df)); x.lineTo(X(p.p),Y(p.d_f+p.sigma_df)); x.stroke(); }
+    x.fillStyle=col; x.beginPath(); x.arc(X(p.p),Y(p.d_f),isKey?5.5:4,0,7); x.fill();
+    x.font=(isKey?'600 ':'')+'11px system-ui'; x.textAlign='center';
+    x.fillText(fmt(p.d_f,4), X(p.p), Y(p.d_f)-13);
+    if(isKey){ x.fillStyle='#6b7c90'; x.font='10px system-ui'; x.fillText('EXACT p_c = 1/2', X(p.p), H-B+31); }
+  });
+  // the legend / numbers
+  const dTri=Math.abs(key.d_f-DF_2D), sTri=Number((sens.find(s=>s.dimension==='2')||{}).sensitivity);
+  const invTri=vrow('P4a').measured, fccKey=ladl('fcc_site','published key');
+  x.textAlign='left'; x.font='11px system-ui';
+  let yy=T+14;
+  const line=(t,col)=>{ x.fillStyle=col||'#9fb0c3'; x.fillText(t, W-R+14, yy); yy+=16; };
+  line('At the exact threshold:'); line('|d_f − 91/48| = '+dTri.toFixed(5), C.key);
+  line('= '+(dTri/key.sigma_df).toFixed(2)+' σ of one statistical', '#6b7c90'); line('error bar.', '#6b7c90');
+  yy+=6; line('∂d_f/∂p here = '+sTri.toFixed(1), C.tri);
+  line('(3-D site is '+SENS_ST.toFixed(0)+' — see below)', '#6b7c90');
+  yy+=6; line('Inverting it: anchor d_f at', '#9fb0c3'); line('91/48 and read off p_c →', '#9fb0c3');
+  line('error '+invTri+' vs the exact ½', C.key);
+  yy+=8; line('3-D published key (FCC-site):', '#9fb0c3');
+  line('d_f = '+fmt(fccKey.d_f,5)+', |Δ| = '+Math.abs(fccKey.d_f-DF_3D).toFixed(5), C.fcc);
+
+  document.getElementById('extake').innerHTML =
+    'This is the arm that could have killed the rung, and it does the opposite. With the threshold known '+
+    '<b>exactly</b> and the exponent known <b>exactly</b>, the finite-size machinery returns '+
+    '<b>'+fmt(key.d_f,5)+'</b> against <b>'+DF_2D.toFixed(6)+'</b> — a gap of <b>'+dTri.toFixed(5)+'</b>, or '+
+    (dTri/key.sigma_df).toFixed(2)+' of one statistical error bar. Nothing is wrong with how the exponent '+
+    'is measured. Move the threshold by ±0.005 and the answer swings from '+fmt(lo.d_f,3)+' to '+
+    fmt(hi.d_f,3)+': the exponent is not really testing the universality class here, it is <b>reading back '+
+    'the threshold you fed it</b>. Which is also why it inverts so well — anchoring on the exact exponent '+
+    'recovers the exact threshold to <b>'+invTri+'</b>. (That inversion consumes the known exponent, so it '+
+    'is a cross-check, never a prediction.)';
+})();
+
+// ---------- Panel 3: the ordering fork ----------
+(function(){
+  const c=document.getElementById('fork'), x=c.getContext('2d');
+  const W=c.width,H=c.height,L=240,R=150,T=26,B=52;
+  const groups=D.fork;
+  const vals=groups.flatMap(g=>[g.aggregate,g.per_batch]);
+  const lo=Math.min(...vals)/1.8, hi=Math.max(...vals)*1.8;
+  const X=v=>L+(Math.log(v/lo)/Math.log(hi/lo))*(W-L-R);
+  const gh=(H-T-B)/groups.length;
+  x.strokeStyle='#233042'; x.beginPath(); x.moveTo(L,T); x.lineTo(L,H-B); x.lineTo(W-R,H-B); x.stroke();
+  x.fillStyle='#6b7c90'; x.font='10px system-ui'; x.textAlign='center';
+  for(const t of [3e-5,1e-4,3e-4,1e-3,3e-3]) if(t>lo&&t<hi){
+    x.strokeStyle='#1a2430'; x.beginPath(); x.moveTo(X(t),T); x.lineTo(X(t),H-B); x.stroke();
+    x.fillText(t.toExponential(0).replace('e-','e−'), X(t), H-B+16);
+  }
+  x.fillText('distance from the answer key, in units of p  (log scale — shorter is better)', (L+W-R)/2, H-12);
+  groups.forEach((g,i)=>{
+    const y0=T+i*gh+gh*0.16, bh=gh*0.28;
+    [['aggregate-then-extrapolate',g.aggregate,C.st],['extrapolate-then-average',g.per_batch,C.mid]].forEach((b,j)=>{
+      const y=y0+j*(bh+3);
+      x.fillStyle=b[2]; x.globalAlpha=.8; x.fillRect(L,y,X(b[1])-L,bh); x.globalAlpha=1;
+      x.fillStyle=b[2]; x.font='10px system-ui'; x.textAlign='left';
+      x.fillText(b[1].toExponential(2).replace('e-','e−'), X(b[1])+6, y+bh/2+3.5);
+      if(i===0){ x.fillStyle='#9fb0c3'; x.fillText(b[0], W-R+14, T+14+j*15); }
+    });
+    x.fillStyle='#e6edf5'; x.font='11px system-ui'; x.textAlign='right';
+    x.fillText(g.label, L-12, y0+bh-1);
+    x.fillStyle='#6b7c90'; x.font='10px system-ui';
+    x.fillText(g.key, L-12, y0+bh+13);
+    const winner = g.per_batch < g.aggregate ? 'per-batch' : 'aggregate';
+    x.fillStyle = winner==='per-batch' ? C.mid : C.st; x.font='600 10px system-ui';
+    x.fillText(winner+' wins', L-12, y0+bh+27);
+  });
+  document.getElementById('forktake').innerHTML =
+    'Three answer keys, and the ordering that wins is <b>not the same one</b>. On both site lattices — '+
+    'including the one where the threshold is known <em>exactly</em> — averaging the per-batch fits is '+
+    '3–5× more accurate. On the bond lattice measured one rung earlier, the aggregate ordering won. So '+
+    'there is no universal right answer here, and the licence claimed from a single key does not '+
+    'generalise: <b>the aggregation order is a knob that has to be declared per experiment</b>. It matters '+
+    'because on bond data the two settings gave opposite verdicts about the very negative being '+
+    're-examined; here, fortunately, they agree (panel 1).';
+})();
+
+// ---------- Panel 4: the sensitivity ladder ----------
+(function(){
+  const c=document.getElementById('sens'), x=c.getContext('2d');
+  const W=c.width,H=c.height,L=250,R=90,T=20,B=44;
+  const rows=sens.filter(s=>!s.lattice.includes('secant'));
+  const vals=rows.map(r=>Number(r.sensitivity));
+  const hi=Math.max(...vals)*1.15;
+  const X=v=>L+(v/hi)*(W-L-R);
+  const rh=(H-T-B)/rows.length;
+  x.strokeStyle='#233042'; x.beginPath(); x.moveTo(L,T); x.lineTo(L,H-B); x.lineTo(W-R,H-B); x.stroke();
+  x.fillStyle='#6b7c90'; x.font='10px system-ui'; x.textAlign='center';
+  for(let t=0;t<=hi;t+=100) if(t>0){ x.strokeStyle='#1a2430'; x.beginPath(); x.moveTo(X(t),T); x.lineTo(X(t),H-B); x.stroke(); x.fillText(String(t), X(t), H-B+15); }
+  x.fillText('∂d_f/∂p  —  how much the exponent moves per unit of threshold error', (L+W-R)/2, H-12);
+  rows.forEach((r,i)=>{
+    const y=T+i*rh+rh*0.24, bh=rh*0.5, v=Number(r.sensitivity);
+    const col = r.dilution==='bond' ? C.old : (r.dimension==='2' ? C.tri : C.fcc);
+    x.fillStyle=col; x.globalAlpha=.8; x.fillRect(L,y,X(v)-L,bh); x.globalAlpha=1;
+    x.fillStyle=col; x.font='600 11px system-ui'; x.textAlign='left';
+    x.fillText(v.toFixed(1), X(v)+7, y+bh/2+4);
+    x.fillStyle='#9fb0c3'; x.font='11px system-ui'; x.textAlign='right';
+    x.fillText(r.dimension+'-D  '+r.dilution+'  ·  '+r.lattice, L-12, y+bh/2+4);
+  });
+  document.getElementById('senstake').innerHTML =
+    'One number explains every rung in this thread. In 2-D it is about <b>10</b> — a threshold error of a '+
+    'thousandth costs a hundredth of an exponent, and nobody notices. In 3-D site percolation it is '+
+    '<b>~100</b>, and in 3-D <em>bond</em> percolation <b>~300</b>. So the same threshold precision that '+
+    'is perfectly adequate in 2-D is worth a tenth of an exponent in 3-D bond — which is exactly the '+
+    'order of both registered "misses". It is not a constant of percolation: it grows with dimension and '+
+    'again with the dilution rule, so it has to be <b>re-measured for each variant</b> rather than carried '+
+    'across, and any exponent quoted at a <em>located</em> critical point needs this number attached.';
+})();
+
+// ---------- Panel 5: verdict ----------
+(function(){
+  const t=document.getElementById('verdict');
+  let h='<tr><th>prediction</th><th>quantity</th><th>measured</th><th>registered</th><th>verdict</th></tr>';
+  for(const r of D.verdict){
+    const rep = r.prediction==='report-only';
+    const ok = String(r.pass)==='true';
+    h+='<tr'+(rep?' class="rep"':'')+'><td>'+r.prediction+'</td><td style="text-align:left">'+r.quantity+
+       '</td><td style="color:#e6edf5">'+r.measured+'</td><td>'+r.registered+'</td><td class="'+
+       (rep?'':(ok?'pass':'fail'))+'">'+(rep?'—':(ok?'PASS':'FAIL'))+'</td></tr>';
+  }
+  t.innerHTML=h;
+  const gated=D.verdict.filter(r=>r.prediction!=='report-only');
+  const all=gated.every(r=>String(r.pass)==='true');
+  const agg=D.by_locator.find(r=>r.locator.startsWith('aggregate'));
+  tile('tiles','p_c(stella-site), re-located',fmt(est('stella_site','threshold','aggregate-extrapolated')),
+       '±'+fmt(est('stella_site','error_bar_candidate','OLS'))+' — 5.6 had 0.174453');
+  tile('tiles','d_f there',fmt(agg.d_f,4),"5.6: 2.43782 — class "+DF_3D+", its band ±"+TOL_56);
+  tile('tiles','worst z of three locators',fmt(Math.max(...D.by_locator.map(r=>r.z)),2)+'σ','ordering-robust: all three < 2','pass');
+  tile('tiles','verdict', all?'H-DISSOLVE':'H-CERTIFY', 'both branches registered before the run (P3c)', all?'pass':'fail');
+  document.getElementById('vtake').innerHTML = all
+    ? 'All sixteen gated predictions hold and the registered <b>H-DISSOLVE</b> branch is the outcome. '+
+      '5.6 is <b>not</b> retracted: every band it registered held, its numbers reproduce here to the paper '+
+      'trail’s own precision, and its scope-statement stands verbatim. What changes is the sentence '+
+      'underneath — the miss measured our threshold, not the lattice — and that change is written into '+
+      '5.6’s own eval, dated and marked. Honest limits, all pre-registered: this does <b>not</b> confirm '+
+      'the exponent (the propagated band is far too wide, by design and by measurement), the threshold is '+
+      '<b>not</b> re-quoted as a new headline constant, and the newer estimator is <b>not</b> demonstrably '+
+      'more accurate — on all three answer keys the plain mean of the crossings is in fact closer.'
+    : 'A registered prediction failed — see <code>eval.md</code>. If it is P3c, this is the pre-registered '+
+      '<b>H-CERTIFY</b> outcome, not a broken rung (R5).';
+})();
+
+document.getElementById('cap').innerHTML =
+  'Gate: <code>core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs</code> · spec: '+
+  '<code>lab/warp-5-universality/0510-site-locator-reprocess/spec.md</code> (R1, committed before the '+
+  'run) · data: this entry’s committed <code>data/</code>, whose input is rung 5.6’s '+
+  '<code>rw_curves.csv</code> read-only · answer keys: Sykes &amp; Essam 1964 / Kesten 1980 (exact ½), '+
+  'den Nijs 1979 / SLE₆ (exact 91/48), Lorenz &amp; Ziff, J. Stat. Phys. 98, 961 (2000), and Wang, Zhou, '+
+  'Zhang, Garoni, Deng, PRE 87, 052107 (2013) · regenerate: <code>cargo run -p viz --bin '+
+  'gen_site_locator -- '+D.source.commit+'</code> · commit <code>'+D.source.commit+'</code>. '+
+  'Self-contained, no external assets (R10).';
+</script>
+</body>
+</html>

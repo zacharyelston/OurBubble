@@ -1,0 +1,6 @@
+experiment,exponent,coefficient,r2,theory_exponent
+synthetic_3x^-2,-2.000000,3.000000,1.000000000,-2
+casimir_force,-2.007432,0.134633,0.999996,-2
+heat_kernel_d1,-0.500000,1.002053,0.999999,1
+heat_kernel_d2,-1.000000,2.004106,0.999999,2
+heat_kernel_d3,-1.500000,3.006158,0.999999,3

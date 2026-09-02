@@ -13,14 +13,31 @@ from typing import Dict, Iterable, List, Sequence
 
 EDITION_DIR = Path(__file__).resolve().parent
 
-# The record is a **different repository**, pinned by SHA in `record.lock` and checked out into
-# `.record/` by `tools/fetch_record.sh`. Before the book moved out of UniForge this was simply the
-# enclosing repository root, and the distinction did not exist; now it does, and it is the whole
-# point. Every declared entry, gate, figure, standard and quotation source below is resolved against
-# the pinned checkout — never against anything in this repository — so a quotation can only pass by
-# being verbatim in the engine's record at a commit written down and reviewable.
+# THE RECORD, IN TWO LAYERS.
+#
+# The evidence is a different repository — the UniForge engine — pinned by SHA in `record.lock`, and
+# it is private. That left the book in an awkward position: it could tell a reader which file every
+# number came from and then not let them open it. So the cited files are **committed here**, in
+# `record/`, copied verbatim out of a checkout of the pinned commit.
+#
+#   RECORD  = `record/`   the committed snapshot. Always present, in every clone and on the
+#                         published site. **Quotations are verified against this**, so the
+#                         quotation gate never depends on engine access.
+#   FETCHED = `.record/`  a checkout of the pinned commit, when someone can reach the engine.
+#                         Used for one thing: proving `record/` still equals it, byte for byte.
+#
+# The split is what keeps the snapshot honest. On its own a committed copy is just a copy — it could
+# be edited to say anything, and the quotation check would happily pass against the edit. The
+# integrity layer is what makes it evidence: whenever the engine is reachable, every snapshotted
+# path is diffed against the real repository at the pinned commit, and any drift fails loudly. When
+# it is not reachable the check says so rather than implying it ran.
 RECORD_LOCK = EDITION_DIR / "record.lock"
-RECORD_DIR = EDITION_DIR / ".record"
+RECORD_DIR = EDITION_DIR / "record"
+FETCHED_DIR = EDITION_DIR / ".record"
+
+# The commit the snapshot was taken at, written by `tools/snapshot_record.sh`. The scaffolding it
+# generates alongside is listed in `record/.generated` and excluded from the comparison.
+SNAPSHOT_STAMP = ".snapshot-sha"
 MANIFEST_PATH = EDITION_DIR / "edition.json"
 SUMMARY_PATH = EDITION_DIR / "chapters" / "SUMMARY.md"
 APPENDIX_FILE = "chapters/the-simulations.md"
@@ -522,7 +539,7 @@ def declared_record_paths(manifest: Dict[str, object]) -> List[str]:
     have been quietly, provably wrong on its first day.
     """
     paths = set()
-    prefix = f"../{RECORD_DIR.name}/"
+    prefix = f"{RECORD_DIR.name}/"
     for chapter in sorted((EDITION_DIR / "chapters").glob("*.md")):
         markdown = chapter.read_text(encoding="utf-8")
         for raw in MARKDOWN_LINK.findall(markdown) + HTML_LINK.findall(markdown):
@@ -540,21 +557,101 @@ def declared_record_paths(manifest: Dict[str, object]) -> List[str]:
     return sorted(paths)
 
 
+def generated_paths() -> set:
+    """The snapshot's scaffolding, as `record/.generated` lists it.
+
+    An explicit list rather than a name heuristic, and the reason is a caught bug: the first version
+    guessed — skip `index.html`, skip an `.html` beside a text file, skip dotfiles — and that guess
+    silently excluded thirteen real engine files (`data/.gitkeep`) from the byte-for-byte
+    comparison. The check still passed; it was just checking less than it claimed. The generator now
+    writes down what it made, so record and scaffolding are told apart by record, not by resemblance.
+    """
+    listing = RECORD_DIR / ".generated"
+    if not listing.exists():
+        return set()
+    return {line.strip() for line in listing.read_text(encoding="utf-8").splitlines() if line.strip()}
+
+
+def snapshot_files(root: Path, cited: Sequence[str], skip: set = frozenset()) -> Dict[str, bytes]:
+    """The **verbatim** files under one root, keyed by record-relative path.
+
+    Walks only the cited paths, so a stray file elsewhere under `record/` is never mistaken for
+    evidence. `skip` carries the generated view layer when reading the snapshot, and is empty when
+    reading the engine — which has no scaffolding to skip.
+    """
+    out: Dict[str, bytes] = {}
+    for entry in cited:
+        base = root / entry
+        candidates = sorted(base.rglob("*")) if base.is_dir() else [base]
+        for path in candidates:
+            if not path.is_file():
+                continue
+            rel = path.relative_to(root).as_posix()
+            if rel in skip:
+                continue
+            out[rel] = path.read_bytes()
+    return out
+
+
+def check_snapshot_integrity(cited: Sequence[str], errors: List[str]) -> str:
+    """Layer 2 — **`record/` is still byte-for-byte the engine at the pinned commit.**
+
+    This is the check that turns a committed copy into evidence. Layer 1 verifies every quotation
+    against `record/`, and would pass just as happily against a `record/` somebody had edited to
+    agree with the prose; on its own it proves the book is self-consistent, not that it is true.
+    Here the snapshot is diffed against the real repository — same commit, same bytes — and any
+    difference at all is a failure naming the file.
+
+    It can only run when the engine is reachable, which for a private repository means locally, or in
+    CI with a token. When it cannot run it returns a status saying so and asserts nothing, because a
+    check that quietly skips is worse than one that is absent: it teaches people the green tick means
+    something it does not.
+    """
+    if not FETCHED_DIR.exists():
+        return "unverified — .record/ not fetched"
+
+    engine = snapshot_files(FETCHED_DIR, cited)
+    committed = snapshot_files(RECORD_DIR, cited, skip=generated_paths())
+
+    drifted = 0
+    for rel in sorted(set(engine) | set(committed)):
+        if rel not in committed:
+            errors.append(f"snapshot integrity: {rel} is in the engine but missing from record/")
+            drifted += 1
+        elif rel not in engine:
+            errors.append(f"snapshot integrity: record/{rel} is not in the engine at this commit")
+            drifted += 1
+        elif engine[rel] != committed[rel]:
+            errors.append(
+                f"snapshot integrity: record/{rel} differs from the engine at the pinned commit — "
+                f"re-run `tools/snapshot_record.sh`; if the bytes changed on purpose, that is a "
+                f"record bump and belongs in record.lock"
+            )
+            drifted += 1
+
+    # The status line has to be the *outcome*, not the fact that the comparison happened. A tamper
+    # test caught this reading "verified — 150 files byte-for-byte" on the same run that reported
+    # drift: the errors were correct and the headline contradicted them, which is the one thing a
+    # status line must never do.
+    if drifted:
+        return f"FAILED — {drifted} of {len(committed)} files differ from the engine"
+    return f"verified — {len(committed)} files byte-for-byte"
+
+
 def check_record(manifest: Dict[str, object], errors: List[str]) -> str:
-    """The record contract: the right repository, at the pinned commit, carrying the declared files.
+    """The record contract: the right repository, the pinned commit, the declared files, present.
 
-    This is the check the move out of UniForge made necessary. The evidence used to be in the same
-    working tree as the prose, so "is the quotation still true?" was answered against whatever was
-    checked out. Now the answer is against **one commit, written down** — which is strictly stronger,
-    and only as strong as this function. Three things must hold before any quotation is trusted:
+    Three things must hold before any quotation is trusted:
 
-    1. `.record/` exists (someone ran the fetcher), and
-    2. it is the commit `record.lock` names — not a stale checkout, not somebody's working tree, and
-    3. `record.lock`'s path list is exactly what `edition.json` depends on, so the lock cannot
-       quietly under-declare the footprint it is pinning.
+    1. `record.lock` names a repository and a full commit id;
+    2. its path list is exactly what `edition.json` and the chapters depend on, so the lock cannot
+       quietly under-declare the footprint it is pinning; and
+    3. the committed snapshot at `record/` carries every cited path, and is stamped with that commit.
 
-    Bumping the record is therefore a deliberate act: edit the SHA, re-fetch, re-run this. If a
-    quotation stopped being verbatim between the two commits, the checker says so by name.
+    Note what is *not* here any more: engine access. Quotations are checked against `record/`, which
+    every clone has, so the gate holds on a machine that has never seen the engine. Proving the
+    snapshot still equals the engine is `check_snapshot_integrity`'s job, and it is separate
+    precisely because it is the half that cannot always run.
     """
     lock = load_lock()
     if not lock:
@@ -581,30 +678,32 @@ def check_record(manifest: Dict[str, object], errors: List[str]) -> str:
 
     if not RECORD_DIR.exists():
         errors.append(
-            f"the record is not fetched: {RECORD_DIR.name}/ is absent. Run `tools/fetch_record.sh` "
-            f"to check out {repo} at {sha[:12] or '?'} — every quotation below is verified against it"
+            f"the record snapshot is absent: {RECORD_DIR.name}/ is not in this repository. It is "
+            f"committed, so this is not a fetch — restore it, or re-derive it with "
+            f"`tools/fetch_record.sh && tools/snapshot_record.sh`"
         )
-        return f"{repo}@{sha[:12]} (NOT FETCHED)"
+        return f"{repo}@{sha[:12]} (NO SNAPSHOT)"
 
-    stamp = RECORD_DIR / ".fetched-sha"
-    fetched = stamp.read_text(encoding="utf-8").strip() if stamp.exists() else ""
-    if not fetched:
-        head = RECORD_DIR / ".git" / "HEAD"
-        fetched = "unknown"
-        if head.exists():
-            import subprocess  # local: only needed when the stamp is absent
-
-            try:
-                fetched = subprocess.run(
-                    ["git", "-C", str(RECORD_DIR), "rev-parse", "HEAD"],
-                    capture_output=True, text=True, check=True,
-                ).stdout.strip()
-            except (OSError, subprocess.CalledProcessError):
-                fetched = "unknown"
-    if fetched != sha:
+    stamp = RECORD_DIR / SNAPSHOT_STAMP
+    stamped = stamp.read_text(encoding="utf-8").strip() if stamp.exists() else ""
+    if stamped != sha:
         errors.append(
-            f"the fetched record is {fetched} but record.lock pins {sha} — re-run "
-            f"`tools/fetch_record.sh`, or bump record.lock deliberately if the move was intended"
+            f"the snapshot is stamped {stamped or 'nothing'} but record.lock pins {sha} — "
+            f"re-run `tools/fetch_record.sh && tools/snapshot_record.sh`. Bumping the pin without "
+            f"re-snapshotting would leave the book quoting one commit and citing another"
+        )
+
+    for entry in declared:
+        if not (RECORD_DIR / entry).exists():
+            errors.append(f"the snapshot is missing a cited path: {entry}")
+
+    # The symlink is load-bearing, not decoration: it is how mdBook carries the snapshot into the
+    # built book, and therefore how a record link resolves on the published site.
+    link = EDITION_DIR / "chapters" / RECORD_DIR.name
+    if not link.is_symlink():
+        errors.append(
+            "chapters/record is not a symlink to ../record — without it mdBook cannot copy the "
+            "snapshot into the built book and every record link is dead on the published site"
         )
 
     return f"{repo}@{sha[:12]}"
@@ -651,13 +750,18 @@ def main() -> int:
     forbidden_patterns = list(manifest.get("forbidden_chapter_patterns", []))
     errors: List[str] = []
 
-    # The record contract first, and it short-circuits: with no `.record/` every declared entry,
-    # gate, figure and quotation source is "missing", and a hundred errors saying that would bury
-    # the one that explains why.
+    # The record contract first, and it short-circuits: with no snapshot every declared entry, gate,
+    # figure and quotation source is "missing", and a hundred errors saying that would bury the one
+    # that explains why.
     pin = check_record(manifest, errors)
     print(f"record: {pin}", flush=True)
     if not RECORD_DIR.exists():
         return report(errors, [], {}, manifest, args)
+
+    # Layer 2. Reported on its own line, always — including when it could not run, because a reader
+    # of this output should never have to guess which half of the contract was checked.
+    integrity = check_snapshot_integrity(declared_record_paths(manifest), errors)
+    print(f"snapshot integrity: {integrity}", flush=True)
 
     # The guard is tested before it is trusted, on every run — not only under --self-test.
     self_test(manifest, errors)

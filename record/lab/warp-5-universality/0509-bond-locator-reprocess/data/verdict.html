@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0509-bond-locator-reprocess/data/verdict.csv · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0509-bond-locator-reprocess/data/verdict.csv</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../../index.html">Our Bubble</a>.</div><pre>prediction,quantity,measured,registered,pass
+P0a,stella per-batch naive mean / sigma (5.7 copy fidelity),0.099641 / 0.000312,0.099641 / 0.000312 (±0.000001),true
+P0b,d_f at 5.7&#x27;s located p_c,2.02746,2.02762 (±0.001),true
+P0c,d_f (fcc) at the PUBLISHED threshold,2.51943,2.52295 (±0.05),true
+P1a,p_c (stella aggregate-extrapolated),0.100648,0.100648 (±0.00001) and &gt; 0.099641,true
+P1b,OLS intercept se (stella) / r2 stella / r2 fcc,0.000518 / 0.0022 / 0.1527,[0.0003..0.0008] / both &lt; 0.3,true
+P1c,fcc key error in units of (se | w-spread),1.10 / 6.09,&lt; 2.5 and &gt; 3,true
+P2a,local ∂d_f/∂p at the new locator,340.1,[250..450],true
+P2b,ordering systematic (aggregate vs per-batch),0.001330,[0.0008..0.002] aggregate higher,true
+P2c,fcc key error aggregate vs per-batch,0.000360 vs 0.000588,aggregate closer,true
+P2d,propagated 1-sigma band in d_f,0.1766,[0.1..0.3],true
+P3a,d_f at the 5.8 locator,2.37985,2.37985 (±0.01),true
+P3b,|d_f − class| vs 5.7&#x27;s miss,0.1431 vs 0.49533,&lt; 0.5 × 5.7&#x27;s miss and upward,true
+P3c,z = |d_f − class| / band (DISSOLVE if &lt; 2),0.81,&lt; 2 (H-DISSOLVE branch),true
+P4a,d_f-anchored inversion (fcc) vs the published key,+0.0000128,±0.00005,true
+report-only,d_f at the per-batch-extrapolated locator,1.91924,—,
+report-only,p_c(d_f-anchored | stella) [derived | = P3c in p-space],0.101069,—,
+report-only,fcc aggregate-naive error vs the key,0.000201,— (vs extrapolated 0.000360),
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../../README.html">What this directory is</a>.</footer></main></body></html>

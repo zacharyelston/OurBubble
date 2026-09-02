@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0502-self-contained/eval.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0502-self-contained/eval.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0502 — Warp-5.2: the complete, self-contained prediction — evaluation
+
+**Verdict:** CONFIRMED (R10) · **Gate:** `uf5_2_selfcontained_gate` (green: yes, 23 s) · **Commit:** `87cbd96` (registered `4e6cb63`)
+
+## Result
+
+**Nothing supplied but the model — the toy now outputs `T_c, ν, β, γ` end-to-end.** The Binder cumulant
+`U = 1 − ⟨m⁴⟩/3⟨m²⟩²` is size-independent at criticality, so the `U_L(T)` curves cross at a universal point;
+that crossing **locates `T_c` blind**, and its slope FSS **measures `ν` blind**. Everything else follows.
+
+| quantity | measured (blind) | exact | pass |
+|---|---|---|---|
+| P0 universal Binder value `U*` | **0.6135** | ≈ 0.61 | ✅ |
+| P1 located `T_c` | **2.26683** | 2.26919 (0.10%) | ✅ |
+| P2 correlation-length exponent `ν` | **1.040** | 1 (4.0%) | ✅ |
+| P3 magnetization exponent `β` | **0.126** | 0.125 (0.8%) | ✅ |
+| P3 susceptibility exponent `γ` | **1.828** | 1.75 (4.5%) | ✅ |
+
+The Binder curves cross at `2.2623, 2.2704, 2.2678` (adjacent-`L` pairs), averaging to `T_c = 2.2668` —
+0.10% from the Onsager value, with **no exact `T_c` supplied**. The slope `|dU/dT| = 0.28, 0.58, 0.82, 1.07`
+across `L = 8,16,24,32` scales as `L^{1/ν}` → `ν = 1.040`. At the located `T_c`, `⟨|m|⟩` and `χ` give
+`β/ν = 0.1215`, `γ/ν = 1.7579`; times the measured `ν` → `β = 0.126`, `γ = 1.828`. Data:
+[`data/binder.csv`](data/binder.csv), [`data/fss.csv`](data/fss.csv), [`data/results.csv`](data/results.csv).
+Figure: `core/viz gen_selfcontained`.
+
+## What it rules in / out
+
+- **Closes rung 5.1&#x27;s two caveats.** 5.1 supplied `T_c` and `ν`; this rung *measures* both from the same
+  simulation data. The pipeline is now genuinely **self-contained** — the only input is the model (couplings,
+  dimension); `T_c, ν, β, γ, U*` are all **outputs**, each matching the exact 2-D-Ising truth (and hence real
+  2-D-Ising materials).
+- **The `ν` residual is the honest limit.** `ν = 1.040` (4%) is the noisiest number — it rides on fourth
+  moments and a finite-`L` slope — and it propagates into `γ` (4.5% high). Larger `L`, more statistics, and a
+  corrections-to-scaling term would tighten it; the few-percent residual is reported, not hidden (R5).
+- **Firewall intact.** Universal quantities of a **toy** Ising model, computed by seeded Monte Carlo. Not a
+  claim about the warp/DEC engine or spacetime.
+
+## Deferred / next
+
+The one remaining composition: run this **fully-blind pipeline on the 3-D model** (locate 3-D `T_c` by the
+Binder crossing, measure 3-D `ν`), so the *novel* 3-D prediction of rung 5.1 becomes self-contained too —
+compute-bound (3-D temperature scans), not method-bound, since both pieces (5.1&#x27;s 3-D exponents, 5.2&#x27;s blind
+`T_c`/`ν`) are now proven. Then a **data-collapse** figure as the visual capstone of chapter 5.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

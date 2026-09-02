@@ -1,0 +1,339 @@
+//! uf3_5_doubleslit_mirror_gate — rung 3.5: the double-slit demo's mirror asymmetry, its cause,
+//! and two exact repairs (#252, #250).
+//!
+//! Registered spec: lab/warp-3-shield/0305-doubleslit-mirror/spec.md (R1 — committed before the
+//! run-for-record). Probe: core/uniforge/examples/doubleslit_mirror_probe.rs.
+//!
+//! Four arms at the demo's exact parameters (200×140, λ=14, sep=64, dt=0.3, 2 steps/frame):
+//!   A  mesh_2d_triangle_grid + ⋆=I            — the committed demo (control)
+//!   B  mesh_2d_triangle_grid + geometric 2-D ⋆ — the #23 fix on the asymmetric mesh
+//!   C  mesh_2d_triangle_grid_crossed + ⋆=I     — mirror symmetry as a mesh automorphism
+//!   D  crossed + geometric ⋆                   — both
+//!
+//! Run: cd core && cargo test -p uniforge --release --test uf3_5_doubleslit_mirror_gate -- --nocapture
+//!
+//! FIREWALL: toy DEC scalar wave on a lattice. Slit, screen, fringe, intensity name lattice
+//! features and derived observables, never claims about nature. Not a Maxwell/EM simulation.
+
+use geom::mesh::{mesh_2d_triangle_grid, mesh_2d_triangle_grid_crossed};
+use solve::scene::{PlaneWaveSource, ScalarScene};
+use solve::wave_solver::MeshWaveSolver;
+use std::fmt::Write as _;
+
+const W: usize = 200;
+const H: usize = 140;
+const NV_H: usize = H + 1;
+const C: f64 = 1.0;
+const DT: f64 = 0.3;
+const SPF: usize = 2;
+const WAVELENGTH: f64 = 14.0;
+const AMPLITUDE: f64 = 1.0;
+const SEP: usize = 64;
+const SW: usize = 8;
+const BARRIER_X: usize = 64;
+const SCREEN_X: usize = 188;
+const SPONGE_MARGIN: usize = 12;
+const SPONGE_COEFF_BASE: f64 = 0.15;
+const STATIONS: [usize; 4] = [32, 66, 120, SCREEN_X];
+const CONTINUUM_DY: f64 = WAVELENGTH * ((SCREEN_X - BARRIER_X) as f64) / (SEP as f64); // 27.125
+
+fn vi(x: usize, y: usize) -> usize {
+    x * NV_H + y
+}
+
+fn grid_coords() -> Vec<[f64; 3]> {
+    let mut coords = vec![[0.0; 3]; (W + 1) * NV_H];
+    for (x, col) in coords.chunks_exact_mut(NV_H).enumerate() {
+        for (y, c) in col.iter_mut().enumerate() {
+            *c = [x as f64, y as f64, 0.0];
+        }
+    }
+    coords
+}
+
+/// The demo scene, constructed exactly as gen_doubleslit / viz/doubleslit.html do.
+fn demo_scene() -> ScalarScene {
+    let cy = H / 2;
+    let s = SEP / 2;
+    let mut wall_vertices = Vec::new();
+    for y in 0..=H {
+        for x in BARRIER_X..=BARRIER_X + 1 {
+            let in_slit1 = (y as i32 - (cy as i32 - s as i32)).abs() <= (SW / 2) as i32;
+            let in_slit2 = (y as i32 - (cy as i32 + s as i32)).abs() <= (SW / 2) as i32;
+            if !(in_slit1 || in_slit2) {
+                wall_vertices.push(vi(x, y));
+            }
+        }
+    }
+    let mut damping = Vec::new();
+    let m = SPONGE_MARGIN as f64;
+    for x in 0..=W {
+        for y in 0..=H {
+            let dx = (x as f64).min((W - x) as f64);
+            let dy = (y as f64).min((H - y) as f64);
+            let e = dx.min(dy);
+            if e < m {
+                damping.push((vi(x, y), (1.0 - e / m) * SPONGE_COEFF_BASE));
+            }
+        }
+    }
+    let mut src = Vec::new();
+    for y in 0..=H {
+        src.push(vi(2, y));
+        src.push(vi(3, y));
+    }
+    ScalarScene {
+        wall_vertices,
+        damping,
+        plane_wave_sources: vec![PlaneWaveSource {
+            vertices: src,
+            wavelength: WAVELENGTH,
+            amplitude: AMPLITUDE,
+        }],
+        point_sources: vec![],
+    }
+}
+
+fn mirror_asym(f: &[f64]) -> f64 {
+    let (mut num, mut den) = (0.0, 0.0);
+    for y in SPONGE_MARGIN..=H - SPONGE_MARGIN {
+        num += (f[y] - f[H - y]).abs();
+        den += f[y].abs();
+    }
+    if den > 0.0 {
+        num / den
+    } else {
+        0.0
+    }
+}
+
+struct ArmResult {
+    front: i64,
+    asym_stations: [f64; 4],
+    lobe_ratio: f64,
+    intensity_asym: f64,
+    max_intensity: f64,
+    fringe_centers: Vec<f64>,
+    mean_spacing: f64,
+    screen_intensity: Vec<f64>,
+}
+
+fn run_arm(solver: &MeshWaveSolver, max_frames: usize, front_threshold: f64) -> ArmResult {
+    let nv = solver.mesh().num_k_forms(0);
+    let scene = demo_scene();
+    let mut phi = vec![0.0; nv];
+    let mut phi_old = vec![0.0; nv];
+    let mut sim_time = 0.0;
+    let mut screen_intensity = vec![0.0; NV_H];
+    let mut front: Option<usize> = None;
+    for frame in 0..max_frames {
+        scene.advance_frame(solver, &mut phi, &mut phi_old, C, DT, &mut sim_time, SPF);
+        if front.is_none() {
+            let mx = (0..=H)
+                .map(|y| phi[vi(SCREEN_X, y)].abs())
+                .fold(0.0f64, f64::max);
+            if mx > front_threshold {
+                front = Some(frame);
+            }
+        }
+        if let Some(start) = front {
+            if frame >= start {
+                for (y, si) in screen_intensity.iter_mut().enumerate() {
+                    let v = phi[vi(SCREEN_X, y)];
+                    *si += v * v;
+                }
+            }
+        }
+    }
+
+    let column = |x: usize| -> Vec<f64> { (0..=H).map(|y| phi[vi(x, y)]).collect() };
+    let mut asym_stations = [0.0; 4];
+    for (i, &x) in STATIONS.iter().enumerate() {
+        asym_stations[i] = mirror_asym(&column(x));
+    }
+
+    let cy = H / 2;
+    let s = SEP / 2;
+    let lobe = |yc: usize| -> f64 {
+        ((yc - 8)..=(yc + 8))
+            .map(|y| phi[vi(66, y)].abs())
+            .fold(0.0f64, f64::max)
+    };
+    let (la, lb) = (lobe(cy - s), lobe(cy + s));
+    let lobe_ratio = if lb > 0.0 { la / lb } else { f64::NAN };
+
+    let intensity_asym = mirror_asym(&screen_intensity);
+    let max_intensity = screen_intensity
+        .iter()
+        .copied()
+        .fold(0.0f64, f64::max);
+
+    // Fringe centers: cluster adjacent local maxima (gap ≤ 4) in the sponge-free band.
+    let mut peaks: Vec<usize> = Vec::new();
+    for y in (SPONGE_MARGIN + 1)..(H - SPONGE_MARGIN) {
+        if screen_intensity[y] > screen_intensity[y - 1]
+            && screen_intensity[y] > screen_intensity[y + 1]
+        {
+            peaks.push(y);
+        }
+    }
+    let mut fringe_centers: Vec<f64> = Vec::new();
+    let mut cluster: Vec<usize> = Vec::new();
+    for &p in &peaks {
+        if let Some(&last) = cluster.last() {
+            if p - last > 4 {
+                fringe_centers.push(cluster.iter().sum::<usize>() as f64 / cluster.len() as f64);
+                cluster.clear();
+            }
+        }
+        cluster.push(p);
+    }
+    if !cluster.is_empty() {
+        fringe_centers.push(cluster.iter().sum::<usize>() as f64 / cluster.len() as f64);
+    }
+    let mean_spacing = if fringe_centers.len() >= 2 {
+        (fringe_centers.last().unwrap() - fringe_centers.first().unwrap())
+            / (fringe_centers.len() - 1) as f64
+    } else {
+        f64::NAN
+    };
+
+    ArmResult {
+        front: front.map(|f| f as i64).unwrap_or(-1),
+        asym_stations,
+        lobe_ratio,
+        intensity_asym,
+        max_intensity,
+        fringe_centers,
+        mean_spacing,
+        screen_intensity,
+    }
+}
+
+#[test]
+fn uf3_5_doubleslit_mirror_gate() {
+    let coords = grid_coords();
+
+    let a = run_arm(&MeshWaveSolver::new(mesh_2d_triangle_grid(W, H)), 340, 0.01);
+    let b = run_arm(
+        &MeshWaveSolver::with_geometric_hodge(mesh_2d_triangle_grid(W, H), &coords),
+        800,
+        0.002,
+    );
+    let c = run_arm(
+        &MeshWaveSolver::new(mesh_2d_triangle_grid_crossed(W, H)),
+        340,
+        0.01,
+    );
+    let d = run_arm(
+        &MeshWaveSolver::with_geometric_hodge(mesh_2d_triangle_grid_crossed(W, H), &coords),
+        800,
+        0.002,
+    );
+
+    // ⋆₀ mirror-defect populations (full population, boundary included — the P2 mechanism)
+    let star0_mirror_defect = |mesh: &geom::mesh::SimplicialComplex| -> f64 {
+        let s0 = dec::hodge::geometric_hodge_star_0_2d(mesh, &coords);
+        let mut mdef = 0.0f64;
+        for x in 0..=W {
+            for y in 0..=H {
+                mdef = mdef.max((s0[vi(x, y)] - s0[vi(x, H - y)]).abs());
+            }
+        }
+        mdef
+    };
+    let s0_defect_uniform = star0_mirror_defect(&mesh_2d_triangle_grid(W, H));
+    let s0_defect_crossed = star0_mirror_defect(&mesh_2d_triangle_grid_crossed(W, H));
+
+    let max_asym = |r: &ArmResult| -> f64 { r.asym_stations.iter().copied().fold(0.0, f64::max) };
+
+    // Scorecard
+    eprintln!("== uf3_5 doubleslit mirror gate — scorecard");
+    for (name, r) in [("A demo", &a), ("B uni+geom", &b), ("C crossed+I", &c), ("D crossed+geom", &d)] {
+        eprintln!(
+            "   {name}: front {} | max station asym {:.3e} | intensity asym {:.3e} | lobe ratio {:.3} | spacing {:.2} | centers {:?}",
+            r.front, max_asym(r), r.intensity_asym, r.lobe_ratio, r.mean_spacing, r.fringe_centers
+        );
+    }
+    eprintln!(
+        "   star0 mirror-defect: uniform {:.4e}, crossed {:.4e} | continuum dy = {CONTINUUM_DY}",
+        s0_defect_uniform, s0_defect_crossed
+    );
+
+    // Write data (R10 source of truth)
+    let data_dir = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../lab/warp-3-shield/0305-doubleslit-mirror/data"
+    );
+    std::fs::create_dir_all(data_dir).unwrap();
+    let mut arms_csv = String::from(
+        "arm,front_frame,asym_x32,asym_x66,asym_x120,asym_x188,lobe_ratio,intensity_asym,max_intensity,mean_spacing\n",
+    );
+    for (name, r) in [("A", &a), ("B", &b), ("C", &c), ("D", &d)] {
+        writeln!(
+            arms_csv,
+            "{name},{},{:.6e},{:.6e},{:.6e},{:.6e},{:.6},{:.6e},{:.6e},{:.4}",
+            r.front,
+            r.asym_stations[0],
+            r.asym_stations[1],
+            r.asym_stations[2],
+            r.asym_stations[3],
+            r.lobe_ratio,
+            r.intensity_asym,
+            r.max_intensity,
+            r.mean_spacing
+        )
+        .unwrap();
+    }
+    std::fs::write(format!("{data_dir}/arms.csv"), arms_csv).unwrap();
+    let mut prof_csv = String::from("y,intensity_a,intensity_b,intensity_c,intensity_d\n");
+    for y in 0..=H {
+        writeln!(
+            prof_csv,
+            "{y},{:.6e},{:.6e},{:.6e},{:.6e}",
+            a.screen_intensity[y], b.screen_intensity[y], c.screen_intensity[y], d.screen_intensity[y]
+        )
+        .unwrap();
+    }
+    std::fs::write(format!("{data_dir}/screen_intensity.csv"), prof_csv).unwrap();
+
+    // P0 — control: the committed demo reproduces
+    let p0 = a.front == 231 && (3.0..=4.5).contains(&a.lobe_ratio) && a.intensity_asym > 0.5;
+
+    // P1 — the drop-in repair: crossed mesh + ⋆=I
+    let centers_pair = c.fringe_centers.iter().all(|&yc| {
+        c.fringe_centers
+            .iter()
+            .any(|&ym| (yc + ym - (H as f64)).abs() <= 1.0)
+    });
+    let p1 = max_asym(&c) < 1e-12
+        && c.intensity_asym < 1e-12
+        && (200..=260).contains(&c.front)
+        && c.max_intensity > 0.0
+        && centers_pair;
+
+    // P2 — the #23 fix, scoped: geometric ⋆ bounds
+    let p2 = max_asym(&b) < 1e-5 && s0_defect_crossed == 0.0 && max_asym(&d) < 1e-12;
+
+    // P3 — the #250 number: measured spacing vs the far-field formula (out of regime here)
+    let fresnel = (SEP as f64) * (SEP as f64) / (WAVELENGTH * ((SCREEN_X - BARRIER_X) as f64));
+    let rel_dev = (c.mean_spacing - CONTINUUM_DY).abs() / CONTINUUM_DY;
+    let p3 = (17.0..=22.0).contains(&c.mean_spacing)
+        && rel_dev > 0.2
+        && c.mean_spacing < CONTINUUM_DY
+        && fresnel > 1.0;
+
+    eprintln!(
+        "   P0 {} | P1 {} | P2 {} | P3 {} (rel_dev {:.3}, fresnel {:.2})",
+        p0, p1, p2, p3, rel_dev, fresnel
+    );
+    eprintln!(
+        "VERDICT: demo asymmetry reproduced and repaired — crossed mesh exact at star=I, geometric star exact only with the crossed mesh (open-boundary star0 bounds the uniform mesh at ~1e-7); far-field formula out of regime (Fresnel {:.2}). FIREWALL: toy DEC scalar wave on a lattice; slit/screen/fringe name lattice features, never claims about nature.",
+        fresnel
+    );
+
+    assert!(p0, "P0 failed: the committed demo control did not reproduce (front {}, lobe {:.3}, asym {:.3e})", a.front, a.lobe_ratio, a.intensity_asym);
+    assert!(p1, "P1 failed: crossed-mesh repair not exact/drop-in (max asym {:.3e}, front {})", max_asym(&c), c.front);
+    assert!(p2, "P2 failed: geometric-star bounds (B {:.3e} vs 1e-5, D {:.3e} vs 1e-12, crossed star0 defect {:.3e})", max_asym(&b), max_asym(&d), s0_defect_crossed);
+    assert!(p3, "P3 failed: fringe spacing {:.2} vs continuum {CONTINUUM_DY} (rel dev {:.3})", c.mean_spacing, rel_dev);
+}

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>book/LESSON_STANDARD.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>book/LESSON_STANDARD.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../index.html">Our Bubble</a>.</div><pre># The lesson standard
+
+*How a chapter is built, and what makes a figure a data-true infographic of **The Container**. This is the contract every
+chapter follows so the public book and the study guide stay in lock-step and every picture is
+honest. Copy [`templates/LESSON_TEMPLATE.md`](templates/LESSON_TEMPLATE.md) to start one.*
+
+&gt; **FIREWALL.** Every chapter is about a toy lattice computation. Naming is literal solver/geometry
+&gt; vocabulary; nothing is a claim about nature. The firewall line is **mandatory** and appears on the
+&gt; page and on every infographic.
+
+---
+
+## 1. The two-voice rule
+
+Each chapter is authored **once** but read **two ways**:
+
+- **Public voice** — plain language, no equations required, carried by the hero infographic. Answers
+  *what is this, and why is it interesting?*
+- **Study-guide voice** — the rigorous companion in the same chapter: the prediction, the gate, the
+  numbers, the caveats, the reproduce-it commands, the exercises.
+
+Authoring once keeps them from drifting. A chapter is **not done** until both voices are present and
+its figures regenerate from the committed data.
+
+## 2. Anatomy of a chapter (the required sections)
+
+1. **Title + one-line concept** — the single idea the chapter teaches.
+2. **Firewall scope line** — what the words mean here; what is *not* claimed.
+3. **Source** — the `lab/NNNN/` run(s) and the `tests/…_gate.rs` gate(s) this chapter is built on.
+4. **The hook** *(public)* — the question, in human terms.
+5. **The prediction** *(study guide)* — what we expected and the gate that decides it, registered
+   **before** the run (R1/P1). State a null/negative outright if that&#x27;s what happened.
+6. **The figure(s)** — the data-true infographic(s) (see §3), each with a traceable caption.
+7. **What happened** — the result in both voices: the plain-language takeaway *and* the numbers with
+   tolerances. **Negatives are first-class** (R5) — a &quot;this doesn&#x27;t work&quot; chapter is a real chapter.
+8. **Reproduce** — the exact commands (the gate + the viz export) that regenerate the data and the
+   figures, pinned to a commit.
+9. **Try it / exercises** *(study guide)* — a parameter to change, a prediction to make, a knob on
+   the live infographic.
+
+## 3. The infographic standard (R10++)
+
+R10 is the rule: **the sim IS the graphic.** These are the specifics that make a figure publishable.
+
+**Data-true (non-negotiable).**
+- Every value shown is read from the run&#x27;s real output (`lab/NNNN/data/…`), never hand-drawn,
+  faked, or &quot;illustrative.&quot; If it&#x27;s not in the data, it&#x27;s not in the figure.
+- The figure is produced by a **viz exporter** (`viz`, #8) + a renderer (the viz app, #9) —
+  the same &quot;browser/page computes no physics, it renders the engine&#x27;s export&quot; discipline as the
+  `A → F → E/B` viewer.
+- **Traceable caption:** every figure cites its `lab/NNNN`, the data file, and the gate, so a reader
+  can diff the picture against the numbers.
+
+**Self-contained.**
+- One file, no external fonts / CDNs / network (CSP-safe) — inline CSS/JS, embed assets as data URIs.
+  (The `A → F → E/B` viewer is the reference build.)
+
+**Consistent visual language.**
+- The shared palette and ramp (carried from the viz gallery): background `#0b0e13`, ink `#e6edf5`,
+  and the field ramp `#1e3a8a → #06b6d4 → #eab308 → #ef4444`; gold `#eab308` for the photon `A`,
+  violet/amber for the B/E split, green for the `d²=0` / null state.
+- A standing **firewall banner** and, where scale is shown, the **scale-free note** (the toy carries
+  no intrinsic length).
+- A legend for every layer; units or &quot;dimensionless (firewall)&quot; stated.
+
+**Honest.**
+- Show the negative result as plainly as the positive (R5). If a quantity is an artifact (e.g. a
+  lattice-anisotropy term), label it as such — don&#x27;t smooth it away.
+- No decorative axes, no implied precision beyond the tolerance.
+
+**Accessible.**
+- Honor `prefers-reduced-motion`; keep contrast legible; don&#x27;t rely on color alone (pair color with
+  label/shape).
+
+## 4. Naming &amp; layout
+
+```
+book/chapters/NN-slug/
+  chapter.md        # the authored chapter (both voices, from the template)
+  figures/          # the self-contained infographic(s) + the data snapshot they render
+  PROVENANCE.md     # commands + commit that produced the data and figures
+```
+
+`NN` orders the chapter; `slug` is the concept (e.g. `03-the-light-cone`). The chapter index lives in
+[`chapters/README.md`](chapters/README.md).
+
+## 5. Definition of done (per chapter)
+
+- [ ] Both voices present (public hook + study-guide rigor); one source.
+- [ ] Firewall scope line on the page and on every figure.
+- [ ] Every figure data-true, self-contained, with a traceable caption (lab + gate + data file).
+- [ ] Prediction registered before the run (R1); result reported honestly, negatives included (R5).
+- [ ] `PROVENANCE.md` regenerates the data and figures from a pinned commit.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../README.html">What this directory is</a>.</footer></main></body></html>

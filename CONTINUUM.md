@@ -22,7 +22,11 @@ Rules of the ledger:
   stumble-hunting.
 - **One voice across the forge, the object, and the book** (owner, 2026-09-01): plain words first, honest about limits, and aspiring to inspire — a reader should leave wanting to build a test, not believing a claim.
 - **The record is pinned, never followed.** A lane that needs newer evidence bumps `record.lock`
-  deliberately and re-runs the checker (see the README). No lane tracks the engine's `main`.
+  deliberately — fetch, re-snapshot, checker, one commit (see the README). No lane tracks the
+  engine's `main`.
+- **`record/` is derived, never edited.** It is a verbatim copy of the engine at the pinned commit,
+  and the integrity layer diffs it byte for byte whenever the engine is reachable. Editing a file
+  there to make a quotation fit is the one failure this repository is built to catch.
 
 ## Active lanes
 
@@ -30,15 +34,14 @@ Rules of the ledger:
 |---|---|---|---|---|
 | **Structure** | owner + the decision session (Fable): section architecture, ordering, merges, scope calls | decisions; merges; this file | this ledger + merge verdicts | active |
 | **Rewrite** | content agent: prose voice, pacing, baby-step pedagogy across the edition | `chapters/`, `edition.json`, `theme/`, `ART_DIRECTION.md`, `EDITION_STANDARD.md` | one PR per pass | idle — last delivery: the whole-book pass + provenance tone pass (UniForge #347, merged 2026-09-01, before the move); awaiting next charter |
-| **Repository** | bootstrap and infrastructure: the move out of UniForge, the record contract, tier 0, CI, Pages | `record.lock`, `tools/`, `Makefile`, `.github/`, `check_edition.py`, `gen_appendix.py`, `README.md`, `FIREWALL.md`, `PROVENANCE.md` | the bootstrap commit | complete 2026-09-01 |
+| **Repository** | bootstrap and infrastructure: the move out of UniForge, the record contract, the committed record snapshot (reader click-through), tier 0, CI, Pages | `record.lock`, `record/`, `tools/`, `Makefile`, `.github/`, `check_edition.py`, `gen_appendix.py`, `README.md`, `FIREWALL.md`, `PROVENANCE.md` | the bootstrap commit + the snapshot PR | complete 2026-09-01 |
 
 ## Dormant / registered lanes (no agent assigned)
 
 | lane | charter | tracked |
 |---|---|---|
 | Illustration | replace the placeholder SVG studies with stronger art, under `ART_DIRECTION.md`'s contract (concept, alt text, "Analogy — not data." caption, firewall) | — |
-| Record bumps | advance `record.lock` as the engine's evidence advances; each bump is its own commit with the checker green | — |
-| Reader access | the record repository is private, so a stranger cannot run `tools/fetch_record.sh`; decide what the reproduce path offers them | owner decision |
+| Record bumps | advance `record.lock` as the engine's evidence advances — fetch, re-snapshot, checker, one commit | — |
 
 FIREWALL: this file coordinates work on a book about a toy DEC lattice; nothing here is a claim
 about nature.

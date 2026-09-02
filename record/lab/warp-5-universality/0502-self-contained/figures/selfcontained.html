@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the complete self-contained prediction — T_c and ν measured blind</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  td.num{font-variant-numeric:tabular-nums;color:var(--green)} td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The complete self-contained prediction — T_c and ν, measured blind</h1>
+  <p class="sub">Nothing supplied but the model. The Binder cumulant's crossing locates the critical
+     temperature; its slope measures the correlation-length exponent. Every critical number is an output.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Universal quantities of a <b>toy</b> Ising model from a seeded Wolff
+     simulation — T_c, ν, β, γ, U* are all <b>outputs</b>, only the model is input. Universality-class
+     membership shared with real materials; not a magnet/spacetime claim.</div>
+
+  <div class="panel">
+    <h2>The Binder crossing locates T_c — no exact input</h2>
+    <p class="q">U_L(T) = 1 − ⟨m⁴⟩/3⟨m²⟩² is size-independent at criticality, so the curves for every L cross
+       at one point. That crossing is T_c; the crossing height is the universal U*.</p>
+    <canvas id="binder" width="1120" height="360"></canvas>
+    <div class="legend" id="leg"></div>
+    <div class="take" id="btake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Everything an output — measured vs exact</h2>
+    <p class="q">The critical temperature, the correlation-length exponent, and the exponents β, γ — all
+       extracted from the same simulation data, checked against the exact 2-D-Ising truth.</p>
+    <table class="disc" id="disc"><thead><tr><th>quantity</th><th>measured (blind)</th><th>exact</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"binder":[{"L":8,"pts":[{"T":2.2500,"U":0.61832},{"T":2.2550,"U":0.61736},{"T":2.2600,"U":0.61572},{"T":2.2650,"U":0.61569},{"T":2.2700,"U":0.61424},{"T":2.2750,"U":0.61100},{"T":2.2800,"U":0.61034},{"T":2.2850,"U":0.60875},{"T":2.2900,"U":0.60756}]},{"L":16,"pts":[{"T":2.2500,"U":0.62090},{"T":2.2550,"U":0.61956},{"T":2.2600,"U":0.61732},{"T":2.2650,"U":0.61384},{"T":2.2700,"U":0.61076},{"T":2.2750,"U":0.60876},{"T":2.2800,"U":0.60514},{"T":2.2850,"U":0.60244},{"T":2.2900,"U":0.59786}]},{"L":24,"pts":[{"T":2.2500,"U":0.62427},{"T":2.2550,"U":0.62192},{"T":2.2600,"U":0.61837},{"T":2.2650,"U":0.61423},{"T":2.2700,"U":0.61112},{"T":2.2750,"U":0.60486},{"T":2.2800,"U":0.60119},{"T":2.2850,"U":0.59662},{"T":2.2900,"U":0.59269}]},{"L":32,"pts":[{"T":2.2500,"U":0.62816},{"T":2.2550,"U":0.62526},{"T":2.2600,"U":0.61889},{"T":2.2650,"U":0.61544},{"T":2.2700,"U":0.61013},{"T":2.2750,"U":0.60437},{"T":2.2800,"U":0.59907},{"T":2.2850,"U":0.59182},{"T":2.2900,"U":0.58580}]}],"tc":2.26683,"ustar":0.6135,"results":[{"name":"critical temperature T_c","measured":"2.26683","exact":"2.26919"},{"name":"universal Binder value U*","measured":"0.6135","exact":"0.61"},{"name":"correlation-length exponent ν","measured":"1.0396","exact":"1.0"},{"name":"magnetization exponent β","measured":"0.1263","exact":"0.125"},{"name":"susceptibility exponent γ","measured":"1.8275","exact":"1.75"}],"source":{"commit":"87cbd96"}};
+
+// ---- Binder crossing ----
+(function(){
+  const cv=document.getElementById("binder"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=54,padR=16,padT=16,padB=34;
+  const curves=D.binder; // [{L, pts:[{T,U}]}]
+  const allT=curves.flatMap(c=>c.pts.map(p=>p.T)), allU=curves.flatMap(c=>c.pts.map(p=>p.U));
+  const tmin=Math.min(...allT),tmax=Math.max(...allT),umin=Math.min(...allU),umax=Math.max(...allU);
+  const X=t=>padL+(t-tmin)/(tmax-tmin)*(W-padL-padR);
+  const Y=u=>padT+(umax-u)/(umax-umin)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let i=0;i<=4;i++){const t=tmin+(tmax-tmin)*i/4;const x=X(t);g.strokeStyle="#141c27";g.beginPath();g.moveTo(x,padT);g.lineTo(x,H-padB);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText(t.toFixed(3),x,H-padB+13);}
+  g.fillStyle="#4b5c70";g.textAlign="left";g.fillText("Binder U",padL,padT+2);g.textAlign="right";g.fillText("T →",W-padR,H-padB+24);
+  // located Tc vertical + U* marker
+  g.strokeStyle="#eab308";g.setLineDash([5,4]);g.beginPath();g.moveTo(X(D.tc),padT);g.lineTo(X(D.tc),H-padB);g.stroke();g.setLineDash([]);
+  g.fillStyle="#eab308";g.textAlign="center";g.fillText("T_c located = "+D.tc.toFixed(4),X(D.tc),padT+11);
+  const cols=["#06b6d4","#22c55e","#eab308","#ef4444","#c084fc"];
+  curves.forEach((c,ci)=>{g.strokeStyle=cols[ci%cols.length];g.lineWidth=2;g.beginPath();
+    c.pts.forEach((p,i)=>{const x=X(p.T),y=Y(p.U);i?g.lineTo(x,y):g.moveTo(x,y);});g.stroke();
+    c.pts.forEach(p=>{g.fillStyle=cols[ci%cols.length];g.beginPath();g.arc(X(p.T),Y(p.U),2.4,0,7);g.fill();});});
+  g.fillStyle="#eab308";g.beginPath();g.arc(X(D.tc),Y(D.ustar),4.5,0,7);g.fill();
+  document.getElementById("leg").innerHTML = curves.map((c,ci)=>`<span class="sw" style="background:${cols[ci%cols.length]}"></span>L=${c.L}`).join("");
+  document.getElementById("btake").innerHTML =
+    `The four curves meet at one point — <b>T_c = ${D.tc.toFixed(4)}</b> (exact 2.2692, 0.10%), at the universal
+     Binder value <b>U* = ${D.ustar.toFixed(3)}</b> (≈0.61 for 2-D Ising). No exact temperature was supplied;
+     the crossing found it. The steepening of the slope with L then gives ν.`;
+})();
+
+// ---- results table ----
+(function(){
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=D.results.map(r=>`<tr><td>${r.name}</td><td class="num">${r.measured}</td><td class="thy">${r.exact}</td></tr>`).join("");
+  document.getElementById("dtake").innerHTML =
+    `Every number is an <b>output</b>: T_c and U* from the crossing, ν from the slope FSS, β and γ from the
+     magnetization and susceptibility at the located T_c. This closes rung 5.1's two supplied inputs — the
+     pipeline now predicts <b>T_c, ν, β, γ</b> end-to-end. <b>Honest scope:</b> ν (4%) is the noisiest and
+     propagates into γ; larger L and a corrections term would tighten it.`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_selfcontained</code> from
+   <code>lab/warp-5-universality/0502-self-contained/data/</code> (gate <code>uf5_2_selfcontained_gate</code>,
+   commit <code>${D.source.commit}</code>). Seeded Wolff; self-contained.`;
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+purpose,value
+sweep_base,0x5EED ^ (k<<50)
+measure_base,0xABCD
+kbatch,5
+r_sweep,300
+r_meas,2400
+stripes,4
+drift_exponent_w,2
+delta_p 3-D (paired central difference),0.0006
+delta_p 2-D (paired central difference),0.005
+input (read-only),lab/warp-5-universality/0506-stella-percolation/data/rw_curves.csv

@@ -1,0 +1,50 @@
+######## probe: 0509 — 5.8's extrapolation applied to 5.7's bond curves ########
+FIREWALL (R3): edge-diluted toy graphs; class membership computed, not a materials claim.
+
+[fcc_bond] pairs: [(14.696938456699069, 0.12018461467455895), (20.784609690826528, 0.11973555153348374), (29.393876913398138, 0.12031034482758621), (41.569219381653056, 0.11962025556800272)]
+  w=2 fit: p_c=0.119804  c=0.07331  r2=0.1527  OLS se(p_c)=0.000326
+  best-w: w=1.0 p_c=0.119653 r2=0.1628; w-spread[1.6,2.4]=0.000059
+  naive mean (all pairs)=0.119963  (excl smallest)=0.119889
+  ** ANSWER-KEY CALIBRATION: |p_c - lit| = 0.000360 = 1.10x se  (w-spread would have claimed 6.09x too small)
+[stella_bond] pairs: [(14.696938456699069, 0.10087804663891063), (20.784609690826528, 0.0998836990267555), (29.393876913398138, 0.10080136849080738), (41.569219381653056, 0.10091525423728813)]
+  w=2 fit: p_c=0.100648  c=-0.01303  r2=0.0022  OLS se(p_c)=0.000518
+  best-w: w=1.0 p_c=0.100800 r2=0.0257; w-spread[1.6,2.4]=0.000064
+  naive mean (all pairs)=0.100620  (excl smallest)=0.100533
+[stella batch 0] naive=0.098735 (5.7's estimator)  extrap(w=2)=0.098237 r2=0.4707  pairs=4
+[stella batch 1] naive=0.099103 (5.7's estimator)  extrap(w=2)=0.099084 r2=0.0843  pairs=4
+[stella batch 2] naive=0.100257 (5.7's estimator)  extrap(w=2)=0.100274 r2=0.0548  pairs=4
+[stella batch 3] naive=0.100294 (5.7's estimator)  extrap(w=2)=0.099969 r2=0.1064  pairs=4
+[stella batch 4] naive=0.099814 (5.7's estimator)  extrap(w=2)=0.099026 r2=0.2585  pairs=4
+[stella] per-batch EXTRAP: p_c = 0.099318 ± 0.000364   per-batch NAIVE (5.7's): 0.099641 ± 0.000312
+  ** ORDERING SYSTEMATIC (aggregate-then-extrapolate vs extrapolate-then-average): 0.001330
+  (5.7 committed naive 0.099641 ± 0.000312 — copy fidelity of the sweep)
+[fcc batch 0] naive=0.117903 (5.7's estimator)  extrap(w=2)=0.117098 r2=0.7209  pairs=4
+[fcc batch 1] naive=0.120627 (5.7's estimator)  extrap(w=2)=0.120093 r2=0.2139  pairs=4
+[fcc batch 2] naive=0.120138 (5.7's estimator)  extrap(w=2)=0.120394 r2=0.3419  pairs=4
+[fcc batch 3] naive=0.119926 (5.7's estimator)  extrap(w=2)=0.120055 r2=0.1511  pairs=4
+[fcc batch 4] naive=0.120026 (5.7's estimator)  extrap(w=2)=0.120235 r2=0.0033  pairs=4
+[fcc] per-batch EXTRAP: p_c = 0.119575 ± 0.000622   per-batch NAIVE (5.7's): 0.119724 ± 0.000471
+  ** ORDERING SYSTEMATIC (aggregate-then-extrapolate vs extrapolate-then-average): 0.000229
+  ** FCC ANSWER KEY 0.1201635: agg-extrap err -0.000360  per-batch-extrap err -0.000588  per-batch-naive (5.7's own) err -0.000440
+  sweep stage took 26.278132292s
+
+[stella d_f] 5.7 located (oracle)   p=0.099641 -> d_f=2.02746 ± 0.01091 (stat)  (vs class 2.52295; smax=[1062.449, 2067.97, 4778.87, 8415.065]) [3.603381875s]
+[stella d_f] extrap agg - d         p=0.100048 -> d_f=2.17457 ± 0.01528 (stat)  (vs class 2.52295; smax=[1124.78, 2239.615, 5438.464, 10104.139]) [3.379171125s]
+[stella d_f] extrap agg (w=2)       p=0.100648 -> d_f=2.37985 ± 0.01076 (stat)  (vs class 2.52295; smax=[1223.4, 2524.83, 6591.312, 13149.819]) [3.489620167s]
+[stella d_f] extrap agg + d         p=0.101248 -> d_f=2.58272 ± 0.01019 (stat)  (vs class 2.52295; smax=[1325.579, 2826.733, 7919.86, 16968.517]) [3.37808575s]
+[stella d_f] per-batch extrap       p=0.099318 -> d_f=1.91924 ± 0.00974 (stat)  (vs class 2.52295; smax=[1013.735, 1932.61, 4310.799, 7288.503]) [3.482166291s]
+[stella d_f] class-value solve      p=0.101100 -> d_f=2.54301 ± 0.00985 (stat)  (vs class 2.52295; smax=[1299.099, 2745.421, 7580.964, 16030.065]) [3.504504084s]
+  ** COPY FIDELITY: d_f at 5.7's located p_c = 2.02746 vs 5.7's committed 2.02762 (|Δ| = 1.62e-4)
+  ** LOCAL SENSITIVITY at the new locator: ∂d_f/∂p = 340.1 (5.7's secant over the LOWER interval: 337.6)
+  ** PROPAGATED BAND: sens × se(p_c) = 340.1 × 0.000518 = ±0.1763; ⊕ d_f's own stat ±0.0108 => ±0.1766 (1σ)
+     d_f(extrap) = 2.37985;  |d_f - class| = 0.1431 = 0.81σ
+     5.7's miss for comparison: |2.02762 - 2.52295| = 0.49533
+     d_f-ANCHORED INVERSION (stella): p at which d_f = class = 0.101069
+[fcc d_f] extrapolated             p=0.1198036 -> d_f=2.42019 ± 0.01724 (stat) (vs class 2.52295) [3.290327375s]
+[fcc d_f] literature (0 loc err)   p=0.1201635 -> d_f=2.51943 ± 0.01323 (stat) (vs class 2.52295) [3.416318292s]
+  (5.7's own located FCC p_c = 0.119724 gave d_f = 2.39293, report-only)
+  fcc se(p_c) = 0.000326
+  ** FCC ZERO-LOCATION-ERROR CONTROL: |d_f(p_lit) - class| = 0.00352 (vs 5.7's 0.49533 miss); sens_fcc = 275.7
+  ** d_f-ANCHORED INVERSION (fcc, the answer-key test of the inverted estimator): p = 0.1201763 vs lit 0.1201635 (err +0.0000128)
+
+[probe done] total 53.823179s

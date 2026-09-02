@@ -1,0 +1,4 @@
+locator,p,d_f,loc_err,band,abs_delta,z,dissolves
+5.6's own located p_c,0.174453,2.43793,0.000410,0.0504,0.0850,1.69,true
+per-batch extrapolated,0.174369,2.42851,0.000446,0.0546,0.0944,1.73,true
+aggregate extrapolated,0.174911,2.49050,0.000514,0.0623,0.0325,0.52,true

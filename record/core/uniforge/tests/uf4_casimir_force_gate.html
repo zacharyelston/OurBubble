@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf4_casimir_force_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf4_casimir_force_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! lab/0401 — Warp-4.1: the Casimir force — the piston, and the bench discovers a different exponent.
+//!
+//! Rung 4.0 needed a bulk subtraction to expose the negative Casimir energy. The FORCE needs none: a
+//! movable &quot;piston&quot; plate in a long chain feels F = −∂E_tot/∂a, and the bulk/surface pieces cancel because
+//! the total length is fixed. This is the subtraction-free confirmation the vacuum pulls the plates
+//! together — and a second automated-discovery test: the bench should recover a DIFFERENT power law from
+//! 4.0&#x27;s (exponent −2, not −1) with coefficient π/24, proving the law-finder reads the physics.
+//!
+//! Run: `cargo test -p uniforge --release --test uf4_casimir_force_gate -- --nocapture`
+//!
+//! FIREWALL (R3): the discrete gradient of a TOY scalar field&#x27;s zero-point energy ½Σℏωₖ on a TOY lattice
+//! with a movable interior Dirichlet node. Standard QFT bookkeeping; not a device/spacetime/free energy. c=1.
+
+use std::io::Write;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+/// Zero-point energy of a fixed–fixed box of `n` interior sites: E₀ = ½Σₖ 2sin(kπ/2(n+1)).
+fn e0(n: i64) -&gt; f64 {
+    if n &lt;= 0 {
+        return 0.0;
+    }
+    (1..=n).map(|k| (k as f64 * std::f64::consts::PI / (2.0 * (n as f64 + 1.0))).sin()).sum()
+}
+
+/// Total zero-point energy of a bath of `ntot` sites with a movable Dirichlet node at site `p`
+/// (splits into boxes of p−1 and ntot−p interior sites).
+fn e_tot(ntot: i64, p: i64) -&gt; f64 {
+    e0(p - 1) + e0(ntot - p)
+}
+
+/// Central-difference Casimir force on the piston at separation a = p: F = −[E(p+1) − E(p−1)]/2.
+fn force(ntot: i64, a: i64) -&gt; f64 {
+    -(e_tot(ntot, a + 1) - e_tot(ntot, a - 1)) / 2.0
+}
+
+/// Slope of a simple linear regression y = m·x + b (returns m).
+fn slope(xs: &amp;[f64], ys: &amp;[f64]) -&gt; f64 {
+    let m = xs.len() as f64;
+    let (sx, sy) = (xs.iter().sum::&lt;f64&gt;(), ys.iter().sum::&lt;f64&gt;());
+    let sxy: f64 = xs.iter().zip(ys).map(|(x, y)| x * y).sum();
+    let sxx: f64 = xs.iter().map(|x| x * x).sum();
+    (m * sxy - sx * sy) / (m * sxx - sx * sx)
+}
+
+#[test]
+fn uf4_casimir_force_gate() {
+    let coeff_theory = std::f64::consts::PI / 24.0; // |F|·a² → π/24
+    let ntot: i64 = 4000;
+    rec!(&quot;\n######## lab/0401 — Warp-4.1: the Casimir force — the piston ########&quot;);
+    rec!(&quot;FIREWALL (R3): discrete gradient of a TOY scalar field&#x27;s zero-point energy on a TOY lattice.&quot;);
+    rec!(&quot;  bath N_tot={ntot}. Target |F|·a² → π/24 = {coeff_theory:.6}, exponent → −2. c=1.\n&quot;);
+
+    // P0 — symmetric split: no net force
+    let f_sym = force(ntot, ntot / 2);
+
+    // sweep the piston separation
+    let seps: [i64; 7] = [8, 12, 16, 24, 32, 48, 64];
+    rec!(&quot;[sweep] piston separation a → force F(a):&quot;);
+    let (mut xs, mut fs, mut ca2) = (Vec::new(), Vec::new(), Vec::new());
+    for &amp;a in &amp;seps {
+        let f = force(ntot, a);
+        rec!(&quot;   a={a:&gt;3} | F={f:.6e} | |F|·a²={:.5}&quot;, f.abs() * (a * a) as f64);
+        xs.push(a as f64);
+        fs.push(f);
+        ca2.push(f.abs() * (a * a) as f64);
+    }
+    let attractive = fs.iter().all(|&amp;f| f &lt; 0.0);
+
+    // P2 — discover the law: exponent from log|F| vs log a, coefficient from mean |F|·a²
+    let logx: Vec&lt;f64&gt; = xs.iter().map(|a| a.ln()).collect();
+    let logy: Vec&lt;f64&gt; = fs.iter().map(|f| f.abs().ln()).collect();
+    let exponent = slope(&amp;logx, &amp;logy);
+    let coeff = ca2.iter().sum::&lt;f64&gt;() / ca2.len() as f64;
+    let coeff_err = (coeff - coeff_theory).abs() / coeff_theory;
+
+    // P3 — far wall irrelevant: double the bath, compare at a mid separation
+    let a_mid = 32;
+    let f_n = force(ntot, a_mid);
+    let f_2n = force(2 * ntot, a_mid);
+    let wall_dep = (f_n - f_2n).abs() / f_n.abs();
+
+    rec!(&quot;\n[P0] symmetric split (a=N_tot/2): F = {f_sym:.3e} (want |·|&lt;1e-9)&quot;);
+    rec!(&quot;[P1] attractive (F&lt;0 for all a): {attractive}&quot;);
+    rec!(&quot;[P2] DISCOVERED force law: exponent = {exponent:.4} (theory −2); coefficient |F|·a² = {coeff:.5} (theory π/24={coeff_theory:.5}, err {:.2}%)&quot;, coeff_err * 100.0);
+    rec!(&quot;[P3] far wall: F(N_tot)={f_n:.4e} vs F(2·N_tot)={f_2n:.4e} → dep {wall_dep:.2e} (want &lt;1e-3)&quot;);
+
+    // R10 artifacts
+    let dir = concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/../../lab/warp-4-vacuum/0401-casimir-force-piston/data&quot;);
+    std::fs::create_dir_all(dir).expect(&quot;create lab data dir&quot;);
+    let mut sweep = String::from(&quot;a,force,abs_f_a2\n&quot;);
+    for (i, &amp;a) in seps.iter().enumerate() {
+        sweep.push_str(&amp;format!(&quot;{a},{:.9},{:.6}\n&quot;, fs[i], ca2[i]));
+    }
+    std::fs::write(format!(&quot;{dir}/force_sweep.csv&quot;), sweep).expect(&quot;write force_sweep.csv&quot;);
+    let fit = format!(
+        &quot;metric,value,theory\nexponent,{exponent:.6},-2.0\ncoefficient,{coeff:.6},{coeff_theory:.6}\n\
+         coeff_err_frac,{coeff_err:.6},0.0\nf_symmetric,{f_sym:.3e},0.0\nwall_dependence,{wall_dep:.3e},0.0\n&quot;
+    );
+    std::fs::write(format!(&quot;{dir}/force_fit.csv&quot;), fit).expect(&quot;write force_fit.csv&quot;);
+
+    // verdicts
+    let p0 = f_sym.abs() &lt; 1e-9;
+    let p1 = attractive;
+    let p2 = (exponent + 2.0).abs() &lt; 0.10 &amp;&amp; coeff_err &lt; 0.03;
+    let p3 = wall_dep &lt; 1e-3;
+
+    let verdict = if p0 &amp;&amp; p1 &amp;&amp; p2 &amp;&amp; p3 {
+        format!(&quot;THE VACUUM PULLS THE PLATES TOGETHER — SUBTRACTION-FREE, AND THE BENCH FINDS A NEW LAW (R10). The \
+             piston force is attractive at every separation, vanishes for a symmetric split (F={f_sym:.0e}), and \
+             is independent of the far wall ({wall_dep:.0e}) — so no bulk subtraction is needed. The automated \
+             log–log fit discovers a power law with exponent {exponent:.2} (theory −2, DISTINCT from 4.0&#x27;s −1) \
+             and coefficient |F|·a²={coeff:.4} — within {:.1}% of π/24={coeff_theory:.4}. The bench read the \
+             force physics, not a hardcoded number. FIREWALL (R3): toy zero-point bookkeeping.&quot;, coeff_err * 100.0)
+    } else {
+        format!(&quot;CHECK (R5) — p0={p0} p1={p1} p2={p2} p3={p3}; f_sym={f_sym:.1e} attractive={attractive} exp={exponent:.3} coeff={coeff:.4} (π/24={coeff_theory:.4}, err {:.1}%) wall={wall_dep:.1e}. FIREWALL (R3).&quot;, coeff_err * 100.0)
+    };
+    rec!(&quot;\n[lab/0401 VERDICT] {verdict}&quot;);
+    rec!(&quot;\n  [recorded: p0={p0} p1={p1} p2={p2} p3={p3} exponent={exponent:.4} coeff={coeff:.5} coeff_err={coeff_err:.5} f_sym={f_sym:.2e} wall_dep={wall_dep:.2e}]&quot;);
+
+    assert!(p0, &quot;P0: a symmetric split gives no net force&quot;);
+    assert!(p1, &quot;P1: the Casimir force is attractive&quot;);
+    assert!(p2, &quot;P2: the bench discovers the force law (exponent −2, coefficient π/24)&quot;);
+    assert!(p3, &quot;P3: the force is independent of the far wall (subtraction-free)&quot;);
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>
