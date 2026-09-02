@@ -38,6 +38,62 @@ Every chapter begins with one editorial illustration study. It must:
 The current SVG studies are replaceable placeholders. A replacement may be more expressive, but it
 must preserve the concept, alt-text intent, caption distinction, and firewall.
 
+## Numbers computed while the page is built
+
+Chapters 1–3 live on one triangle and one tetrahedron, and every number in them is
+finger-countable. Quoting such a number from the record would be theatre: the reader can check it on
+a napkin, so the book does the arithmetic in front of her instead of citing itself.
+
+**Write a token; the build replaces it.** In chapter prose:
+
+```
+{{napkin:triangle_loop_example}}
+```
+
+The mdBook preprocessor substitutes generated Markdown for it on every build. An unknown token name
+fails the build, and a token that somehow survives into a built page fails the checker — the reader
+is never shown a brace-literal where a number belongs.
+
+| token | what it computes |
+|---|---|
+| `tetra_counts` | the tetrahedron's census — dots, lines, faces, inside — and that `d∘d = 0` on both rungs |
+| `triangle_loop_example` | corner values 2, 5, 1 on a triangle; the three oriented differences and their sum |
+| `tetra_face_loops` | corner values 2, 5, 1, 4; the six differences; each of the four faces' loop sums |
+| `tetra_inside_sum` | six freely chosen line-numbers, the four non-zero face-numbers they give, and their oriented sum around the inside |
+| `slosh_table` | ten ticks of the engine's rule on one tetrahedron, every line counting the same, with a conserved total |
+| `slosh_table_dialed` | the same ten ticks with one line counted double — the dial, in miniature |
+
+Three properties are guaranteed, and each is enforced rather than intended:
+
+1. **Exact and short.** Rational arithmetic throughout, no floating point; a value that will not
+   write down exactly in a couple of decimal places fails the build rather than being rounded into
+   the table.
+2. **Deterministic.** Every token is recomputed twice on every check and must come out identical.
+   "Computed while this page was built" is a promise about *every* build.
+3. **Self-asserting.** Each token proves its own claim before it renders — the loop sums are zero,
+   the inside sum is zero, the total is conserved, the average does not move. A napkin that quietly
+   printed a non-zero loop sum would be worse than no napkin.
+
+Every rendered block ends with one line: *computed while this page was built — <what>.*
+
+### The exemption, and exactly how far it reaches
+
+A napkin's numbers are **not** in the appendix, and must not be: they are computed, not quoted. So
+inside a napkin block, the rule that an emphasised number must be anchored in the chapter's appendix
+section does not apply.
+
+**The exemption is bounded by the block and nothing else.** The preprocessor fences each rendered
+token with `<!-- napkin:NAME -->` … `<!-- /napkin:NAME -->`, and the checker excises exactly those
+spans before applying the anchoring rule to the built page. An emphasised number one paragraph
+outside a block is governed exactly as before — a computed `0` inside a napkin licenses nothing
+outside it. (Verified by mutation: the same bold value passes inside a span and fails outside it.)
+
+### Lane boundary
+
+The Rewrite lane writes tokens in `chapters/` and never edits the backend. The Repository lane owns
+`preprocessor.py`, `tools/napkin.py` and `check_edition.py` and never edits a chapter's prose. A new
+token is a Repository-lane change; using one is a Rewrite-lane change.
+
 ## The revised shadow method
 
 The legacy manuscript used four beats: get data, give it shape, check, repeat. The current project
