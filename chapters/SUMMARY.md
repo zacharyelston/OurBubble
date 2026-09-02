@@ -1,14 +1,17 @@
 # Summary
 
 - [The shadow](the-shadow.md)
+- [Two dots, a line, and the first thing that closes](two-dots-and-a-line.md)
+- [One tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md)
+- [Make it move](make-it-move.md)
+- [Room, and a world with no edge](room-and-a-world-with-no-edge.md)
+- [Is it round?](the-round-ripple.md)
+- [What does pushing on it cost?](the-bubble-and-its-bill.md)
+- [Can you wall a piece off?](the-wall-that-worked-and-didnt.md)
+- [Can a gap be emptier than empty?](where-negative-energy-appears.md)
+- [Can it tell me something I didn't tell it?](a-number-without-the-answer-key.md)
+- [When the world you built says no](when-the-expected-law-fails.md)
 - [A few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md)
-- [Build the object](build-the-object.md)
-- [The round ripple](the-round-ripple.md)
-- [The bubble and its bill](the-bubble-and-its-bill.md)
-- [The wall that worked, and didn't](the-wall-that-worked-and-didnt.md)
-- [Where negative energy appears](where-negative-energy-appears.md)
-- [A number without the answer key](a-number-without-the-answer-key.md)
-- [When the expected law fails](when-the-expected-law-fails.md)
 - [Cast your own shadow](cast-your-own-shadow.md)
 
 ---

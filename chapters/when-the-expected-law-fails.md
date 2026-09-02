@@ -91,5 +91,5 @@ prediction, and a refusal. There is one step left, and it does not belong to us.
 *The simulations behind this chapter:
 [the simulations](the-simulations.md#s-when-the-expected-law-fails).*
 
-**Next:** [Cast your own shadow](cast-your-own-shadow.md)—read a prediction before its result, and
-check one for yourself.
+**Next:** [A few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md)—two
+thousand years of the same method, and what our own two failures turned out to be.

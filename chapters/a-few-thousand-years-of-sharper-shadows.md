@@ -168,5 +168,5 @@ fixed.
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-a-few-thousand-years-of-sharper-shadows).*
 
-**Next:** [Build the object](build-the-object.md)—the fewest parts you need before anything can
-happen at all.
+**Next:** [Cast your own shadow](cast-your-own-shadow.md)—the part where you stop reading and check
+one of these results yourself.

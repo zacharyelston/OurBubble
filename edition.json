@@ -12,13 +12,6 @@
     "a-few-thousand-years-of-sharper-shadows": {
       "sources": []
     },
-    "build-the-object": {
-      "sources": [
-        "book/chapters/00-the-object/chapter.md",
-        "book/chapters/README.md",
-        "viz/synthesis.html"
-      ]
-    },
     "the-round-ripple": {
       "sources": [
         "book/chapters/01-the-light-cone/chapter.md",
@@ -56,6 +49,31 @@
         "book/LESSON_STANDARD.md",
         "docs/DEMOS.md"
       ]
+    },
+    "two-dots-and-a-line": {
+      "sources": [
+        "book/chapters/00-the-object/chapter.md",
+        "book/LESSON_STANDARD.md"
+      ]
+    },
+    "one-tetrahedron-is-a-whole-world": {
+      "sources": [
+        "book/chapters/00-the-object/chapter.md",
+        "book/LESSON_STANDARD.md"
+      ]
+    },
+    "make-it-move": {
+      "sources": [
+        "book/chapters/00-the-object/chapter.md",
+        "book/LESSON_STANDARD.md"
+      ]
+    },
+    "room-and-a-world-with-no-edge": {
+      "sources": [
+        "book/chapters/00-the-object/chapter.md",
+        "book/chapters/README.md",
+        "viz/synthesis.html"
+      ]
     }
   },
   "appendix": {
@@ -80,40 +98,6 @@
           "1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.",
           "1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.",
           "1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could."
-        ]
-      },
-      "build-the-object": {
-        "title": "Build the object",
-        "rungs": [
-          "The Container, chapter 00 — the eleven-step object ramp"
-        ],
-        "figures": [
-          "viz/synthesis-slow-ramp.html",
-          "viz/synthesis.html"
-        ],
-        "standards": [
-          "book/chapters/00-the-object/chapter.md",
-          "book/chapters/README.md"
-        ],
-        "commands": [
-          "cargo run --release -p viz --bin gen_synthesis -- \"$(git rev-parse --short HEAD)\""
-        ],
-        "record_quotes": [
-          {
-            "text": "70.5288°",
-            "source": "book/chapters/00-the-object/chapter.md",
-            "what": "the angle between two faces of one tetrahedron, meeting along an edge"
-          },
-          {
-            "text": "5.1043",
-            "source": "book/chapters/00-the-object/chapter.md",
-            "what": "how many such tetrahedra it would take to close a full turn around that edge — not a whole number"
-          },
-          {
-            "text": "7.3561°",
-            "source": "book/chapters/00-the-object/chapter.md",
-            "what": "the wedge left over once five are packed in: what no sixth tetrahedron can fill"
-          }
         ]
       },
       "the-round-ripple": {
@@ -415,6 +399,61 @@
           "python3 check_edition.py",
           "mdbook build",
           "python3 check_edition.py --rendered"
+        ]
+      },
+      "two-dots-and-a-line": {
+        "title": "Two dots, a line, and the first thing that closes — the object, from nothing",
+        "standards": [
+          "book/chapters/00-the-object/chapter.md",
+          "book/LESSON_STANDARD.md"
+        ]
+      },
+      "one-tetrahedron-is-a-whole-world": {
+        "title": "One tetrahedron is a whole world — every kind of number, on a napkin",
+        "standards": [
+          "book/chapters/00-the-object/chapter.md",
+          "book/LESSON_STANDARD.md"
+        ]
+      },
+      "make-it-move": {
+        "title": "Make it move — the one rule, and what one tick does",
+        "standards": [
+          "book/chapters/00-the-object/chapter.md",
+          "book/LESSON_STANDARD.md"
+        ]
+      },
+      "room-and-a-world-with-no-edge": {
+        "title": "Room, and a world with no edge — why tetrahedra need a compromise",
+        "rungs": [
+          "The Container, chapter 00 — the eleven-step object ramp"
+        ],
+        "figures": [
+          "viz/synthesis-slow-ramp.html",
+          "viz/synthesis.html"
+        ],
+        "standards": [
+          "book/chapters/00-the-object/chapter.md",
+          "book/chapters/README.md"
+        ],
+        "commands": [
+          "cargo run --release -p viz --bin gen_synthesis -- \"$(git rev-parse --short HEAD)\""
+        ],
+        "record_quotes": [
+          {
+            "text": "70.5288°",
+            "source": "book/chapters/00-the-object/chapter.md",
+            "what": "the angle between two faces of one tetrahedron, meeting along an edge"
+          },
+          {
+            "text": "5.1043",
+            "source": "book/chapters/00-the-object/chapter.md",
+            "what": "how many such tetrahedra it would take to close a full turn around that edge — not a whole number"
+          },
+          {
+            "text": "7.3561°",
+            "source": "book/chapters/00-the-object/chapter.md",
+            "what": "the wedge left over once five are packed in: what no sixth tetrahedron can fill"
+          }
         ]
       }
     }
