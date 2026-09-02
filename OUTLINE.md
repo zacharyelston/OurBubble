@@ -64,9 +64,9 @@ reader every time instead of explained to her once.
 28. What is the least a clock needs?  *(ticks, all the same)*
 29. What should one tick *do*?  *(one rule: each dot moves toward its neighbours by the differences on its lines)*
 30. Is that really the whole law — nothing else, ever?  *(yes; every result in the book is that sentence, run)*
-31. Run it on the tetrahedron — four numbers, tick by tick: what do they do?  *(they slosh toward each other and settle level)*  [table: four numbers, ten ticks]
+31. Run it on the tetrahedron — four numbers, tick by tick: what do they do?  *(they slosh back and forth — and every four ticks they are exactly back where they started; nothing leaks)*  [table: four numbers, ten ticks — computed at build]
 32. Add the four up at every tick — what happens to the total?  *(it never changes: coming home, in time)*
-33. Turn the dial — count one line for more — what changes?  *(the sloshing along that line is faster; the settling point is not)*
+33. Turn the dial — count one line for more — what changes?  *(the rhythm along that line; the total, and the average, never move)*
 34. Now poke one dot hard and watch. Is there a ring?  *(no — every dot is every other dot's neighbour; there is no room, and no direction)*
 35. So what question can I *not* ask in this world?  *(the stopwatch question: how fast, and is it the same every way)*
 
