@@ -171,6 +171,9 @@ def footnote(what: str) -> str:
     return f"\n*computed while this page was built — {what}.*\n"
 
 
+CAPTION_CEILING = 70
+
+
 def block(name: str, body: str, what: str) -> str:
     """One rendered token, fenced by comments that mark exactly where the computed span begins.
 
@@ -178,6 +181,16 @@ def block(name: str, body: str, what: str) -> str:
     computed-on-build exemption to this span and nothing else, so a bold number the *narrative*
     emphasises is still governed by the appendix-anchoring rule.
     """
+    # A caption is a caption. It was the one surface with no ceiling on it — the grain band counts a
+    # chapter's prose and sees `{{napkin:NAME}}` as one word — and a caption grew to 118 words and
+    # spent the following section's whole reveal in small italics before anyone measured it (a
+    # proofreader, 2026-09-02). The cap is above every caption in the book, so it costs nothing
+    # except the next one that tries to do a section's work.
+    length = len(what.split())
+    assert length <= CAPTION_CEILING, (
+        f"{name}: the caption is {length} words, over the {CAPTION_CEILING}-word ceiling — a "
+        f"caption states what was computed; it does not carry the section's argument"
+    )
     return (
         f"<!-- napkin:{name} -->\n\n{body.strip()}\n{footnote(what)}\n<!-- /napkin:{name} -->"
     )
@@ -695,6 +708,24 @@ def shows_exactly(name: str, fragment: str, expected: Sequence[Fraction]) -> Non
     )
 
 
+def checked_block(name: str, body: str, what: str,
+                  in_caption: Dict[str, str] | None = None, **values: str) -> str:
+    """Render a token, and check the block AND the caption each carry the numbers they claim.
+
+    Two scopes, because one was not enough twice over. `values` must appear anywhere in the block —
+    that is the table's rule. `in_caption` must appear **in the caption itself**, which is the rule
+    the first version missed: a caption saying "a sixth" passed a whole-block check because `1/8`
+    was in the table three lines above it, and a caption saying "Only 7 rows" passed because `3` was
+    in a cell somewhere (a proofreader, 2026-09-02, twice). A claim is only checked where it is
+    made.
+    """
+    text = block(name, body, what)
+    carries(name, text, **values)
+    if in_caption:
+        carries(f"{name}'s caption", what, **in_caption)
+    return text
+
+
 def carries(name: str, body: str, **values: str) -> str:
     """Assert the rendered text actually contains the values that were computed. Returns `body`.
 
@@ -733,13 +764,19 @@ def octa_cut() -> str:
         f"({' · '.join(cut['faces_at_a_tip'])}), and **{len(cut['faces_in_a_face'])}** lie flat in "
         f"a face of the tetrahedron you cut ({' · '.join(cut['faces_in_a_face'])})."
     )
-    carries("octa_cut", body, dots=f"**{cut['dots']}**", tips=f"**{cut['tips']}**",
-            octahedra=f"**{cut['octahedra']}**", tip_share=fraction_text(cut["tip_share"]),
-            core_share=fraction_text(cut["core_share"]))
-    return block("octa_cut", body,
-                 "one tetrahedron cut at the middles of its six lines: the four tips are an eighth "
-                 "of it each and the shape between them is exactly half, so the five pieces "
-                 "account for all of it")
+    return checked_block(
+        "octa_cut", body,
+        f"one tetrahedron cut at the middles of its six lines: the {word(cut['tips'])} tips are "
+        f"{fraction_text(cut['tip_share'])} of it each and the shape between them is exactly "
+        f"{fraction_text(cut['core_share'])}, so the {word(cut['tips'] + cut['octahedra'])} pieces "
+        f"account for all of it",
+        in_caption={"tip_share": fraction_text(cut["tip_share"]),
+                    "core_share": fraction_text(cut["core_share"]),
+                    "tips": f"the {word(cut['tips'])} tips",
+                    "pieces": f"the {word(cut['tips'] + cut['octahedra'])} pieces"},
+        dots=f"**{cut['dots']}**", tips=f"**{cut['tips']}**",
+        octahedra=f"**{cut['octahedra']}**",
+        tip_share=fraction_text(cut["tip_share"]), core_share=fraction_text(cut["core_share"]))
 
 
 def octa_counts() -> str:
@@ -766,15 +803,18 @@ def octa_counts() -> str:
         f"lines share a corner — which leaves **{len(cut['opposite_pairs'])}** pairs joined by "
         f"nothing at all: {pairs}."
     )
-    carries("octa_counts", body, oct_dots=f"**{cut['oct_dots']}**",
-            oct_lines=f"**{cut['oct_lines']}**", oct_faces=f"**{cut['oct_faces']}**",
-            pairs=pairs, tetra_census=f"| {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |",
-            pair_count=f"**{len(cut['opposite_pairs'])}** pairs",
-            names=" · ".join(octahedron.MID_NAMES))
-    return block("octa_counts", body,
-                 f"the census of the shape between the tips — {cut['oct_degree']} lines at every "
-                 f"dot, and the three pairs of dots that no line joins, which is the first room in "
-                 f"the book")
+    return checked_block(
+        "octa_counts", body,
+        f"the census of the shape between the tips: {cut['oct_degree']} lines at every dot, and "
+        f"the {word(len(cut['opposite_pairs']))} pairs of dots that no line joins — the first room "
+        f"in the book",
+        oct_dots=f"**{cut['oct_dots']}**",
+        oct_lines=f"**{cut['oct_lines']}**", oct_faces=f"**{cut['oct_faces']}**",
+        pairs=pairs, tetra_census=f"| {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |",
+        pair_count=f"**{len(cut['opposite_pairs'])}** pairs",
+        names=" · ".join(octahedron.MID_NAMES),
+        in_caption={"degree": f"{cut['oct_degree']} lines at every dot",
+                    "pairs": f"the {word(len(cut['opposite_pairs']))} pairs"})
 
 
 def octa_poke_table() -> str:
@@ -795,15 +835,20 @@ def octa_poke_table() -> str:
         f"|---|{'---|' * len(names)}---|\n" + "\n".join(rows)
     )
     # The rows the chapter reads out, and the names it reads them under.
-    carries("octa_poke_table", body, header=" | ".join(names),
-            crossing=rows[poke["crossing_ticks"]], home=rows[poke["home_ticks"]],
-            last=rows[poke["period"]])
-    return block("octa_poke_table", body,
-                 f"the same rule and the same tick size as the tetrahedron's tables, run on the "
-                 f"shape between the tips from a poke of 1 on {poke['poked']}: the whole of it is "
-                 f"on the opposite dot {poke['opposite']} at tick {poke['crossing_ticks']} and home "
-                 f"at tick {poke['home_ticks']}, the total never moves, and the pair (now, before) "
-                 f"does not repeat until tick {poke['period']}")
+    return checked_block(
+        "octa_poke_table", body,
+        f"the same rule and the same tick size as the tetrahedron's tables, run on the shape "
+        f"between the tips from a poke of 1 on {poke['poked']}: the whole of it is on the opposite "
+        f"dot {poke['opposite']} at tick {poke['crossing_ticks']} and home at tick "
+        f"{poke['home_ticks']}, the total never moves, and the pair (now, before) does not repeat "
+        f"until tick {poke['period']}",
+        header=" | ".join(names),
+        crossing=rows[poke["crossing_ticks"]], home=rows[poke["home_ticks"]],
+        last=rows[poke["period"]],
+        in_caption={"poked": f"poke of 1 on {poke['poked']}",
+                    "crossing": f"{poke['opposite']} at tick {poke['crossing_ticks']}",
+                    "home": f"home at tick {poke['home_ticks']}",
+                    "period": f"repeat until tick {poke['period']}"})
 
 
 def octa_face_sum() -> str:
@@ -859,17 +904,22 @@ def octa_face_sum() -> str:
     )
     shows_exactly("octa_face_sum's face-numbers", "\n".join(walk_rows),
                   list(surface["face_numbers"]))
-    carries("octa_face_sum", body, terms=total_terms,
-            grouping=f"{word(len(grouped))} groups of "
-                     f"{word(len(next(iter(grouped.values()))))}",
-            faces_walked=f"each of the {word(len(faces))} faces",
-            **{f"face {index}": row for index, row in enumerate(walk_rows)},
-            **{f"group {face}": f"| {face} | {' · '.join(items)} |"
-               for face, items in grouped.items()})
-    return block("octa_face_sum", body,
-                 "twelve freely chosen arrows on the shape between the tips, the eight non-zero "
-                 "face-numbers they give, and their sum walked from outside — zero, because every "
-                 "one of the twelve lines is walked exactly twice, once each way")
+    return checked_block(
+        "octa_face_sum", body,
+        f"{word(len(lines))} freely chosen arrows on the shape between the tips, the "
+        f"{word(len(faces))} non-zero face-numbers they give, and their sum walked from outside — "
+        f"zero, because every one of the {word(len(lines))} lines is walked exactly twice, once "
+        f"each way",
+        terms=total_terms,
+        grouping=f"{word(len(grouped))} groups of "
+                 f"{word(len(next(iter(grouped.values()))))}",
+        faces_walked=f"each of the {word(len(faces))} faces",
+        in_caption={"arrows": f"{word(len(lines))} freely chosen arrows",
+                    "faces": f"the {word(len(faces))} non-zero face-numbers",
+                    "lines": f"the {word(len(lines))} lines is walked"},
+        **{f"face {index}": row for index, row in enumerate(walk_rows)},
+        **{f"group {face}": f"| {face} | {' · '.join(items)} |"
+           for face, items in grouped.items()})
 
 
 def stella_counts() -> str:
@@ -904,16 +954,20 @@ def stella_counts() -> str:
     # Phrases, not bare digits: a "6" on its own is in the table too, so asserting the digit would
     # let a literal into the sentence beside it. The attack that found this typed "The 15 are…"
     # under a table saying 14, and every check stayed green (a proofreader, 2026-09-02).
-    carries("stella_counts", body, dots=f"**{both['dots']}**", lines=f"**{both['lines']}**",
-            middles=f"the {both['middles']} middles", tips=f"{both['tips']} tips",
-            middle_degree=f"Every middle has {both['middle_degree']} lines",
-            tip_degree=f"every tip has {both['tip_degree']}",
-            apexes=" · ".join(twin["apex_names"]),
-            in_its_cube=fraction_text(both["stella_in_its_cube"]))
-    return block("stella_counts", body,
-                 "the two tetrahedra threaded through one another, counted: the second is the same "
-                 "size as the first and its own six middles are the same six middles, so they share "
-                 "one octahedron and the eight tips are the corners of a cube")
+    return checked_block(
+        "stella_counts", body,
+        f"the two tetrahedra threaded through one another, counted: the second is the same size as "
+        f"the first and its own {word(both['middles'])} middles are the same "
+        f"{word(both['middles'])} middles, so they share one octahedron and the "
+        f"{word(both['tips'])} tips are the corners of a cube",
+        dots=f"**{both['dots']}**", lines=f"**{both['lines']}**",
+        middles=f"the {both['middles']} middles", tips=f"{both['tips']} tips",
+        middle_degree=f"Every middle has {both['middle_degree']} lines",
+        tip_degree=f"every tip has {both['tip_degree']}",
+        apexes=" · ".join(twin["apex_names"]),
+        in_its_cube=fraction_text(both["stella_in_its_cube"]),
+        in_caption={"middles": f"its own {word(both['middles'])} middles",
+                    "tips": f"the {word(both['tips'])} tips"})
 
 
 def stella_refusal() -> str:
@@ -963,23 +1017,68 @@ def stella_refusal() -> str:
         "So run it anyway, and watch the biggest number anywhere in the world:\n\n"
         f"| tick | the biggest number in it |\n|---|---|\n{growth_rows}"
     )
-    carries("stella_refusal", body, column="the tick it must stay under",
-            **{f"bound for {row['dots']} dots": fraction_text(row["bound"])
-               for row in ceilings["rows"]},
-            book_tick=fraction_text(TICK_K),
-            last_bound=_thousands(bounds[max(bounds)]))
-    example = runaway["example"]
-    return block("stella_refusal", body,
-                 f"the same poke and the same tick on the two tetrahedra threaded together: the "
-                 f"tick is over what this object will take, so nothing sloshes — it runs away, past "
-                 f"{_thousands(bounds[max(bounds)])} by tick {max(bounds)}. Only "
-                 f"{runaway['printable_rows']} rows of the full table can be written down in halves "
-                 f"at all. A tick that does stay under the bound is no rescue: at "
-                 f"{fraction_text(example['k'])} the numbers have {example['first_denominator']} "
-                 f"underneath them at the first tick and {example['second_denominator']} at the "
-                 f"second, and every tick that holds prints two rows at most. And at no tick size that can be written as a fraction does this object "
-                 f"ever come home — five were tried, and why none can is proved in "
-                 f"`tools/octahedron.py`")
+    # The caption says only what the two tables above it are: the poke, the tick, the runaway and
+    # how much of it can be written down. Everything else it used to carry — the smaller tick, the
+    # fifths, the never-coming-home — is the next section's own reveal, and a caption that spends a
+    # section's surprise two beats early in small italics was a real defect (a proofreader,
+    # 2026-09-02). It also grew the one surface the grain band does not measure.
+    most_rows = max(row["printable"] for row in runaway["stable_tried"])
+    return checked_block(
+        "stella_refusal", body,
+        f"the same poke and the same tick on the two tetrahedra threaded together: the tick is "
+        f"over what this object will take, so nothing sloshes — it runs away, past "
+        f"{_thousands(bounds[max(bounds)])} by tick {max(bounds)}. Only "
+        f"{runaway['printable_rows']} rows of the full table can be written down in halves at all, "
+        f"and no tick that does stay under the bound prints more than {most_rows}",
+        column="the tick it must stay under",
+        **{f"bound for {row['dots']} dots": fraction_text(row["bound"])
+           for row in ceilings["rows"]},
+        book_tick=fraction_text(TICK_K),
+        last_bound=_thousands(bounds[max(bounds)]),
+        in_caption={"runaway": _thousands(bounds[max(bounds)]),
+                    "tick": f"by tick {max(bounds)}",
+                    "rows": f"Only {runaway['printable_rows']} rows",
+                    "most": f"more than {most_rows}"})
+
+
+# What a token's arithmetic REFUSES, in the prose of any chapter that carries the token.
+#
+# The defect this exists for (a proofreader, 2026-09-02): `stella_refusal`'s table was corrected to
+# "the tick it must stay under" and the prose two paragraphs below it still said "a largest tick it
+# will hold, the table says what they are" — pointing at a table that said the opposite. Every
+# fidelity check here reads what the *tool* wrote; nothing read what the *author* wrote. So each
+# token names the phrasings its own numbers disprove, `check_edition.py` refuses them in the
+# chapter's source, and the contradiction cannot be reintroduced by an edit two paragraphs away.
+#
+# The last group is the three readings `notes/octahedron-crossing.md` computed and refuted. They are
+# the appendix's business (they are that chapter's `note` in `edition.json`) and they are refused in
+# every chapter's prose, whether or not it carries a token, because a refuted claim is not a
+# chapter's to make.
+REFUSED_IN_PROSE: Dict[str, List[str]] = {
+    "stella_refusal": [
+        "tick it will hold",
+        "tick it holds",
+        "largest tick that holds",
+        "biggest tick that holds",
+    ],
+    "octa_face_sum": [
+        "group four and four",
+        "four and four",
+    ],
+    "octa_poke_table": [
+        "one tick to cross",
+        "a tick is a trip",
+        "trip round the octahedron",
+        "trip round the shape",
+    ],
+    "*": [
+        "trip round the octahedron",
+        "saves work",
+        "cheaper than working",
+        "finishes its calculation",
+        "before the cube is stable",
+    ],
+}
 
 
 TOKENS = {

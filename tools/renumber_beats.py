@@ -23,7 +23,18 @@ Usage:
     tools/renumber_beats.py --beats-from 36 --by 11                       # a dry run: prints only
 
 `--expect-last` is the outline's highest beat number *before* the shift, and it is required to
-write. It is what makes a second run of the same command impossible rather than merely unwise.
+write: the operator states what they believe the file contains, and a stale belief is refused. The
+refusal deliberately does not print the number that would unblock it.
+
+**What that does and does not buy, stated plainly.** It stops the realistic accident — the
+documented command re-run verbatim. It cannot distinguish a re-run from a *deliberate* second
+insertion at the same beat, because nothing in the file distinguishes them: both open a hole and
+move everything after it. Two things cover that instead. A tree with a hole already in it is
+refused here (finish the insertion first), and `tools/beat_coverage.py` — which runs in tier 0 —
+refuses an outline whose beat numbering has a hole in it at all. That second one is the guard that
+matters, and it was added for exactly this: a double shift moves the outline and every marker
+together, so every beat is still claimed by a section and the coverage audit passed while the
+numbering had an eleven-beat hole in it (a proofreader, 2026-09-02). Tier 0 now goes red on it.
 
 It prints a self-check afterwards and refuses to write if it fails: the outline's beats must still
 run consecutively — apart from the one hole a positive shift opens on purpose, which it names — and
@@ -57,6 +68,12 @@ def shifted(text: str, pattern: re.Pattern, first: int, by: int) -> tuple[str, i
         return match.group(0).replace(match.group(1), str(number + by), 1)
 
     return pattern.sub(replace, text), moves
+
+
+def breaks_in(text: str) -> list[tuple[int, int]]:
+    """Where the outline's beat run is already broken — i.e. an insertion is half finished."""
+    beats = outline_beats(text)
+    return [(a, b) for a, b in zip(beats, beats[1:]) if b != a + 1]
 
 
 def outline_beats(text: str) -> list[int]:
@@ -120,12 +137,17 @@ def main() -> int:
     # they believe the file contains, and the second run cannot make that statement truthfully.
     last = max(outline_beats(outline))
     if args.apply and args.expect_last is None:
-        print(f"refusing to write without --expect-last: the outline's last beat is {last} now. "
-              f"Pass --expect-last {last} if that is the tree you meant to shift.")
+        print("refusing to write without --expect-last: read OUTLINE.md, and pass the highest beat "
+              "number it currently carries. The number is not printed here on purpose.")
         return 1
     if args.expect_last is not None and args.expect_last != last:
-        print(f"--expect-last {args.expect_last} but the outline's last beat is {last} — this tree "
-              f"is not the one you meant to shift (a shift already applied?). Nothing written.")
+        print(f"--expect-last {args.expect_last} does not match the outline, so this is not the "
+              f"tree you meant to shift — a shift may already have been applied. Read OUTLINE.md. "
+              f"Nothing written.")
+        return 1
+    if breaks_in(outline):
+        print(f"the outline already has a gap in its beats {breaks_in(outline)} — an insertion is "
+              f"half done. Write the new beats into it before shifting again. Nothing written.")
         return 1
 
     new_outline, beat_moves = shifted(outline, BEAT_LINE, args.beats_from, args.by)

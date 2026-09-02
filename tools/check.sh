@@ -35,7 +35,7 @@ cd "$ROOT"
 
 step() { printf '\n\033[1m== %s\033[0m\n' "$1"; }
 
-step "1/4 · fetch the pinned engine (for the integrity layer)"
+step "1/5 · fetch the pinned engine (for the integrity layer)"
 # Soft on purpose. The engine is private; most readers cannot reach it, and the quotation gate does
 # not need it. What is NOT soft is pretending the integrity layer ran — `check_edition.py` prints
 # its own status line either way, and says "unverified" when it could not.

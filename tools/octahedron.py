@@ -1203,6 +1203,11 @@ def mid_faces() -> List[Tuple[int, int, int]]:
     by an exact 3×3 integer determinant on the face's own three corners: the object is centred on
     the origin, so a cycle with a positive determinant is the one seen anticlockwise from outside.
     That is the only place geometry enters, and it enters as the sign of an integer.
+
+    **And "outside" is checked, not asserted by convention.** Flipping the determinant's sense
+    flips all eight cycles at once, which leaves the boundary sum zero and every line still walked
+    once each way — consistent, and inward (a proofreader, 2026-09-02). So each cycle's own normal
+    is computed the long way, `(v₂−v₁) × (v₃−v₁)`, and required to point *away* from the centre.
     """
     out: List[Tuple[int, int, int]] = []
     for triple in combinations(range(6), 3):
@@ -1211,7 +1216,19 @@ def mid_faces() -> List[Tuple[int, int, int]]:
         corners = [MID_POINTS[i] for i in triple]
         turn = _det3(*corners)
         assert turn != 0, f"the face {triple} is flat"
-        out.append(triple if turn > 0 else (triple[0], triple[2], triple[1]))
+        cycle = triple if turn > 0 else (triple[0], triple[2], triple[1])
+        a, b, c = (MID_POINTS[i] for i in cycle)
+        edge1 = [b[i] - a[i] for i in range(3)]
+        edge2 = [c[i] - a[i] for i in range(3)]
+        normal = [edge1[1] * edge2[2] - edge1[2] * edge2[1],
+                  edge1[2] * edge2[0] - edge1[0] * edge2[2],
+                  edge1[0] * edge2[1] - edge1[1] * edge2[0]]
+        outward = sum(normal[i] * (a[i] + b[i] + c[i]) for i in range(3))
+        assert outward > 0, (
+            f"the face {[MID_NAMES[i] for i in cycle]} is walked so that its own normal points "
+            f"back at the centre ({outward}) — that is inward, not 'from outside'"
+        )
+        out.append(cycle)
     assert len(out) == 8, f"the octahedron came out with {len(out)} faces, not 8"
     return out
 
@@ -1535,12 +1552,45 @@ def stella_reader_census() -> Dict[str, object]:
     )
 
     whole = _volume([points[i] for i in (6, 7, 8, 9)])
-    stella = 8 * (whole / 8) + whole / 2
-    cube = Fraction(8)
+
+    # Both volumes the ratio is made of are built from the fourteen points, piece by piece, rather
+    # than from each other: the eight tips as eight actual tetrahedra, the core as the four
+    # tetrahedra the cut makes of it, and the hull cube from the spread of the tips along each axis.
+    # Deriving one from the other let an attack change `stella / cube` to `stella / 4` with every
+    # volume assertion still true, and the page then said the pair fills the whole cube (a
+    # proofreader, 2026-09-02).
+    tips = []
+    for apex_index in range(6, 14):
+        apex = points[apex_index]
+        touching = [index for index in range(6)
+                    if _squared_length(points[index], apex) == Fraction(2)]
+        assert len(touching) == 3, f"a tip touches {len(touching)} middles, not 3"
+        tips.append(_volume([apex] + [points[index] for index in touching]))
+    diagonal = (MID_NAMES.index("AB"), MID_NAMES.index("CD"))
+    ring = _ring([index for index in range(6) if index not in diagonal])
+    core = sum(_volume([MID_POINTS[diagonal[0]], MID_POINTS[diagonal[1]],
+                        MID_POINTS[ring[w]], MID_POINTS[ring[(w + 1) % 4]]]) for w in range(4))
+    stella = sum(tips) + core
+    spread = [max(point[axis] for point in points[6:]) - min(point[axis] for point in points[6:])
+              for axis in range(3)]
+    cube = spread[0] * spread[1] * spread[2]
     assert whole == Fraction(8, 3) and stella == 4 and cube == 8, (
         f"the volumes came out tetrahedron {whole}, stella {stella}, cube {cube}"
     )
-    return {
+    assert sum(tips) == 8 * (whole / 8) and core == whole / 2, (
+        f"the pieces came to {sum(tips)} and {core}, not eight eighths and a half"
+    )
+    # The two ratios the chapter prints, asserted as themselves. Asserting the volumes they are
+    # divided from is not the same thing: an attack changed `stella / cube` to `stella / 4` and the
+    # page said the pair fills the whole cube with every volume assertion still true (a
+    # proofreader, 2026-09-02).
+    in_its_cube = stella / cube
+    in_tetrahedra = stella / whole
+    assert in_its_cube == Fraction(1, 2), f"the pair fills {in_its_cube} of its cube, not a half"
+    assert in_tetrahedra == Fraction(3, 2), (
+        f"the pair is {in_tetrahedra} of the tetrahedron we cut, not three halves"
+    )
+    out = {
         "dots": 14,
         "lines": 36,
         "middles": 6,
@@ -1548,10 +1598,25 @@ def stella_reader_census() -> Dict[str, object]:
         "pieces": 9,                          # eight tetrahedra and the octahedron between them
         "middle_degree": 8,
         "tip_degree": 3,
-        "stella_in_tetrahedra": stella / whole,   # 3/2 — one and a half of the object we cut
-        "stella_in_its_cube": stella / cube,      # 1/2
+        "stella_in_tetrahedra": in_tetrahedra,    # 3/2 — one and a half of the object we cut
+        "stella_in_its_cube": in_its_cube,        # 1/2
         "tips_independent": True,
     }
+    # The last assertion is on the dict itself, not on the variables it was built from. An attack
+    # changed `"stella_in_its_cube": stella / Fraction(4)` here and every assertion above it stayed
+    # true, so the page said the pair fills the whole cube (a proofreader, 2026-09-02). What the
+    # caller receives is what has to be checked.
+    assert out["stella_in_its_cube"] == Fraction(1, 2), (
+        f"what this returns says the pair fills {out['stella_in_its_cube']} of its cube"
+    )
+    assert out["stella_in_tetrahedra"] == Fraction(3, 2), (
+        f"what this returns says the pair is {out['stella_in_tetrahedra']} tetrahedra"
+    )
+    assert (out["dots"], out["lines"]) == (len(points), len(lines)), (
+        f"what this returns says {out['dots']} dots and {out['lines']} lines, but the object has "
+        f"{len(points)} and {len(lines)}"
+    )
+    return out
 
 
 # ── the tick that has worked all along, and the object it stops working on ───────────────────────
@@ -1741,12 +1806,14 @@ def stella_runaway(k: Fraction = BOOK_TICK) -> Dict[str, object]:
     start_row = [Fraction(1)] + [Fraction(0)] * 13
     rows = slosh(unit_weights(lines), lines, ticks=2, initial=start_row, k=example_k)
     push = 8
-    assert {value.denominator for value in rows[1]} == {1, 5}, (
-        f"tick 1 at k = {example_k} is in {sorted({v.denominator for v in rows[1]})}, not fifths"
-    )
-    assert {value.denominator for value in rows[2]} == {25}, (
-        f"tick 2 at k = {example_k} is in {sorted({v.denominator for v in rows[2]})}, not "
-        f"twenty-fifths"
+    # Taken from the rows themselves. Typing them beside the rows let an attack change the pair to
+    # 7 and 49 with both assertions still passing, because nothing connected the numbers the page
+    # printed to the run they described (a proofreader, 2026-09-02).
+    first_denominator = max(value.denominator for value in rows[1])
+    second_denominator = max(value.denominator for value in rows[2])
+    assert (first_denominator, second_denominator) == (5, 25), (
+        f"tick 1 and 2 at k = {example_k} came out over {first_denominator} and "
+        f"{second_denominator}, not 5 and 25"
     )
     assert rows[1][0] == 1 - example_k * push, "the first push is not the poked dot's line count"
 
@@ -1764,7 +1831,8 @@ def stella_runaway(k: Fraction = BOOK_TICK) -> Dict[str, object]:
         "printable_rows": printable,
         "stable_tried": tuple(tried),
         "push_at_a_middle": push,
-        "example": {"k": example_k, "first_denominator": 5, "second_denominator": 25},
+        "example": {"k": example_k, "first_denominator": first_denominator,
+                    "second_denominator": second_denominator},
         "never_returns": True,
     }
 

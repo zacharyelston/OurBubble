@@ -98,8 +98,7 @@ Now put numbers on its lines instead, the way you did on the tetrahedron.
 
 <!-- beat 40 -->
 
-Twelve arrows of your own choosing, one to a line. Then walk the eight faces the way they face
-from outside, and add up what goes round each.
+Now walk the eight faces the way they face from outside, and add up what goes round each.
 
 {{napkin:octa_face_sum}}
 
@@ -145,8 +144,8 @@ useful one: two tetrahedra, threaded through one another, overlapping in the sha
 
 It is still small. Fourteen dots, and you have met every one of them. It has room in it, which the
 tetrahedron did not — though room is only a *there*, and not yet a direction, so the stopwatch
-question you were left holding in [make it move](make-it-move.md) is still waiting on more than
-this. Which leaves one thing to do with it.
+question is still waiting: it needs directions, and directions need many. Which leaves one thing to
+do with it.
 
 Make it move.
 
@@ -164,8 +163,8 @@ and it gets worse for ever.
 
 This is not a mistake in the arithmetic and it is not a mistake in the object. It is the two of them
 together: a tick that is small enough for a tetrahedron, and small enough for the shape between the
-tips, is too big for the two threaded. Each of those objects has a largest tick it will hold, the
-table says what they are, and this one's is smaller than the tick we brought.
+tips, is too big for the two threaded. Each of those objects has a tick it has to stay under, the
+table says what they are, and this one's is under the tick we brought.
 
 So bring a smaller tick.
 

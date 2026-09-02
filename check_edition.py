@@ -320,6 +320,117 @@ def check_napkin_determinism(errors: List[str]) -> str:
     return f"{len(napkin.TOKENS)} tokens, recomputed and identical"
 
 
+CHAPTER_CAPTION_CEILING = 300
+
+
+def check_napkin_captions(errors: List[str]) -> str:
+    """Every computed caption is measured, and no chapter can grow inside its captions.
+
+    The grain band and the chapter word range both read a chapter's **source**, where a token is the
+    seven characters `{{napkin:…}}`. So the captions — real reader-facing prose, rendered into the
+    page on every build — were the one surface with no measurement at all, and one of them reached
+    118 words and took over the following section's argument before a reader counted it
+    (2026-09-02).
+
+    Two ceilings, and they are deliberately not the chapter's: `napkin.block()` refuses a caption
+    over `CAPTION_CEILING` words as it renders, and this refuses a chapter whose captions come to
+    more than `CHAPTER_CAPTION_CEILING` between them. Folding caption words into the 350–1800
+    chapter range instead was considered and rejected as a change the Structure lane owns, not this
+    check: it would put `the-shape-between` at 2,044 words against an 1,800 ceiling and force a
+    244-word cut in prose a reader had just passed. The numbers are on this line either way, so the
+    trade is visible rather than assumed.
+    """
+    try:
+        import napkin
+    except ImportError as failure:
+        errors.append(f"napkin captions: cannot import tools/napkin.py ({failure})")
+        return "unavailable"
+
+    def caption(name: str) -> str:
+        rendered = napkin.render(name)
+        marker = "*computed while this page was built — "
+        if marker not in rendered:
+            return ""
+        return rendered.split(marker, 1)[1].split("*", 1)[0]
+
+    lengths = {name: len(words(caption(name))) for name in napkin.TOKENS}
+    longest = max(lengths, key=lambda name: lengths[name])
+    per_chapter: Dict[str, int] = {}
+    for path in sorted((EDITION_DIR / "chapters").glob("*.md")):
+        markdown = path.read_text(encoding="utf-8")
+        used = NAPKIN_TOKEN.findall(markdown)
+        if not used:
+            continue
+        total = sum(lengths.get(name, 0) for name in used)
+        per_chapter[path.stem] = total
+        if total > CHAPTER_CAPTION_CEILING:
+            errors.append(
+                f"chapters/{path.name}: its computed captions come to {total} words, over the "
+                f"{CHAPTER_CAPTION_CEILING}-word ceiling — the chapter is growing where the grain "
+                f"band cannot see it"
+            )
+    if not per_chapter:
+        errors.append("napkin captions: no chapter carries a token, so this check saw nothing")
+        return "unavailable"
+    heaviest = max(per_chapter, key=lambda slug: per_chapter[slug])
+    return (
+        f"longest {lengths[longest]} words ({longest}), ceiling {napkin.CAPTION_CEILING}; "
+        f"heaviest chapter {per_chapter[heaviest]} ({heaviest}), ceiling "
+        f"{CHAPTER_CAPTION_CEILING}"
+    )
+
+
+def check_napkin_contradictions(errors: List[str]) -> str:
+    """A chapter may not say what its own tokens disprove — checked against the prose, not the token.
+
+    Every other fidelity check in this file reads what the *tool* wrote. This one reads what the
+    *author* wrote, which is where the defect was: `stella_refusal`'s table was corrected to "the
+    tick it must stay under" and the prose two paragraphs below still said "a largest tick it will
+    hold, the table says what they are", pointing at a table that said the opposite (a proofreader,
+    2026-09-02). `napkin.REFUSED_IN_PROSE` is each token's list of phrasings its own arithmetic
+    disproves, plus a `*` list refused in every chapter — the three readings the record's own
+    computation refuted, which belong to the appendix and to no chapter's prose.
+
+    Self-tested below on constructed sentences, because a guard nobody has made fail is a guard
+    nobody has tested.
+    """
+    try:
+        import napkin
+    except ImportError as failure:
+        errors.append(f"napkin contradictions: cannot import tools/napkin.py ({failure})")
+        return "unavailable"
+
+    refused = napkin.REFUSED_IN_PROSE
+    everywhere = refused.get("*", [])
+
+    def hits(text: str, phrases: Sequence[str]) -> List[str]:
+        lowered = cleaned_prose(text).casefold()
+        return [phrase for phrase in phrases if phrase.casefold() in lowered]
+
+    # The guard, tested before it is trusted.
+    for phrase in everywhere + refused.get("stella_refusal", []):
+        if not hits(f"A sentence that says {phrase} in passing.", [phrase]):
+            errors.append(f"napkin contradictions: the guard does not catch {phrase!r}")
+    if hits("The tick that must stay under two fifths is the one we brought.", everywhere):
+        errors.append("napkin contradictions: the guard false-positives on a correct sentence")
+
+    checked = 0
+    for path in sorted((EDITION_DIR / "chapters").glob("*.md")):
+        markdown = path.read_text(encoding="utf-8")
+        if path.name == APPENDIX_FILE.split("/")[-1]:
+            continue                     # the appendix is where the refuted readings belong
+        phrases = list(everywhere)
+        for name in NAPKIN_TOKEN.findall(markdown):
+            phrases.extend(refused.get(name, []))
+        checked += 1
+        for phrase in hits(markdown, phrases):
+            errors.append(
+                f"chapters/{path.name}: the prose says {phrase!r}, which this chapter's own "
+                f"arithmetic refuses — see napkin.REFUSED_IN_PROSE"
+            )
+    return f"{checked} chapters read for {len(everywhere)} refused readings and each token's own"
+
+
 def check_canon(errors: List[str]) -> str:
     """The canonical tetrahedron labeling still agrees with the napkin it is derived from.
 
@@ -1047,6 +1158,14 @@ def main() -> int:
     # So is the napkin arithmetic. Reported on its own line: "computed while this page was built" is
     # a promise about every build, so the check that keeps it should be visible in every run.
     status(errors, "napkin self-test", lambda: check_napkin_determinism(errors))
+
+    # The captions are prose too, and until 2026-09-02 they were the only prose in the book that
+    # nothing measured — the grain band reads the source, where a token is one word.
+    status(errors, "napkin captions", lambda: check_napkin_captions(errors))
+
+    # And the chapter's own sentences must not contradict the tokens they sit next to. Every other
+    # check here reads what the tool wrote; this one reads what the author wrote.
+    status(errors, "napkin contradictions", lambda: check_napkin_contradictions(errors))
 
     # And so is the canonical labeling. `CANON.md` promises the book draws the tetrahedron one way,
     # derived from the napkin; this is the line that makes drift between the two fail the build
