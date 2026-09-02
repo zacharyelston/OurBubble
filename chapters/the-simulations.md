@@ -34,6 +34,12 @@ One section per chapter, in reading order, **numbered from `00`** to match the o
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what
 the chapters link to.
 
+**Leaving a note.** Every section in this book carries a small link at its heading — *Leave a note on
+this section* — and it opens a short form about how that section read to you. A note is a gift and
+not a test: "I lost the thread here" is a complete one, and you need not be right about any of the
+maths. Sending it does need a free GitHub account, which is the honest limit of a way to write to us
+that asks you for no email address and loads nothing onto the page you are reading.
+
 ---
 
 <a id="s-the-shadow"></a>
