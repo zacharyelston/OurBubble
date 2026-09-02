@@ -63,13 +63,9 @@ between the two. The nose and the tail are comparatively cheap.
 
 **[Open the data-true energy figure](../.record/lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html)**
 
-Every one of those three was written down as a prediction, with a threshold, before the run. The
-appendix has the registered question and the test that re-runs it.
+Every one of those three was written down as a prediction, with a threshold, before the run.
 
 ## What "negative" is and is not
-
-This is the point in the chapter where it would be easy to say something exciting and false, so let us
-be careful.
 
 The number our formula returns splits cleanly into two competing parts. One of them cares about
 whether the region is being stretched or compressed. The other cares about whether it is being
@@ -97,8 +93,7 @@ total never goes below the floor. A shaped push *asks* for something below the f
 cannot answer.
 
 That barrier is not a gap in the toy. It is the shape of the actual problem, and finding it by running
-into it is more useful than reading it in a textbook, because now we know exactly where it sits in our
-own machinery.
+into it and running into it is how you learn where it sits in your own machinery.
 
 Which forces the next move, and it is not *only* a cleverer arrangement of fields. If the fields cannot
 supply the sign, stop asking them — and ask instead whether the *other* half of the problem is softer
@@ -107,4 +102,4 @@ than it looks. Not what a push costs, but the resistance it is pushing against.
 *The simulations behind this chapter: [the simulations](the-simulations.md#s-the-bubble-and-its-bill).*
 
 **Next:** [The wall that worked, and didn't](the-wall-that-worked-and-didnt.md)—one experiment,
-two honest answers.
+one yes and one no.

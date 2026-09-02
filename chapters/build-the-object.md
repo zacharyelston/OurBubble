@@ -41,7 +41,7 @@ And a difference is never *at* a place. It is *between* two places. So it needs 
 A point and a line. That is the starting kit, and it is worth pausing on how little it is. There is no
 distance yet. No direction. No time. Nothing but places, and connections between places.
 
-Here is the sentence the rest of the book leans on: **that is not a crude version of something
+And here is the thing worth holding on to: **that is not a crude version of something
 better.** It is a small world, complete in itself, and everything we do on it will be exact. When a
 textbook formula turns up later in these pages, it turns up as a *comparison* — never as the standard
 this little world is failing to meet.
@@ -64,9 +64,8 @@ this resolution, in these units, for this many steps, and then it quietly stops.
 is a fact about counting. It holds at any size, in any units, however long you run — or the thing you
 built is not a mesh at all.
 
-And it is checked rather than asserted. Every time this book's figures are rebuilt, the machine
-constructs a small copy of the object, walks every loop in it, and adds up the totals. They come back
-zero — exactly zero, as integers, every time.
+And it is not something you have to take on trust. Walk every loop in the object, add the totals up,
+and they come back zero — exactly zero, as integers, at any size.
 
 ## Nothing yet knows how long a line is
 
@@ -140,12 +139,12 @@ So: tetrahedra. Except for one old surprise.
 **Regular tetrahedra do not fill space.** Aristotle wrote that they do, and the mistake stood for
 something like eighteen centuries. Stack them around a shared edge and they come very close to
 closing, and *very close* is the whole story: five of them leave a thin wedge that no sixth can fill.
-The angle is in the appendix, measured on the very tetrahedron this book's figures draw rather than
-remembered from a table.
+The angle is in the appendix, measured on the tetrahedron itself rather than remembered from a
+table.
 
 Which means there is no perfect answer, and **every tetrahedral lattice is a compromise.** That
 matters more than it sounds. A compromise is a *choice*, a choice has consequences, and the
-consequences can be measured — which, it turns out, is most of what the rest of this book does.
+consequences can be measured.
 
 Here is the choice we made. Take the eight corners of a cube and sort them into two groups by whether
 their coordinates add up to an even or an odd number. Each group of four spans a regular tetrahedron.

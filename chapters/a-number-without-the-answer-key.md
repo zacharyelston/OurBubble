@@ -2,8 +2,7 @@
 
 > **Scope.** *Ising model*, *critical point* and *universality* name lattice models and the
 > dimensionless properties they share with some measured systems. This is a **toy**; agreement with a
-> universality class says nothing about spacetime and does not validate this project's older warp
-> ambitions.
+> universality class says nothing about spacetime.
 
 <figure class="chapter-illustration">
   <img src="assets/blind-class-and-its-miss.svg" alt="Two panels. On the left, measured markers sit on a dashed line that marks an answer already known. On the right the dashed line is gone, the markers still form the same trend, and one marker sits outside a band that was drawn before the measurement was taken.">
@@ -17,8 +16,7 @@ You take a famous constant of nature. You build formulas out of whatever your mo
 you write it up.
 
 It always works, and it never means anything, because a target you already know the value of will
-attract formulas indefinitely. Closeness is not evidence when you were free to keep searching. The old
-version of this project has a trail of those, and none of them are in this book.
+attract formulas indefinitely. Closeness is not evidence when you were free to keep searching.
 
 So: what would count instead?
 
@@ -54,8 +52,8 @@ else, and had to produce the class numbers itself.
 
 It got them, to six and seven digits.
 
-That is not a discovery. It is a calibration, and it is the step that makes everything after it worth
-reading. An instrument that cannot recover a known answer has no business reporting an unknown one.
+That is not a discovery. It is a calibration. An instrument that cannot recover a known answer has no
+business reporting an unknown one.
 
 **[Open the data-true universality figure](../.record/lab/warp-5-universality/0500-ising-universality/figures/universality.html)**
 
@@ -71,11 +69,11 @@ It came back with two exponents that agree with the values measured *in real mat
 critical point, and in uniaxial magnets — to within a few percent. Nobody fitted those targets. There
 was no parameter in which they could have entered.
 
-That is the thing this project had been trying to do the wrong way for years. Not a formula that lands
+Not a formula that lands
 near a famous number, but a computation that produces a number nobody supplied and then agrees with
 measurement.
 
-There is an honest dependency and it belongs in the same breath. This stage was handed two ingredients
+There is a dependency here, and it belongs in the same breath. This stage was handed two ingredients
 rather than measuring them: the temperature at which the transition happens, and one of the class
 numbers itself. So the agreement is real, and it rests on two things it was given.
 
@@ -90,12 +88,11 @@ And it missed one quantity, in exactly the direction it had said it would.
 
 That last sentence is the one worth slowing down for. Before the run, the team wrote down that this
 particular quantity was the one the affordable lattice sizes could not pin down, and that its estimate
-would come out *too high*. It came out too high. The miss is not hidden, not explained away, not
-quietly dropped from the summary — it is a prediction the experiment made about its own limits, and
-then met.
+would come out *too high*. It came out too high — a prediction the experiment made about its own
+limits, and then met.
 
 An experiment that announces its own ceiling in advance is doing something different from one that
-explains a shortfall afterwards. The appendix carries both figures and the band that was registered.
+explains a shortfall afterwards.
 
 ## The part where the mistake was ours
 
@@ -117,9 +114,7 @@ record, correct, and simply never carried through into the numbers that depended
 a better telescope. They needed to propagate a number they already had.
 
 The original rows are still in the record. They were not deleted and rewritten; they carry a note
-saying what later work found. That matters more than it sounds: a record where negatives quietly
-disappear once they become inconvenient is not a record, and the fact that you can still read the
-original miss is what makes the correction believable.
+saying what later work found, so the original miss is still there to read.
 
 So the method has now shown four things, and the fourth is the rarest: it can recover a known answer,
 work where no answer exists, state its own limits in advance and hit them — and find that a failure it

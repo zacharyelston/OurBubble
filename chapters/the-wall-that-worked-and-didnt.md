@@ -6,7 +6,7 @@
 
 <figure class="chapter-illustration">
   <img src="assets/wall-two-answers.svg" alt="A strong incoming wave fading out across a wall, and below it two identical carts, unchanged, showing that the hoped-for change in motion did not occur.">
-  <figcaption><strong>Analogy — not data.</strong> One experiment, two honest answers: the isolation worked and the effect people wanted from it did not. Both halves are in the record.</figcaption>
+  <figcaption><strong>Analogy — not data.</strong> One experiment, two answers: the isolation worked, and the effect people wanted from it did not.</figcaption>
 </figure>
 
 The last chapter ended at a barrier in the argument: a shaped push wants energy below the floor, and
@@ -29,8 +29,7 @@ That is a testable statement, and we happen to have a world we can wall a region
 
 Build an isolating shell in the little world — a region where the field is heavily suppressed, and not
 to be confused with the bubble wall of the last chapter, which was a shape the energy took rather than
-a thing we built. Put a test blob inside it. Then ask two separate questions, and keep them separate, because this is exactly where
-a hopeful experimenter loses the thread.
+a thing we built. Put a test blob inside it. Then ask two separate questions, and keep them separate.
 
 **Question one: does the wall actually isolate?** Send a signal from outside and see how much of it
 reaches the inside.
@@ -47,7 +46,7 @@ The wall works. A signal that has to cross the shell arrives on the inside about
 times** weaker than it would without one. That is not a marginal effect; the interior really is cut
 off.
 
-And the control behaves too, which matters more than the headline. A path that goes from outside to
+And the control behaves too. A path that goes from outside to
 outside *without* crossing the shell is barely touched — it comes through at about **0.86** of its
 unobstructed strength. If that number had also collapsed, we would not have built a shield; we would
 have built a machine that damps everything, and the isolation figure would have meant nothing.
@@ -81,10 +80,9 @@ Notice what it does *not* say. It does not say the coupling idea is wrong. It sa
 precise and more useful: **under standard physics, cutting off the information does not cut the
 inertia**, because inertia and potentials live in different places in the equations. To get the effect
 you would need an extra law — a new rule tying mass to environmental coupling — and that rule is a
-separate, contested hypothesis that we have not assumed and are not going to smuggle in.
+separate, contested hypothesis, which this experiment does not assume.
 
-So the experiment did not fail to answer. It answered, and part of the answer was no, and it also
-handed us the price of the interesting version: *if* such a law existed, this run's isolation figure
+The experiment answered, and part of the answer was no. It also handed us the price of the interesting version: *if* such a law existed, this run's isolation figure
 would predict a spectacularly lighter interior. It does not, so it does not.
 
 ## And the other way at the same barrier
@@ -96,7 +94,7 @@ emptying one would only be the first step, because it gets you to zero, and a sh
 something below the floor. If you cannot even reach zero over a volume, below it is out of the
 question.
 
-A conjecture, stated properly, with a threshold. Tested to destruction. **No.**
+A conjecture, with a threshold. Tested to destruction. **No.**
 
 The energies add. You can cancel a field at a point, and you can cancel it on a surface, but a
 free-space volume where everything is zero is not something you can build out of sources aimed at it

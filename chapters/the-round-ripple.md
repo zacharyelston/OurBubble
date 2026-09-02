@@ -41,8 +41,8 @@ what they are — and the ring comes back round.
 
 ## What round is worth measuring against
 
-That is a satisfying story and it would be worthless without a number, because "rounder" is exactly
-the kind of judgement that a person hoping for a result will make on a picture.
+That is a satisfying story, and "rounder" is exactly the kind of judgement a hopeful person makes on
+a picture. It needs a number.
 
 So we measured it: send a pulse out from the middle, time its arrival along an edge direction, time
 its arrival along a diagonal, and compare the two speeds. If the ring were perfectly round they would
@@ -56,7 +56,7 @@ halve it.
 **[Open the data-true isotropy figure](../.record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)** —
 the two rings side by side, dots measured, a dashed circle for reference.
 
-## Making the claim harder to fake
+## The same question, asked five ways at once
 
 A single comparison along two directions is thin, and the residual 2.2% is a number a sceptic should
 push on. Is that the object still being slightly uneven, or is it just a coarse grid?
@@ -77,8 +77,7 @@ is the signature of a coarse grid rather than a defect.
 Then the same pipeline, unchanged, on the naive setting. The spread there is **33.2%** — and it does
 not shrink. That is the difference between a grid that is merely coarse and a geometry that is wrong.
 
-The control is what makes the first answer worth anything. A test that only ever agrees with you has
-measured nothing.
+The control is what makes the first answer worth anything.
 
 ## The part where we were the problem
 
@@ -105,8 +104,7 @@ computer's own arithmetic runs out — about fifteen decimal places down, which 
 **[open the demo and turn it on and off yourself](../.record/viz/doubleslit.html)**
 
 That last link is the one worth clicking. The demo carries a switch between the two meshes, so you can
-watch a real defect in this project's own published work appear and disappear. A lattice can be wrong.
-The honest thing is to show you where, and to leave the switch in.
+watch a real defect in a published demo appear and disappear. The switch is still in it.
 
 ## What this chapter actually established
 
@@ -114,8 +112,7 @@ Not that the little world has light in it. It does not.
 
 What it established is that **one setting inside the machine controls whether the world behaves the
 same way in every direction**, that the effect is large enough to see and large enough to measure,
-that we can tell a coarse grid from a broken geometry by whether the error shrinks, and that when we
-got it wrong in public the same reasoning found it.
+and that we can tell a coarse grid from a broken geometry by whether the error shrinks.
 
 Everything after this depends on that. A world that steers untrue is a world where no measurement
 means what it appears to mean.

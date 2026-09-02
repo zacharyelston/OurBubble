@@ -21,8 +21,7 @@ was later corrected. Here, for the first time, **the project proposed a law and 
 would be, wrote it down, handed the data to a machine that had never been told the answer, and the
 machine came back with something else.
 
-That is the test a measuring device has to pass before any of its agreements mean anything. It is here
-on purpose, near the end, where a reader is most inclined to trust everything before it.
+That is the test a measuring device has to pass before any of its agreements mean anything.
 
 ## The setup, and the guess
 
@@ -37,8 +36,7 @@ material, the frequency would fall like a square root: quadruple the material we
 halves. So — the argument goes — putting some of that material in should do the same thing, just less
 of it. The scaling should still be a square root.
 
-It is a clean, plausible expectation, and the useful thing about it is that it is specific enough to be
-wrong. We registered it before running: the exponent should come out at **p = −1/2**.
+It is a clean, plausible expectation, and it is specific enough to be wrong. We registered it before running: the exponent should come out at **p = −1/2**.
 
 ## The part that worked
 
@@ -49,8 +47,7 @@ direction.
 
 So there is a law here worth measuring. We handed the peak positions and the weights to the same
 blind fitter from [the round ripple](the-round-ripple.md) and
-[the vacuum chapter](where-negative-energy-appears.md) — the one that is not told the expected answer and
-has to pick from a menu registered in advance.
+[the vacuum chapter](where-negative-energy-appears.md).
 
 ## The part that failed
 
@@ -68,14 +65,14 @@ not. The lump occupies a small part of the cavity and most of the vibration is s
 unchanged space. A local change should not inherit the scaling of a global one — which, said plainly,
 means the mistake was in the argument rather than in the run.
 
-That explanation is comfortable, and comfort is exactly when to be careful. So it is written down as a
+That explanation is comfortable, which is exactly when to be careful. So it is written down as a
 *new prediction* rather than a patch: if the reason is really the volume fraction, then increasing the
 lump's share of the cavity should move the exponent toward −1/2. If it does not, the explanation is
 wrong too, and it will be a registered miss like the first one.
 
 That is the difference between an explanation and an excuse. An explanation makes a new commitment.
 
-## Why this chapter belongs where it is
+## The same instrument, refusing
 
 The same instrument that selected a straight-line law for the ripple, and recovered a coefficient with
 a π in it from the vacuum, and produced an exponent nobody supplied for the critical point — that same
@@ -83,8 +80,7 @@ instrument, unchanged, refused the most natural material-scaling analogy anyone 
 
 It returned the law that was in the data rather than the law in the chapter title.
 
-That is what the shadow method was for. Propose a shape. Say what would prove it wrong. Check, and keep
-the answer.
+That is what the shadow method was for.
 
 We have followed the chain now from an object, through a ripple, a cost, a wall, a vacuum, a
 prediction, and a refusal. There is one step left, and it does not belong to us.
@@ -92,4 +88,4 @@ prediction, and a refusal. There is one step left, and it does not belong to us.
 *The simulations behind this chapter: [the simulations](the-simulations.md#s-when-the-expected-law-fails).*
 
 **Next:** [Cast your own shadow](cast-your-own-shadow.md)—read a prediction before its result, and
-stop taking this book's word for anything.
+check one for yourself.
