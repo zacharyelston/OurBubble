@@ -361,7 +361,7 @@ def tetra_inside_sum() -> str:
         f"| arrow | {arrow_rows} |\n\n"
         "Each face below is walked the same way round as seen from outside, which is what makes the "
         "two faces meeting along any line walk that line in opposite directions:\n\n"
-        "| walked | its arrows, in order | how much goes round it |\n"
+        "| walked | its three arrows, signed | how much goes round it |\n"
         "|---|---|---|\n"
         f"{walk_table}\n\n"
         f"Now just add the four up: {outward_terms} = **0**."

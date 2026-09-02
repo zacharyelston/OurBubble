@@ -44,10 +44,14 @@ Here is the rule, and it is the only one in the book.
 **Each dot's number is pushed toward its neighbours' by the differences on its lines — and carries
 forward the motion it has already built up.**
 
-The word to watch is **carries**. Take it out and you have the other rule, the one we are not using:
-*move toward your neighbours* — a dot looks along its lines, finds its neighbours higher, goes up a
-bit, and next tick starts again from wherever it landed. That is a drop of ink in water. It spreads,
-it flattens, it stops.
+Read it twice, because there is a rule one word away from it that is not the one we are using. *Move
+toward your neighbours*: a dot looks along its lines, finds its neighbours higher, goes up a bit,
+and next tick starts again from wherever it landed. That is a drop of ink in water. It spreads, it
+flattens, it stops.
+
+Ours is the other one, and the difference is a single word.
+
+## The word is *carries*
 
 Leave it in, and the push still moves the number — but it does not hand the number a *destination*.
 It acts on the number's motion, and the motion is what carries it. So the differences set the change
@@ -84,6 +88,11 @@ yet. Then apply the rule ten times.
 
 They slosh — and then they come back. Tick 3 holds the same four numbers as tick 0, in the same
 places. Not close; the same. It does it again at 4, and at 7 and 8, and it will go on forever.
+
+Count it off in the table before reading on, because the next paragraph is the point of the chapter
+and it is easy to nod at.
+
+## Nothing settles
 
 **Nothing settles.** Under the other rule the four numbers would have converged on their average and
 stopped there, which is what ink in water does. This is the plucked string.
@@ -134,8 +143,8 @@ at 4, then at 7 and 8 — twice a cycle. This one comes home at 3, then not unti
 both tables.
 
 And the total never moved, so neither did the average. The dial changed *how* the world moves, not
-how much there is. Hold on to that: a later chapter is entirely about a dial set badly, and the tell
-was never in the totals — it was always in the motion.
+how much there is. A later chapter is entirely about a dial set badly, and the tell was never in the
+totals — always in the motion.
 
 Now stop being gentle. Poke one dot hard — put a big number on it and leave the others alone. Watch.
 
@@ -159,11 +168,10 @@ Which means there is a question you cannot ask here.
 You cannot ask how fast.
 
 Speed is a distance divided by a time. You have the time — ticks, and you can count them. What you
-do not have is anything to divide by, and the reason is not that the dial is unset. You were offered
-lengths for the six lines in
-[one tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md), and you may set them
-however you like. The trouble is that on one tetrahedron every pair of dots is one line apart, so
-every journey is the same journey. There is nothing to compare with anything.
+lack is anything to divide by, and the reason is not that the dial is unset: you were offered
+lengths for the six lines in [one tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md)
+and may set them as you like. The trouble is that on one tetrahedron every pair of dots is one line
+apart, so every journey is the same journey. There is nothing to compare.
 
 And there is a sharper version of the question hiding behind it, which is the one this book is
 actually going to spend a chapter on. Not just *how fast*, but: **is it the same speed in every

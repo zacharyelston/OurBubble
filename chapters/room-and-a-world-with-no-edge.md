@@ -66,26 +66,31 @@ Stack the cubes, keeping the same colour throughout. The tetrahedra never meet f
 gaps between them are not thin wedges any more: each is shaped like an octahedron, and each is
 centred on one of the corners you threw away.
 
-Octahedra are easy. Pick a long diagonal, cut along it, and one falls into four tetrahedra. Do that
-to every hole and space is filled entirely with tetrahedra — not all the same shape, which is the
-compromise, and no wedge left anywhere.
+Octahedra are easy. Pick one of the three long diagonals, cut along it, and the octahedron falls
+into four tetrahedra. Do that to every hole and space is filled entirely with tetrahedra — not all
+the same shape, which is the compromise, and no wedge left anywhere.
 
 ## Is any dot special?
 
-Before poking anything, one question worth settling, because the next chapter depends on the answer.
+One detail in that recipe matters more than it looks: which of the three diagonals you pick is
+decided by a rule, and the rule **twists as it goes**, coming back to where it started every third
+hole.
 
-You threw away half the corners, cut the holes along diagonals, and did all of it by recipe. It
-would be easy to end up with a lopsided thing — some dots in the thick of it, others out on a limb,
-a few sitting on seams where the recipe changed its mind. If that were so, poking one dot and poking
-another would not be the same experiment, and no comparison between directions would mean anything.
+A twisting recipe is exactly the kind that could leave seams — dots in the thick of it, dots out on
+a limb, dots where the rule changed its mind. If poking one dot were not the same experiment as
+poking another, no comparison between directions would mean anything.
 
-It is not so. Every dot in this world sees the same arrangement around it: the same lines, going the
-same ways, to neighbours the same distance off. There is no special place, no centre and no seam.
+None is singled out. But the twist leaves its mark: there are **three kinds of place** here, each
+the other two turned a third of the way round the cube's long diagonal. Every dot has the same
+number of lines leaving it; what differs is which way its two longest point. The record counted
+them, and they come in exact thirds.
 
-That is exactly what a fair test of a ripple needs, and you now have it. So poke a dot in the middle
-of a great many, and watch.
+So the world has a grain, and nothing is privileged — turn the whole lattice a third of a turn about
+that diagonal, slide it along, and it lands back on itself with the three kinds swapped round.
+Remember the grain when a ripple comes out lopsided, because a grain is one place lopsidedness can
+hide.
 
-Now you have room. So: poke a dot in the middle of a great many, and watch.
+Now you have room. So poke a dot in the middle of a great many, and watch.
 
 ## The pond
 

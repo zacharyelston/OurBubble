@@ -134,9 +134,13 @@ counts — whether a long line and a short line are worth the same when a number
 or whether the long one should count for less.
 
 Call it the dial. Six lines, six settings, and every setting gives you a different world with the
-same dots in it. Nothing so far has needed the dial, which is why you have not met it until now.
-Almost every result later in this book turns out to depend on it, and one whole chapter is about
-what happens when it is set carelessly.
+same dots in it.
+
+And the promise the last chapter made is kept here: turn the dial however you like and **both zeros
+survive**. Lengths were never an input to either, so no setting can disturb either. The two facts
+you have are the two the dial cannot touch. Nothing so far has needed the dial, which is why you
+have not met it until now. Almost every result later in this book turns out to depend on it, and one
+whole chapter is about what happens when it is set carelessly.
 
 Is that really enough to call a world?
 
