@@ -127,8 +127,9 @@ records the SHA it was taken at, and it must match the lock.
 | `gen_appendix.py` · `preprocessor.py` | the appendix generator, and the mdBook hook that runs it on every build |
 | `record.lock` · `record/` · `tools/fetch_record.sh` · `tools/snapshot_record.sh` | the record contract: the pin, the committed snapshot, and the two scripts that derive it |
 | `tools/napkin.py` · `preprocessor.py` | the numbers chapters 1–3 compute at build time, and the mdBook hook that runs them |
+| `CANON.md` · `tools/canon.py` | the one labeling of the tetrahedron, derived from the napkin, and the only code that draws its net |
 | `tools/check.sh` · `Makefile` | tier 0 |
-| `ART_DIRECTION.md` · `EDITION_STANDARD.md` · `LEGACY_MIGRATION.md` | the illustration contract, the writing contract, and what was and was not carried over from the legacy manuscript |
+| `ART_DIRECTION.md` · `EDITION_STANDARD.md` · `LEGACY_MIGRATION.md` | the illustration contract, the writing contract, and what was and was not carried over from each earlier source |
 | `FIREWALL.md` | scope of claims |
 | `CONTINUUM.md` | the agent-lane ledger for this repository |
 | `PROVENANCE.md` | where this edition came from |
