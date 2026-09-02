@@ -9,6 +9,8 @@
   <figcaption><strong>Analogy — not data.</strong> A shadow is not evidence of its source — it is an invitation to build a test. That move, not the shadow, is what this book is about.</figcaption>
 </figure>
 
+<!-- beat 1 -->
+
 A child stands in a yard at noon and her shadow is a stub around her feet. She comes back after
 dinner and it is longer than she is, stretched across the grass toward the fence.
 

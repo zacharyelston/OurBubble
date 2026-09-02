@@ -138,9 +138,8 @@ The object is finished, so the question can finally be asked honestly: standing 
 wrapped world, does it look like standing on any other?
 
 There is one reason to doubt it, back in the cutting. Which of the three diagonals gets cut was
-never left to you: it is fixed by a rule of ours, and that rule **twists on purpose** — number each
-hole by how far it sits along the three directions, add those up, and the pick cycles as the total
-does.
+never left to you: it is fixed by a rule of ours, and that rule **twists** — number each hole by how
+far it sits along the three directions, add those up, and the pick cycles as the total does.
 
 A twisting rule is exactly the kind that could leave seams. If poking one dot were not the same
 experiment as poking another, no comparison between directions would mean anything.
