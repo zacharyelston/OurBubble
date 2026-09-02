@@ -9,9 +9,9 @@
   <figcaption><strong>Analogy — not data.</strong> Every stop on that walk is a file in the repository. This page is not one of them — the trail runs through the record rather than through the book.</figcaption>
 </figure>
 
-The manuscript this edition grew out of ended in celebration: *we measured our bubble together.*
+<!-- beat 100 -->
 
-I would like to keep the warmth of that and fix the claim.
+So what did we actually do? One sentence, and it should be the honest one rather than the warm one.
 
 We did not measure the universe. We inspected one object we had built, and we watched its measuring
 tools do seven things: recover laws that were already known, tell controls apart from results,
@@ -19,10 +19,15 @@ produce a number nobody supplied, state a limit in advance and then hit it, keep
 the record at full size, find that two published failures had been our own analysis rather than the
 world — and refuse a law we proposed ourselves.
 
-That is a smaller claim than a theory of everything. It is also considerably more useful, because it
-is the kind of claim that could have come out false, and you can go and check whether it did.
+That is a smaller claim than a theory of everything, and considerably more useful, because it is the
+kind of claim that could have come out false — and you can go and check whether it did.
+
+Which raises the only question left in the book: can you check it without taking anyone's word,
+including mine?
 
 ## Follow one result without running anything
+
+<!-- beat 101 -->
 
 Take the refusal from the last chapter — the exponent that came out a little over half the expected
 steepness. Four files, ten minutes, no build required.
@@ -48,6 +53,8 @@ encouraging ones.
 
 ## Check this edition against the record
 
+<!-- beat 102 -->
+
 The chapters you have read carry no rung labels and no quotations. That is a deliberate choice. That
 provenance did not go missing. It moved to the appendix.
 
@@ -65,12 +72,20 @@ python3 check_edition.py --rendered
 
 The first command is the book reading itself, and it is worth being exact about what it promises.
 
+## What that first command promises
+
+<!-- beat 102 -->
+
 **Every figure with a `read from` file beside it in the appendix is checked verbatim** against that
 file — those, and only those, are the ones a program has been over. **Every figure a chapter sets in
 digits and puts in bold is checked too**: it has to be one its own appendix section declares that
 way, so a number cannot be emphasised into your eye without a counterpart in the record. Alongside
 that, it confirms each cited test and figure is still in the repository, each chapter still points
 at its own section, and each chapter still carries its visible scope statement.
+
+## And what no program has read
+
+<!-- beat 102 -->
 
 It also holds the whole edition against **the list of retired claims** — the constant-formulas and
 structural correspondences this project's older phase went in for, of the kind
@@ -84,6 +99,10 @@ wall is a few hundred times what sits in the calm middle, or that a signal arriv
 million times weaker, no program has read that sentence — the second one is bold, but it is bold
 *words*, so the digit rule never sees it. Those are numbers we wrote, from runs whose figures are
 linked and whose experiments the appendix names.
+
+## The numbers you can check against the world
+
+<!-- beat 102 -->
 
 The history chapter's figures are outside it too, and differently: no file is named beside `89.85°`
 or `~0.3 arcseconds` because none of it is ours. **Those are the numbers in this book you can check
@@ -100,6 +119,8 @@ None of that computes any physics. It checks that the story and the record still
 
 ## The check that would actually catch us
 
+<!-- beat 103 -->
+
 The commands above verify bookkeeping. Here is the one that verifies the science, and it is the
 reason this project can make the claims it does.
 
@@ -110,14 +131,28 @@ Nothing should change. If any number in these chapters had been nudged after the
 taste, or typed in by hand, that is where it appears.
 
 Every appendix section carries the command for its own result. Start with one whose runtime suits
-your machine, read what the section says about it first, and — this is the part that makes it an
-experiment rather than a chore — **write down what you expect before you press Return.**
+your machine, and read what the section says about it before you run anything.
+
+## ✎ Before you press Return
+
+<!-- beat 104 -->
+
+**Write down what you expect.**
+
+Not "it should pass" — that is not a prediction, it is a hope. Write the thing that would tell you
+something: whether `git status` comes back empty, and if it does not, which file you expect to have
+moved and why. Then press Return.
+
+You have now done, on your own machine, the thing this whole book has been about. Somebody wrote
+down what should happen before they looked. That somebody is you.
 
 If the regenerated files do differ, do not explain it away. Stop and find it. A changed seed, a
 changed dependency, a changed tolerance, a changed piece of machinery: each of those is part of the
 result's history and worth more than the result.
 
 ## What we carry out of the bubble
+
+<!-- beat 105 -->
 
 The shadow was never proof of a sphere. It was an invitation to build a test.
 
@@ -129,6 +164,10 @@ and kept its limits. The material bridge refused the easy exponent.
 
 Put together, those do not add up to a discovery. They add up to a method:
 
+## What it adds up to
+
+<!-- beat 105 -->
+
 1. Notice something you cannot explain.
 2. Propose the smallest structure that would explain it.
 3. Say, in advance, what would prove the proposal wrong.
@@ -137,7 +176,13 @@ Put together, those do not add up to a discovery. They add up to a method:
 The container is the object we examined. The bubble is the patch of it we pushed on, and measured,
 and handed back. Neither of them asks for belief, and this book has tried hard not to either.
 
-So go and find another shadow. Then write down what it would take to surprise you — before you look.
+So: where is the next shadow?
+
+There is one wherever something changes and nobody has written down what it would take to be
+surprised. It does not have to be a lattice. It has to be small enough to hold in your head, and
+specific enough to be wrong.
+
+Find it. Then write down what would prove you wrong — before you look.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-cast-your-own-shadow).*

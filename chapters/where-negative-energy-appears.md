@@ -1,4 +1,4 @@
-# Where negative energy appears
+# Can a gap be emptier than empty?
 
 > **Scope.** A **toy** computation of a Casimir-like effect. The negative value is a difference between
 > two baselines inside that computation — not a reservoir of usable energy, and not evidence that
@@ -9,55 +9,128 @@
   <figcaption><strong>Analogy — not data.</strong> Fewer shapes fit inside than outside, so the baseline between the plates differs from the baseline beyond them. What the difference actually measures is in the figure linked below.</figcaption>
 </figure>
 
-Two chapters have now run into the same barrier from three directions. A shaped push wants energy
-below the floor. Ordinary fields cannot go below the floor. Shielding does not change what inertia
-is, and interference cannot empty a volume.
+<!-- beat 69 -->
 
-But established physics does have a place where a negative *difference* is real, and it is not in
-the fields at all. It is in what is left when you take the fields away — an effect Hendrik Casimir
-worked out in 1948, and which has since been measured in the laboratory.
+Three noes now, all at the same barrier. A shaped push wants something below the floor. Ordinary
+fields cannot go below the floor. Walling a region off does not change what resistance is, and aimed
+fields cannot empty a volume.
 
-## Empty does not mean featureless
+So the honest question is no longer *how do we get the sign* but: does established physics put a
+real negative difference anywhere at all?
 
-In quantum theory, a field does not sit perfectly still even in its lowest state. Every shape it
-could vibrate in carries a little irreducible activity, and the total over all those shapes is the
-baseline of empty space.
+It does, and the place is a surprise. It is not in the fields. It is in what is left when you take
+the fields away — an effect Hendrik Casimir worked out in 1948, and which has since been measured in
+the laboratory.
 
-Now put two walls close together.
+What is left when you take the fields away, though? Isn't that nothing?
 
-Some shapes no longer fit. A vibration whose natural length is wider than the gap simply cannot
-exist in there, the way a long wavelength cannot exist on a short guitar string. The set of
-available shapes between the walls is smaller than the set available outside them.
+## What "empty" contains
 
-So the baseline inside is not the baseline outside. And since we removed contributions rather than
-adding them, the inside sits *lower*.
+<!-- beat 70 -->
+
+Not nothing. This is the one piece of quantum theory the book needs, and it is one sentence long.
+
+A field does not sit perfectly still, even in its lowest state. Every shape it could possibly
+vibrate in carries a little irreducible activity — not because anything excited it, but because
+perfect stillness is not among the options. Add up that little bit over every available shape and
+you have the baseline of empty space.
+
+So "empty" is not featureless. It is a very long list of possible vibrations, each contributing a
+trace, and the total is a number.
+
+Which means the list can be interfered with. Put two walls close together, and ask what stops
+fitting.
+
+## The long shapes stop fitting
+
+<!-- beat 71 -->
+
+The long ones.
+
+A vibration whose natural length is wider than the gap simply cannot exist in there — the same
+reason a long note cannot exist on a short guitar string. Between the walls, the set of available
+shapes is smaller than the set available outside them. Some possibilities have been removed, and
+removed is the operative word: nothing was added anywhere.
+
+So there are now two baselines, one inside the gap and one outside it, computed from two different
+lists.
+
+Which is lower, and why?
+
+## Inside, because we took things away
+
+<!-- beat 72 -->
+
+Inside. And you can get there without any calculation at all.
+
+The baseline is a sum of contributions, every one of them a little bit of something rather than a
+little bit of nothing. The inside list is the outside list with entries missing. A sum over fewer
+positive contributions is smaller. So the inside sits below the outside.
 
 That is the whole mechanism, and it is worth noticing how little it needs. No exotic material, no
-new law — just boundaries, and the ordinary fact that boundaries exclude possibilities.
+new law, no energy from anywhere. Just boundaries, and the ordinary fact that boundaries exclude
+possibilities.
 
-## What the little world did with it
+Now: we can build that in the little world. Before we do, commit to something.
+
+## ✎ Before we look
+
+<!-- beat 73 -->
+
+**Write down your guess.** As the two walls are brought closer together, does the difference between
+inside and outside grow, or shrink?
+
+There is a real argument each way and it is worth feeling both. Closer walls exclude more shapes, so
+perhaps the difference deepens. But a narrower gap holds less of everything, so perhaps there is
+less of a difference to have. Pick one, and note in half a sentence which way you think it goes.
+
+And a second guess, because the chapter turns on it: if the difference deepens as the gap narrows,
+what does that mean the walls will *do*?
+
+## What the little world did
+
+<!-- beat 74 -->
 
 We built the one-dimensional version. Two walls in the lattice, the allowed vibration shapes
 computed directly from the object's own operator, the common bulk contribution subtracted off, and
 then the question: what is left?
 
 Every measured value sits below the free-space line. And as the walls move closer, it goes further
-down — which is the same thing as saying the walls are pulled together, since a quantity that drops
-as a gap narrows is a quantity that would rather the gap narrowed.
+down.
+
+Which answers the second guess, and this is the part worth pausing on. A quantity that drops as a
+gap narrows is a quantity that would rather the gap were narrower — so the walls are pulled
+together. The attraction is not an extra ingredient. It is the same fact, read as a tendency instead
+of as a number.
 
 That is the sign three attempts had been unable to reach, appearing on its own.
 
-## The part that makes it more than a sign
+## A sign is easy
 
-A sign is easy. Half the ways of getting this calculation wrong give you a negative number.
+<!-- beat 75 -->
 
-What is harder — and what this experiment was really for — is the *shape* of the answer. Casimir's
-calculation gives a law for how the effect scales with the gap, and it comes with a specific
-coefficient that has a π in it. If our little world reproduces the scaling *and* lands on the
-coefficient, then we are not looking at a sign, we are looking at the phenomenon.
+Which is exactly why a sign is not enough, and this is the sceptical beat of the chapter.
 
-So we swept the gap over a range of separations and handed the results to the same blind fitter from
-[the round ripple](the-round-ripple.md).
+Half the ways of getting this calculation wrong hand you a negative number. If all we had was "it
+came out below the line", we would have almost no evidence that we had reproduced Casimir's effect
+rather than made a sign error with good taste.
+
+What would settle it is the *shape* of the answer. Casimir's calculation gives a law for how the
+effect scales with the gap, and that law comes with a specific coefficient — a coefficient with a π
+in it. Reproduce the scaling *and* land on the coefficient, and you are no longer looking at a sign.
+You are looking at the phenomenon.
+
+Neither of those can be guessed. So: did the machine find them without being told?
+
+## What came back
+
+<!-- beat 76 -->
+
+It did.
+
+We swept the gap over a range of separations and handed the results to the same blind fitter from
+[is it round?](the-round-ripple.md) — told nothing about what it was looking at, picking from a menu
+written down beforehand.
 
 It came back with the scaling law: the exponent it found was **−0.9997** against a true value of −1,
 with a fit quality of six nines. It separated out the contribution from the two wall edges and got
@@ -68,34 +141,37 @@ Nobody typed π into the fitter. Nobody typed the exponent in. It was not told w
 
 **[Open the data-true Casimir figure](record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)**
 
-## Two things this does not mean
+## Two things it is not
 
-**It is not a power source.** The negative number is a difference between two baselines. You cannot
-draw on it; there is nothing to draw. Arranging boundaries costs more than the difference is worth,
-and in any case there is no energy in this chapter at all — there is a lattice, a spectrum, and a
-subtraction.
+<!-- beat 76 -->
 
-**It does not rescue the shaped push.** That experiment wants a particular amount of the sign, in a
-particular place, at a particular scale. What we found here is the sign, in a tiny gap, at a
-magnitude set by the gap itself. The distance between those two facts is enormous and this chapter
-does not shrink it by a step. What it does is establish that the sign is not forbidden — which is a
-much smaller thing than a solution.
+Two things this is not, and both matter. **It is not a power source** — the negative number is a
+difference between two baselines, there is nothing to draw on, and arranging boundaries costs more
+than the difference is worth. **It does not rescue the shaped push** — that wants a particular
+amount of the sign, in a particular place, at a particular scale, and what we have is the sign in a
+tiny gap at a magnitude set by the gap. The distance between those is enormous and this chapter does
+not shrink it by a step. It establishes only that the sign is not forbidden, which is a much smaller
+thing than a solution.
 
-## What actually changed here
+Something else changed in this chapter, though, and it is quieter than the physics.
 
-Something quieter than the physics.
+## What quietly changed
 
-Up to this chapter, a person set up each experiment, ran it, and read off the answer. Here the
-*machine* swept a parameter, fitted the results, chose between candidate laws, and reported a
-coefficient — and a person only checked its working afterwards.
+<!-- beat 77 -->
 
-That is a different kind of instrument. And once you have an instrument that can find a law it was
-not told, you can point it at something where nobody knows the answer.
+Up to now, a person set up each experiment, ran it, and read off the answer.
 
-Which is what the next chapter does.
+Here the *machine* swept a parameter, fitted the results, chose between candidate laws, and reported
+a coefficient — and a person only checked its working afterwards. Read the two paragraphs above
+again with that in mind: the exponent and the coefficient were not confirmed by us, they were
+*found*, by something that could not have wanted them.
 
-*The simulations behind this chapter:
+That is a different kind of instrument, and it changes what the next question can be. Once you have
+something that can find a law it was not told, you can point it at a place where nobody knows the
+answer and see what it says.
+
+*What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-where-negative-energy-appears).*
 
-**Next:** [A number without the answer key](a-number-without-the-answer-key.md)—can it find
-something nobody told it?
+**Next:** [Can it tell me something I didn't tell it?](a-number-without-the-answer-key.md)—the
+difference between a number you looked up and a number you earned.
