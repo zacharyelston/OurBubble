@@ -671,30 +671,49 @@ def fraction_text(value: Fraction) -> str:
     return text
 
 
+# Every worded fraction the captions use, and nothing else. Two rules come with this table, both
+# learned the hard way one round apart (a proofreader, 2026-09-02):
+#
+#   * **it is pinned to literals below**, because a lookup is not a derivation. `fraction_text`
+#     round-trips its own output (`Fraction("1/8") == 1/8`); words cannot be parsed back that
+#     honestly, so the check is a written-out pin next to the entry. Without it, editing
+#     `Fraction(1, 8): "an eighth"` to `"a sixth"` renders "a sixth" over a table saying `1/8` and
+#     every check agrees, because `in_caption` compares the caption against the same corrupted
+#     lookup — the `stella_in_its_cube` shape, one round later, in the fix for it;
+#   * **nothing dead lives here.** It held eight entries of which two were reached, including
+#     "half again" for 3/2, which is not a reading of 3/2 on its own. An unused value with an
+#     assertion beside it is cover for whatever the next author does with it, which is exactly why
+#     `stella_runaway`'s spare denominators were deleted rather than guarded.
+#
+# A caption that needs a new worded fraction adds the entry AND its pin, in the same commit.
 FRACTION_WORDS = {
     Fraction(1, 2): "half",
-    Fraction(1, 3): "a third",
-    Fraction(2, 3): "two thirds",
-    Fraction(1, 4): "a quarter",
-    Fraction(1, 5): "a fifth",
-    Fraction(2, 5): "two fifths",
     Fraction(1, 8): "an eighth",
-    Fraction(3, 2): "half again",
 }
+
+assert FRACTION_WORDS[Fraction(1, 2)] == "half", "a half is not called 'half' any more"
+assert FRACTION_WORDS[Fraction(1, 8)] == "an eighth", "an eighth is not called 'an eighth'"
+assert len(FRACTION_WORDS) == 2, (
+    "FRACTION_WORDS has grown or shrunk: pin every entry to a literal above, and keep no entry no "
+    "caption reaches"
+)
+assert {fraction_text(value) for value in FRACTION_WORDS} == {"1/2", "1/8"}, (
+    "the worded fractions and their digit forms have come apart"
+)
 
 
 def fraction_words(value: Fraction) -> str:
-    """A small fraction in words — `an eighth`, `half` — derived, for prose that reads better so.
+    """A small fraction in words — `an eighth`, `half` — for prose that reads better that way.
 
     `fraction_text` gives `1/8`, which is right in a table cell and wrong in a sentence: making a
     caption fidelity-checked turned "an eighth of it each … exactly half" into "1/8 … 1/2" four
     lines above prose still saying "an eighth" (a proofreader, 2026-09-02). The same fact in two
     registers is a stumble, and a caption is prose. The table keeps the digits; the caption gets the
-    words; both come from the same value.
+    words; both come from the same value, and the words are pinned where they are written down.
     """
     assert value in FRACTION_WORDS, (
-        f"{value} has no worded form here — add it to FRACTION_WORDS rather than writing it out in "
-        f"a caption, or use fraction_text() and let the sentence carry the digits"
+        f"{value} has no worded form here — add it to FRACTION_WORDS with its pin rather than "
+        f"writing it out in a caption, or use fraction_text() and let the sentence carry the digits"
     )
     return FRACTION_WORDS[value]
 
