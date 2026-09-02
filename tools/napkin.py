@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""The napkin backend: the book's chapters 1–3 numbers, computed while the page is built.
+"""The napkin backend: the book's chapters 1–4 numbers, computed while the page is built.
 
-Chapters 1–3 live on one triangle and one tetrahedron, and every number in them is finger-countable
-— four dots, six lines, three differences, ten ticks. Quoting such numbers from a record would be
+Chapters 1–4 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+and every number in them is finger-countable — four dots, six lines, three differences, ten ticks,
+and then a crossing that takes two of those ticks. Quoting such numbers from a record would be
 theatre: the reader can check them on a napkin, so the book should do the same thing in front of her
 rather than cite itself. Each `{{napkin:NAME}}` token in a chapter is replaced at build time by the
 result of running the arithmetic here, and every rendered block says so.
+
+Chapter 4 is where the napkin runs out, on purpose, and that is its finding: the arithmetic for the
+shapes bigger than one tetrahedron lives in `tools/octahedron.py`, and the last of those shapes
+cannot be run at the chapters' own tick size at all. `number()` refusing to print it is not a
+formatting problem — it is the chapter's point, arriving in the one place it cannot be argued with.
 
 **Everything is exact.** `fractions.Fraction` throughout, and each value is rendered by
 `number()`, which refuses anything it cannot write down exactly and briefly. There is no floating
@@ -30,6 +36,7 @@ The object and the rule are the engine's, replicated faithfully in Python:
 
 from __future__ import annotations
 
+import re
 from fractions import Fraction
 from itertools import combinations
 from typing import Dict, List, Sequence, Tuple
@@ -164,6 +171,9 @@ def footnote(what: str) -> str:
     return f"\n*computed while this page was built — {what}.*\n"
 
 
+CAPTION_CEILING = 70
+
+
 def block(name: str, body: str, what: str) -> str:
     """One rendered token, fenced by comments that mark exactly where the computed span begins.
 
@@ -171,6 +181,16 @@ def block(name: str, body: str, what: str) -> str:
     computed-on-build exemption to this span and nothing else, so a bold number the *narrative*
     emphasises is still governed by the appendix-anchoring rule.
     """
+    # A caption is a caption. It was the one surface with no ceiling on it — the grain band counts a
+    # chapter's prose and sees `{{napkin:NAME}}` as one word — and a caption grew to 118 words and
+    # spent the following section's whole reveal in small italics before anyone measured it (a
+    # proofreader, 2026-09-02). The cap is above every caption in the book, so it costs nothing
+    # except the next one that tries to do a section's work.
+    length = len(what.split())
+    assert length <= CAPTION_CEILING, (
+        f"{name}: the caption is {length} words, over the {CAPTION_CEILING}-word ceiling — a "
+        f"caption states what was computed; it does not carry the section's argument"
+    )
     return (
         f"<!-- napkin:{name} -->\n\n{body.strip()}\n{footnote(what)}\n<!-- /napkin:{name} -->"
     )
@@ -613,6 +633,523 @@ def vertex_classes() -> str:
                  f"(confirmed unchanged on a {TORUS_CHECK}³ world)")
 
 
+# ── the shape between: cut the one tetrahedron and look at what is left ──────────────────────────
+#
+# Chapters 1–3 never leave one tetrahedron, and the chapter after them needs room. The cheapest room
+# is not more tetrahedra: it is *inside* the one she has. Mark the middle of each of its six lines,
+# cut, and four half-size tetrahedra come off the tips leaving one octahedron between them — the
+# owner's finding, and the object the record's tiling turns out to be full of.
+#
+# **The arithmetic for these six tokens lives in `tools/octahedron.py`, not here**, and the import
+# below is deliberately inside each function rather than at the top of the file. `octahedron.py`
+# imports *this* module — it runs the chapters' own leapfrog rather than a second copy of it — so a
+# top-level import here would be a cycle. The direction of dependence is the honest one: the napkin
+# owns the rule and the rendering, the other module owns the object and every assertion about it.
+#
+# Nothing below computes anything itself. Each token renders numbers another module has already
+# asserted, and re-asserts the handful of them the chapter's sentences actually lean on, so a claim
+# cannot survive here after stopping being true over there.
+
+
+def _octahedron():
+    import octahedron                        # noqa: PLC0415 — see the note above: a cycle otherwise
+    return octahedron
+
+
+def fraction_text(value: Fraction) -> str:
+    """An exact fraction as a fraction — `2/3`, `2/5` — for the values `number()` rightly refuses.
+
+    `number()` writes a short decimal or nothing, which is the correct rule for a table of a run: a
+    value it cannot write is a sign the arithmetic left the napkin. A *tick size* is different. Two
+    thirds is exactly as checkable as a half and it has no short decimal, so refusing it would push
+    the chapter into rounding a number the reader is meant to be able to verify. The round-trip is
+    asserted, so this cannot quietly print something else.
+    """
+    text = (f"{value.numerator}/{value.denominator}" if value.denominator != 1
+            else str(value.numerator))
+    assert Fraction(text) == value, f"{value} does not round-trip through {text!r}"
+    return text
+
+
+# Every worded fraction the captions use, and nothing else. Two rules come with this table, both
+# learned the hard way one round apart (a proofreader, 2026-09-02):
+#
+#   * **it is pinned to literals below**, because a lookup is not a derivation. `fraction_text`
+#     round-trips its own output (`Fraction("1/8") == 1/8`); words cannot be parsed back that
+#     honestly, so the check is a written-out pin next to the entry. Without it, editing
+#     `Fraction(1, 8): "an eighth"` to `"a sixth"` renders "a sixth" over a table saying `1/8` and
+#     every check agrees, because `in_caption` compares the caption against the same corrupted
+#     lookup — the `stella_in_its_cube` shape, one round later, in the fix for it;
+#   * **nothing dead lives here.** It held eight entries of which two were reached, including
+#     "half again" for 3/2, which is not a reading of 3/2 on its own. An unused value with an
+#     assertion beside it is cover for whatever the next author does with it, which is exactly why
+#     `stella_runaway`'s spare denominators were deleted rather than guarded.
+#
+# A caption that needs a new worded fraction adds the entry AND its pin, in the same commit.
+FRACTION_WORDS = {
+    Fraction(1, 2): "half",
+    Fraction(1, 8): "an eighth",
+}
+
+assert FRACTION_WORDS[Fraction(1, 2)] == "half", "a half is not called 'half' any more"
+assert FRACTION_WORDS[Fraction(1, 8)] == "an eighth", "an eighth is not called 'an eighth'"
+assert len(FRACTION_WORDS) == 2, (
+    "FRACTION_WORDS has grown or shrunk: pin every entry to a literal above, and keep no entry no "
+    "caption reaches"
+)
+assert {fraction_text(value) for value in FRACTION_WORDS} == {"1/2", "1/8"}, (
+    "the worded fractions and their digit forms have come apart"
+)
+
+
+def fraction_words(value: Fraction) -> str:
+    """A small fraction in words — `an eighth`, `half` — for prose that reads better that way.
+
+    `fraction_text` gives `1/8`, which is right in a table cell and wrong in a sentence: making a
+    caption fidelity-checked turned "an eighth of it each … exactly half" into "1/8 … 1/2" four
+    lines above prose still saying "an eighth" (a proofreader, 2026-09-02). The same fact in two
+    registers is a stumble, and a caption is prose. The table keeps the digits; the caption gets the
+    words; both come from the same value, and the words are pinned where they are written down.
+    """
+    assert value in FRACTION_WORDS, (
+        f"{value} has no worded form here — add it to FRACTION_WORDS with its pin rather than "
+        f"writing it out in a caption, or use fraction_text() and let the sentence carry the digits"
+    )
+    return FRACTION_WORDS[value]
+
+
+def _thousands(count: int) -> str:
+    return f"{count:,}"
+
+
+SMALL_WORDS = ("no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+               "ten", "eleven", "twelve")
+
+
+def word(count: int) -> str:
+    """A small count as a word, for prose that must not carry a typed numeral.
+
+    A sentence like "they fall into four groups of three" is a claim about numbers the token just
+    computed, and the first version of it typed both and got one wrong — it said "four and four"
+    over a table showing three lines per face (a proofreader, 2026-09-02). Built from the counts
+    instead, it cannot disagree with them.
+    """
+    assert 0 <= count < len(SMALL_WORDS), f"{count} is not a small count"
+    return SMALL_WORDS[count]
+
+
+def shows_each(name: str, fragment: str, pairs: Sequence[Tuple[str, Fraction]]) -> None:
+    """Every labelled cell in rendered text carries ITS OWN number, and the text carries no others.
+
+    `shows_exactly` compares a sorted multiset, so a permutation is invisible: swap two arrows
+    between lines and the same numbers are all still present (a proofreader, 2026-09-02). The page
+    then disagrees with itself between two adjacent tables — under a sentence inviting the reader to
+    check exactly that. So each cell is matched against the line it names.
+    """
+    for label, value in pairs:
+        cell = f"{label} **{number(value)}**"
+        assert cell in fragment, (
+            f"{name}: the rendered text does not carry {cell!r} — a number is against the wrong "
+            f"name, or was typed instead of taken from the data"
+        )
+    found = re.findall(r"\*\*(−?[\d.]+)\*\*", fragment)
+    assert len(found) == len(pairs), (
+        f"{name}: the rendered text shows {len(found)} emphasised numbers for {len(pairs)} pieces "
+        f"of data"
+    )
+
+
+def shows_exactly(name: str, fragment: str, expected: Sequence[Fraction]) -> None:
+    """Scrape the emphasised numbers out of rendered text and match them against the data.
+
+    `carries()` compares the page against strings built the same way the page was, so it catches a
+    literal typed into the text and misses a rewritten *builder* — retype every arrow in one table
+    and the check retypes with it. This closes that by reading the rendered characters back with a
+    regular expression and comparing the multiset to the numbers the arithmetic holds. It is the one
+    check here that does not trust the code that wrote the line.
+    """
+    found = sorted(re.findall(r"\*\*(−?[\d.]+)\*\*", fragment))
+    want = sorted(number(value) for value in expected)
+    assert found == want, (
+        f"{name}: the rendered table shows {found} where the arithmetic holds {want} — a number was "
+        f"typed into the text instead of being taken from the data"
+    )
+
+
+def checked_block(name: str, body: str, what: str,
+                  in_caption: Dict[str, str] | None = None, **values: str) -> str:
+    """Render a token, and check the block AND the caption each carry the numbers they claim.
+
+    Two scopes, because one was not enough twice over. `values` must appear anywhere in the block —
+    that is the table's rule. `in_caption` must appear **in the caption itself**, which is the rule
+    the first version missed: a caption saying "a sixth" passed a whole-block check because `1/8`
+    was in the table three lines above it, and a caption saying "Only 7 rows" passed because `3` was
+    in a cell somewhere (a proofreader, 2026-09-02, twice). A claim is only checked where it is
+    made.
+    """
+    text = block(name, body, what)
+    carries(name, text, **values)
+    if in_caption:
+        carries(f"{name}'s caption", what, **in_caption)
+    return text
+
+
+def carries(name: str, body: str, **values: str) -> str:
+    """Assert the rendered text actually contains the values that were computed. Returns `body`.
+
+    Why this exists, in the words of the attack that found it (a proofreader, 2026-09-02): the
+    tokens "assert their *inputs* and render their *outputs*, and nothing checks that the rendered
+    characters are the computed values". Editing a literal `11` into a table whose census says 10
+    left every check green, because every assertion was about the census and none was about the
+    page. A token that says "computed while this page was built" is making a claim about the
+    characters on the page, so the characters are what this checks.
+    """
+    for label, value in values.items():
+        assert value in body, (
+            f"{name}: the rendered block does not contain the computed {label} ({value!r}) — a "
+            f"number was typed into the text instead of being taken from the arithmetic"
+        )
+    return body
+
+
+def octa_cut() -> str:
+    cut = _octahedron().midpoint_cut()
+    assert (cut["dots"], cut["tips"], cut["octahedra"]) == (10, 4, 1), (
+        f"the cut gave {cut['dots']} dots, {cut['tips']} tips and {cut['octahedra']} octahedra"
+    )
+    assert cut["tip_share"] == Fraction(1, 8) and cut["core_share"] == Fraction(1, 2), (
+        "the tips are not eighths, or the shape between them is not half"
+    )
+    body = (
+        "| what falls out | how many | how big |\n"
+        "|---|---|---|\n"
+        f"| dots — the 4 corners and the 6 middles | **{cut['dots']}** | — |\n"
+        f"| tetrahedra, one at each tip | **{cut['tips']}** | "
+        f"half the side, {fraction_text(cut['tip_share'])} of the whole |\n"
+        f"| the shape left between them | **{cut['octahedra']}** | "
+        f"{fraction_text(cut['core_share'])} of the whole |\n\n"
+        f"Its eight faces divide in two: **{len(cut['faces_at_a_tip'])}** look straight at a tip "
+        f"({' · '.join(cut['faces_at_a_tip'])}), and **{len(cut['faces_in_a_face'])}** lie flat in "
+        f"a face of the tetrahedron you cut ({' · '.join(cut['faces_in_a_face'])})."
+    )
+    return checked_block(
+        "octa_cut", body,
+        f"one tetrahedron cut at the middles of its six lines: the {word(cut['tips'])} tips are "
+        f"{fraction_words(cut['tip_share'])} of it each and the shape between them is exactly "
+        f"{fraction_words(cut['core_share'])}, so the {word(cut['tips'] + cut['octahedra'])} pieces "
+        f"account for all of it",
+        in_caption={"tip_share": fraction_words(cut["tip_share"]),
+                    "core_share": fraction_words(cut["core_share"]),
+                    "tips": f"the {word(cut['tips'])} tips",
+                    "pieces": f"the {word(cut['tips'] + cut['octahedra'])} pieces"},
+        dots=f"**{cut['dots']}**", tips=f"**{cut['tips']}**",
+        octahedra=f"**{cut['octahedra']}**",
+        tip_share=fraction_text(cut["tip_share"]), core_share=fraction_text(cut["core_share"]))
+
+
+def octa_counts() -> str:
+    octahedron = _octahedron()
+    cut = octahedron.midpoint_cut()
+    tetra = census()
+    counts = (len(tetra["dots"]), len(tetra["lines"]), len(tetra["faces"]), len(tetra["insides"]))
+    assert counts == (4, 6, 4, 1), f"the tetrahedron's census came out {counts}"
+    assert (cut["oct_dots"], cut["oct_lines"], cut["oct_faces"]) == (6, 12, 8), (
+        f"the octahedron came out {(cut['oct_dots'], cut['oct_lines'], cut['oct_faces'])}"
+    )
+    assert cut["oct_degree"] == 4 and len(cut["opposite_pairs"]) == 3, (
+        "the octahedron's dots do not have four lines each, or there are not three opposite pairs"
+    )
+    pairs = " · ".join("–".join(pair) for pair in cut["opposite_pairs"])
+    body = (
+        "| | dots | lines | faces | inside |\n"
+        "|---|---|---|---|---|\n"
+        f"| the tetrahedron, from before | {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |\n"
+        f"| the shape between the tips | **{cut['oct_dots']}** | **{cut['oct_lines']}** | "
+        f"**{cut['oct_faces']}** | 1 |\n\n"
+        f"Its six dots are the middles of the tetrahedron's six lines, so they keep those lines' "
+        f"names: {' · '.join(octahedron.MID_NAMES)}. Two of them are joined exactly when their "
+        f"lines share a corner — which leaves **{len(cut['opposite_pairs'])}** pairs joined by "
+        f"nothing at all: {pairs}."
+    )
+    return checked_block(
+        "octa_counts", body,
+        f"the census of the shape between the tips: {cut['oct_degree']} lines at every dot, and "
+        f"the {word(len(cut['opposite_pairs']))} pairs of dots that no line joins — the first room "
+        f"in the book",
+        oct_dots=f"**{cut['oct_dots']}**",
+        oct_lines=f"**{cut['oct_lines']}**", oct_faces=f"**{cut['oct_faces']}**",
+        pairs=pairs, tetra_census=f"| {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |",
+        pair_count=f"**{len(cut['opposite_pairs'])}** pairs",
+        names=" · ".join(octahedron.MID_NAMES),
+        in_caption={"degree": f"{cut['oct_degree']} lines at every dot",
+                    "pairs": f"the {word(len(cut['opposite_pairs']))} pairs"})
+
+
+def octa_poke_table() -> str:
+    octahedron = _octahedron()
+    poke = octahedron.octahedron_poke_table()
+    history = poke["history"]
+    assert poke["crossing_ticks"] == 2 and poke["home_ticks"] == 3 and poke["period"] == 12, (
+        f"the crossing came out {poke['crossing_ticks']}, home {poke['home_ticks']}, repeat "
+        f"{poke['period']}"
+    )
+    names = octahedron.MID_NAMES
+    rows = []
+    for tick, row in enumerate(history):
+        cells = " | ".join(number(value) for value in row)
+        rows.append(f"| {tick} | {cells} | **{number(sum(row))}** |")
+    body = (
+        f"| tick | {' | '.join(names)} | total |\n"
+        f"|---|{'---|' * len(names)}---|\n" + "\n".join(rows)
+    )
+    # The rows the chapter reads out, and the names it reads them under.
+    return checked_block(
+        "octa_poke_table", body,
+        f"the same rule and the same tick size as the tetrahedron's tables, run on the shape "
+        f"between the tips from a poke of 1 on {poke['poked']}: the whole of it is on the opposite "
+        f"dot {poke['opposite']} at tick {poke['crossing_ticks']} and home at tick "
+        f"{poke['home_ticks']}, the total never moves, and the pair (now, before) does not repeat "
+        f"until tick {poke['period']}",
+        header=" | ".join(names),
+        crossing=rows[poke["crossing_ticks"]], home=rows[poke["home_ticks"]],
+        last=rows[poke["period"]],
+        in_caption={"poked": f"poke of 1 on {poke['poked']}",
+                    "crossing": f"{poke['opposite']} at tick {poke['crossing_ticks']}",
+                    "home": f"home at tick {poke['home_ticks']}",
+                    "period": f"repeat until tick {poke['period']}"})
+
+
+def octa_face_sum() -> str:
+    octahedron = _octahedron()
+    surface = octahedron.octahedron_boundary_sum()
+    names = octahedron.MID_NAMES
+    lines = octahedron.mid_lines()
+    faces = octahedron.mid_faces()
+    arrows = {line: Fraction(value) for line, value in zip(lines, surface["arrows"])}
+    assert surface["sum"] == 0, f"the eight faces summed to {surface['sum']}"
+    assert surface["lines_walked_each_way"] == 12, "not every line was walked once each way"
+
+    # Group the twelve lines by the face of the original tetrahedron they lie in: a line joins two
+    # middles, and the letters of those two middles name a face. Four faces, three lines each.
+    grouped: Dict[str, List[str]] = {}
+    for line in lines:
+        letters = "".join(sorted(set(names[line[0]]) | set(names[line[1]])))
+        assert len(letters) == 3, f"the line {line} spans {letters}, which is not a face"
+        grouped.setdefault(letters, []).append(
+            f"{names[line[0]]}–{names[line[1]]} **{number(arrows[line])}**"
+        )
+    assert sorted(grouped) == ["ABC", "ABD", "ACD", "BCD"], f"the grouping came out {grouped}"
+    assert all(len(items) == 3 for items in grouped.values()), "a face does not hold three lines"
+    grouped_table = "\n".join(f"| {face} | {' · '.join(items)} |"
+                              for face, items in sorted(grouped.items()))
+    shows_each("octa_face_sum's arrows", grouped_table,
+               [(f"{names[line[0]]}–{names[line[1]]}", arrows[line]) for line in lines])
+
+    walk_rows = []
+    for face, value in zip(faces, surface["face_numbers"]):
+        cycle = [names[index] for index in face]
+        terms = []
+        for step in range(3):
+            low, high = face[step], face[(step + 1) % 3]
+            sign = 1 if low < high else -1
+            terms.append(signed(sign * arrows[(min(low, high), max(low, high))]))
+        walk_rows.append(
+            f"| {' → '.join(cycle + [cycle[0]])} | {' '.join(terms)} | **{number(value)}** |"
+        )
+    total_terms = " ".join(signed(value) for value in surface["face_numbers"]).lstrip("+")
+
+    body = (
+        f"{word(len(lines)).capitalize()} numbers, one on each line — arrows in their own right, "
+        f"not differences of anything. Each line lies in one face of the tetrahedron you cut, so "
+        f"they fall into {word(len(grouped))} groups of "
+        f"{word(len(next(iter(grouped.values()))))}:\n\n"
+        "| the face it lies in | its three lines, with their arrows |\n|---|---|\n"
+        + grouped_table
+        + f"\n\nNow walk each of the {word(len(faces))} faces the way round it faces from "
+          f"outside:\n\n"
+        "| walked | its three arrows, signed | how much goes round it |\n|---|---|---|\n"
+        + "\n".join(walk_rows)
+        + f"\n\nAnd add the {word(len(faces))} up: {total_terms} = **0**."
+    )
+    shows_exactly("octa_face_sum's face-numbers", "\n".join(walk_rows),
+                  list(surface["face_numbers"]))
+    return checked_block(
+        "octa_face_sum", body,
+        f"{word(len(lines))} freely chosen arrows on the shape between the tips, the "
+        f"{word(len(faces))} non-zero face-numbers they give, and their sum walked from outside — "
+        f"zero, because every one of the {word(len(lines))} lines is walked exactly twice, once "
+        f"each way",
+        terms=total_terms,
+        grouping=f"{word(len(grouped))} groups of "
+                 f"{word(len(next(iter(grouped.values()))))}",
+        faces_walked=f"each of the {word(len(faces))} faces",
+        in_caption={"arrows": f"{word(len(lines))} freely chosen arrows",
+                    "faces": f"the {word(len(faces))} non-zero face-numbers",
+                    "lines": f"the {word(len(lines))} lines is walked"},
+        **{f"face {index}": row for index, row in enumerate(walk_rows)},
+        **{f"group {face}": f"| {face} | {' · '.join(items)} |"
+           for face, items in grouped.items()})
+
+
+def stella_counts() -> str:
+    octahedron = _octahedron()
+    twin = octahedron.second_tetrahedron()
+    both = octahedron.stella_reader_census()
+    tetra = census()
+    cut = octahedron.midpoint_cut()
+    assert (both["dots"], both["lines"]) == (14, 36), (
+        f"the two together came out {both['dots']} dots and {both['lines']} lines"
+    )
+    assert both["tips_independent"] and twin["twin_middles_the_same"], (
+        "the two tetrahedra are not threaded through one another"
+    )
+    assert both["stella_in_tetrahedra"] == Fraction(3, 2), (
+        f"the pair came out {both['stella_in_tetrahedra']} of the tetrahedron we cut"
+    )
+    body = (
+        "| | dots | lines |\n"
+        "|---|---|---|\n"
+        f"| the tetrahedron, from before | {len(tetra['dots'])} | {len(tetra['lines'])} |\n"
+        f"| the shape between the tips | {cut['oct_dots']} | {cut['oct_lines']} |\n"
+        f"| the two tetrahedra, threaded | **{both['dots']}** | **{both['lines']}** |\n\n"
+        f"Those are the {both['middles']} middles and {both['tips']} tips — the four "
+        f"you started with and the four the second tetrahedron brought "
+        f"({' · '.join(twin['apex_names'])}). Every middle has {both['middle_degree']} lines and "
+        f"every tip has {both['tip_degree']}, and **no two tips are joined at all**, so nothing "
+        f"gets from one tip to another without going through the middle. Together they fill "
+        f"{fraction_text(both['stella_in_its_cube'])} of the cube whose eight corners the tips "
+        f"are — half again as much room as the tetrahedron you cut."
+    )
+    # Phrases, not bare digits: a "6" on its own is in the table too, so asserting the digit would
+    # let a literal into the sentence beside it. The attack that found this typed "The 15 are…"
+    # under a table saying 14, and every check stayed green (a proofreader, 2026-09-02).
+    return checked_block(
+        "stella_counts", body,
+        f"the two tetrahedra threaded through one another, counted: the second is the same size as "
+        f"the first and its own {word(both['middles'])} middles are the same "
+        f"{word(both['middles'])} middles, so they share one octahedron and the "
+        f"{word(both['tips'])} tips are the corners of a cube",
+        dots=f"**{both['dots']}**", lines=f"**{both['lines']}**",
+        middles=f"the {both['middles']} middles", tips=f"{both['tips']} tips",
+        middle_degree=f"Every middle has {both['middle_degree']} lines",
+        tip_degree=f"every tip has {both['tip_degree']}",
+        apexes=" · ".join(twin["apex_names"]),
+        in_its_cube=fraction_text(both["stella_in_its_cube"]),
+        in_caption={"middles": f"its own {word(both['middles'])} middles",
+                    "tips": f"the {word(both['tips'])} tips"})
+
+
+def stella_refusal() -> str:
+    octahedron = _octahedron()
+    ceilings = octahedron.napkin_ceilings()
+    runaway = octahedron.stella_runaway()
+    assert ceilings["tick"] == TICK_K, (
+        f"the ceilings were worked out at tick {ceilings['tick']}, not the chapters' {TICK_K}"
+    )
+    assert [row["holds"] for row in ceilings["rows"]] == [True, True, False], (
+        "the verdicts are not hold, hold, fail"
+    )
+    assert runaway["printable_rows"] == 3 and runaway["never_returns"], (
+        f"{runaway['printable_rows']} rows print, or the run comes home after all"
+    )
+
+    # The chapter's own names for the three objects, keyed by how many dots each has, so a row
+    # cannot be labelled as the wrong object: the count is what the module computed.
+    called = {4: "the tetrahedron", 6: "the shape between the tips", 14: "the two, threaded"}
+    assert sorted(row["dots"] for row in ceilings["rows"]) == sorted(called), (
+        "the three objects are no longer the 4-, 6- and 14-dot ones the chapter met"
+    )
+    # The column says "must stay under", and it means it: `napkin_ceilings` runs each object AT its
+    # own bound and asserts the numbers grow there. The first version of this table was headed "the
+    # biggest tick it will hold", which a reader disproved on the tetrahedron with a pencil.
+    ceiling_rows = "\n".join(
+        f"| {called[row['dots']]} | {row['dots']} | {fraction_text(row['bound'])} | "
+        f"{'holds' if row['holds'] else '**too big**'} |"
+        for row in ceilings["rows"]
+    )
+    look = dict(runaway["look"])
+    bounds = dict(runaway["bounds"])
+    growth = []
+    for tick, value in runaway["look"]:
+        try:
+            growth.append((tick, number(value)))
+        except AssertionError:
+            growth.append((tick, f"past {_thousands(bounds[tick])}"))
+    assert any(text.startswith("past") for _, text in growth), (
+        "every row wrote down exactly, so the runaway has nothing to show"
+    )
+    growth_rows = "\n".join(f"| {tick} | {text} |" for tick, text in growth)
+
+    body = (
+        f"| | dots | the tick it must stay under | the book's tick, "
+        f"{fraction_text(TICK_K)} |\n|---|---|---|---|\n{ceiling_rows}\n\n"
+        "So run it anyway, and watch the biggest number anywhere in the world:\n\n"
+        f"| tick | the biggest number in it |\n|---|---|\n{growth_rows}"
+    )
+    # The caption says only what the two tables above it are: the poke, the tick, the runaway and
+    # how much of it can be written down. Everything else it used to carry — the smaller tick, the
+    # fifths, the never-coming-home — is the next section's own reveal, and a caption that spends a
+    # section's surprise two beats early in small italics was a real defect (a proofreader,
+    # 2026-09-02). It also grew the one surface the grain band does not measure.
+    most_rows = max(row["printable"] for row in runaway["stable_tried"])
+    return checked_block(
+        "stella_refusal", body,
+        f"the same poke and the same tick on the two tetrahedra threaded together: the tick is "
+        f"over what this object will take, so nothing sloshes — it runs away, past "
+        f"{_thousands(bounds[max(bounds)])} by tick {max(bounds)}. Only "
+        f"{runaway['printable_rows']} rows of the full table can be written down in halves at all, "
+        f"and no tick that does stay under the bound prints more than {word(most_rows)} rows",
+        column="the tick it must stay under",
+        **{f"bound for {row['dots']} dots": fraction_text(row["bound"])
+           for row in ceilings["rows"]},
+        book_tick=fraction_text(TICK_K),
+        last_bound=_thousands(bounds[max(bounds)]),
+        in_caption={"runaway": _thousands(bounds[max(bounds)]),
+                    "tick": f"by tick {max(bounds)}",
+                    "rows": f"Only {runaway['printable_rows']} rows",
+                    "most": f"more than {word(most_rows)} rows"})
+
+
+# What a token's arithmetic REFUSES, in the prose of any chapter that carries the token.
+#
+# The defect this exists for (a proofreader, 2026-09-02): `stella_refusal`'s table was corrected to
+# "the tick it must stay under" and the prose two paragraphs below it still said "a largest tick it
+# will hold, the table says what they are" — pointing at a table that said the opposite. Every
+# fidelity check here reads what the *tool* wrote; nothing read what the *author* wrote. So each
+# token names the phrasings its own numbers disprove, `check_edition.py` refuses them in the
+# chapter's source, and the contradiction cannot be reintroduced by an edit two paragraphs away.
+#
+# The last group is the three readings `notes/octahedron-crossing.md` computed and refuted. They are
+# the appendix's business (they are that chapter's `note` in `edition.json`) and they are refused in
+# every chapter's prose, whether or not it carries a token, because a refuted claim is not a
+# chapter's to make.
+REFUSED_IN_PROSE: Dict[str, List[str]] = {
+    "stella_refusal": [
+        "tick it will hold",
+        "tick it holds",
+        "largest tick that holds",
+        "biggest tick that holds",
+    ],
+    "octa_face_sum": [
+        "group four and four",
+        "four and four",
+    ],
+    "octa_poke_table": [
+        "one tick to cross",
+        "a tick is a trip",
+        "trip round the octahedron",
+        "trip round the shape",
+    ],
+    "*": [
+        "trip round the octahedron",
+        "saves work",
+        "cheaper than working",
+        "finishes its calculation",
+        "before the cube is stable",
+    ],
+}
+
+
 TOKENS = {
     "tetra_counts": tetra_counts,
     "triangle_loop_example": triangle_loop_example,
@@ -621,6 +1158,12 @@ TOKENS = {
     "slosh_table": slosh_table,
     "slosh_table_dialed": slosh_table_dialed,
     "vertex_classes": vertex_classes,
+    "octa_cut": octa_cut,
+    "octa_counts": octa_counts,
+    "octa_poke_table": octa_poke_table,
+    "octa_face_sum": octa_face_sum,
+    "stella_counts": stella_counts,
+    "stella_refusal": stella_refusal,
 }
 
 

@@ -3,7 +3,7 @@
 **A book about a small world we built inside a computer, and what happened when we pointed real
 tests at it.**
 
-Nine chapters and an appendix. It starts with a child noticing her shadow and a Greek who knew what
+Fourteen chapters and an appendix. It starts with a child noticing her shadow and a Greek who knew what
 to do next, and it ends with you running the checks yourself. In between: a structure built out of
 points and lines, a ripple that came out lopsided until one setting fixed it, a wall that worked and
 a hoped-for effect that did not, an energy bill, a measurement with no answer key, and a law that
@@ -32,7 +32,7 @@ UniForge builds The Container. The lab tests it. Our Bubble teaches it.
 The reading order is [`chapters/SUMMARY.md`](chapters/SUMMARY.md) — that file is the *only* place
 the order is written down, so a chapter carries no number in its name and none in its prose.
 
-The nine chapters are narrative. They carry no rung labels and no quotations, on purpose. Everything
+The fourteen chapters are narrative. They carry no rung labels and no quotations, on purpose. Everything
 a skeptic wants — which registered experiment each chapter rests on, its gate, its data-true figure,
 the exact numbers quoted and the file that carries each one, and the commands that regenerate them —
 is in [the appendix](chapters/the-simulations.md), one section per chapter, and each chapter closes
@@ -63,10 +63,10 @@ Building can legitimately modify a tracked file: `chapters/the-simulations.md` i
 to the record and someone remembering to run a script. `git status` is therefore part of the check —
 a clean tree after a build means the appendix and the record agree.
 
-The build also **computes some of the book's numbers**. Chapters 1–3 live on one triangle and one
-tetrahedron, where every number is finger-countable, so rather than quote them the chapters carry
-`{{napkin:…}}` tokens that the preprocessor replaces with arithmetic it runs at build time — the
-census, the loop sums, the ten-tick table. Each rendered block says so on its last line. The
+The build also **computes some of the book's numbers**. Chapters 1–4 live on one triangle, one
+tetrahedron and the two shapes it is made of, where every number is finger-countable, so rather than
+quote them the chapters carry `{{napkin:…}}` tokens that the preprocessor replaces with arithmetic it
+runs at build time — the census, the loop sums, the ten-tick table, the octahedron's crossing. Each rendered block says so on its last line. The
 arithmetic is exact (rational, no floating point), recomputed twice on every check to prove it is
 deterministic, and each token asserts its own invariant — loop sums zero, total conserved — before it
 renders anything. The tokens and the scope of their one exemption from the appendix-anchoring rule
@@ -126,7 +126,8 @@ records the SHA it was taken at, and it must match the lock.
 | `check_edition.py` | the checker |
 | `gen_appendix.py` · `preprocessor.py` | the appendix generator, and the mdBook hook that runs it on every build |
 | `record.lock` · `record/` · `tools/fetch_record.sh` · `tools/snapshot_record.sh` | the record contract: the pin, the committed snapshot, and the two scripts that derive it |
-| `tools/napkin.py` · `preprocessor.py` | the numbers chapters 1–3 compute at build time, and the mdBook hook that runs them |
+| `tools/napkin.py` · `tools/octahedron.py` · `preprocessor.py` | the numbers chapters 1–4 compute at build time, the object the later ones are computed on, and the mdBook hook that runs them |
+| `tools/renumber_beats.py` | moves beat numbers through `OUTLINE.md` and every chapter's markers together, when a beat is inserted |
 | `CANON.md` · `tools/canon.py` | the one labeling of the tetrahedron, derived from the napkin, and the only code that draws its net |
 | `tools/check.sh` · `Makefile` | tier 0 |
 | `ART_DIRECTION.md` · `EDITION_STANDARD.md` · `LEGACY_MIGRATION.md` | the illustration contract, the writing contract, and what was and was not carried over from each earlier source |

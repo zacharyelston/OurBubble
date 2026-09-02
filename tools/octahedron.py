@@ -1146,6 +1146,699 @@ def work_counts(n: int = TORUS, cut=screw111) -> Dict[str, object]:
     }
 
 
+# ── the reader's route in: cut ONE tetrahedron at the middles of its six lines ───────────────────
+#
+# Everything above this line audits the record's tiling, which is where the octahedron was found.
+# Everything below it is the same object reached the way a reader can reach it with a pencil: take
+# the one tetrahedron chapters 1–3 already own, mark the middle of each of its six lines, and cut.
+# Four half-size tetrahedra come off the tips and one octahedron is left between them.
+#
+# The two routes must agree, and that they do is asserted rather than assumed: `midpoint_cut`
+# checks that the six midpoints, joined the way the cut joins them, are the *same graph* as
+# `octahedron_lines()` — the object the audits above were run on.
+#
+# The corners are placed on alternate corners of a cube of side 2, which is the placement that makes
+# every number below an integer: the six midpoints land exactly on `(±1,0,0)`, `(0,±1,0)`,
+# `(0,0,±1)`, and the second tetrahedron's four corners land on the cube's other four corners.
+
+TET_CORNERS: Dict[str, Point] = {
+    "A": (1, 1, 1),
+    "B": (1, -1, -1),
+    "C": (-1, 1, -1),
+    "D": (-1, -1, 1),
+}
+
+# The six middles, named for the lines they halve — `AB` is the middle of the line `AB`. The names
+# and their order are the napkin's own (`napkin.simplices(…, 1)` in ascending order), so CANON.md's
+# rule that a label is an identity carries over from the tetrahedron to this object for free, and no
+# index is introduced. Two middles are joined exactly when their lines share a corner, which is why
+# the three pairs with no letter in common — AB·CD, AC·BD, AD·BC — are the ones that are *not*
+# joined. Those are the opposite pairs.
+MID_NAMES: Tuple[str, ...] = tuple("".join(pair) for pair in combinations("ABCD", 2))
+MID_POINTS: Tuple[Tuple[Fraction, ...], ...] = tuple(
+    tuple(Fraction(TET_CORNERS[name[0]][axis] + TET_CORNERS[name[1]][axis], 2) for axis in range(3))
+    for name in MID_NAMES
+)
+
+
+def _shares_corner(i: int, j: int) -> bool:
+    return bool(set(MID_NAMES[i]) & set(MID_NAMES[j]))
+
+
+def mid_lines() -> List[Tuple[int, int]]:
+    """The octahedron's twelve lines, in the midpoint naming: the pairs of middles that touch."""
+    return [(i, j) for i, j in combinations(range(6), 2) if _shares_corner(i, j)]
+
+
+def _det3(a: Sequence[Fraction], b: Sequence[Fraction], c: Sequence[Fraction]) -> Fraction:
+    return (a[0] * (b[1] * c[2] - b[2] * c[1])
+            - a[1] * (b[0] * c[2] - b[2] * c[0])
+            + a[2] * (b[0] * c[1] - b[1] * c[0]))
+
+
+def mid_faces() -> List[Tuple[int, int, int]]:
+    """The octahedron's eight faces, each walked the way round it faces from OUTSIDE.
+
+    A face is a triangle of the graph, and there are exactly eight. The walking direction is fixed
+    by an exact 3×3 integer determinant on the face's own three corners: the object is centred on
+    the origin, so a cycle with a positive determinant is the one seen anticlockwise from outside.
+    That is the only place geometry enters, and it enters as the sign of an integer.
+
+    **And "outside" is checked, not asserted by convention.** Flipping the determinant's sense
+    flips all eight cycles at once, which leaves the boundary sum zero and every line still walked
+    once each way — consistent, and inward (a proofreader, 2026-09-02). So each cycle's own normal
+    is computed the long way, `(v₂−v₁) × (v₃−v₁)`, and required to point *away* from the centre.
+    """
+    out: List[Tuple[int, int, int]] = []
+    for triple in combinations(range(6), 3):
+        if not all(_shares_corner(a, b) for a, b in combinations(triple, 2)):
+            continue
+        corners = [MID_POINTS[i] for i in triple]
+        turn = _det3(*corners)
+        assert turn != 0, f"the face {triple} is flat"
+        cycle = triple if turn > 0 else (triple[0], triple[2], triple[1])
+        a, b, c = (MID_POINTS[i] for i in cycle)
+        edge1 = [b[i] - a[i] for i in range(3)]
+        edge2 = [c[i] - a[i] for i in range(3)]
+        normal = [edge1[1] * edge2[2] - edge1[2] * edge2[1],
+                  edge1[2] * edge2[0] - edge1[0] * edge2[2],
+                  edge1[0] * edge2[1] - edge1[1] * edge2[0]]
+        outward = sum(normal[i] * (a[i] + b[i] + c[i]) for i in range(3))
+        assert outward > 0, (
+            f"the face {[MID_NAMES[i] for i in cycle]} is walked so that its own normal points "
+            f"back at the centre ({outward}) — that is inward, not 'from outside'"
+        )
+        out.append(cycle)
+    assert len(out) == 8, f"the octahedron came out with {len(out)} faces, not 8"
+    return out
+
+
+def _ring(four: Sequence[int]) -> List[int]:
+    """Four middles round the equator, put in the order they actually touch each other.
+
+    Taking them in name order would give `AC AD BC BD`, and `AD` does not touch `BC` — they are an
+    opposite pair. A quarter built on that pair would be a flat cell, so the order is derived here
+    from which middles share a corner rather than assumed from the naming.
+    """
+    ring = [four[0]]
+    remaining = list(four[1:])
+    while remaining:
+        nxt = next((index for index in remaining if _shares_corner(ring[-1], index)), None)
+        assert nxt is not None, f"the equator {four} does not close into a ring"
+        ring.append(nxt)
+        remaining.remove(nxt)
+    assert _shares_corner(ring[-1], ring[0]), f"the ring {ring} does not close"
+    return ring
+
+
+def _volume(cell: Sequence[Sequence[Fraction]]) -> Fraction:
+    """Six times the signed volume of a tetrahedron, as a positive exact fraction of a sixth."""
+    a, b, c, d = (tuple(Fraction(v) for v in point) for point in cell)
+    return abs(_det3([b[i] - a[i] for i in range(3)],
+                     [c[i] - a[i] for i in range(3)],
+                     [d[i] - a[i] for i in range(3)])) / 6
+
+
+def _squared_length(a: Sequence[Fraction], b: Sequence[Fraction]) -> Fraction:
+    return sum((x - y) ** 2 for x, y in zip(a, b))
+
+
+def midpoint_cut() -> Dict[str, object]:
+    """Cut the one tetrahedron at its six middles. What falls out, counted exactly.
+
+    The claim being checked, which is the owner's finding stated as arithmetic: the cut gives four
+    tetrahedra at the tips and **one** octahedron between them; the tips are half-size; the
+    octahedron is exactly half the whole; and of its eight faces, four look at a tip and four lie
+    flat in a face of the tetrahedron that was cut. Nothing here is read off a picture.
+    """
+    corners = {name: tuple(Fraction(v) for v in point) for name, point in TET_CORNERS.items()}
+    whole = _volume(list(corners.values()))
+
+    # Ten dots: the four corners, and the six middles.
+    dots = set(corners.values()) | set(MID_POINTS)
+    assert len(dots) == 10, f"the cut object has {len(dots)} dots, not 10"
+
+    # The four tips: a corner, and the middles of the three lines that leave it.
+    tips = {}
+    for name in "ABCD":
+        touching = [index for index, mid in enumerate(MID_NAMES) if name in mid]
+        assert len(touching) == 3, f"the corner {name} is on {len(touching)} lines, not 3"
+        tips[name] = [corners[name]] + [MID_POINTS[index] for index in touching]
+        assert _volume(tips[name]) == whole / 8, (
+            f"the tip at {name} is {_volume(tips[name]) / whole} of the whole, not an eighth"
+        )
+        edges = {_squared_length(u, v) for u, v in combinations(tips[name], 2)}
+        assert edges == {Fraction(2)}, f"the tip at {name} is not regular: squared sides {edges}"
+    big_edges = {_squared_length(u, v) for u, v in combinations(corners.values(), 2)}
+    assert big_edges == {Fraction(8)}, f"the tetrahedron that was cut is not regular: {big_edges}"
+
+    # ONE octahedron between them, on the six middles — and it is the object audited above.
+    lines = mid_lines()
+    assert len(lines) == 12, f"the middles are joined by {len(lines)} lines, not 12"
+    degrees = {name: sum(1 for line in lines if index in line)
+               for index, name in enumerate(MID_NAMES)}
+    assert set(degrees.values()) == {4}, f"the middles do not all have four lines: {degrees}"
+    opposite = [(MID_NAMES[i], MID_NAMES[j]) for i, j in combinations(range(6), 2)
+                if not _shares_corner(i, j)]
+    assert len(opposite) == 3, f"{len(opposite)} pairs of middles are unjoined, not 3"
+
+    # The same graph as the object §1–§5 were computed on, under the name map AB→+x, CD→−x, …
+    to_audited = {name: OCT_POINTS.index(tuple(int(v) for v in MID_POINTS[index]))
+                  for index, name in enumerate(MID_NAMES)}
+    mapped = {tuple(sorted((to_audited[MID_NAMES[i]], to_audited[MID_NAMES[j]])))
+              for i, j in lines}
+    assert mapped == {tuple(sorted(line)) for line in octahedron_lines()}, (
+        "the reader's octahedron is not the octahedron the audits above were run on"
+    )
+
+    # Volume: four eighths at the tips, and the rest is the octahedron. Exactly half.
+    faces = mid_faces()
+    core = whole - 4 * (whole / 8)
+    assert core == whole / 2, f"the octahedron is {core / whole} of the whole, not a half"
+    # Cut the octahedron into four about one long diagonal and the volumes must still add up, which
+    # is the check that "one octahedron" is the whole of what is left rather than most of it.
+    diagonal = (MID_NAMES.index("AB"), MID_NAMES.index("CD"))
+    equator = _ring([index for index, name in enumerate(MID_NAMES)
+                     if name not in ("AB", "CD")])
+    quarters = [
+        [MID_POINTS[diagonal[0]], MID_POINTS[diagonal[1]],
+         MID_POINTS[equator[w]], MID_POINTS[equator[(w + 1) % 4]]]
+        for w in range(4)
+    ]
+    assert sum(_volume(cell) for cell in quarters) == core, (
+        "cutting the octahedron into four does not give back its own volume"
+    )
+
+    # Its eight faces: four look at a tip, four lie flat in a face of the tetrahedron.
+    at_a_tip, in_a_face = [], []
+    for face in faces:
+        letters = [set(MID_NAMES[index]) for index in face]
+        shared = set.intersection(*letters)
+        spanned = set.union(*letters)
+        if len(shared) == 1:
+            at_a_tip.append((face, next(iter(shared))))
+            assert len(spanned) == 4, f"a tip face spans {spanned}"
+        else:
+            assert len(spanned) == 3, f"a face spans {spanned}, which is neither 3 nor 4 letters"
+            in_a_face.append((face, "".join(sorted(spanned))))
+    assert len(at_a_tip) == 4 and len(in_a_face) == 4, (
+        f"{len(at_a_tip)} faces look at a tip and {len(in_a_face)} lie in a face, expected 4 and 4"
+    )
+    assert {name for _, name in at_a_tip} == set("ABCD"), "the four tip faces are not one per tip"
+    assert {name for _, name in in_a_face} == {"ABC", "ABD", "ACD", "BCD"}, (
+        "the four flat faces are not one per face of the tetrahedron"
+    )
+    # Each flat one is the middle triangle of that face: its three middles are middles of that
+    # face's own three lines, and it lies in that face's plane.
+    for face, name in in_a_face:
+        for index in face:
+            assert set(MID_NAMES[index]) <= set(name), (
+                f"{MID_NAMES[index]} is not a middle of a line of {name}"
+            )
+        plane = [corners[letter] for letter in name]
+        for index in face:
+            assert _det3([plane[1][i] - plane[0][i] for i in range(3)],
+                         [plane[2][i] - plane[0][i] for i in range(3)],
+                         [MID_POINTS[index][i] - plane[0][i] for i in range(3)]) == 0, (
+                f"{MID_NAMES[index]} does not lie in the plane of {name}"
+            )
+
+    return {
+        "dots": len(dots),
+        "corners": 4,
+        "middles": 6,
+        "tips": 4,
+        "octahedra": 1,
+        "tip_share": Fraction(1, 8),
+        "tip_side": Fraction(1, 2),          # squared side 2 against the big one's 8
+        "core_share": Fraction(1, 2),
+        "oct_dots": 6,
+        "oct_lines": 12,
+        "oct_faces": 8,
+        "oct_degree": 4,
+        "opposite_pairs": tuple(opposite),
+        "faces_at_a_tip": tuple(name for _, name in sorted(at_a_tip, key=lambda p: p[1])),
+        "faces_in_a_face": tuple(name for _, name in sorted(in_a_face, key=lambda p: p[1])),
+    }
+
+
+# Twelve freely chosen arrows, one per line of the octahedron — arrows in their own right, not
+# differences of anything, which is beat 22's move and the only way the sum below demonstrates
+# something. Chosen (and asserted) so that all eight faces carry a non-zero number.
+MID_ARROWS: Tuple[int, ...] = (3, 1, 4, 1, 5, 2, 6, 5, 3, 5, 8, 9)
+
+
+def octahedron_boundary_sum() -> Dict[str, object]:
+    """The eight outside faces of the octahedron add to exactly zero, for every set of arrows.
+
+    This is chapter 2's `tetra_inside_sum` one shape out: put a number on each of the twelve lines,
+    read off how much goes round each of the eight faces, walk every face the way it faces from
+    outside, and add. Zero — and not nearly zero: **each line is walked exactly twice, once each
+    way**, which is asserted here line by line rather than argued. No length is used anywhere in it.
+
+    The four-times-over reading is checked too, by `boundary_sum()` above on the record's own cut
+    octahedron: cut this shape into four tetrahedra and each of the four walks its own four faces to
+    zero, the four inside faces cancelling in pairs. Same zero, arrived at from the tetrahedron's.
+    """
+    lines, faces = mid_lines(), mid_faces()
+    arrows = {line: Fraction(value) for line, value in zip(lines, MID_ARROWS)}
+    assert len(arrows) == 12, f"{len(arrows)} arrows for {len(lines)} lines"
+
+    def goes_round(face: Sequence[int]) -> Fraction:
+        total = Fraction(0)
+        for step in range(3):
+            low, high = face[step], face[(step + 1) % 3]
+            total += arrows[(min(low, high), max(low, high))] * (1 if low < high else -1)
+        return total
+
+    numbers = [goes_round(face) for face in faces]
+    assert all(value != 0 for value in numbers), (
+        f"a face came out zero ({numbers}) — choose arrows that make every face carry something, or "
+        f"the sum below demonstrates less than it claims"
+    )
+
+    walked: Dict[Tuple[int, int], int] = {line: 0 for line in lines}
+    for face in faces:
+        for step in range(3):
+            low, high = face[step], face[(step + 1) % 3]
+            walked[(min(low, high), max(low, high))] += 1 if low < high else -1
+    assert set(walked.values()) == {0}, (
+        f"a line is not walked once each way: {walked} — the sum would then be an accident"
+    )
+    total = sum(numbers)
+    assert total == 0, f"the eight outside faces summed to {total}, not 0"
+
+    # The same zero, reached from the tetrahedron: the record's cut octahedron, four insides.
+    cut = boundary_sum()
+    assert cut["outside_sum"] == 0 and cut["per_inside"] == (0, 0, 0, 0), (
+        "the cut octahedron's four insides no longer walk to zero each"
+    )
+    return {
+        "arrows": tuple(MID_ARROWS),
+        "face_numbers": tuple(numbers),
+        "sum": total,
+        "lines_walked_each_way": 12,
+        "from_four_insides": True,
+    }
+
+
+def second_tetrahedron() -> Dict[str, object]:
+    """Fill the four flat faces and a second tetrahedron appears, threaded through the first.
+
+    Each of the four faces that lies flat in a face of the original takes one more tetrahedron, the
+    same size as the tips. Their four new corners are not four unrelated points: each is one of the
+    original corners pushed through the middle and out the other side, and the four of them are a
+    regular tetrahedron the same size as the one we cut, whose own six middles are the *same* six
+    middles. Two tetrahedra, one octahedron between them, threaded.
+    """
+    corners = {name: tuple(Fraction(v) for v in point) for name, point in TET_CORNERS.items()}
+    whole = _volume(list(corners.values()))
+    faces: Dict[str, Tuple[int, ...]] = {}
+    for face in mid_faces():
+        letters = set.union(*[set(MID_NAMES[index]) for index in face])
+        if len(letters) == 3:                      # the ones lying flat in a face, not at a tip
+            faces["".join(sorted(letters))] = face
+    assert len(faces) == 4, f"{len(faces)} flat faces, not 4"
+
+    apexes: Dict[str, Tuple[Fraction, ...]] = {}
+    for name, face in faces.items():
+        missing = (set("ABCD") - set(name)).pop()      # the corner this face does not touch
+        apex = tuple(-value for value in corners[missing])
+        cell = [MID_POINTS[index] for index in face] + [apex]
+        assert _volume(cell) == whole / 8, (
+            f"the tetrahedron added on {name} is {_volume(cell) / whole} of the whole, not an eighth"
+        )
+        sides = {_squared_length(u, v) for u, v in combinations(cell, 2)}
+        assert sides == {Fraction(2)}, f"the tetrahedron added on {name} is not regular: {sides}"
+        apexes[missing + "′"] = apex
+
+    twin = list(apexes.values())
+    assert {_squared_length(u, v) for u, v in combinations(twin, 2)} == {Fraction(8)}, (
+        "the four new corners are not a regular tetrahedron the size of the one we cut"
+    )
+    assert _volume(twin) == whole, "the second tetrahedron is not the same size as the first"
+    twin_middles = {tuple(Fraction(u[i] + v[i], 2) for i in range(3))
+                    for u, v in combinations(twin, 2)}
+    assert twin_middles == set(MID_POINTS), (
+        "the second tetrahedron's own six middles are not the same six middles"
+    )
+    hull = set(corners.values()) | set(twin)
+    assert hull == {tuple(Fraction(s) for s in signs) for signs in product((1, -1), repeat=3)}, (
+        "the eight tips are not the eight corners of a cube"
+    )
+    return {
+        "added": 4,
+        "apex_names": tuple(sorted(apexes)),
+        "apex_share": Fraction(1, 8),
+        "twin_same_size": True,
+        "twin_middles_the_same": True,
+        "hull": "a cube",
+    }
+
+
+# The stella, in the reader's own names: the six middles, the four corners we cut, and the four the
+# second tetrahedron brought. `A′` is where `A` lands if you push it through the middle and out the
+# other side, which is also the tip that sits over the face `A` does not touch.
+STELLA_READER_NAMES: Tuple[str, ...] = MID_NAMES + tuple("ABCD") + tuple(c + "′" for c in "ABCD")
+
+
+def stella_reader_points() -> Tuple[Tuple[Fraction, ...], ...]:
+    corners = tuple(tuple(Fraction(v) for v in TET_CORNERS[c]) for c in "ABCD")
+    twin = tuple(tuple(-v for v in point) for point in corners)
+    return MID_POINTS + corners + twin
+
+
+def stella_reader_lines() -> List[Tuple[int, int]]:
+    """The stella's thirty-six lines: the shortest joins, in the reader's naming.
+
+    Every line of this object is the same length — squared length 2, half the tetrahedron's own
+    line — because each is either a line of the octahedron or half of one of the two tetrahedra's
+    lines. Taking "the shortest joins" as the rule is therefore not a choice: it is asserted below
+    that the twelve octahedron lines and the twenty-four halves are exactly what it produces.
+    """
+    points = stella_reader_points()
+    lines = [(i, j) for i, j in combinations(range(14), 2)
+             if _squared_length(points[i], points[j]) == Fraction(2)]
+    return lines
+
+
+def stella_reader_census() -> Dict[str, object]:
+    """Count the stella the way the reader arrived at it, and tie it to the audited object."""
+    points = stella_reader_points()
+    assert len(set(points)) == 14, "the stella's dots are not 14 distinct points"
+    lines = stella_reader_lines()
+    assert len(lines) == 36, f"the stella came out with {len(lines)} lines, not 36"
+    degrees = {STELLA_READER_NAMES[i]: sum(1 for line in lines if i in line) for i in range(14)}
+    middles = {degrees[name] for name in MID_NAMES}
+    tips = {degrees[name] for name in STELLA_READER_NAMES[6:]}
+    assert middles == {8}, f"the middles have {middles} lines, not 8"
+    assert tips == {3}, f"the tips have {tips} lines, not 3"
+    for i, j in lines:
+        assert not (i >= 6 and j >= 6), (
+            f"{STELLA_READER_NAMES[i]} and {STELLA_READER_NAMES[j]} are joined — no two tips are, "
+            f"which is why crossing from one tip to another must go through the middle"
+        )
+
+    # The same object as §3–§5 above, under the map from the reader's names to the audited ones.
+    audited = stella_lines(cut=False)
+    order = {}
+    for index, name in enumerate(MID_NAMES):
+        order[index] = OCT_POINTS.index(tuple(int(v) for v in MID_POINTS[index]))
+    for index in range(6, 14):
+        order[index] = 6 + APEX_POINTS.index(tuple(int(v) for v in points[index]))
+    mapped = {tuple(sorted((order[i], order[j]))) for i, j in lines}
+    assert mapped == {tuple(sorted(line)) for line in audited}, (
+        "the reader's stella is not the stella the spectrum above was certified on"
+    )
+
+    whole = _volume([points[i] for i in (6, 7, 8, 9)])
+
+    # Both volumes the ratio is made of are built from the fourteen points, piece by piece, rather
+    # than from each other: the eight tips as eight actual tetrahedra, the core as the four
+    # tetrahedra the cut makes of it, and the hull cube from the spread of the tips along each axis.
+    # Deriving one from the other let an attack change `stella / cube` to `stella / 4` with every
+    # volume assertion still true, and the page then said the pair fills the whole cube (a
+    # proofreader, 2026-09-02).
+    tips = []
+    for apex_index in range(6, 14):
+        apex = points[apex_index]
+        touching = [index for index in range(6)
+                    if _squared_length(points[index], apex) == Fraction(2)]
+        assert len(touching) == 3, f"a tip touches {len(touching)} middles, not 3"
+        tips.append(_volume([apex] + [points[index] for index in touching]))
+    diagonal = (MID_NAMES.index("AB"), MID_NAMES.index("CD"))
+    ring = _ring([index for index in range(6) if index not in diagonal])
+    core = sum(_volume([MID_POINTS[diagonal[0]], MID_POINTS[diagonal[1]],
+                        MID_POINTS[ring[w]], MID_POINTS[ring[(w + 1) % 4]]]) for w in range(4))
+    stella = sum(tips) + core
+    spread = [max(point[axis] for point in points[6:]) - min(point[axis] for point in points[6:])
+              for axis in range(3)]
+    cube = spread[0] * spread[1] * spread[2]
+    assert whole == Fraction(8, 3) and stella == 4 and cube == 8, (
+        f"the volumes came out tetrahedron {whole}, stella {stella}, cube {cube}"
+    )
+    assert sum(tips) == 8 * (whole / 8) and core == whole / 2, (
+        f"the pieces came to {sum(tips)} and {core}, not eight eighths and a half"
+    )
+    # The two ratios the chapter prints, asserted as themselves. Asserting the volumes they are
+    # divided from is not the same thing: an attack changed `stella / cube` to `stella / 4` and the
+    # page said the pair fills the whole cube with every volume assertion still true (a
+    # proofreader, 2026-09-02).
+    in_its_cube = stella / cube
+    in_tetrahedra = stella / whole
+    assert in_its_cube == Fraction(1, 2), f"the pair fills {in_its_cube} of its cube, not a half"
+    assert in_tetrahedra == Fraction(3, 2), (
+        f"the pair is {in_tetrahedra} of the tetrahedron we cut, not three halves"
+    )
+    out = {
+        "dots": 14,
+        "lines": 36,
+        "middles": 6,
+        "tips": 8,
+        "pieces": 9,                          # eight tetrahedra and the octahedron between them
+        "middle_degree": 8,
+        "tip_degree": 3,
+        "stella_in_tetrahedra": in_tetrahedra,    # 3/2 — one and a half of the object we cut
+        "stella_in_its_cube": in_its_cube,        # 1/2
+        "tips_independent": True,
+    }
+    # The last assertion is on the dict itself, not on the variables it was built from. An attack
+    # changed `"stella_in_its_cube": stella / Fraction(4)` here and every assertion above it stayed
+    # true, so the page said the pair fills the whole cube (a proofreader, 2026-09-02). What the
+    # caller receives is what has to be checked.
+    assert out["stella_in_its_cube"] == Fraction(1, 2), (
+        f"what this returns says the pair fills {out['stella_in_its_cube']} of its cube"
+    )
+    assert out["stella_in_tetrahedra"] == Fraction(3, 2), (
+        f"what this returns says the pair is {out['stella_in_tetrahedra']} tetrahedra"
+    )
+    assert (out["dots"], out["lines"]) == (len(points), len(lines)), (
+        f"what this returns says {out['dots']} dots and {out['lines']} lines, but the object has "
+        f"{len(points)} and {len(lines)}"
+    )
+    return out
+
+
+# ── the tick that has worked all along, and the object it stops working on ───────────────────────
+
+BOOK_TICK = Fraction(1, 2)      # `napkin.TICK_K`: the chapters' own tick size
+LEAPFROG_BOUND = 4              # the leapfrog holds while (tick × biggest stiffness) < 4
+
+
+def _peak(size: int, lines: Sequence[Tuple[int, int]], k: Fraction, ticks: int,
+          source: int = 0) -> Fraction:
+    """The biggest number anywhere in the world at any tick of a one-dot poke. Exact."""
+    start = [Fraction(1) if index == source else Fraction(0) for index in range(size)]
+    history = slosh(unit_weights(list(lines)), list(lines), ticks=ticks, initial=start, k=k)
+    return max(abs(value) for row in history for value in row)
+
+
+CEILING_TICKS = 40
+
+
+def napkin_ceilings() -> Dict[str, object]:
+    """The tick each of the three objects must stay UNDER — and the strictness is the point.
+
+    One number decides it for each object, and it is exact. A mode of `Δ₀` with eigenvalue `λ` obeys
+    `x' = (2 − kλ)x − x_prev`, which stays bounded exactly while `kλ < 4`; so the largest eigenvalue
+    fixes the bound. The eigenvalues are certified without an eigensolver — `spectrum_below` is
+    Sylvester's criterion on exact rationals, asked either side of each claimed value.
+
+    **The inequality is strict, and this asserts it by running the thing.** `4/λ_max` is not a tick
+    that works; it is the tick that does not, and a reader who tried it on the tetrahedron — where
+    it is exactly 1, and the run goes 1, 2, 4, 5, 7, 8 … in whole numbers — would catch any wording
+    that said otherwise. So each object is run twice here: at its own bound, where it must grow, and
+    at half of it, where it must not. A proofreader found the chapter's table headed "the biggest
+    tick it will hold" over these three values (2026-09-02); the numbers were right and the heading
+    was wrong, and the assertions below are what stop that coming back.
+    """
+    objects = (("the tetrahedron", 4, tetra_lines(), Fraction(4)),
+               ("the octahedron", 6, octahedron_lines(), Fraction(6)),
+               ("the two together", 14, stella_lines(cut=False), Fraction(10)))
+    rows = []
+    for name, size, lines, claimed in objects:
+        matrix = laplacian_matrix(size, lines)
+        assert not spectrum_below(matrix, claimed), f"{name}: λ_max is below {claimed}"
+        assert spectrum_below(matrix, claimed + Fraction(1, 1000)), (
+            f"{name}: λ_max is above {claimed}"
+        )
+        product_ = BOOK_TICK * claimed
+        bound = Fraction(LEAPFROG_BOUND) / claimed
+        at_the_bound = _peak(size, lines, bound, CEILING_TICKS)
+        under_it = _peak(size, lines, bound / 2, CEILING_TICKS)
+        assert at_the_bound > 4, (
+            f"{name}: at k = {bound} the poke only reached {float(at_the_bound)}, so the bound is "
+            f"not strict and 'the tick it must stay under' is the wrong wording"
+        )
+        assert under_it < 2, (
+            f"{name}: at k = {bound / 2} the poke reached {float(under_it)}, so staying under the "
+            f"bound is not enough after all"
+        )
+        rows.append({
+            "object": name,
+            "dots": size,
+            "stiffest": claimed,
+            "book_tick_product": product_,
+            "holds": product_ < LEAPFROG_BOUND,
+            "bound": bound,
+            "peak_at_the_bound": at_the_bound,
+            "peak_under_it": under_it,
+        })
+    assert [row["holds"] for row in rows] == [True, True, False], (
+        f"the verdicts came out {[row['holds'] for row in rows]}"
+    )
+    assert rows[2]["bound"] == Fraction(2, 5), f"the stella's bound is {rows[2]['bound']}"
+    return {"tick": BOOK_TICK, "bound": LEAPFROG_BOUND, "rows": tuple(rows)}
+
+
+READER_TICKS = 12
+
+
+def octahedron_poke_table(k: Fraction = BOOK_TICK) -> Dict[str, object]:
+    """Poke one middle of the octahedron at the chapters' own tick, in the reader's own names.
+
+    The same run as `octahedron_table()` above, in the naming a reader arrived at by cutting — and
+    asserted to be that run, dot for dot, under the name map. Three facts inside it are the beat:
+    at tick 2 the whole poke is on the **opposite** middle and nowhere else, at tick 3 it is home,
+    and the pair *(now, before)* does not repeat until 12, which is why the table is not over at 3.
+    """
+    lines = mid_lines()
+    poked = MID_NAMES.index("AB")
+    opposite = MID_NAMES.index("CD")
+    start = [Fraction(1) if index == poked else Fraction(0) for index in range(6)]
+    history = slosh(unit_weights(lines), lines, ticks=READER_TICKS, initial=start, k=k)
+
+    denominators = {value.denominator for row in history for value in row}
+    assert denominators <= {1, 2}, f"the run left whole numbers and halves: {denominators}"
+    for tick, row in enumerate(history):
+        for value in row:
+            number(value)          # raises rather than rounding, which is the printability claim
+
+    crossed = [Fraction(1) if index == opposite else Fraction(0) for index in range(6)]
+    assert history[2] == crossed, f"tick 2 came out {history[2]}, not all on the opposite middle"
+    assert history[3] == start, f"tick 3 came out {history[3]}, not home"
+    assert history[1] != start and history[1][poked] < 0, (
+        "the poked middle did not go negative on the way across, so 'the whole of it crosses' would "
+        "be describing a run that never left"
+    )
+    assert period(history) == 12, f"the period came out {period(history)}, not 12"
+
+    # The same numbers as the audited table, under AB→+x, AC→+y, AD→+z, BC→−z, BD→−y, CD→−x.
+    order = [OCT_POINTS.index(tuple(int(v) for v in MID_POINTS[index])) for index in range(6)]
+    audited = octahedron_table()["history"]
+    for tick in range(min(len(audited), len(history))):
+        assert [history[tick][index] for index in range(6)] == \
+               [audited[tick][order[index]] for index in range(6)], (
+            f"the reader's run and the audited run disagree at tick {tick}"
+        )
+    return {
+        "k": k,
+        "poked": MID_NAMES[poked],
+        "opposite": MID_NAMES[opposite],
+        "crossing_ticks": 2,
+        "home_ticks": 3,
+        "period": 12,
+        "history": tuple(tuple(row) for row in history),
+    }
+
+
+RUNAWAY_TICKS = 20
+RUNAWAY_LOOK = (0, 1, 2, 3, 10, RUNAWAY_TICKS)
+
+
+def _round_floor(value: Fraction) -> int:
+    """The value floored to two significant digits — a round number that is honestly below it.
+
+    The first version of this floored to one of 1, 2 or 5 × 10ⁿ, which turned 8,504 into "past
+    5,000" and 123,534,961 into "past 100,000,000": true, and 40% and 20% short. A proofreader
+    called it (2026-09-02). Two digits keeps the number round enough to read and close enough to
+    mean something, and the assertion below keeps it a floor rather than a rounding.
+    """
+    assert value >= 1
+    digits = len(str(int(value)))
+    unit = 10 ** max(digits - 2, 0)
+    floored = (int(value) // unit) * unit
+    assert floored <= value, f"{floored} is not below {float(value)}"
+    return floored
+
+
+def stella_runaway(k: Fraction = BOOK_TICK) -> Dict[str, object]:
+    """Poke the same dot on the stella at the same tick, and watch it leave the napkin twice over.
+
+    Two separate failures, and the chapter needs both. **It runs away**: the tick is over this
+    object's ceiling, so the biggest number in the world grows without bound — past a hundred
+    million by tick 20, from a poke of 1. **And it cannot be written down**: the first push is 8 at
+    the poked dot and −1 at each of its eight neighbours, so the halves become quarters and then
+    eighths, and `napkin.number()` refuses the fourth row. Neither is a shortage of patience.
+    """
+    lines = stella_reader_lines()
+    start = [Fraction(1)] + [Fraction(0)] * 13
+    history = slosh(unit_weights(lines), lines, ticks=RUNAWAY_TICKS, initial=start, k=k)
+    biggest = [max(abs(value) for value in row) for row in history]
+    assert biggest[0] == 1, "the poke was not 1"
+    for tick in (5, 10, 15, RUNAWAY_TICKS):
+        assert biggest[tick] > biggest[tick - 5], f"the run shrank between ticks {tick - 5} and {tick}"
+    assert biggest[RUNAWAY_TICKS] > 100_000_000, (
+        f"the biggest number at tick {RUNAWAY_TICKS} is {float(biggest[RUNAWAY_TICKS])}, not past "
+        f"a hundred million — the runaway claim would be overstated"
+    )
+
+    printable = renderable_ticks(14, lines, 0, k, RUNAWAY_TICKS)
+    assert printable == 3, f"{printable} rows print, not 3"
+
+    # And no tick size rescues it: the stable ones print two rows at most, and none of them ever
+    # comes home, because a poke at a middle excites the pair of stiffnesses that cannot return.
+    tried = []
+    for candidate in (Fraction(39, 100), Fraction(7, 20), Fraction(1, 4), Fraction(1, 5),
+                      Fraction(1, 10)):
+        assert candidate < Fraction(2, 5), f"{candidate} is not under the ceiling"
+        rows = renderable_ticks(14, lines, 0, candidate, 10)
+        repeat = period_of(14, lines, 0, candidate, 60)
+        assert rows <= 2, f"k = {candidate} printed {rows} rows"
+        assert repeat == 0, f"k = {candidate} came home after {repeat} steps"
+        tried.append({"k": candidate, "printable": rows, "period": repeat})
+
+    # And what a tick that DOES hold costs instead, worked on the one the chapter shows: a fifth.
+    # The push at a poked middle is its eight lines, so the poke lands on fifths at tick 1 and on
+    # twenty-fifths at tick 2 — the denominators square, which is why a smaller tick is not a
+    # rescue. Asserted, because the chapter says these two words.
+    example_k = Fraction(1, 5)
+    start_row = [Fraction(1)] + [Fraction(0)] * 13
+    rows = slosh(unit_weights(lines), lines, ticks=2, initial=start_row, k=example_k)
+    push = 8
+    # Taken from the rows themselves. Typing them beside the rows let an attack change the pair to
+    # 7 and 49 with both assertions still passing, because nothing connected the numbers the page
+    # printed to the run they described (a proofreader, 2026-09-02).
+    first_denominator = max(value.denominator for value in rows[1])
+    second_denominator = max(value.denominator for value in rows[2])
+    assert (first_denominator, second_denominator) == (5, 25), (
+        f"tick 1 and 2 at k = {example_k} came out over {first_denominator} and "
+        f"{second_denominator}, not 5 and 25"
+    )
+    assert rows[1][0] == 1 - example_k * push, "the first push is not the poked dot's line count"
+
+    matrix = laplacian_matrix(14, stella_lines(cut=False))
+    excited = excited_polynomial(matrix, [Fraction(1) if i == 0 else Fraction(0)
+                                          for i in range(14)])
+    assert poly_divides([Fraction(20), Fraction(-11), Fraction(1)], excited), (
+        "a poke at a middle does not excite the pair λ²−11λ+20, so the never-returns argument in "
+        "`periods()` would not apply to this poke"
+    )
+    return {
+        "k": k,
+        "look": tuple((tick, biggest[tick]) for tick in RUNAWAY_LOOK),
+        "bounds": tuple((tick, _round_floor(biggest[tick])) for tick in RUNAWAY_LOOK),
+        "printable_rows": printable,
+        "stable_tried": tuple(tried),
+        "push_at_a_middle": push,
+        # The fifth-sized tick's denominators are asserted above and deliberately NOT returned. They
+        # were, and nothing rendered them — an assertion beside an unrendered value looks like cover
+        # for whatever a future caption does with it, which is the shape the caption defect had (a
+        # proofreader, 2026-09-02). The chapter states them in prose; this is where they are checked.
+        "never_returns": True,
+    }
+
+
 # ── the report ───────────────────────────────────────────────────────────────────────────────────
 
 
@@ -1257,6 +1950,52 @@ def report() -> str:
         f"{w['octahedron_vs_line']}× the per-line loop, {w['octahedron_vs_dot']}× the per-dot one")
     say(f"  on the motif alone the octahedron's 13 lines and the spikes' 24 partition all 37 "
         f"exactly once: same work as the per-line loop, differently grouped.")
+
+    say("\n── 7 · the reader's route: cut ONE tetrahedron at the middles of its six lines ──")
+    cut = midpoint_cut()
+    say(f"  {cut['dots']} dots ({cut['corners']} corners + {cut['middles']} middles) → "
+        f"{cut['tips']} tetrahedra at the tips, each {float_free(cut['tip_share'])} of the whole "
+        f"and half its side, and {cut['octahedra']} octahedron between them, "
+        f"{float_free(cut['core_share'])} of the whole.")
+    say(f"  that octahedron: {cut['oct_dots']} dots, {cut['oct_lines']} lines, "
+        f"{cut['oct_faces']} faces, {cut['oct_degree']} lines at every dot — and "
+        f"{len(cut['opposite_pairs'])} pairs of dots NOT joined: "
+        f"{', '.join('·'.join(pair) for pair in cut['opposite_pairs'])}. It is the same graph as "
+        f"§1–§5's octahedron, asserted under the name map.")
+    say(f"  of its 8 faces, 4 look at a tip ({', '.join(cut['faces_at_a_tip'])}) and 4 lie flat in "
+        f"a face of the tetrahedron that was cut ({', '.join(cut['faces_in_a_face'])}).")
+    poke = octahedron_poke_table()
+    say(f"  poke {poke['poked']} at the chapters' own k = {poke['k']}: whole numbers and halves "
+        f"throughout; the whole poke is on {poke['opposite']} at tick {poke['crossing_ticks']}, "
+        f"home at tick {poke['home_ticks']}, and (now, before) repeats at {poke['period']}.")
+    surface = octahedron_boundary_sum()
+    say(f"  12 freely chosen arrows: {' '.join(str(a) for a in surface['arrows'])} → the 8 outside "
+        f"faces carry {' '.join(signed(v) for v in surface['face_numbers'])}, and every line is "
+        f"walked once each way, so they sum to {number(surface['sum'])}.")
+    twin = second_tetrahedron()
+    say(f"  fill the {twin['added']} flat faces and the new corners are "
+        f"{', '.join(twin['apex_names'])} — a regular tetrahedron the size of the one we cut, whose "
+        f"own six middles are the same six middles. Hull: {twin['hull']}.")
+    stella = stella_reader_census()
+    say(f"  the two together: {stella['dots']} dots, {stella['lines']} lines, {stella['pieces']} "
+        f"pieces; {float_free(stella['stella_in_tetrahedra'])} of the tetrahedron we cut and "
+        f"{float_free(stella['stella_in_its_cube'])} of its cube. No two tips are joined.")
+
+    say("\n── 8 · and the tick that has worked all along stops working ──")
+    ceilings = napkin_ceilings()
+    for row in ceilings["rows"]:
+        say(f"  {row['object']:<18} {row['dots']:>2} dots · stiffest {number(row['stiffest'])} · "
+            f"× the book's tick = {number(row['book_tick_product'])} · "
+            f"{'under 4, holds' if row['holds'] else 'over 4, RUNS AWAY'} · "
+            f"must stay under {float_free(row['bound'])} "
+            f"(at it, the poke reaches {float(row['peak_at_the_bound']):.0f})")
+    runaway = stella_runaway()
+    say(f"  poke a middle of the stella at k = {runaway['k']}: the biggest number goes "
+        + ", ".join(f"{tick}→{float_free(value)}" for tick, value in runaway["look"])
+        + f"; only {runaway['printable_rows']} rows can be written down at all.")
+    say("  every tick that does hold prints two rows at most, and none of them ever comes home: "
+        + ", ".join(f"k = {row['k']} ({row['printable']} row(s))"
+                    for row in runaway["stable_tried"]))
     say("")
     return "\n".join(out)
 
@@ -1290,6 +2029,14 @@ def self_test() -> None:
     tick_size_table()
     octahedron_table()
     work_counts()
+    # The reader's route: the same object, reached by cutting one tetrahedron.
+    midpoint_cut()
+    octahedron_poke_table()
+    octahedron_boundary_sum()
+    second_tetrahedron()
+    stella_reader_census()
+    napkin_ceilings()
+    stella_runaway()
     # The napkin's own tokens must be untouched by the `slosh` generalisation this module needed.
     import napkin
     for token in napkin.TOKENS:

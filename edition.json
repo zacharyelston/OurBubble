@@ -75,6 +75,12 @@
         "book/chapters/README.md",
         "viz/synthesis.html"
       ]
+    },
+    "the-shape-between": {
+      "sources": [
+        "book/chapters/00-the-object/chapter.md",
+        "book/LESSON_STANDARD.md"
+      ]
     }
   },
   "appendix": {
@@ -468,6 +474,15 @@
             "what": "the wedge left over once five are packed in: what no sixth tetrahedron can fill"
           }
         ]
+      },
+      "the-shape-between": {
+        "title": "The shape between — one tetrahedron, cut open",
+        "standards": [
+          "book/chapters/00-the-object/chapter.md",
+          "book/LESSON_STANDARD.md"
+        ],
+        "note": "**What this chapter deliberately does not say.** Three readings of the shape between the tips were put to the same arithmetic and refused. They are recorded here rather than in the prose, because a chapter is a poor place to argue with a claim nobody made to the reader.\n\n**A tick is not a trip round the octahedron.** Crossing it takes two ticks; going round its equator takes four. The twelve-tick repeat belongs to the tick size and not to the shape — turn the tick to a quarter or a fifth and it never repeats at all.\n\n**Gathering the work at the octahedron saves nothing.** On the fourteen-dot motif it is the same thirty-seven line-visits, differently grouped. On the record's tiling it is thirteen sevenths of the plain per-line loop, because each of an octahedron's edges belongs to a second octahedron too.\n\n**And nothing finishes first.** One tick reads only the tick before it, so there is no order inside a tick for that to be a statement about.\n\nWhat the octahedron does uniquely supply, on the record's tiling, is one line in seven — two of every dot's fourteen — that no tetrahedron provides. On the faces the pairing with tetrahedra is exactly one to one; on the lines, two tetrahedra touch each other directly. The chapter says the face fact and the line fact and stops there.\n\nAll of it is computed and asserted by [`tools/octahedron.py`](../tools/octahedron.py), whose report is reproduced in [`notes/octahedron-crossing.md`](../notes/octahedron-crossing.md).",
+        "computed": true
       }
     }
   },

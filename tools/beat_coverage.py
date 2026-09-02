@@ -68,6 +68,30 @@ def outline_chapters() -> list[tuple[int, str, list[int]]]:
     return out
 
 
+def numbering_problems(beats: list[int]) -> list[str]:
+    """The outline's beats must run 1, 2, 3 … with nothing missing. **Pure.**
+
+    This is the check that was missing, and the gap it left was found by a proofreader
+    (2026-09-02): `tools/renumber_beats.py` run twice shifts the outline's beats AND every chapter's
+    markers together, so every beat is still claimed by a section and the audit below passes — while
+    the outline has an eleven-beat hole in it and every number in the book is eleven too high. The
+    claims agreeing with the contract means nothing if the contract itself has a hole.
+    """
+    if not beats:
+        return ["the outline carries no beats at all"]
+    problems = []
+    if beats[0] != 1:
+        problems.append(f"the outline's beats start at {beats[0]}, not 1")
+    holes = [(a, b) for a, b in zip(beats, beats[1:]) if b != a + 1]
+    if holes:
+        problems.append(
+            f"the outline's beat numbering has {len(holes)} hole(s): "
+            + ", ".join(f"{a} → {b}" for a, b in holes)
+            + " — a renumbering is half applied, or a beat was deleted"
+        )
+    return problems
+
+
 def reading_order() -> list[str]:
     text = SUMMARY.read_text(encoding="utf-8")
     return [m.group(1)[:-3] for m in re.finditer(r"^- \[[^\]]+\]\(([^)]+\.md)\)\s*$", text, re.M)]
@@ -177,6 +201,15 @@ def self_test() -> list[str]:
     if not audit(beats, _fixture(36, [37]))["secs"][0][3]:
         failures.append("self-test: the opening is not flagged as the preamble")
 
+    # the contract's numbering: contiguous from 1 passes, and the shapes a half-applied
+    # renumbering leaves must not
+    if numbering_problems([1, 2, 3, 4]):
+        failures.append("self-test: a contiguous run 1..4 was reported as a problem")
+    if not numbering_problems([1, 2, 14, 15]):
+        failures.append("self-test: an eleven-beat hole in the outline was not reported")
+    if not numbering_problems([12, 13, 14]):
+        failures.append("self-test: an outline starting at 12 was not reported")
+
     return failures
 
 
@@ -185,6 +218,11 @@ def main() -> int:
     order, grain, n_beats = reading_order(), [], 0
     # The guard is tested before it is trusted, on every run.
     problems = self_test()
+
+    # The contract's own numbering, over the WHOLE outline whatever range was asked for: a hole
+    # anywhere means every number after it is suspect, including inside the range.
+    everything = [beat for _, _, beats in outline_chapters() for beat in beats]
+    problems += numbering_problems(everything)
 
     for number, title, beats in outline_chapters():
         if not (lo <= number <= hi):

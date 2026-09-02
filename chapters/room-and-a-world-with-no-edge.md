@@ -12,17 +12,19 @@
 <!-- NOTE(figure): (b) alt — "One cube with its eight corners two-coloured; the four corners of a single colour joined by face diagonals into a tetrahedron; and beside it the eight-sided hole that appears between such tetrahedra once the cubes are stacked, with a discarded corner at its centre." -->
 <!-- NOTE(figure): (b) brief — the two-colouring must read as a rule rather than a decoration: a reader should be able to re-derive which corners are kept. Distinguish kept from discarded by more than hue, and make the hole's centre visibly one of the discarded corners, because that identification is the beat. -->
 
-The last chapter left you stuck. One tetrahedron has no room in it, so it cannot have a ripple, so
-it cannot answer the only question you actually wanted to ask.
+The last chapter left you needing two things: a machine, and a rule for where the next shape goes.
+This chapter is the rule.
 
-The fix seems obvious. If one tetrahedron is too small, use a lot of them, stacked together, the way
-a floor is tiled with triangles.
+You have two shapes now — the tetrahedron, and the eight-faced shape you cut out from between its
+tips — and no rule yet for how they sit together. Start with the simpler question, and with the
+shape you have had the longest. If one tetrahedron is too small, use a lot of them, stacked
+together, the way a floor is tiled with triangles.
 
 Do they stack?
 
 ## They do not stack
 
-<!-- beat 36 -->
+<!-- beat 47 -->
 
 No, and the way they fail is one of the better stories in mathematics.
 
@@ -39,7 +41,7 @@ Which raises a fair question: why insist on tetrahedra at all?
 
 ## What a square can do that a triangle cannot
 
-<!-- beat 37 -->
+<!-- beat 48 -->
 
 Because triangles are rigid and squares are not, and rigidity is the property you cannot do without.
 
@@ -55,7 +57,7 @@ If there is no perfect answer, what did we choose?
 
 ## The compromise we chose
 
-<!-- beat 38 -->
+<!-- beat 49 -->
 
 Every tetrahedral world is a compromise, and a compromise is a choice with measurable consequences.
 
@@ -66,15 +68,16 @@ cube's faces, so all six gaps between them are equal — which makes them one re
 cube, one tetrahedron.
 
 Stack the cubes, same colour throughout. The tetrahedra never meet face to face, and the gaps
-between them are no longer thin wedges: each is an octahedron, centred on a corner you threw away.
-Cut one along a long diagonal and it falls into four tetrahedra. Do that to every hole and space is
-filled — entirely with tetrahedra, not all the same shape, and no wedge anywhere.
+between them are no longer thin wedges: each gap is **the shape you cut out from between the tips**,
+eight faces and all, centred on a corner you threw away. Cut one along a long diagonal, just as you
+did then, and it falls into four tetrahedra. Do that to every gap and space is filled — entirely
+with tetrahedra, not all the same shape, and no wedge anywhere.
 
 Now you have room. So poke a dot in the middle of a great many, and watch.
 
 ## The pond
 
-<!-- beat 39 -->
+<!-- beat 50 -->
 
 There is a ring.
 
@@ -95,7 +98,7 @@ Watch it a little longer, though, and it does something a pond in a field does n
 
 ## It hits the edge
 
-<!-- beat 40 -->
+<!-- beat 51 -->
 
 It reaches the outermost dots and comes back.
 
@@ -111,7 +114,7 @@ world with no edge at all — and there is a cheap trick for that.
 
 ## Wrap it
 
-<!-- beat 41 -->
+<!-- beat 52 -->
 
 Glue the far side to the near side.
 
@@ -133,7 +136,7 @@ Which leaves one thing to check before the question you have been unable to ask 
 
 ## Now that the world has no edge — is any dot special?
 
-<!-- beat 42 -->
+<!-- beat 53 -->
 
 The object is finished, so the question can finally be asked honestly: standing on one dot of this
 wrapped world, does it look like standing on any other?
@@ -157,7 +160,7 @@ So the world has a grain, and no dot is privileged.
 
 ## The object, and the only question left
 
-<!-- beat 43 -->
+<!-- beat 54 -->
 
 You can now ask the stopwatch question: poke a dot, count the ticks, see how far the front has gone,
 then do it again in another direction and compare.
@@ -166,10 +169,10 @@ And the grain gives that question teeth: if the two disagree, either the world r
 one way, or you are reading the grain.
 
 Every step was forced but one. Dots, because a number needs somewhere to sit; lines, because change
-lives between; a triangle, because it closes; a tetrahedron, because that is the triangle one
-dimension up and holds its shape where a cube does not; a clock and one rule, because nothing could
-happen; many tetrahedra, because one had no room; the two-colouring, because tetrahedra will not
-stack alone; a wrap, because edges echo.
+lives between; a triangle, because it closes; a tetrahedron, because it is the triangle one dimension
+up and does not flex; a clock and one rule, because nothing could happen; the cut, because the first
+room was inside; many, because one was still too small; the two-colouring, because tetrahedra will
+not stack alone; a wrap, because edges echo.
 
 The exception is the dial: the only thing anybody chose, and still unset.
 

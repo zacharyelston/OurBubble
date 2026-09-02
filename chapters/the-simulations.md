@@ -63,7 +63,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
@@ -78,7 +78,7 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
@@ -93,13 +93,40 @@ the chapters link to.
 - [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built, by [`tools/napkin.py`](../tools/napkin.py), and re-derived on every build — so the thing to check is not a file but the arithmetic, which the chapter shows you.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
+
+---
+
+<a id="s-the-shape-between"></a>
+
+## §04 · The shape between — one tetrahedron, cut open
+
+**The chapter.** [the-shape-between.md](the-shape-between.md)
+
+**What this chapter deliberately does not say.** Three readings of the shape between the tips were put to the same arithmetic and refused. They are recorded here rather than in the prose, because a chapter is a poor place to argue with a claim nobody made to the reader.
+
+**A tick is not a trip round the octahedron.** Crossing it takes two ticks; going round its equator takes four. The twelve-tick repeat belongs to the tick size and not to the shape — turn the tick to a quarter or a fifth and it never repeats at all.
+
+**Gathering the work at the octahedron saves nothing.** On the fourteen-dot motif it is the same thirty-seven line-visits, differently grouped. On the record's tiling it is thirteen sevenths of the plain per-line loop, because each of an octahedron's edges belongs to a second octahedron too.
+
+**And nothing finishes first.** One tick reads only the tick before it, so there is no order inside a tick for that to be a statement about.
+
+What the octahedron does uniquely supply, on the record's tiling, is one line in seven — two of every dot's fourteen — that no tetrahedron provides. On the faces the pairing with tetrahedra is exactly one to one; on the lines, two tetrahedra touch each other directly. The chapter says the face fact and the line fact and stops there.
+
+All of it is computed and asserted by [`tools/octahedron.py`](../tools/octahedron.py), whose report is reproduced in [`notes/octahedron-crossing.md`](../notes/octahedron-crossing.md).
+
+**Standards and record this section rests on.**
+
+- [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
+
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
 ---
 
 <a id="s-room-and-a-world-with-no-edge"></a>
 
-## §04 · Room, and a world with no edge — why tetrahedra need a compromise
+## §05 · Room, and a world with no edge — why tetrahedra need a compromise
 
 **The chapter.** [room-and-a-world-with-no-edge.md](room-and-a-world-with-no-edge.md)
 
@@ -136,7 +163,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 <a id="s-the-round-ripple"></a>
 
-## §05 · Is it round? — the dial, set twice
+## §06 · Is it round? — the dial, set twice
 
 **The chapter.** [the-round-ripple.md](the-round-ripple.md)
 
@@ -190,7 +217,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 <a id="s-the-bubble-and-its-bill"></a>
 
-## §06 · What does pushing on it cost? — the shaped push and its bill
+## §07 · What does pushing on it cost? — the shaped push and its bill
 
 **The chapter.** [the-bubble-and-its-bill.md](the-bubble-and-its-bill.md)
 
@@ -230,7 +257,7 @@ cargo run  --release -p viz     --bin gen_energy
 
 <a id="s-the-wall-that-worked-and-didnt"></a>
 
-## §07 · Can you wall a piece off? — one experiment, one yes and one no
+## §08 · Can you wall a piece off? — one experiment, one yes and one no
 
 **The chapter.** [the-wall-that-worked-and-didnt.md](the-wall-that-worked-and-didnt.md)
 
@@ -275,7 +302,7 @@ cargo run  --release -p viz     --bin gen_null
 
 <a id="s-where-negative-energy-appears"></a>
 
-## §08 · Can a gap be emptier than empty? — the one place the sign is real
+## §09 · Can a gap be emptier than empty? — the one place the sign is real
 
 **The chapter.** [where-negative-energy-appears.md](where-negative-energy-appears.md)
 
@@ -322,7 +349,7 @@ cargo run  --release -p viz     --bin gen_casimir
 
 <a id="s-a-number-without-the-answer-key"></a>
 
-## §09 · Can it tell me something I didn't tell it? — the answer key taken away
+## §10 · Can it tell me something I didn't tell it? — the answer key taken away
 
 **The chapter.** [a-number-without-the-answer-key.md](a-number-without-the-answer-key.md)
 
@@ -380,7 +407,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §10 · When the world you built says no — the obvious answer, refused
+## §11 · When the world you built says no — the obvious answer, refused
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 
@@ -422,7 +449,7 @@ cargo run  --release -p viz     --bin gen_shift_law
 
 <a id="s-a-few-thousand-years-of-sharper-shadows"></a>
 
-## §11 · A few thousand years of sharper shadows — history, and our own two misses
+## §12 · A few thousand years of sharper shadows — history, and our own two misses
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
@@ -460,7 +487,7 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 <a id="s-cast-your-own-shadow"></a>
 
-## §12 · Cast your own shadow — the reproduce path
+## §13 · Cast your own shadow — the reproduce path
 
 **The chapter.** [cast-your-own-shadow.md](cast-your-own-shadow.md)
 

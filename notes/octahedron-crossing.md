@@ -201,14 +201,17 @@ scale, centred on a hole.
 
 ---
 
-## What beats 33–45 could honestly say
+## What these numbers were spent on
 
-Beat 38 already tells her the tetrahedra never meet face to face and that octahedra sit between them;
+*Beat numbers below were brought up to the outline's current ones when the change landed, so they
+are correct as they stand; the last section records what the change was.*
+
+Beat 49 already tells her the tetrahedra never meet face to face and that octahedra sit between them;
 the computed fact worth adding is the exact 1:1 pairing — 864 tetrahedron faces, 864 octahedron
 faces, each face one of each — and then the correction her next question earns: on the *lines*, where
 numbers actually live, tetrahedra do touch each other directly, and what the octahedron uniquely
-supplies is one line in seven, two of every dot's fourteen, that no tetrahedron provides. A new beat
-between 34 and 36 can give her the octahedron on its own napkin at the same tick size she already
+supplies is one line in seven, two of every dot's fourteen, that no tetrahedron provides. A new chapter
+between beats 35 and 47 can give her the octahedron on its own napkin at the same tick size she already
 has: poke one dot, and at tick 2 the whole of it is on the opposite dot, at tick 3 the whole of it is
 home, and it does not truly repeat until 12 — her first object where crossing takes longer than one
 tick, which is exactly the room beat 34 says the tetrahedron does not have. The strongest new idea is
@@ -222,3 +225,24 @@ octahedron saves work (it is the same 37 line-visits on the motif and 13/7 times
 tiling). And if a beat ever wants the stella's own table, it cannot have one: `k = 1/2` is unstable
 there, every stable step size is under `2/5`, and none of them keeps the numbers short enough for
 `number()` to print.
+
+
+### What was written (2026-09-02, issue [#34](https://github.com/zacharyelston/OurBubble/issues/34))
+
+A new chapter, **The shape between** — outline chapter 4, beats **36–46** — reached this object the
+way a reader can: not by tiling anything, but by cutting the one tetrahedron she already has at the
+middles of its six lines. Four tips and one octahedron, and the octahedron is exactly half of it.
+That route is computed in `tools/octahedron.py` §7–§8 (`midpoint_cut`, `octahedron_poke_table`,
+`octahedron_boundary_sum`, `second_tetrahedron`, `stella_reader_census`, `napkin_ceilings`,
+`stella_runaway`), which assert it is the *same object* as §1–§6's — the graph is checked against
+`octahedron_lines()` and the fourteen-dot one against `stella_lines()`, under the name map — so the
+reader's route and the record's cannot come apart. Six napkin tokens carry it into the prose:
+`octa_cut`, `octa_counts`, `octa_poke_table`, `octa_face_sum`, `stella_counts`, `stella_refusal`.
+
+Two things landed differently from the sketch above. The eight-face sum is stated on the **uncut**
+octahedron — twelve arrows, eight faces, every line walked once each way — because that is the form
+the reader can check, with the four-insides version kept as the cross-check next to it. And the
+stella's refusal became the chapter's climax rather than a footnote: the largest tick each object
+will hold (1, 2/3, 2/5) against the book's own 1/2, and the run that goes past a hundred million by
+tick 20. The three refuted readings are in the appendix, as this chapter's `note` in `edition.json`,
+and appear nowhere in the prose.

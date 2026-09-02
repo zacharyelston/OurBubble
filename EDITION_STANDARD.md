@@ -40,9 +40,11 @@ must preserve the concept, alt-text intent, caption distinction, and firewall.
 
 ## Numbers computed while the page is built
 
-Chapters 1–3 live on one triangle and one tetrahedron, and every number in them is
-finger-countable. Quoting such a number from the record would be theatre: the reader can check it on
-a napkin, so the book does the arithmetic in front of her instead of citing itself.
+Chapters 1–4 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+and every number in them is finger-countable — or, in the one case where it stops being, visibly
+stops being, which is that chapter's point. Quoting such a number from the record would be theatre:
+the reader can check it on a napkin, so the book does the arithmetic in front of her instead of
+citing itself.
 
 **Write a token; the build replaces it.** In chapter prose:
 
@@ -62,6 +64,13 @@ is never shown a brace-literal where a number belongs.
 | `tetra_inside_sum` | six freely chosen line-numbers, the four non-zero face-numbers they give, and their oriented sum around the inside |
 | `slosh_table` | ten ticks of the engine's rule on one tetrahedron, every line counting the same, with a conserved total |
 | `slosh_table_dialed` | the same ten ticks with one line counted double — the dial, in miniature |
+| `vertex_classes` | the tiling built on a wrapped world, and how many kinds of place its cut rule leaves — with the control that cuts every hole alike |
+| `octa_cut` | one tetrahedron cut at the middles of its six lines: four tips at an eighth each, and one eight-faced shape that is exactly half |
+| `octa_counts` | that shape's census against the tetrahedron's, its dots' names, and the three pairs of dots no line joins |
+| `octa_poke_table` | the same rule and tick on it: the whole poke crosses to the opposite dot in two ticks and is home in three |
+| `octa_face_sum` | twelve freely chosen arrows on it, the eight face-numbers they give, and their sum walked from outside |
+| `stella_counts` | the two tetrahedra threaded through one another, counted — and that the second's own middles are the same middles |
+| `stella_refusal` | the largest tick each of the three objects will hold, and the run that runs away when one is too big |
 
 Three properties are guaranteed, and each is enforced rather than intended:
 
@@ -75,6 +84,24 @@ Three properties are guaranteed, and each is enforced rather than intended:
    printed a non-zero loop sum would be worse than no napkin.
 
 Every rendered block ends with one line: *computed while this page was built — <what>.*
+
+**Three rules the captions and the prose around them answer to**, each of them a defect that shipped
+once and was caught by a reader rather than a check (2026-09-02):
+
+1. **A caption is a caption.** `tools/napkin.py` refuses one over 70 words as it renders, and the
+   checker refuses a chapter whose captions come to more than 300 words between them, printing both
+   numbers on every run. The grain band reads a chapter's *source*, where a token is one word, so
+   without this the captions were the only reader-facing prose in the book that nothing measured —
+   and one of them reached 118 words and took over the following section's argument.
+2. **A claim is checked where it is made.** A token asserts that its rendered block contains the
+   values it computed, and separately that its *caption* contains the ones the caption claims. A
+   number present in the table does not license a caption that contradicts it.
+3. **A chapter may not say what its own tokens disprove.** `napkin.REFUSED_IN_PROSE` lets a token
+   name the phrasings its arithmetic refuses; the checker looks for them in the chapter's prose, not
+   in the token. It also refuses, in every chapter, the readings the record's own computation
+   refuted — those belong to the appendix. This is the only check in the repository that reads what
+   the *author* wrote rather than what the tool wrote, and it exists because a corrected table sat
+   two paragraphs above prose still making the disproved claim.
 
 ### The exemption, and exactly how far it reaches
 
@@ -93,6 +120,11 @@ outside it. (Verified by mutation: the same bold value passes inside a span and 
 The Rewrite lane writes tokens in `chapters/` and never edits the backend. The Repository lane owns
 `preprocessor.py`, `tools/napkin.py` and `check_edition.py` and never edits a chapter's prose. A new
 token is a Repository-lane change; using one is a Rewrite-lane change.
+
+The Repository lane was retired complete on 2026-09-01, so the six `octa_*`/`stella_*` tokens were
+added by the Rewrite lane on the coordinator's instruction (2026-09-02, issue #34) rather than
+across the boundary. The boundary itself stands: the arithmetic went into `tools/`, the prose into
+`chapters/`, and neither commit touched the other's business.
 
 ## The revised shadow method
 
