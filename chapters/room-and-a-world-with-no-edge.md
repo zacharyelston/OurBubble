@@ -17,8 +17,8 @@ This chapter is the rule.
 
 You have two shapes now — the tetrahedron, and the eight-faced shape you cut out from between its
 tips — and no rule yet for how they sit together. Start with the simpler question, and with the
-shape you have had the longest. If one tetrahedron is too small, use a
-lot of them, stacked together, the way a floor is tiled with triangles.
+shape you have had the longest. If one tetrahedron is too small, use a lot of them, stacked
+together, the way a floor is tiled with triangles.
 
 Do they stack?
 
