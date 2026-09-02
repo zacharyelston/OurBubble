@@ -17,6 +17,15 @@ in step, and substitute the fresh text into the book being built. Writing the fi
 puts the appendix under the same discipline the project applies to run data, so `git status` is the
 check. Build the book and the working tree stays clean, or the record moved and you want to know.
 
+It does two more things to the book on the way past, both of them additions to a page rather than
+edits to prose: it computes every `{{napkin:…}}` token, and it puts one **reader's note link** at
+each section heading. The note pass is driven by the `<!-- beat N -->` marker that already sits
+under every section heading, which is the only place in the book where a section's heading and its
+beat number are written down together — so a section that is renamed, renumbered or moved carries a
+correct link without anyone maintaining one. `tools/reader_note.py` holds the URL format;
+`check_edition.py --rendered` reads every link back out of the built HTML and asserts it still points
+at the section it sits under.
+
 Failure is loud on purpose: if regeneration raises, this exits non-zero and the build stops rather
 than quietly rendering a stale appendix, which is the one outcome the whole arrangement exists to
 prevent.
@@ -32,11 +41,19 @@ import gen_appendix
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent / "tools"))
 import napkin  # noqa: E402  (needs the path above)
 import napkin_export  # noqa: E402  (needs the path above)
+import reader_note  # noqa: E402  (needs the path above)
 
 # `{{napkin:NAME}}` — the Rewrite lane writes these in chapter prose; this replaces each with the
 # arithmetic run at build time. The token is the whole contract between the two lanes: the lane that
 # writes chapters never touches this file, and this file never touches a chapter's prose.
 NAPKIN = re.compile(r"\{\{napkin:([a-z0-9_]+)\}\}")
+
+# The chapter's own title, and its section headings. Used by the reader-note pass below, which adds
+# HTML *around* the prose and never inside it — the same contract the napkin token has, read from the
+# other direction: the lane that writes chapters writes only the `<!-- beat N -->` markers it already
+# writes, and this file turns each one into a link.
+CHAPTER_TITLE = re.compile(r"^# +(.+?)\s*$", re.M)
+SECTION_HEADING = re.compile(r"^## +(.+?)\s*$", re.M)
 
 
 def substitute(item, slug: str, markdown: str) -> bool:
@@ -97,6 +114,68 @@ def expand_napkins(item, report: list) -> None:
         expand_napkins(child, report)
 
 
+def with_note_links(markdown: str, slug: str, report: list) -> str:
+    """One reader's-note link under every section heading that declares a beat. **Pure.**
+
+    Split out of the tree walk so the rule can be exercised on constructed markdown rather than only
+    on the book — the shape the rest of this repository's guards are held to.
+
+    Three decisions worth writing down:
+
+    * **The marker is the trigger, not the heading.** A heading with no `<!-- beat N -->` under it
+      gets no link, which is what keeps the generated appendix (fourteen headings, no markers) out
+      of this and makes the rendered check's rule a two-way one: marked sections carry exactly one
+      link, unmarked headings carry none.
+    * **The link goes immediately after the heading**, before the marker and the prose, so the
+      reader meets it where the section starts and the stylesheet can pull it up beside the heading.
+    * **Only the first marker in a section counts.** A second one would be a defect in the prose,
+      not a second link — and the rendered check refuses a section carrying two markers rather than
+      this file guessing which one is meant.
+    """
+    titled = CHAPTER_TITLE.search(markdown)
+    if titled is None:
+        return markdown  # no `# H1`: not a chapter page, so there is no chapter title to carry
+    chapter = titled.group(1)
+
+    headings = list(SECTION_HEADING.finditer(markdown))
+    out: list = []
+    cursor = 0
+    for index, heading in enumerate(headings):
+        end = headings[index + 1].start() if index + 1 < len(headings) else len(markdown)
+        marked = reader_note.BEAT_MARKER.search(markdown[heading.end():end])
+        out.append(markdown[cursor:heading.end()])
+        cursor = heading.end()
+        if marked is None:
+            continue
+        beat = int(marked.group(1))
+        out.append("\n\n" + reader_note.link_html(chapter, heading.group(1), beat, slug))
+        report.append((slug, beat))
+    out.append(markdown[cursor:])
+    return "".join(out)
+
+
+def add_note_links(item, report: list) -> None:
+    """Walk the book and let `with_note_links` at every page that has a source path.
+
+    The path is what supplies the slug, and the slug is what makes the link point at the published
+    page: a page mdBook synthesised with no path of its own cannot be linked to, so it is skipped
+    rather than linked wrongly.
+    """
+    if not isinstance(item, dict):
+        return
+    chapter = item.get("Chapter")
+    if chapter is None:
+        return
+    path = chapter.get("path") or ""
+    leaf = path.rsplit("/", 1)[-1]
+    if leaf.endswith(".md"):
+        chapter["content"] = with_note_links(
+            chapter.get("content") or "", leaf[: -len(".md")], report
+        )
+    for child in chapter.get("sub_items", []):
+        add_note_links(child, report)
+
+
 def main() -> int:
     if len(sys.argv) > 1 and sys.argv[1] == "supports":
         return 0  # every renderer: the substitution is renderer-agnostic
@@ -147,6 +226,23 @@ def main() -> int:
             for name in sorted({n for _, n in report})
         )
         print(f"napkin preprocessor: computed {len(report)} block(s) — {counts}", file=sys.stderr)
+
+    # The reader's note links, last: they are added around the prose, so they neither hide a napkin
+    # token from the pass above nor get scanned as one. The module's own round-trip test runs first —
+    # a URL format that cannot be read back is not one to write into fourteen pages.
+    broken = reader_note.self_test()
+    if broken:
+        print("reader-note preprocessor: " + "; ".join(broken), file=sys.stderr)
+        return 1
+    notes: list = []
+    for item in book_items(book):
+        add_note_links(item, notes)
+    if notes:
+        print(
+            f"reader-note preprocessor: {len(notes)} section link(s) across "
+            f"{len({slug for slug, _ in notes})} page(s)",
+            file=sys.stderr,
+        )
 
     json.dump(book, sys.stdout)
     return 0

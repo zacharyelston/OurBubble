@@ -38,6 +38,32 @@ the exact numbers quoted and the file that carries each one, and the commands th
 is in [the appendix](chapters/the-simulations.md), one section per chapter, and each chapter closes
 with a single link into its own section.
 
+## Reader notes — how someone tells us a section did not land
+
+Every section heading in the built book carries one small link, *Leave a note on this section*, which
+opens a prefilled [issue form](.github/ISSUE_TEMPLATE/reader-note.yml) labelled `reader-note`: what
+the section said that you read differently, what you expected, anything else. The link arrives with
+the chapter, the section, its beat and the page anchor already filled in, so a reader never has to
+describe where they were and a maintainer lands on the paragraph they were looking at.
+
+**The limit, plainly: sending a note needs a free GitHub account.** That is the price of the only
+version of this we will ship. There is no comment widget, no hosted form and no analytics on any
+page — nothing external loads at all, which `check_edition.py --rendered` now refuses on every
+build — and the alternative to an account would be handing a reader's words to a third party they
+never agreed to.
+
+How it works, for a maintainer:
+
+- the links are **generated at build time** by [`preprocessor.py`](preprocessor.py) from the
+  `<!-- beat N -->` markers that already sit under every section heading — nobody maintains a link,
+  and no chapter's prose changed to get one;
+- the URL format and its parser are one file, [`tools/reader_note.py`](tools/reader_note.py), which
+  round-trips itself on every build;
+- `python3 check_edition.py --rendered` asserts that every marked section carries exactly **one**
+  link, that each link's beat is its own section's marker, and that each URL parses back to that
+  page's slug and to the heading id mdBook actually emitted — so a rename or a reorder cannot leave
+  a link pointing somewhere else.
+
 ## How to build it
 
 You need Python 3 and [mdBook](https://rust-lang.github.io/mdBook/). Nothing else — the record the
