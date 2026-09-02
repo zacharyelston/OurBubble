@@ -4,7 +4,7 @@
 > by people whose names we know. It contains no lattice, no simulation and no result of ours. What
 > carries over into the rest of the book is the **method** — measure, state how well you can measure,
 > and let a finer instrument overturn you — never the discoveries.
-
+<!-- NOTE(zac): why are we defineing histry as empty of us?  was that a possibility?   -->
 <figure class="chapter-illustration">
   <img src="assets/sharper-shadows.svg" alt="Three panels of the same triangulation: a wide angle that is easy to read and gives the right answer; a star's yearly shift too small to read, its two candidate lines lying on top of each other; and that very same shift separated at last by a finer instrument, seventeen centuries later.">
   <figcaption><strong>Analogy — not data.</strong> The same geometry three times over, and the middle and right panels are the same measurement. What changes between them is not the reasoning but how finely the angle can be read — which is the whole of this chapter.</figcaption>
@@ -137,6 +137,7 @@ away. The stars were not fixed. Both of those had been in print, by careful peop
 correctly from what they could see.
 - **And that is not a scandal. It is the mechanism.** A field where finer measurement never overturns
 anything is a field where nobody stated a number precisely enough to be caught.
+<!-- NOTE(zac): i'm not syncing with why me think there might be a scandal percieved?  maybe a better way to present this? or drop the drama entirely?  -->
 
 The last point is the one worth carrying. Being overturned by better resolution is not the failure
 mode of measurement; it is measurement working. The failure mode is the other thing — a claim
@@ -161,6 +162,7 @@ attached, not shrugs.
 **And once — this is the one to wait for — two published misses that turned out to be the project's own
 bookkeeping rather than facts about the lattice.** They sat in the record as failures for a long time,
 and then stopped being failures, without anyone re-running them.
+<!-- NOTE(zac): are we talking about the bubble or software?  why is software the focus?    -->
 
 When you reach that chapter, you will have met the move already. It is the star that was never
 fixed.
