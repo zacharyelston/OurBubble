@@ -7,12 +7,15 @@ import argparse
 import json
 import re
 import sys
+from html import unescape
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
 
 
 EDITION_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(EDITION_DIR / "tools"))
+
+import reader_note  # noqa: E402  (needs the path above)
 
 # THE RECORD, IN TWO LAYERS.
 #
@@ -274,6 +277,248 @@ def check_rendered_bold(label: str, html: str, anchored: Sequence[str], errors: 
             f"chapter's appendix section nor inside a napkin block — quote a value the appendix "
             f"carries, compute it in a napkin, or drop the emphasis"
         )
+
+
+RENDERED_H1 = re.compile(r'<h1 id="[^"]*"[^>]*>(?P<inner>.*?)</h1>', re.DOTALL)
+RENDERED_H2 = re.compile(r'<h2 id="(?P<id>[^"]*)"[^>]*>(?P<inner>.*?)</h2>', re.DOTALL)
+ISSUE_FORM = EDITION_DIR / ".github" / "ISSUE_TEMPLATE" / reader_note.TEMPLATE
+
+# An asset the page would fetch from somewhere else. `<a href>` is deliberately not in the list — a
+# book may of course link out — and neither is anything a reader chooses to follow. What is refused
+# is a load: a script, a stylesheet, a frame, an image or a media file that arrives from another
+# host when a page is merely opened.
+EXTERNAL_ASSET = re.compile(
+    r"<(?P<tag>script|link|iframe|frame|img|source|video|audio|embed|object|track)\b"
+    r"[^>]*?\b(?P<attribute>src|href|data)\s*=\s*[\"'](?P<url>(?:https?:)?//[^\"']*)[\"']",
+    re.IGNORECASE,
+)
+
+
+def text_of(html_fragment: str) -> str:
+    """A rendered fragment as comparable words: tags gone, entities decoded, curls straightened."""
+    return reader_note.straighten(unescape(TAG.sub("", html_fragment)).strip())
+
+
+def check_note_links(order: Sequence[str], errors: List[str]) -> str:
+    """Every marked section in the **built** book carries exactly one reader's-note link, and it fits.
+
+    This is the check that makes the links maintainable rather than merely present. They are
+    generated at build time from the `<!-- beat N -->` markers (`preprocessor.py`), and the failure
+    mode of a generated link is not that it disappears — it is that it survives a rename or a
+    reorder and quietly points somewhere else. So each link is read back out of the HTML mdBook
+    actually wrote and made to agree with the section it sits under, on all four of the things it
+    carries:
+
+    * the **beat** in the link equals the marker in that section, not the one next door;
+    * the **page** in the link is this page's slug;
+    * the **anchor** in the link equals the `id` mdBook emitted on this heading — which is what
+      keeps `reader_note.anchor()`, a port of mdBook's own id rule, from drifting unnoticed;
+    * the **heading and chapter title** in the link equal the heading and the `<h1>` on the page.
+
+    And it is two-way, which is what a mutation showed it had to be. Requiring "a link under every
+    marked heading" catches a dropped link; it does not catch a link appearing where no section is,
+    which is exactly what a heading swallowed by a code fence would produce. So an unmarked heading
+    must carry **none**, a marked one exactly **one**, and nothing above the first heading may carry
+    one at all.
+
+    **Two stated limits, so the pass line is not read as more than it is.** A chapter's opening prose
+    — everything above the first `##`, which may itself declare a beat — carries no link; the reader
+    meets the first one at the first section heading. And the generated appendix has no markers by
+    construction, so it carries none either, which this asserts rather than assumes.
+    """
+    if not RENDER_DIR.exists():
+        errors.append("rendered book is absent; run `mdbook build` before checking the note links")
+        return "not run"
+
+    # The two addresses the links are built from, cross-checked against what the repository already
+    # says about itself. A link pointing at the wrong repository or the wrong site would be perfectly
+    # well-formed, and every other check here would pass.
+    book_toml = (EDITION_DIR / "book.toml").read_text(encoding="utf-8")
+    if f'git-repository-url = "{reader_note.REPO_URL}"' not in book_toml:
+        errors.append(
+            f"tools/reader_note.py files notes at {reader_note.REPO_URL!r}, which is not the "
+            f"`git-repository-url` in book.toml"
+        )
+    if reader_note.BOOK_URL not in (EDITION_DIR / "README.md").read_text(encoding="utf-8"):
+        errors.append(
+            f"tools/reader_note.py points readers at {reader_note.BOOK_URL!r}, which is not the "
+            f"published address README.md gives"
+        )
+
+    # The form the links open. A renamed file or a renamed field id would leave 120 links opening a
+    # blank issue instead of the form, with nothing else here objecting.
+    if not ISSUE_FORM.exists():
+        errors.append(
+            f"every note link opens {reader_note.TEMPLATE}, which does not exist at "
+            f"{ISSUE_FORM.relative_to(EDITION_DIR)}"
+        )
+    else:
+        form = ISSUE_FORM.read_text(encoding="utf-8")
+        for field in ("section", "page", "read-differently"):
+            if not re.search(rf"^\s*id:\s*{re.escape(field)}\s*$", form, re.M):
+                errors.append(
+                    f"{ISSUE_FORM.relative_to(EDITION_DIR)}: no field with id {field!r} — the "
+                    f"links prefill by field id, so a rename here silently stops prefilling"
+                )
+        if f'labels: ["{reader_note.LABEL}"]' not in form:
+            errors.append(
+                f"{ISSUE_FORM.relative_to(EDITION_DIR)}: the form does not carry the "
+                f"{reader_note.LABEL!r} label the links ask for"
+            )
+
+    links = 0
+    marked = 0
+    pages = 0
+    for slug in order:
+        rendered_path = RENDER_DIR / f"{slug}.html"
+        if not rendered_path.exists():
+            continue  # check_rendered reports an absent page; one error per fault is enough
+        label = str(rendered_path.relative_to(EDITION_DIR))
+        html = rendered_path.read_text(encoding="utf-8")
+
+        titled = RENDERED_H1.search(html)
+        if titled is None:
+            errors.append(f"{label}: no chapter `<h1>` — a note link has no chapter title to carry")
+            continue
+        chapter_title = text_of(titled.group("inner"))
+
+        headings = list(RENDERED_H2.finditer(html))
+        opening = html[: headings[0].start()] if headings else html
+        stray = len(reader_note.LINK_HTML.findall(opening))
+        if stray:
+            errors.append(
+                f"{label}: {stray} note link(s) above the first section heading — a link belongs to "
+                f"a heading, so this is a heading that did not render (a code fence, most likely)"
+            )
+
+        page_had_links = False
+        for index, heading in enumerate(headings):
+            end = headings[index + 1].start() if index + 1 < len(headings) else len(html)
+            region = html[heading.end():end]
+            heading_text = text_of(heading.group("inner"))
+            where = f"{label} §{heading_text}"
+
+            beats = reader_note.BEAT_MARKER.findall(region)
+            found = list(reader_note.LINK_HTML.finditer(region))
+            if not beats:
+                if found:
+                    errors.append(
+                        f"{where}: carries a note link but declares no `<!-- beat N -->` marker"
+                    )
+                continue
+            marked += 1
+            if len(beats) > 1:
+                errors.append(f"{where}: declares {len(beats)} beat markers; a section declares one")
+                continue
+            if len(found) != 1:
+                errors.append(
+                    f"{where}: {len(found)} note link(s) — every section carries exactly one, and "
+                    f"the build puts it there (preprocessor.py)"
+                )
+                continue
+
+            link = found[0]
+            links += 1
+            page_had_links = True
+            if link.group("text") != reader_note.LINK_TEXT:
+                errors.append(
+                    f"{where}: the note link reads {link.group('text')!r}, not "
+                    f"{reader_note.LINK_TEXT!r}"
+                )
+            parsed = reader_note.parse(unescape(link.group("href")))
+            if parsed is None:
+                errors.append(
+                    f"{where}: the note link's URL does not parse back — a field is missing, "
+                    f"misencoded, or disagrees with another: {unescape(link.group('href'))!r}"
+                )
+                continue
+            if parsed["beat"] != int(beats[0]):
+                errors.append(
+                    f"{where}: the note link says beat {parsed['beat']}, the section's marker says "
+                    f"beat {beats[0]}"
+                )
+            if parsed["slug"] != slug:
+                errors.append(
+                    f"{where}: the note link's page is {parsed['slug']!r}, not this page ({slug!r})"
+                )
+            if parsed["anchor"] != heading.group("id"):
+                errors.append(
+                    f"{where}: the note link scrolls to #{parsed['anchor']}, but mdBook gave this "
+                    f"heading the id {heading.group('id')!r}"
+                )
+            # Both sides straightened, and only for the comparison. `smart-punctuation = true`
+            # means the built page says `didn’t` and `-` where the source (and therefore the link a
+            # reader sees) says `didn't` and `—`; the link keeps the author's punctuation, and the
+            # comparison ignores exactly that difference and nothing else.
+            if reader_note.straighten(str(parsed["heading"])) != heading_text:
+                errors.append(
+                    f"{where}: the note link names the section {parsed['heading']!r}, which is not "
+                    f"this heading"
+                )
+            if reader_note.straighten(str(parsed["chapter"])) != chapter_title:
+                errors.append(
+                    f"{where}: the note link names the chapter {parsed['chapter']!r}; this page's "
+                    f"title is {chapter_title!r}"
+                )
+        if page_had_links:
+            pages += 1
+
+    appendix_page = RENDER_DIR / f"{Path(APPENDIX_FILE).stem}.html"
+    appendix_links = (
+        len(reader_note.LINK_HTML.findall(appendix_page.read_text(encoding="utf-8")))
+        if appendix_page.exists()
+        else 0
+    )
+    if appendix_links:
+        errors.append(
+            f"the generated appendix carries {appendix_links} note link(s); it declares no beats, "
+            f"so it should carry none"
+        )
+
+    broken = reader_note.self_test()
+    for failure in broken:
+        errors.append(failure)
+
+    return (
+        f"{links} link(s) under {marked} marked section(s) on {pages} page(s) — exactly one per "
+        f"marked section and none anywhere else, each carrying the beat its own marker declares, "
+        f"and each URL parsed back to this page's slug, to the id mdBook gave this heading, and to "
+        f"this heading's and chapter's own text; the URL round trip and every refusal in "
+        f"tools/reader_note.py asserted; the appendix's generated headings carry none, and a "
+        f"chapter's opening prose carries none"
+    )
+
+
+def check_no_external_assets(order: Sequence[str], errors: List[str]) -> str:
+    """Nothing on a book page is fetched from another host. Opening a page contacts this site only.
+
+    Written down as a check because the obvious way to collect reader feedback is the one thing this
+    refuses: a comment widget, a hosted form, an analytics tag. Each is one `<script src>` away, each
+    would work, and each would mean a reader of a book about a toy lattice being observed by a third
+    party they never agreed to. The note links are `<a href>`s a reader chooses to follow, which is
+    the whole difference this check is drawing.
+
+    `<a>` is therefore not in scope; a load is. Scoped to the book's own pages plus the two mdBook
+    generates (`print.html`, `404.html`) — `book/record/` is the committed snapshot's own views.
+    """
+    if not RENDER_DIR.exists():
+        errors.append("rendered book is absent; run `mdbook build` before checking for external assets")
+        return "not run"
+
+    pages = [RENDER_DIR / f"{slug}.html" for slug in order]
+    pages += [RENDER_DIR / name for name in ("index.html", "print.html", "404.html")]
+    checked = 0
+    for page in pages:
+        if not page.exists():
+            continue
+        checked += 1
+        for found in EXTERNAL_ASSET.finditer(page.read_text(encoding="utf-8")):
+            errors.append(
+                f"{page.relative_to(EDITION_DIR)}: <{found.group('tag').lower()}> loads "
+                f"{found.group('url')!r} from another host — no widget, form service or analytics "
+                f"may load on a reader's page; inline it or drop it"
+            )
+    return f"{checked} built page(s) load nothing from another host — no script, style, frame, image or media"
 
 
 def check_napkin_determinism(errors: List[str]) -> str:
@@ -1243,6 +1488,11 @@ def main() -> int:
 
     if args.rendered:
         check_rendered(order, sections, errors)
+        # Both on their own lines, because both are promises made to a reader rather than to a
+        # maintainer: that the link beside a heading opens a note about *that* heading, and that
+        # opening a page of this book contacts nobody but this site.
+        status(errors, "reader-note links", lambda: check_note_links(order, errors))
+        status(errors, "external assets", lambda: check_no_external_assets(order, errors))
 
     return report(errors, narrative, sections, manifest, args)
 
