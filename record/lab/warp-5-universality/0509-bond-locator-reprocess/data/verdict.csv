@@ -1,0 +1,18 @@
+prediction,quantity,measured,registered,pass
+P0a,stella per-batch naive mean / sigma (5.7 copy fidelity),0.099641 / 0.000312,0.099641 / 0.000312 (±0.000001),true
+P0b,d_f at 5.7's located p_c,2.02746,2.02762 (±0.001),true
+P0c,d_f (fcc) at the PUBLISHED threshold,2.51943,2.52295 (±0.05),true
+P1a,p_c (stella aggregate-extrapolated),0.100648,0.100648 (±0.00001) and > 0.099641,true
+P1b,OLS intercept se (stella) / r2 stella / r2 fcc,0.000518 / 0.0022 / 0.1527,[0.0003..0.0008] / both < 0.3,true
+P1c,fcc key error in units of (se | w-spread),1.10 / 6.09,< 2.5 and > 3,true
+P2a,local ∂d_f/∂p at the new locator,340.1,[250..450],true
+P2b,ordering systematic (aggregate vs per-batch),0.001330,[0.0008..0.002] aggregate higher,true
+P2c,fcc key error aggregate vs per-batch,0.000360 vs 0.000588,aggregate closer,true
+P2d,propagated 1-sigma band in d_f,0.1766,[0.1..0.3],true
+P3a,d_f at the 5.8 locator,2.37985,2.37985 (±0.01),true
+P3b,|d_f − class| vs 5.7's miss,0.1431 vs 0.49533,< 0.5 × 5.7's miss and upward,true
+P3c,z = |d_f − class| / band (DISSOLVE if < 2),0.81,< 2 (H-DISSOLVE branch),true
+P4a,d_f-anchored inversion (fcc) vs the published key,+0.0000128,±0.00005,true
+report-only,d_f at the per-batch-extrapolated locator,1.91924,—,
+report-only,p_c(d_f-anchored | stella) [derived | = P3c in p-space],0.101069,—,
+report-only,fcc aggregate-naive error vs the key,0.000201,— (vs extrapolated 0.000360),

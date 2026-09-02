@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>dna-thz · dielectric shift law — Ω_peak ∝ ε_r^p</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e;--orange:#f97316}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  table.disc td.num{font-variant-numeric:tabular-nums;color:var(--green)}
+  table.disc td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Dielectric shift law — Ω_peak ∝ ε_r^p</h1>
+  <p class="sub">A star0-scaled inclusion on a 16×8×8 tet lattice shifts the driven resonant peak.
+     The automated bench discovers the exponent p from the swept ε_r data.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Toy DEC 1-form wave on a tet lattice. ε_r is a dimensionless
+     per-vertex <code>scale_star0</code> weight; Ω is a dimensionless drive frequency. The fitted p
+     is a lattice-law, not a physical permittivity exponent. No claim about real THz, DNA, cells,
+     or SI units.</div>
+
+  <div class="panel">
+    <h2>Log–log: measured peak Ω vs ε_r</h2>
+    <p class="q">Dots are the run; the gold line is the discovered fit Ω = C·ε_r^p; the dashed violet
+       line is the naive uniform-medium prediction p = −1/2.</p>
+    <canvas id="shift" width="1120" height="380"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:var(--cyan)"></span>measured peak Ω
+      <span class="sw" style="background:var(--gold)"></span>discovered fit
+      <span class="sw" style="background:var(--violet)"></span>naive √ε_r law (p = −1/2)
+    </div>
+    <div class="take" id="shifttake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>What the bench discovered</h2>
+    <p class="q">The gate swept ε_r, fit Ω_peak vs ε_r by least squares in log space, and read off
+       the exponent and coefficient.</p>
+    <table class="disc" id="disc"><thead><tr><th>quantity</th><th>measured</th><th>naive target</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"series":[{"eps":1.0,"omega":0.646154},{"eps":4.0,"omega":0.523077},{"eps":9.0,"omega":0.400000},{"eps":16.0,"omega":0.323077},{"eps":25.0,"omega":0.276923},{"eps":36.0,"omega":0.261538},{"eps":49.0,"omega":0.230769}],"fit":{"p":-0.2753,"C":0.6968,"r2":0.9774},"source":{"commit":"7fdb4c3"}};
+const S = D.series; // [{eps, omega}]
+const F = D.fit;    // {p, C, r2}
+
+// ---- log-log shift plot ----
+(function(){
+  const cv=document.getElementById("shift"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=58,padR=18,padT=18,padB=34;
+  const lxs=S.map(s=>Math.log(s.eps));
+  const lys=S.map(s=>Math.log(s.omega));
+  const xmin=Math.min(...lxs)*0.98, xmax=Math.max(...lxs)*1.02;
+  const ymin=Math.min(...lys)-0.15, ymax=Math.max(...lys)+0.10;
+  const X=lx=>padL+(lx-xmin)/(xmax-xmin)*(W-padL-padR);
+  const Y=ly=>padT+(ymax-ly)/(ymax-ymin)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+
+  // gridlines in log space, labelled at nice ε_r values
+  const niceEps=[1,2,4,9,16,25,36,49];
+  for(const e of niceEps){
+    const lx=Math.log(e); if(lx<xmin || lx>xmax) continue;
+    const x=X(lx); g.strokeStyle="#141c27"; g.beginPath(); g.moveTo(x,padT); g.lineTo(x,H-padB); g.stroke();
+    g.fillStyle="#3b4a5e"; g.font="10px system-ui"; g.textAlign="center"; g.fillText(e,x,H-padB+13);
+  }
+  const niceOm=[0.2,0.3,0.4,0.5,0.6,0.7];
+  for(const o of niceOm){
+    const ly=Math.log(o); if(ly<ymin || ly>ymax) continue;
+    const y=Y(ly); g.strokeStyle="#141c27"; g.beginPath(); g.moveTo(padL,y); g.lineTo(W-padR,y); g.stroke();
+    g.fillStyle="#3b4a5e"; g.textAlign="right"; g.fillText(o.toFixed(1),padL-6,y+3);
+  }
+
+  // discovered fit line: log Ω = log C + p log ε
+  g.strokeStyle="#eab308"; g.lineWidth=2.5; g.beginPath();
+  let first=true;
+  for(let lx=xmin; lx<=xmax; lx+=0.02){
+    const ly=Math.log(F.C)+F.p*lx;
+    const x=X(lx), y=Y(ly);
+    first?(g.moveTo(x,y),first=false):g.lineTo(x,y);
+  }
+  g.stroke();
+
+  // naive p=-1/2 reference: log Ω = log C + (-0.5) log ε, anchored at ε=1
+  g.strokeStyle="#c084fc"; g.lineWidth=2; g.setLineDash([5,4]); g.beginPath();
+  first=true;
+  const refC=F.C/Math.pow(1,F.p); // anchor to bare point: Ω(1)=C
+  for(let lx=xmin; lx<=xmax; lx+=0.02){
+    const ly=Math.log(refC)+(-0.5)*lx;
+    if(ly<ymin || ly>ymax) continue;
+    const x=X(lx), y=Y(ly);
+    first?(g.moveTo(x,y),first=false):g.lineTo(x,y);
+  }
+  g.stroke(); g.setLineDash([]);
+
+  // measured points
+  S.forEach(s=>{
+    g.fillStyle="#06b6d4"; g.beginPath(); g.arc(X(Math.log(s.eps)),Y(Math.log(s.omega)),4,0,7); g.fill();
+  });
+
+  g.fillStyle="#4b5c70"; g.textAlign="left"; g.fillText("log Ω",padL,padT+2);
+  g.textAlign="right"; g.fillText("log ε →",W-padR,H-padB+24);
+
+  const dev=Math.abs(F.p+0.5);
+  const verdict=dev<0.05
+    ? `The discovered exponent <b>p = ${F.p.toFixed(4)}</b> is consistent with the naive √ε_r law (|p+1/2| = ${dev.toFixed(4)}).`
+    : `The discovered exponent <b>p = ${F.p.toFixed(4)}</b> is <b>not</b> consistent with the naive √ε_r law. The deviation is |p+1/2| = ${dev.toFixed(4)}, far outside the ±0.05 band.`;
+  document.getElementById("shifttake").innerHTML =
+    `The points follow a clean straight line in log space (R² = ${F.r2.toFixed(4)}). ${verdict}`;
+})();
+
+// ---- discovery table ----
+(function(){
+  const rows=[
+    ["exponent p", F.p.toFixed(4), "−0.5000"],
+    ["coefficient C", F.C.toFixed(4), "—"],
+    ["fit quality R²", F.r2.toFixed(4), "1"],
+    ["|p + 1/2|", Math.abs(F.p+0.5).toFixed(4), "< 0.05"],
+  ];
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="thy">${r[2]}</td></tr>`).join("");
+  const verdict=Math.abs(F.p+0.5)<0.05
+    ? "The measured exponent supports the naive √ε_r law."
+    : "The naive √ε_r law is <b>falsified</b> for this small-inclusion geometry; the lattice exponent is much shallower.";
+  document.getElementById("dtake").innerHTML =
+    `The bench extracted <b>p = ${F.p.toFixed(4)}</b> with R² = ${F.r2.toFixed(4)}. ${verdict}`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_shift_law</code> from
+   <code>lab/dna-thz/0001-dna-permittivity-shift-law/data/shift_law.csv</code>
+   (gate <code>uf6_1_thz_shift_law_gate</code>, commit <code>${D.source.commit}</code>).
+   Self-contained; opens with no server.`;
+</script>
+</body>
+</html>

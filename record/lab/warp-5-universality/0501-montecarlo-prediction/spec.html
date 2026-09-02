@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0501-montecarlo-prediction/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0501-montecarlo-prediction/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0501 — Warp-5.1: the graduation swing — blind Monte Carlo predicts nature&#x27;s critical exponents
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf5_1_montecarlo_gate.rs` · **Status:** registered (pre-run)
+
+## Goal (one paragraph)
+
+Rung 5.0 validated the finite-size-scaling machinery on an *exactly solvable* model (a postdiction). This rung
+takes the real swing: run a **generic Monte Carlo** — single-cluster Wolff, which contains **no exact-solution
+input** — on the Ising model in 2-D and 3-D, and extract the critical exponents from raw simulation data by the
+same FSS the previous rung used. The 2-D case is the **validation** (its exponents are known exactly, so we can
+check the blind method). The 3-D case is the **genuine prediction**: the 3-D Ising model has **no closed-form
+solution**, yet the exponents the lattice returns are the ones **measured in real 3-D-Ising materials** (the
+liquid–gas critical point, uniaxial magnets, binary alloys). A dimensionless number of nature, from a model
+with no answer key — the graduation criterion.
+
+## Firewall (R3)
+
+`Ising, Monte Carlo, exponent` name a seeded, deterministic single-cluster Wolff simulation of a **toy** Ising
+model on the lattice bench, and universal exponents extracted by finite-size scaling. Universality-class
+membership shared with real materials — **not** a claim the warp/DEC engine is a magnet, not a spacetime claim.
+The PRNG is a fixed-seed `splitmix64`; the transition probability is precomputed once, so the run is
+reproducible. Dimensionless.
+
+## Predictions (registered before the run)
+
+- **P0 (deterministic):** the same seed gives the same result — a 2-D `L=16` run repeated is identical —
+  *gate:* the two `χ` values are exactly equal (`==`).
+- **P1 (validation — the blind method recovers the exact 2-D exponents):** 2-D Ising Wolff + FSS (`χ = N⟨m²⟩ ~
+  L^{γ/ν}`, `⟨|m|⟩ ~ L^{−β/ν}`, at the exact `T_c = 2/ln(1+√2)`) gives `γ/ν = 1.75` and `β/ν = 0.125` —
+  *gate:* `|γ/ν − 1.75|/1.75 &lt; 0.03` and `|β/ν − 0.125|/0.125 &lt; 0.05`.
+- **P2 (the novel prediction — an unsolved model):** 3-D Ising (no closed form) via the **same** pipeline at
+  `T_c ≈ 4.5115` gives the 3-D-Ising-class exponents `γ/ν ≈ 1.966`, `β/ν ≈ 0.518` — *gate:*
+  `|γ/ν − 1.966|/1.966 &lt; 0.06` and `|β/ν − 0.518|/0.518 &lt; 0.08`.
+- **P3 (distinct classes, both real):** the method resolves the dimensionality — the 2-D and 3-D `γ/ν` differ
+  by a wide margin, each matching *its own* universality class (the classes of real 2-D and 3-D critical
+  materials) — *gate:* `γ/ν(3D) − γ/ν(2D) &gt; 0.15`.
+
+## Method (sketch)
+
+Single-cluster **Wolff** (add aligned neighbours with `p = 1 − e^{−2/T_c}`, flip the cluster) — a generic
+critical-dynamics algorithm with no exact-solution content. Seeded `splitmix64`. 2-D: `L ∈ {8,16,32,64}`,
+warmup 4000 + 40000 measured clusters, at exact `T_c`. 3-D: `L ∈ {12,16,24,32}` (drop the smallest — strong
+corrections to scaling), warmup 6000 + 60000 clusters, at `T_c = 4.511536`. Observables per size: `⟨|m|⟩` and
+`χ = N⟨m²⟩`; exponent ratios from `kinematics::power_law_fit` (`γ/ν` from `χ` vs `L`, `β/ν` from `⟨|m|⟩` vs
+`L`). Emit `data/fss_2d.csv`, `data/fss_3d.csv`, `data/exponents.csv` (ratios vs class targets; β, γ via class
+ν vs real-material measurements).
+
+## What would falsify this
+
+If the blind 2-D exponents missed the exact values (P1), the method would be untrustworthy. If the 3-D
+exponents did not land on the measured 3-D-Ising-class values (P2), the lattice would not sit in that class and
+the prediction would fail. If 2-D and 3-D gave the same `γ/ν` (P3), the method would not resolve universality.
+Corrections-to-scaling at small `L` bias the 3-D estimates by a few percent (a known systematic); this is
+stated, not hidden (R5).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

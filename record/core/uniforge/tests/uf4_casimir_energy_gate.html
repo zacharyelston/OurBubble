@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf4_casimir_energy_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf4_casimir_energy_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! lab/0400 — Warp-4.0: the Casimir vacuum is negative — and the lattice discovers the law.
+//!
+//! Chapters 2–3 showed classical fields can&#x27;t source the warp wall&#x27;s negative energy and a shield only
+//! reaches zero. The one mechanism that genuinely gives ρ&lt;0 is the QUANTUM VACUUM with boundaries — the
+//! Casimir effect. We build it as the zero-point energy E₀ = ½Σℏωₖ of a toy scalar field on a fixed–fixed
+//! lattice chain (the engine&#x27;s 1-D Dirichlet Laplacian d†d; ωₖ² are its eigenvalues). The lattice spectrum
+//! is its own UV cutoff, so E₀ is finite with NO zeta regularization; subtracting the bulk vacuum leaves a
+//! genuinely NEGATIVE confined energy.
+//!
+//! This is also the chapter&#x27;s automation proof: the gate does not check a hardcoded number — it SWEEPS the
+//! plate separation, least-squares-fits E_C(a)=c₀+c₁/a, and DISCOVERS the surface term (c₀→−½) and the
+//! Casimir coefficient (c₁→−π/24), then holds them against theory. The lattice runs the experiment; the
+//! automation extracts and checks the law.
+//!
+//! Run: `cargo test -p uniforge --release --test uf4_casimir_energy_gate -- --nocapture`
+//!
+//! FIREWALL (R3): zero-point energy ½Σℏωₖ of a TOY scalar field (fixed–fixed chain = Dirichlet Laplacian)
+//! on a TOY lattice. ℏ dimensionless; standard QFT bookkeeping, NOT a real device/spacetime/free energy. c=1.
+
+use std::io::Write;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+/// Mode frequencies of the fixed–fixed chain of `n` interior sites: ωₖ = 2 sin(kπ/2(n+1)),
+/// k=1..n — the closed-form spectrum of the 1-D Dirichlet Laplacian (ωₖ² = its eigenvalues).
+fn omegas(n: usize) -&gt; Vec&lt;f64&gt; {
+    (1..=n).map(|k| 2.0 * (k as f64 * std::f64::consts::PI / (2.0 * (n as f64 + 1.0))).sin()).collect()
+}
+
+/// Zero-point energy E₀ = ½ Σ ωₖ.
+fn e0(n: usize) -&gt; f64 {
+    0.5 * omegas(n).iter().sum::&lt;f64&gt;()
+}
+
+/// Bulk vacuum density per unit length: ε∞ = (1/π)∫₀^π sin(q/2) dq = 2/π.
+const EPS_INF: f64 = std::f64::consts::FRAC_2_PI; // 2/π
+
+/// Confined (Casimir) energy at plate separation `a` (= n+1 sites of length): E_C = E₀(n) − ε∞·a.
+fn e_confined(a: usize) -&gt; f64 {
+    let n = a - 1;
+    e0(n) - EPS_INF * a as f64
+}
+
+/// Two-parameter least-squares fit E_C(a) = c₀ + c₁·(1/a). Returns (c₀, c₁, R²).
+fn fit_c0_c1(xs: &amp;[f64], ys: &amp;[f64]) -&gt; (f64, f64, f64) {
+    let m = xs.len() as f64;
+    let inv: Vec&lt;f64&gt; = xs.iter().map(|a| 1.0 / a).collect();
+    let (s1, su, suu) = (m, inv.iter().sum::&lt;f64&gt;(), inv.iter().map(|u| u * u).sum::&lt;f64&gt;());
+    let sy = ys.iter().sum::&lt;f64&gt;();
+    let suy: f64 = inv.iter().zip(ys).map(|(u, y)| u * y).sum();
+    // [s1 su; su suu][c0;c1] = [sy; suy]
+    let det = s1 * suu - su * su;
+    let c0 = (suu * sy - su * suy) / det;
+    let c1 = (s1 * suy - su * sy) / det;
+    let mean = sy / m;
+    let ss_tot: f64 = ys.iter().map(|y| (y - mean).powi(2)).sum();
+    let ss_res: f64 = xs.iter().zip(ys).map(|(a, y)| (y - (c0 + c1 / a)).powi(2)).sum();
+    (c0, c1, 1.0 - ss_res / ss_tot)
+}
+
+/// Slope of a simple linear regression y = m·x + b (returns m) — used to DISCOVER the power-law exponent.
+fn slope(xs: &amp;[f64], ys: &amp;[f64]) -&gt; f64 {
+    let m = xs.len() as f64;
+    let (sx, sy) = (xs.iter().sum::&lt;f64&gt;(), ys.iter().sum::&lt;f64&gt;());
+    let sxy: f64 = xs.iter().zip(ys).map(|(x, y)| x * y).sum();
+    let sxx: f64 = xs.iter().map(|x| x * x).sum();
+    (m * sxy - sx * sy) / (m * sxx - sx * sx)
+}
+
+#[test]
+fn uf4_casimir_energy_gate() {
+    let casimir_coeff = -std::f64::consts::PI / 24.0; // the 1+1D Dirichlet Casimir coefficient
+    rec!(&quot;\n######## lab/0400 — Warp-4.0: the Casimir vacuum is negative — the lattice discovers the law ########&quot;);
+    rec!(&quot;FIREWALL (R3): zero-point energy ½Σℏωₖ of a TOY scalar field (fixed–fixed chain = Dirichlet Laplacian).&quot;);
+    rec!(&quot;  Lattice = its own UV cutoff (no zeta). ε∞={EPS_INF:.6} (2/π). Target Casimir coeff −π/24={casimir_coeff:.6}. c=1.\n&quot;);
+
+    // P0 — the spectrum IS the engine&#x27;s Dirichlet Laplacian (match two spectral moments to the trace).
+    let n = 15usize;
+    let w = omegas(n);
+    let m2: f64 = w.iter().map(|o| o * o).sum(); // Σωₖ² = tr Δ  = 2N
+    let m4: f64 = w.iter().map(|o| o.powi(4)).sum(); // Σωₖ⁴ = tr Δ² = 6N−2
+    let tr1 = 2.0 * n as f64;
+    let tr2 = 6.0 * n as f64 - 2.0;
+    rec!(&quot;[P0] spectrum vs Laplacian (n={n}): Σωₖ²={m2:.9} (tr Δ={tr1}), Σωₖ⁴={m4:.9} (tr Δ²={tr2})&quot;);
+
+    // Sweep the plate separation and record the confined vacuum energy.
+    let seps: [usize; 7] = [8, 12, 16, 24, 32, 48, 64];
+    rec!(&quot;\n[sweep] plate separation a → confined vacuum energy E_C(a):&quot;);
+    let (mut xs, mut ys) = (Vec::new(), Vec::new());
+    for &amp;a in &amp;seps {
+        let ec = e_confined(a);
+        rec!(&quot;   a={a:&gt;3} | E₀={:.5} | E_C={ec:.6} | E_C·a={:.5}&quot;, e0(a - 1), ec * a as f64);
+        xs.push(a as f64);
+        ys.push(ec);
+    }
+    let all_negative = ys.iter().all(|&amp;y| y &lt; 0.0);
+    let monotone = ys.windows(2).all(|w| w[1] &gt; w[0]); // E_C rises toward the bulk as a grows
+
+    // P2 — the lattice DISCOVERS the law: fit E_C(a) = c₀ + c₁/a.
+    let (c0, c1, r2) = fit_c0_c1(&amp;xs, &amp;ys);
+    // discovered exponent: log|E_C − c₀| vs log a → slope ≈ −1
+    let logx: Vec&lt;f64&gt; = xs.iter().map(|a| a.ln()).collect();
+    let logy: Vec&lt;f64&gt; = ys.iter().map(|y| (y - c0).abs().ln()).collect();
+    let exponent = slope(&amp;logx, &amp;logy);
+    let coeff_err = (c1 - casimir_coeff).abs() / casimir_coeff.abs();
+    rec!(&quot;\n[P2] DISCOVERED law  E_C(a) = c₀ + c₁/a :&quot;);
+    rec!(&quot;     c₀ (surface) = {c0:.6}   (theory −0.5)&quot;);
+    rec!(&quot;     c₁ (Casimir) = {c1:.6}   (theory −π/24 = {casimir_coeff:.6}, err {coeff_err:.2}%→{:.3}%)&quot;, coeff_err * 100.0);
+    rec!(&quot;     R² = {r2:.8}   discovered exponent (log-log slope) = {exponent:.4}  (theory −1)&quot;);
+
+    rec!(&quot;\n[P1] E_C(a) &lt; 0 for all a: {all_negative}&quot;);
+    rec!(&quot;[P3] E_C(a) strictly increasing in a (attractive): {monotone}&quot;);
+
+    // R10 artifacts
+    let dir = concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/../../lab/warp-4-vacuum/0400-casimir-negative-energy/data&quot;);
+    std::fs::create_dir_all(dir).expect(&quot;create lab data dir&quot;);
+    let mut spec = String::from(&quot;k,omega\n&quot;);
+    for (k, o) in w.iter().enumerate() {
+        spec.push_str(&amp;format!(&quot;{},{o:.6}\n&quot;, k + 1));
+    }
+    std::fs::write(format!(&quot;{dir}/spectrum.csv&quot;), spec).expect(&quot;write spectrum.csv&quot;);
+    let mut sweep = String::from(&quot;a,e0,e_confined,ec_times_a\n&quot;);
+    for &amp;a in &amp;seps {
+        sweep.push_str(&amp;format!(&quot;{a},{:.6},{:.6},{:.6}\n&quot;, e0(a - 1), e_confined(a), e_confined(a) * a as f64));
+    }
+    std::fs::write(format!(&quot;{dir}/energy_sweep.csv&quot;), sweep).expect(&quot;write energy_sweep.csv&quot;);
+    let fit = format!(
+        &quot;metric,value,theory\nc0_surface,{c0:.6},-0.5\nc1_casimir,{c1:.6},{casimir_coeff:.6}\n\
+         r_squared,{r2:.8},1.0\nexponent,{exponent:.6},-1.0\ncoeff_err_frac,{coeff_err:.6},0.0\n&quot;
+    );
+    std::fs::write(format!(&quot;{dir}/fit.csv&quot;), fit).expect(&quot;write fit.csv&quot;);
+
+    // verdicts
+    let p0 = (m2 - tr1).abs() &lt; 1e-9 &amp;&amp; (m4 - tr2).abs() &lt; 1e-9;
+    let p1 = all_negative;
+    let p2 = r2 &gt; 0.999 &amp;&amp; (c0 + 0.5).abs() &lt; 0.02 &amp;&amp; coeff_err &lt; 0.03;
+    let p3 = monotone;
+
+    let verdict = if p0 &amp;&amp; p1 &amp;&amp; p2 &amp;&amp; p3 {
+        format!(&quot;THE VACUUM GOES NEGATIVE — AND THE LATTICE FINDS THE LAW ITSELF (R10). The confined zero-point \
+             energy of the toy field is negative at every plate separation (bulk-subtracted), and an automated \
+             two-parameter fit of the swept data DISCOVERS the Casimir law: E_C(a) = c₀ + c₁/a with the surface \
+             term c₀={c0:.3} (theory −0.5) and the Casimir coefficient c₁={c1:.4} — within {:.1}% of the exact \
+             1+1D value −π/24={casimir_coeff:.4} — at R²={r2:.5}, discovered exponent {exponent:.2} (theory −1). \
+             The spectrum matches the engine&#x27;s Dirichlet Laplacian to two trace moments. So the quantum vacuum \
+             is the one place ρ&lt;0 is real, the lattice reproduces it with no zeta trick (it is its own \
+             regulator), and the bench AUTO-EXTRACTS the physical law — the value-add. FIREWALL (R3): toy \
+             zero-point bookkeeping; not a device, not free energy.&quot;, coeff_err * 100.0)
+    } else {
+        format!(&quot;CHECK (R5) — p0={p0} p1={p1} p2={p2} p3={p3}; c0={c0:.4} c1={c1:.4} (−π/24={casimir_coeff:.4}, err {:.1}%) R²={r2:.5} exp={exponent:.3} allneg={all_negative} mono={monotone}. FIREWALL (R3).&quot;, coeff_err * 100.0)
+    };
+    rec!(&quot;\n[lab/0400 VERDICT] {verdict}&quot;);
+    rec!(&quot;\n  [recorded: p0={p0} p1={p1} p2={p2} p3={p3} c0={c0:.5} c1={c1:.5} coeff_err={coeff_err:.5} r2={r2:.6} exponent={exponent:.4} m2={m2:.3} m4={m4:.3}]&quot;);
+
+    assert!(p0, &quot;P0: the mode spectrum matches the engine&#x27;s Dirichlet Laplacian (two trace moments)&quot;);
+    assert!(p1, &quot;P1: the confined vacuum energy is negative at every plate separation&quot;);
+    assert!(p2, &quot;P2: the lattice discovers the Casimir law (1/a, coefficient −π/24) by least-squares fit&quot;);
+    assert!(p3, &quot;P3: the Casimir energy deepens as the plates approach (attractive)&quot;);
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

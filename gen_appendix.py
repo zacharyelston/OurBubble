@@ -22,11 +22,15 @@ def render() -> str:
     ap_slug = pathlib.Path(m["appendix"]["file"]).stem
     narrative = [s for s in order if s != ap_slug]
     secs = m["appendix"]["sections"]
-    # The record is not in this repository. `tools/fetch_record.sh` checks UniForge out at the SHA
-    # pinned in `record.lock` into `.record/`, and every citation below points there. The prefix is
-    # one level up from `chapters/` — which is also one level up from the rendered `book/`, so the
-    # same link resolves in the source and in the built page.
-    def rel(p): return "../.record/" + p
+    # `record/` is the committed snapshot: the cited files, verbatim, from UniForge at the SHA
+    # pinned in `record.lock`. Citing the snapshot rather than the fetched `.record/` is what lets
+    # these links resolve for a reader who has no access to the engine — on the published site, and
+    # in a clean clone.
+    #
+    # The prefix has no `../` on purpose. `chapters/record` is a symlink to it, so `record/…`
+    # resolves three ways with one spelling: in the repository browser (from `chapters/`), in the
+    # built book (mdBook copies the tree to `book/record/`), and on the published site.
+    def rel(p): return "record/" + p
 
     L=["# Appendix · The Simulations\n",
     """> **Scope.** Everything on this page describes computations inside a **toy** discrete lattice. The

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-1-move/0117-dispersion-isotropy/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-1-move/0117-dispersion-isotropy/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0117 — Warp-1.7: the bench discovers `ω = c·k` blind, in five directions at once
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs` ·
+**Status:** **CONFIRMED (P0–P4, first run)** — see [`eval.md`](eval.md). The predictions below were
+committed in `f364fb1`, before the run for record (`f2f610b`).
+
+## Goal (one paragraph)
+
+Rung 1.6/1.6b pointed the discovery bench at the lattice light cone **along z only** and let
+`kinematics::power_law_fit` recover the exponent. #46&#x27;s dispersion task asks for the full statement:
+`ω = c·k`, discovered blind, **and isotropic**. This rung supplies the two missing halves. (a) The
+sweep runs on a **fully periodic 3-torus** (`mesh_3d_tetrahedral_grid_periodic`, seam-correct
+`unfolded_scalar_stars`) so there is no open boundary anywhere and plane waves along `[100]`, `[010]`,
+`[001]`, `[110]` and `[111]` are all legal fields — five directions, one operator. (b) The law is
+chosen by a new **answer-free model selector**, `kinematics::select_power_law`, which scores a fixed
+menu of candidate laws `{k⁰, k^½, k¹, k^{3/2}, k², k³}` by log-space `R²` and returns whichever the
+data prefers. Neither the selector nor `power_law_fit` has a parameter through which the expected
+exponent could enter — the gate reads the *result* and asserts on it. Alongside the discovery, two
+pre-registered honesty arms: the finite lattice&#x27;s **short-wavelength bend-down** (1.6&#x27;s lesson), and a
+**negative control** — the same pipeline run on the trivial `⋆ = I` operator, which must come back
+strongly *anisotropic*, or &quot;isotropic&quot; would be an unfalsifiable word.
+
+## Prior known physics, stated up front (R3 / #46&#x27;s &quot;validated re-derivation&quot; arm)
+
+This is a **discovery reframing of known numerics, not new physics**, and the probe made that
+sharper than expected. On this mesh the geometric ⋆ assigns `⋆₁ = 1` to every axis edge and
+**exactly `0`** to every face- and body-diagonal edge (`⋆₀ = 1` uniformly) — the 3-D version of
+rung 3.5&#x27;s &quot;`cot 90° = 0` kills the diagonals&quot;. So `Δ₀ = ⋆₀⁻¹D₀ᵀ⋆₁D₀` here **is** the textbook
+7-point simple-cubic stencil, whose symbol `λ(k) = Σ_a (2 − 2cos k_a)` is closed-form. The sweep
+therefore has an exact analytic answer key, and P0 checks the machinery against it. That is the
+point of this arm of #46: the bench must first be shown re-deriving physics whose answer is already
+known, blind, before any blind claim about something unknown is worth anything. What is *not*
+known in advance to the analysis path is the law itself — the code that turns `(|k|, ω)` into
+&quot;`ω ∝ k¹`, `R² = 0.9999`&quot; never receives it.
+
+## Firewall (R3)
+
+A **toy** DEC scalar wave on a tetrahedral 3-torus. `ω`, `k`, &quot;dispersion&quot;, &quot;light cone&quot;,
+&quot;lightlike&quot;, &quot;speed&quot;, &quot;isotropy&quot; name **numerical properties of the discrete operator**
+`Δ₀ = ⋆₀⁻¹D₀ᵀ⋆₁D₀` and of least-squares fits to its Rayleigh quotients — never a real photon, a real
+light cone, or a measurement of `c`. The **prediction-grade** quantities are the dimensionless,
+parameter-free **exponent** and the dimensionless **anisotropy ratio** (rung-4.4 criterion); the
+fitted coefficient is an *emergent lattice wave speed* in code units, reported but **not** claimed to
+be any physical constant. `c = 1` in code units only. Nothing here is a claim about nature.
+
+## Method (sketch)
+
+`geom::mesh::mesh_3d_tetrahedral_grid_periodic(64,64,64)` (262 144 vertices, 1 572 864 tets, unit
+spacing, no boundary) → `solve::bloch::unfolded_scalar_stars` with `Lattice::orthorhombic([64,64,64])`
+(minimum-image element assembly — raw glued coordinates are seam-corrupt on *every* axis of a
+3-torus, #177/#153-Stage-2) → for each direction `n ∈ {[100],[010],[001],[110],[111]}` and each
+`m = 1,2,…`, the exactly-commensurate plane wave `φ(x) = cos(k·x)` with `k = (2πm/64)·n`, and the
+Rayleigh quotient `λ = ⟨φ,Δ₀φ⟩/⟨φ,φ⟩` via `dec::operators::apply_laplacian_0_metric`, `ω = √λ` →
+`kinematics::{select_power_law, power_law_fit}` on `(|k|, ω)`.
+
+Windows (registered): **long-λ** `|k| ≤ K = 1.05` (which sits between `π/3` and the next `[100]`
+mode, so every direction gets ≥ 6 modes); **half** `|k| ≤ K/2 = 0.525` (≥ 3 modes in every
+direction); **full range** `|k| ≤ 2K = 2.10`. Anisotropy of the discovered speed is
+`A = (C_max − C_min)/C̄` over the five directions. Fully deterministic (pure f64, no RNG, no
+wall-clock). Probe: `core/uniforge/examples/dispersion_isotropy_probe.rs` (committed breadcrumb;
+also carries the `N ∈ {48,64,72}` ladder and a raw-vs-unfolded star arm not registered here).
+
+## Predictions (registered before the run)
+
+- **P0 (control — the bench is aimed at a valid operator with a known key).** Probed values in
+  brackets, all at `N = 64`.
+  - every probed mode has `λ ≥ 0`, so `ω` is real. *gate:* `min λ &gt; −1e-9`. *(probe: 9.63e-3.)*
+  - `⋆₀` is uniform: `max|⋆₀ − 1| &lt; 1e-12`. *(probe: 4.4e-16.)*
+  - `⋆₁ = 1` on **every** axis edge (`max|⋆₁ − 1| &lt; 1e-12`; probe 1.1e-16) and **exactly 0** on
+    **every** face- and body-diagonal edge (`max|⋆₁| &lt; 1e-14`; probe: identically `0.0`, over all
+    786 432 + 262 144 of them). *(8.14&#x27;s rule: the bound quantifies over the whole population.)*
+  - therefore the operator is the 7-point simple-cubic stencil:
+    `max|λ_measured − Σ_a(2 − 2cos k_a)| &lt; 1e-9` over every probed mode. *(probe: 8.23e-12; `λ`
+    ranges to ~4, so this is ~2e-12 relative — 7.0&#x27;s &quot;bound the residue relative to what it rides
+    on&quot;.)*
+  - the three axis directions, related by a cubic symmetry, agree to `&lt; 1e-9` relative.
+    *(probe: 7.44e-13.)*
+- **P1 (the discovery — headline, blind).** For **every** one of the five directions, on the long-λ
+  window, given only `(|k|, ω)`:
+  - `select_power_law` over the fixed menu `{0, ½, 1, 3/2, 2, 3}` returns the **linear** law `p = 1`,
+    and the data prefers it decisively: log-`R²` **margin over the runner-up &gt; 0.15**.
+    *(probe: winner `p=1` in all five, margins 0.2415–0.2463; runner-up always `p=½` at `R²≈0.754`.)*
+  - the free-exponent `power_law_fit` returns `|p − 1| &lt; 0.03` with `R² &gt; 0.9995`.
+    *(probe: `p ∈ [0.98372, 0.99270]`, `R² ≥ 0.9999060`.)*
+- **P2 (isotropy — the new arm).**
+  - a) the discovered speeds agree across the five directions: `A(K) &lt; 0.03`. *(probe: 0.017755,
+    `C ∈ [0.971669, 0.989030]`.)*
+  - b) and that residual disagreement is a **finite-`k` effect, not a leading-order cone defect** —
+    halving the window shrinks it: `A(K)/A(K/2) ∈ [2.0, 3.2]`. *(probe: 2.5811; `A(K/2)=0.006879`.
+    8.15&#x27;s k-scaling discriminator. The ratio is below the naive 4 because the fitted slope absorbs
+    part of the `k²` trend and the window&#x27;s lower edge does not move — that is why the band is
+    probed, not assumed.)*
+  - c) on the halved window the discovered speed sits within `0.02` of the code-unit key `c = 1` in
+    **every** direction: `max|1 − C| &lt; 0.02`. *(probe: 0.011964.)*
+- **P3 (honest lattice limit, R5 — pre-registered, a result and not a failure).** The finite lattice
+  **bends the cone down** at short wavelength. For **every** direction the full-range exponent is
+  below the long-λ exponent by a margin, and stays under 1: *gate:*
+  `p_full &lt; p_long − 0.008` and `0.90 &lt; p_full &lt; 1.00`.
+  *(probe: gaps 0.01474–0.04240; `p_full ∈ [0.94133, 0.97796]`.)*
+- **P4 (the isotropy detector has teeth — negative control).** Run the identical discovery pipeline
+  on the trivial `⋆ = I` operator (rung 1.5&#x27;s / #23&#x27;s anisotropic cone) and it must come back
+  **anisotropic**, and anisotropic in a *different way*:
+  - `A_I(K) &gt; 0.25`, i.e. at least `10×` the geometric ⋆&#x27;s. *(probe: 0.331910,
+    `C ∈ [1.943338, 2.662536]` — a factor 18.7 over P2a&#x27;s value.)*
+  - and its anisotropy does **not** shrink with the window: `A_I(K)/A_I(K/2) ∈ [0.8, 1.2]` — a
+    **leading-order** defect, exactly the alternative P2b rules out for the geometric ⋆.
+    *(probe: 0.9516.)*
+
+## What would falsify this
+
+If `select_power_law` returned anything but the linear law in any direction, or the free exponent
+left `1.00 ± 0.03`, the lattice wave would not be lightlike at long wavelength and the &quot;discovered
+light cone&quot; story fails. If `A(K) ≥ 0.03`, the cone is not isotropic at the registered resolution.
+If `A(K)/A(K/2)` came back near 1 instead of ~2.6, the residual anisotropy would be a genuine
+**leading-order** cone defect surviving the geometric ⋆ — a real negative, and the interesting one:
+it would say the isotropy of rung 1.5 does not survive to the discovered *law*. If `p_full ≥ p_long`
+in any direction the lattice would show no discretization signature, meaning the fit is measuring an
+artifact rather than the operator. And if the `⋆ = I` control came back *isotropic* (P4), the whole
+isotropy measurement would be vacuous — a detector that cannot fail is not a detector, and the rung
+would be withdrawn rather than reported.
+
+## Scope of the negatives / controls (registered)
+
+P4&#x27;s statement is about **this** mesh (the Kuhn 3-torus at `N = 64`) and **this** trivial star
+(`⋆₀ = ⋆₁ = 1`), on the two registered windows. P0&#x27;s &quot;`⋆₁ = 0` on every diagonal&quot; is a census of
+this mesh&#x27;s own unfolded geometric star and nothing wider. In particular, the exact zeros on 2/3 of
+the edges mean the operator is **blind to diagonal edges**; that is benign for the 0-form cone
+measured here, and 8.15 already showed a zero ⋆ opening a spurious null space in the 1-form sector —
+this rung makes **no** claim about 1-forms/photons on this mesh.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

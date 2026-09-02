@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-3-shield/0300-shield-imbalance-inertia/eval.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-3-shield/0300-shield-imbalance-inertia/eval.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0300 — Warp-3.0: the shield, the imbalance, and inertia — evaluation
+
+**Verdict:** CONFIRMED (R5/R10) · **Gate:** `uf3_shield_imbalance_gate` (green: yes) · **Commit:** `6db889c`
+
+## Result
+
+**The imbalance is real; it does not, by itself, change inertia.** A shield provably decouples its interior
+from the outside (the information imbalance), but in standard field theory the barrier is a potential /
+positive effective-mass² — it adds *nothing* to the interior equation of motion — so interior inertia is
+unchanged. The null names the extra ingredient &quot;gravity manipulation&quot; would require.
+
+| quantity | expected | measured | pass |
+|---|---|---|---|
+| P0 exterior control coupling (path not crossing shell) | `∈[0.7,1.4]` | **0.86×** | ✅ |
+| P1 interior coupling (path crossing shell) | `&lt; 0.3` | **2.0e-6×** | ✅ |
+| P2 interior EOM contribution `max\|V\|` (r&lt;6) | `= 0` | **0.0** (exact) | ✅ |
+| P2 interior packet displacement change | `&lt; 1e-4` | **1.2e-6** | ✅ |
+| P3 effective mass² at centre / wall | `≈0` / `&gt;0` | **0 / 40** | ✅ |
+
+The shield cuts the interior&#x27;s coupling to an external source by **~500,000×** while leaving a non-crossing
+exterior path essentially untouched (0.86×) — that is the imbalance, rigorously. Meanwhile the interior
+packet moves identically (Δ displacement 1.2e-6); the only shielded-vs-open field difference is the
+**reflected wall-wave** leaking inward at lattice speed (8.9e-6) — a change in the *signal*, not the
+inertia. Data: [`data/shield.csv`](data/shield.csv), [`data/inertia.csv`](data/inertia.csv). Figure:
+`core/viz gen_shield`.
+
+## What it rules in / out
+
+- **Rules in (provable):** a shield creates a genuine **information imbalance** — the interior sees ~10⁶×
+  less of an external source than an equivalent non-shielded path. Local ≠ external, operationally.
+- **Rules out (the honest null):** that imbalance does **not** reduce inertia under standard physics. The
+  barrier `V` multiplies `φ` (a potential / mass² term), never `φ̈` (the inertia). Inside the bubble
+  `V ≡ 0` exactly, so the interior equation of motion — and therefore the inertia — is unchanged. If
+  anything the *wall* is **more** inert (`m²_eff = V = 40 &gt; 0`), the opposite of &quot;less inertia inside.&quot;
+- **Method notes (R5/R6 honesty):** two registered specifics were corrected to test the intended claims on
+  a finite lattice — (i) the exterior control was moved far from the shell (a near-shell control is itself
+  attenuated); (ii) the P2 metric changed from field bit-identity to `V≡0` in the interior + displacement,
+  because the lattice&#x27;s numerical domain of dependence (~1 cell/step) lets the reflected wave reach the
+  interior over the run. Neither changes the physics conclusion.
+
+## Deferred / next — the fenced hypothesis (contested prior physics, NOT a derivation)
+
+The null says: to convert the imbalance into an inertia change you need an extra law tying mass to
+environmental coupling — **entropic inertia** (Mach / Verlinde / MiHsC). *If* one posited `m_eff ∝ 1/coupling`,
+this run&#x27;s measured interior coupling drop (×2.0e-6) would predict a ~5×10⁵-fold inertia reduction inside.
+That is a **hypothesis-consequence**, computed from the imbalance number, **not** something this toy
+derives or endorses. Building it as a modified stepper (`m_eff` field) is menu item 3.4 — explicitly
+speculative and fenced. The workable-physics result stands on its own: shield → imbalance → *no* inertia change.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

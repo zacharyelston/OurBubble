@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp · the graduation swing — blind Monte Carlo predicts nature's exponents</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  td.num{font-variant-numeric:tabular-nums;color:var(--green)} td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The graduation swing — blind Monte Carlo predicts nature's exponents</h1>
+  <p class="sub">A generic Wolff simulation with no exact-solution content. It nails the 2-D exponents
+     (validation), then predicts the 3-D ones — for a model with no closed form — matching real materials.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> A seeded, deterministic Wolff simulation of a <b>toy</b> Ising model;
+     universality-class membership shared with real materials. Not a claim the warp/DEC engine is a magnet;
+     no spacetime claim.</div>
+
+  <div class="panel">
+    <h2>Finite-size scaling — two slopes, two universality classes</h2>
+    <p class="q">Susceptibility χ = N⟨m²⟩ vs system size L, log–log. The slope is γ/ν. 2-D and 3-D give clearly
+       different slopes — the method resolves the dimensionality of the class from raw data.</p>
+    <canvas id="fss" width="1120" height="360"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:var(--cyan)"></span>2-D Ising (slope γ/ν → 1.75, exact)
+      <span class="sw" style="background:var(--red)"></span>3-D Ising (slope γ/ν → 1.97, no exact solution)
+    </div>
+    <div class="take" id="ftake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The prediction vs real materials</h2>
+    <p class="q">Exponents from the blind simulation, converted with the class ν, against values measured in
+       real critical systems. The 3-D column is a model with no answer key.</p>
+    <table class="disc" id="disc"><thead><tr><th>model</th><th>β (lattice)</th><th>γ (lattice)</th><th>real materials</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"fss2":[{"L":8,"chi":41.7034},{"L":16,"chi":139.2593},{"L":32,"chi":470.3095},{"L":64,"chi":1585.2420}],"fss3":[{"L":12,"chi":199.7484},{"L":16,"chi":345.0722},{"L":24,"chi":817.3085},{"L":32,"chi":1388.0249}],"exps":[{"model":"2-D Ising","gonu":"1.7501","bonu":"0.1253","beta":"0.125","gamma":"1.750","real":"quasi-2D antiferromagnets β≈0.12-0.13"},{"model":"3-D Ising","gonu":"1.9984","bonu":"0.5000","beta":"0.315","gamma":"1.259","real":"liquid-gas & uniaxial magnets β≈0.325 γ≈1.24"}],"source":{"commit":"45a1c7d"}};
+
+// ---- FSS log-log ----
+(function(){
+  const cv=document.getElementById("fss"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=54,padR=20,padT=16,padB=36;
+  const all=[...D.fss2,...D.fss3];
+  const lx=all.map(p=>Math.log10(p.L)), ly=all.map(p=>Math.log10(p.chi));
+  const xmin=Math.min(...lx),xmax=Math.max(...lx),ymin=Math.min(...ly),ymax=Math.max(...ly);
+  const X=v=>padL+(v-xmin)/(xmax-xmin)*(W-padL-padR);
+  const Y=v=>padT+(ymax-v)/(ymax-ymin)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let e=Math.ceil(xmin*10)/10;e<=xmax;e+=0.3){const x=X(e);g.strokeStyle="#141c27";g.beginPath();g.moveTo(x,padT);g.lineTo(x,H-padB);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="center";g.fillText("L="+Math.round(10**e),x,H-padB+13);}
+  g.fillStyle="#4b5c70";g.textAlign="left";g.fillText("log χ",padL,padT+2);g.textAlign="right";g.fillText("log L →",W-padR,H-padB+24);
+  const draw=(pts,col)=>{g.strokeStyle=col;g.lineWidth=2;g.beginPath();
+    pts.forEach((p,i)=>{const x=X(Math.log10(p.L)),y=Y(Math.log10(p.chi));i?g.lineTo(x,y):g.moveTo(x,y);});g.stroke();
+    pts.forEach(p=>{g.fillStyle=col;g.beginPath();g.arc(X(Math.log10(p.L)),Y(Math.log10(p.chi)),3.5,0,7);g.fill();});};
+  draw(D.fss2,"#06b6d4"); draw(D.fss3,"#ef4444");
+  const e2=D.exps.find(e=>e.model.startsWith("2")), e3=D.exps.find(e=>e.model.startsWith("3"));
+  document.getElementById("ftake").innerHTML =
+    `The 2-D line has slope <b>γ/ν = ${e2.gonu}</b> (the exact Onsager value 1.75 — validation), the 3-D line
+     <b>γ/ν = ${e3.gonu}</b> (the 3-D-Ising class, ~1.97). Two different slopes from the same generic
+     algorithm: the method reads the universality class off raw data, with no exact solution supplied.`;
+})();
+
+// ---- real-material table ----
+(function(){
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=D.exps.map(e=>`<tr><td>${e.model}</td><td class="num">${e.beta}</td><td class="num">${e.gamma}</td><td class="thy">${e.real}</td></tr>`).join("");
+  document.getElementById("dtake").innerHTML =
+    `The <b>3-D</b> exponents — <b>β ≈ ${D.exps.find(e=>e.model.startsWith("3")).beta}</b>,
+     <b>γ ≈ ${D.exps.find(e=>e.model.startsWith("3")).gamma}</b> — land within a few percent of the values
+     <i>measured</i> at the real liquid–gas critical point and in uniaxial magnets (β≈0.325, γ≈1.24), for a
+     model with <b>no closed-form solution</b>. A dimensionless number of nature, from a blind simulation —
+     the graduation swing. <b>Honest scope:</b> small-L corrections bias the estimates a few %; T_c and ν
+     (for the conversion) were supplied.`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_montecarlo</code> from
+   <code>lab/warp-5-universality/0501-montecarlo-prediction/data/</code> (gate <code>uf5_1_montecarlo_gate</code>,
+   commit <code>${D.source.commit}</code>). Seeded Wolff; self-contained.`;
+</script>
+</body>
+</html>

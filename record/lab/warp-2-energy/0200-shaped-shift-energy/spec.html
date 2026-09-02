@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-2-energy/0200-shaped-shift-energy/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-2-energy/0200-shaped-shift-energy/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0200 — Warp-2.0: the shaped shift&#x27;s energy structure (the tenet, tested on warp)
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf2_energy_structure_gate.rs` · **Status:** CONFIRMED — see [`eval.md`](eval.md)
+
+## Goal (one paragraph)
+
+Test the [genesis tenet](../../../GENESIS.md) — *only geometry, nothing added by hand* — on the core warp
+claim. Build a shaped shift `N = vs·f(r)·ẑ` on the lattice (a purely geometric deformation), read its
+energy off the purely-geometric extrinsic-curvature functional `16πρ = (trK)² − K_ijK^ij`, and check
+whether the discrete lattice reproduces the **independently known** Alcubierre energy structure with
+nothing tuned by hand. If it does, the tenet holds for warp; if the sign leaks or the torus smears, we
+have found the boundary of &quot;only geometry&quot; — a first-class negative (R5).
+
+## Firewall (R3)
+
+*Shift, energy, warp bubble, exotic* name structures of a **toy** lattice: `N` is a prescribed vector
+field; `16πρ` is the quadratic invariant of its gradients (the ADM/extrinsic-curvature energy of a chosen
+shift). No spacetime, no measurement, no device. c = G = 1; unit lattice spacing.
+
+## Predictions (registered before the run)
+
+**Prior physics (Alcubierre):** `ρ ≤ 0`, localized on the wall (∝ `f&#x27;²`), toroidal (∝ `sin²θ`).
+**Our hand-derivation:** feeding `N = vs·f(r)·ẑ` through the functional gives
+`16πρ = −½·vs²·f&#x27;(r)²·sin²θ`. The gate checks the discrete lattice against this:
+
+- **P0 (control — moving is free):** a *uniform* shift `N = (0,0,vs)` (no wall, `f ≡ 1`) costs **zero**
+  energy everywhere — *gate:* `max|16πρ_uniform| &lt; 1e-9`. (The exotic price is paid for *shaping*, not for
+  translating.)
+- **P1 (exotic / negative — the warp signature):** the shaped shift&#x27;s energy is **negative** wherever it
+  is significant — *gate:* over cells with `|16πρ| &gt; 1e-3·peak`, the negative fraction `≥ 0.98` **and** the
+  minimum `&lt; −1e-3` (with `vs=1`).
+- **P2 (wall-localized):** energy concentrates in the wall shell `|r−R| &lt; 2w`, not the flat interior
+  (`r &lt; R−2w`) or far exterior (`r &gt; R+2w`) — *gate:* `mean|16πρ|_wall ≥ 10 ×` each of
+  `mean|16πρ|_interior` and `mean|16πρ|_exterior`.
+- **P3 (toroidal):** within the wall shell the energy peaks at the **equator** (plane ⟂ travel, `|cosθ|`
+  small) and vanishes toward the **poles** (on the travel axis `z`) — *gate:*
+  `mean|16πρ|_equator ≥ 5 × mean|16πρ|_pole`, where equator = `|cosθ|&lt;0.3`, pole = `|cosθ|&gt;0.85`.
+
+## Method (sketch)
+
+`kinematics::Grid::new(NB=48)`, centre `c0 = 24`. Shift `N=(0,0, vs·f(r))`, `vs=1`,
+`f(r) = ½(1 − tanh((r−R)/w))`, `R=14`, `w=2.5` (inline top-hat — see the menu&#x27;s &quot;top-hat primitive&quot;).
+Energy per interior cell from `kinematics::eulerian_16pi_rho`. Classify each cell by radial band (r vs R)
+and, in the wall shell, by polar angle `cosθ = z_c/r`. Figures-of-merit: `neg_frac`, `min`, `peak`, the
+three band means, and the equator/pole ratio. Emits `data/energy_by_band.csv` and `data/energy_by_angle.csv`.
+Static (no time evolution) — this is an energy-*structure* measurement, kinematics only.
+
+## What would falsify this
+
+Any of: `neg_frac &lt; 0.98` or a positive minimum (sign leaked — not exotic); `wall/interior &lt; 10` (energy
+not wall-localized — the deformation isn&#x27;t paying at the wall); `equator/pole &lt; 5` (no torus — the
+`sin²θ` structure didn&#x27;t survive discretization). A uniform shift showing nonzero energy (P0 fails) would
+mean the functional charges for translation and the whole framing is wrong.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

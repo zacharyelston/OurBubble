@@ -1,0 +1,419 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>UniForge — double slit (DEC scalar wave via core API)</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0e13;color:#cbd5e1;font:14px/1.5 system-ui,sans-serif;overflow:hidden;}
+  #c{position:fixed;inset:0;display:block;}
+  #ui{position:fixed;left:14px;top:66px;background:rgba(20,26,36,.86);border:1px solid #2a3442;
+      border-radius:10px;padding:12px 14px;max-width:300px;max-height:80vh;overflow:auto;}
+  #ui h1{font-size:16px;font-weight:500;margin:0 0 6px;color:#e2e8f0;}
+  #ui p{margin:6px 0;color:#9fb0c3;}
+  .grp{margin:8px 0;border-top:1px solid #2a3442;padding-top:7px;}
+  .gl{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7c8ba0;margin-bottom:3px;}
+  label{display:flex;align-items:center;gap:7px;margin:5px 0;cursor:pointer;}
+  label.rng{display:block;}
+  input[type=range]{width:100%;vertical-align:middle;accent-color:#06b6d4;}
+  .val{color:#e2e8f0;font-variant-numeric:tabular-nums;}
+  button{background:#1e2733;color:#cbd5e1;border:1px solid #2a3442;border-radius:6px;padding:5px 10px;cursor:pointer;font:inherit;}
+  button:hover{background:#26313f;}
+  #read{font-size:12.5px;color:#9fb0c3;}
+  #read b{color:#e2e8f0;}
+  .tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;
+       background:#0d3320;color:#34d399;border:1px solid #166534;margin-bottom:6px;}
+  #status{font-size:11px;margin-top:6px;}
+  .conn{color:#34d399;} .disc{color:#f87171;} .snap{color:#fbbf24;}
+  #snapnote{font-size:11px;color:#7c8ba0;margin:5px 0 0;}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <h1>Double slit</h1>
+  <span class="tag">uniforge API</span>
+  <p>A plane wave hits a wall with two slits; the wavelets interfere and build
+     a fringe pattern on the <b>screen</b> (right edge).<br>
+     Physics computed by <b>uniforge</b> — the DEC scalar-wave equation
+     φ̈ = −c² Δ₀ φ. With a <code>/sim</code> server it streams live; with no server
+     the page replays the engine's own committed export
+     (<code>viz/doubleslit_data.js</code>).</p>
+  <p class="fire" style="border-left:3px solid #ef4444;padding:5px 9px;margin:8px 0;color:#9fb0c3;font-size:11.5px;line-height:1.5"><b style="color:#f87171">FIREWALL.</b> A toy DEC scalar wave — <i>slit, screen, fringe</i> name lattice features, never a claim about nature. Either way the browser computes no physics: it renders the engine's output — streamed over <code>/sim</code>, or read back from the snapshot <code>gen_doubleslit</code> exported from the same solver.</p>
+
+  <div class="grp"><span class="gl">The experiment</span>
+    <label class="rng">wavelength λ <span class="val" id="vl"></span><input type="range" id="lam" min="6" max="40" value="14"></label>
+    <label class="rng">slit separation d <span class="val" id="vd"></span><input type="range" id="sep" min="16" max="150" value="64"></label>
+    <label class="rng">slit width w <span class="val" id="vw"></span><input type="range" id="sw" min="3" max="28" value="8"></label>
+    <label><input type="checkbox" id="two" checked> two slits (off = one slit)</label>
+    <p id="snapnote">snapshot: sliders apply once a server connects.</p>
+  </div>
+
+  <div class="grp"><span class="gl">The mesh (snapshot)</span>
+    <label><input type="checkbox" id="repair"> mirror-repaired mesh (crossed diagonals)</label>
+    <p id="meshnote" style="font-size:11px;color:#7c8ba0;margin:4px 0 0;">
+      The default mesh's uniform cell diagonal breaks y-mirror symmetry — the pattern is
+      <b>~3.8× brighter on one side</b> of a symmetric scene (a lattice artifact, rung 3.5 / #252).
+      The repaired mesh alternates the diagonals: same scene, same solver, y-symmetric to machine
+      precision. Live <code>/sim</code> streams the default mesh only.</p>
+  </div>
+
+  <div class="grp"><span class="gl">Show</span>
+    <label><input type="checkbox" id="sf" checked> wavefield</label>
+    <label><input type="checkbox" id="si" checked> intensity on screen</label>
+    <label><input type="checkbox" id="sb" checked> barrier + screen lines</label>
+  </div>
+
+  <div class="grp"><span class="gl">Run</span>
+    <div style="display:flex;gap:8px;"><button id="pp">pause</button><button id="rs">reset</button></div>
+    <p id="read" style="margin-top:8px;"></p>
+  </div>
+
+  <div id="status" class="disc">⬤ connecting to core API…</div>
+  <p style="opacity:.65;font-size:11.5px;">Physics: uniforge <code>step_scalar_wave</code>, either
+     streamed over the <code>/sim</code> WebSocket API (port 4100, host taken from this page's own
+     URL) or replayed from the committed snapshot.<br>
+     All computation on the Rust server. Zero JS physics.</p>
+</div>
+<script src="./sim-client.js"></script>
+<script src="./doubleslit_data.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// Double-slit visualizer — renders DEC scalar-wave frames the uniforge engine
+// computed. Two sources, one renderer, zero physics in JavaScript:
+//   live     — frames streamed from a /sim server through the shared SMClient.
+//   snapshot — window.DOUBLESLIT, the engine's own export (gen_doubleslit),
+//              replayed when no server is reachable.
+// ═══════════════════════════════════════════════════════════════════════════
+(function(){
+  var cv=document.getElementById('c'), ctx=cv.getContext('2d');
+
+  // The committed snapshot (viz/doubleslit_data.js), or null if it was not loaded.
+  var SNAP = window.DOUBLESLIT || null;
+  // The rung-3.5 mirror-repaired arm (#252): same scene on the crossed-diagonal mesh.
+  var REPAIR = (SNAP && SNAP.repair) || null;
+
+  // Grid parameters (must match what we send to core, and what gen_doubleslit ran)
+  var W=200, H=140; // grid cells
+  var NV_W=W+1, NV_H=H+1; // vertices
+  var barrierX=Math.floor(W*0.32), screenX=W-12;
+  var P={lam:14, sep:64, sw:8, two:true, field:true, intensity:true, bars:true, running:true, repair:false};
+
+  // Snapshot dataset in view: the committed demo arm, or the rung-3.5 repaired arm.
+  // Grid geometry/stride/timing are shared (top-level SNAP fields); only frames + intensity swap.
+  function activeSnap(){ return (P.repair && REPAIR) ? REPAIR : SNAP; }
+
+  // What draw() reads: aliases onto the live buffers or the snapshot buffers.
+  var phi = new Float32Array(NV_W*NV_H);
+  var inten = new Float32Array(NV_H);
+  var frameNum = 0, simTime = 0;
+
+  // Live: phi arrives as a view onto the socket frame; intensity accumulates here.
+  var livePhi = new Float32Array(NV_W*NV_H);
+  var liveInten = new Float32Array(NV_H);
+
+  // Snapshot: one expanded field + the exported screen intensity.
+  var snapPhi = new Float32Array(NV_W*NV_H);
+  var snapInten = new Float32Array(NV_H);
+  var snapIdx = 0;
+
+  // 'snapshot' until a socket is open, and back to 'snapshot' when it closes.
+  var mode = 'snapshot';
+
+  // Image buffer
+  var img = ctx.createImageData(NV_W, NV_H);
+
+  function vi(x,y){ return x * NV_H + y; }
+
+  function wallVertices(){
+    var verts = [];
+    var cy = Math.floor(H/2);
+    for(var y=0; y<NV_H; y++){
+      for(var x=barrierX; x<=barrierX+1; x++){
+        if(P.two){
+          var s = Math.floor(P.sep/2);
+          if(Math.abs(y-(cy-s))<=P.sw/2) continue;
+          if(Math.abs(y-(cy+s))<=P.sw/2) continue;
+        } else {
+          if(Math.abs(y-cy)<=P.sw/2) continue;
+        }
+        verts.push(vi(x,y));
+      }
+    }
+    return verts;
+  }
+
+  function sourceVertices(){
+    var verts = [];
+    for(var y=0; y<NV_H; y++) { verts.push(vi(2,y)); verts.push(vi(3,y)); }
+    return verts;
+  }
+
+  function dampingVertices(){
+    var pairs = [];
+    var M = 12;
+    for(var x=0; x<NV_W; x++){
+      for(var y=0; y<NV_H; y++){
+        var dx=Math.min(x, W-x), dy=Math.min(y, H-y), e=Math.min(dx,dy);
+        if(e < M){
+          var c = (1 - e/M) * 0.15;
+          pairs.push([vi(x,y), c]);
+        }
+      }
+    }
+    return pairs;
+  }
+
+  // ── snapshot playback ─────────────────────────────────────────────────────
+  // The export is decimated by DOUBLESLIT.stride, so one exported sample stands for the
+  // stride×stride block of vertices it was taken from: fill that block with the sample
+  // itself (nearest neighbour, no interpolation — no value the engine did not compute).
+  function snapshotFrame(k){
+    var A = activeSnap();
+    var fr = A.frames[k], st = SNAP.stride || 1;
+    var fnx = SNAP.frame_nx, fny = SNAP.frame_ny;
+    for(var x=0; x<NV_W; x++){
+      var xi = Math.floor(x/st); if(xi > fnx-1) xi = fnx-1;
+      for(var y=0; y<NV_H; y++){
+        var yi = Math.floor(y/st); if(yi > fny-1) yi = fny-1;
+        snapPhi[vi(x,y)] = fr[xi*fny + yi];
+      }
+    }
+    frameNum = A.frame_indices[k];
+    simTime  = frameNum * SNAP.steps_per_frame * SNAP.dt;
+  }
+
+  // The exported screen intensity, exactly as measured (time-mean of φ² at x = W−12).
+  function snapshotIntensity(){
+    var A = activeSnap();
+    for(var y=0; y<NV_H; y++) snapInten[y] = y<A.screen_intensity.length ? A.screen_intensity[y] : 0;
+  }
+
+  // Replay loop: one exported frame every SNAP_MS, paced off the frame clock like the
+  // rest of the gallery (em.html, bubble_live.html) — smooth while visible, paused while
+  // the tab is hidden, and never rate-throttled the way a bare interval would be.
+  var SNAP_MS = 160, snapLast = 0;
+  function snapshotLoop(ts){
+    requestAnimationFrame(snapshotLoop);
+    if(mode !== 'snapshot' || !SNAP || !P.running) return;
+    if(ts - snapLast < SNAP_MS) return;
+    snapLast = ts;
+    snapshotFrame(snapIdx);
+    snapIdx = (snapIdx + 1) % activeSnap().frames.length;
+    draw();
+  }
+
+  // ── mode switching ────────────────────────────────────────────────────────
+  function setStatus(){
+    var el = document.getElementById('status');
+    if(mode === 'live'){ el.className = 'conn'; el.textContent = '⬤ connected to uniforge'; }
+    else if(SNAP){ el.className = 'snap'; el.textContent = '⬤ snapshot (viz/doubleslit_data.js)'; }
+    else { el.className = 'disc'; el.textContent = '⬤ disconnected — retrying…'; }
+  }
+
+  // The sliders reconfigure a *running* simulation only; in snapshot mode there is
+  // nothing to reconfigure, so they are disabled rather than faking a recomputation.
+  var LIVE_INPUTS = ['lam','sep','sw','two'];
+  function setLiveControls(live){
+    for(var i=0;i<LIVE_INPUTS.length;i++) document.getElementById(LIVE_INPUTS[i]).disabled = !live;
+    document.getElementById('snapnote').style.display = live ? 'none' : '';
+    // The mesh toggle is the OPPOSITE: a snapshot feature (live /sim streams the default mesh).
+    document.getElementById('repair').disabled = live || !REPAIR;
+  }
+
+  function enterSnapshot(){
+    mode = 'snapshot';
+    setStatus(); setLiveControls(false);
+    phi = snapPhi; inten = snapInten;
+    if(SNAP){ snapshotIntensity(); snapshotFrame(snapIdx); }
+    draw();
+  }
+
+  function enterLive(){
+    mode = 'live';
+    setStatus(); setLiveControls(true);
+    liveInten.fill(0);
+    phi = livePhi; inten = liveInten;
+  }
+
+  // ── the shared client (viz/sim-client.js) derives the host from location.hostname ──
+  var client = new SMClient({
+    onStatus: function(s){ if(s === 'connected') enterLive(); else if(mode === 'live' || !SNAP) enterSnapshot(); },
+    onError: function(m){ console.error('core:', m); },
+    onMesh: function(info){ if(info.n_vertices && info.n_vertices !== NV_W*NV_H)
+      console.warn('core mesh has', info.n_vertices, 'vertices, page expects', NV_W*NV_H); },
+    onReady: function(){ initSim(); },
+    onFrame: function(f){ takeFrame(f); draw(); }
+  });
+
+  function send(obj){ client.send(obj); }
+
+  function initSim(){
+    // 1. Init mesh + scalar solver
+    send({cmd:'init', mesh:{type:'grid2d', nx:W, ny:H}, c:1.0, dt:0.3,
+          solvers:['scalar_wave']});
+
+    // Wait for mesh_info, then set boundaries
+    setTimeout(function(){
+      // 2. Set wall
+      send({cmd:'set_wall', vertices: wallVertices()});
+      // 3. Set damping
+      send({cmd:'set_damping', vertices: dampingVertices()});
+      // 4. Set plane-wave source
+      send({cmd:'set_plane_wave_source', vertices: sourceVertices(),
+            wavelength: P.lam, amplitude: 1.0});
+      // 5. Set fps
+      send({cmd:'set', fps:30, steps_per_frame:2});
+
+      liveInten.fill(0);
+      updateRead();
+    }, 200);
+  }
+
+  function reconfigure(){
+    if(mode !== 'live') return;
+    send({cmd:'pause'});
+    send({cmd:'clear_boundaries'});
+    send({cmd:'reset'});
+    liveInten.fill(0);
+
+    setTimeout(function(){
+      send({cmd:'set_wall', vertices: wallVertices()});
+      send({cmd:'set_damping', vertices: dampingVertices()});
+      send({cmd:'set_plane_wave_source', vertices: sourceVertices(),
+            wavelength: P.lam, amplitude: 1.0});
+      send({cmd:'resume'});
+      updateRead();
+    }, 100);
+  }
+
+  // A live frame, already decoded by SMClient.parseFrame: {frame, time, fields}.
+  // Field id 0x00 is the scalar φ.
+  function takeFrame(f){
+    if(mode !== 'live') return;
+    frameNum = f.frame;
+    simTime  = f.time;
+    var v0 = f.fields[0x00];
+    if(v0 && v0.length === NV_W*NV_H){ livePhi = v0; phi = livePhi; }
+
+    // Accumulate intensity on screen (client-side, just display logic)
+    if(frameNum > 20){
+      for(var y=0; y<NV_H; y++){
+        var v = livePhi[vi(screenX, y)];
+        liveInten[y] += v*v;
+      }
+    }
+  }
+
+  function inBarrier(x,y){
+    if(x<barrierX || x>barrierX+1) return false;
+    var cy=Math.floor(H/2);
+    if(P.two){ var s=Math.floor(P.sep/2);
+      if(Math.abs(y-(cy-s))<=P.sw/2) return false;
+      if(Math.abs(y-(cy+s))<=P.sw/2) return false;
+    } else { if(Math.abs(y-cy)<=P.sw/2) return false; }
+    return true;
+  }
+
+  function draw(){
+    var d=img.data;
+    for(var x=0; x<NV_W; x++){
+      for(var y=0; y<NV_H; y++){
+        var py = NV_H-1-y; // flip y
+        var idx = py*NV_W+x;
+        var v = P.field ? phi[vi(x,y)] : 0;
+        var a = v/0.5; if(a>1)a=1; if(a<-1)a=-1;
+        var R,G,B;
+        if(a>=0){ R=11+a*219; G=14+a*156; B=19+a*11; }
+        else { var b=-a; R=11+b*9; G=14+b*106; B=19+b*201; }
+        var k=idx*4; d[k]=R; d[k+1]=G; d[k+2]=B; d[k+3]=255;
+      }
+    }
+    // barrier
+    if(P.bars){
+      for(var y=0;y<NV_H;y++){
+        for(var x=barrierX;x<=barrierX+1;x++){
+          if(inBarrier(x,y)){
+            var py=NV_H-1-y, k=(py*NV_W+x)*4;
+            d[k]=120;d[k+1]=132;d[k+2]=150;d[k+3]=255;
+          }
+        }
+      }
+    }
+    // intensity
+    if(P.intensity){
+      var mx=1e-9; for(var y=0;y<NV_H;y++) if(inten[y]>mx) mx=inten[y];
+      for(var y=0;y<NV_H;y++){
+        var f=inten[y]/mx, py=NV_H-1-y;
+        var len=Math.floor(f*40);
+        for(var x=screenX-len;x<=screenX;x++){
+          if(x<0) continue;
+          var k=(py*NV_W+x)*4, g=0.25+0.75*f;
+          d[k]=Math.min(255,d[k]+g*210);
+          d[k+1]=Math.min(255,d[k+1]+g*170);
+          d[k+2]=Math.min(255,d[k+2]+g*40);
+        }
+      }
+    }
+    // screen line
+    if(P.bars){ for(var y=0;y<NV_H;y++){ var k=((NV_H-1-y)*NV_W+screenX)*4; d[k]=150;d[k+1]=210;d[k+2]=235;d[k+3]=255; } }
+
+    cv.width=innerWidth; cv.height=innerHeight;
+    var sc=Math.min(cv.width/NV_W, cv.height/NV_H), dw=NV_W*sc, dh=NV_H*sc, ox=(cv.width-dw)/2, oy=(cv.height-dh)/2;
+    var off=draw._off||(draw._off=document.createElement('canvas')); off.width=NV_W; off.height=NV_H;
+    off.getContext('2d').putImageData(img,0,0);
+    ctx.imageSmoothingEnabled=true; ctx.fillStyle='#0b0e13'; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.drawImage(off,0,0,NV_W,NV_H,ox,oy,dw,dh);
+  }
+
+  function updateRead(){
+    document.getElementById('vl').textContent=P.lam;
+    document.getElementById('vd').textContent=P.two?P.sep:'—';
+    document.getElementById('vw').textContent=P.sw;
+    var L=screenX-barrierX, dy=P.two? (P.lam*L/P.sep):0, fres=P.two? (P.sep*P.sep)/(P.lam*L):0;
+    // The textbook Δy = λL/d is a CONTINUUM FAR-FIELD formula shown for comparison only — the
+    // lattice is under no obligation to match it (#250). At the defaults the geometry is near
+    // field (d²/λL ≈ 2.4) and the lattice measures Δy ≈ 19 px (gate uf3_5, rung 3.5).
+    document.getElementById('read').innerHTML = P.two
+      ? 'slit→screen L = '+L+' · textbook far-field formula <b>Δy = λL/d = '+dy.toFixed(0)+' px</b> — '
+        + 'a continuum comparison, not a prediction the lattice must match'
+        + (fres>1 ? ' (and d²/λL = '+fres.toFixed(1)+' &gt; 1: near field, the formula is out of its '
+        + 'regime here — at the defaults the lattice measures <b>Δy ≈ 19 px</b>, gate uf3_5)' : '')
+        + '.'
+      : 'one slit: a single broad diffraction lobe — <b>no fringes</b>.';
+  }
+
+  // ---- controls ----
+  function on(id,ev,fn){ document.getElementById(id).addEventListener(ev,fn); }
+  function slider(id,key){ on(id,'input',function(e){ P[key]=+e.target.value; reconfigure(); }); }
+  slider('lam','lam'); slider('sep','sep'); slider('sw','sw');
+  on('two','change',function(e){ P.two=e.target.checked; reconfigure(); });
+  on('sf','change',function(e){ P.field=e.target.checked; draw(); });
+  on('si','change',function(e){ P.intensity=e.target.checked; draw(); });
+  on('sb','change',function(e){ P.bars=e.target.checked; draw(); });
+  on('repair','change',function(e){
+    P.repair=e.target.checked;
+    if(mode === 'snapshot' && SNAP){ snapIdx=0; snapshotIntensity(); snapshotFrame(0); draw(); }
+  });
+  on('pp','click',function(e){
+    P.running=!P.running;
+    e.target.textContent=P.running?'pause':'play';
+    send({cmd: P.running?'resume':'pause'}); // live only; snapshotTick honours P.running
+  });
+  on('rs','click',function(){
+    send({cmd:'reset'}); liveInten.fill(0);
+    if(mode === 'live') reconfigure();
+    else { snapIdx=0; enterSnapshot(); }   // rewind the replay; the export itself is fixed
+  });
+  addEventListener('resize',draw);
+  updateRead();
+
+  // ── boot ── show the committed snapshot straight away, then try for a live server.
+  enterSnapshot();
+  if(SNAP) requestAnimationFrame(snapshotLoop);
+  client.connect();
+})();
+</script>
+<script src="./nav.js"></script>
+</body>
+</html>

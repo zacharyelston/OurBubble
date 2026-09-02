@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-1-move/0117-dispersion-isotropy/PROVENANCE.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-1-move/0117-dispersion-isotropy/PROVENANCE.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># Provenance — 0117 Warp-1.7: `ω = c·k` discovered blind, in five directions
+
+- **Registered (R1):** `f364fb14fbb234cf99bffeb936d4ef89b4986da7` — `spec.md` + the gate committed
+  **before** the run for record.
+- **Run for record:** `f2f610b5e48a9d650ddecaef18d56842c4ea2a48` — the gate green (P0–P4), `data/`
+  written by that run.
+- **Toolchain:** `rustc 1.97.1 (8bab26f4f 2026-07-14)`, `--release`.
+- **Gate:** `core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs` (14.5 s wall, tier-2).
+- **Regenerate:**
+  ```bash
+  cd core
+  cargo test -p uniforge --release --test uf1_7_dispersion_isotropy_gate -- --nocapture
+  # rewrites every file in this entry&#x27;s data/ and prints the scorecard above
+  cargo run  -p viz      --release --bin gen_discovery
+  # rebuilds figures/discovery.html from that data/
+  ```
+- **Probe (breadcrumb).** `core/uniforge/examples/dispersion_isotropy_probe.rs` — the committed
+  record of how the registered thresholds were chosen:
+  ```bash
+  cd core &amp;&amp; cargo run -p uniforge --release --example dispersion_isotropy_probe
+  ```
+  It carries an `N ∈ {48, 64, 72}` size ladder (showing the window-composition sensitivity of the
+  anisotropy `A` and the stability of the `A(K)/A(K/2)` ratio at `2.58`–`2.60`), a raw-vs-unfolded
+  star arm (seam corruption inflates apparent anisotropy ~1.4×, #177/1.6b — probed, not gated), and
+  the `⋆₁`-by-edge-class census that discovered the mechanism behind P0&#x27;s closed-form key.
+- **Determinism:** pure `f64`, no RNG, no wall-clock, no parallel reduction in the measured path —
+  identical numbers on every machine. The gate&#x27;s own elapsed-time print is the only wall-clock use
+  and enters no assertion.
+- **Reused, not re-derived:** `geom::mesh::mesh_3d_tetrahedral_grid_periodic`,
+  `solve::bloch::{unfolded_scalar_stars, Lattice}`, `dec::operators::apply_laplacian_0_metric`,
+  `kinematics::{select_power_law, fit_fixed_exponent, power_law_fit}`. The last two are new in the
+  register commit, with their own unit tests in `core/kinematics/src/discover.rs`.
+
+## Data files
+
+| file | what it holds |
+|---|---|
+| `dispersion_directions.csv` | the raw sweep: `direction, m, k, lambda, omega, phase_speed, symbol_lambda` — 63 modes over the five directions out to `\|k\| ≤ 2.10`. `symbol_lambda` is the closed-form 7-point key `Σ_a(2−2cos k_a)`, P0&#x27;s answer key. |
+| `discovery.csv` | per direction: window sizes, the **selected** candidate exponent and its `R²`, the selection margin over the runner-up, the free-fit `exponent`/`coefficient`/`r2` on the long-λ window, the full-range exponent, and the bend. |
+| `candidates.csv` | the model-selection scorecard: `direction, candidate_exponent, r2, selected` for all six candidates × five directions (30 rows) — the source of the figure&#x27;s candidate panel. |
+| `isotropy.csv` | four anisotropy measurements: geometric ⋆ and `⋆ = I`, each at the long and halved windows, with the `C` ranges. |
+| `answer_key.csv` | P0&#x27;s machinery residuals paired with the bound each was registered against. |
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

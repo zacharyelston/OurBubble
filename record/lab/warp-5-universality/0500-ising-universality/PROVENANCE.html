@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0500-ising-universality/PROVENANCE.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0500-ising-universality/PROVENANCE.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># Provenance — 0500 Warp-5.0: universality (Ising central charge and exponents)
+
+- **Registered (R1, pre-run):** commit `dc2c12e`. **Run-for-record:** commit `962dacb` (gate + data); this
+  eval + provenance land in the following commit.
+- **Toolchain:** `rustc 1.94.1 (e408947bf 2026-03-25)`.
+- **Regenerate:**
+  ```bash
+  cd core
+  cargo test --release -p uniforge --test uf5_universality_gate -- --nocapture   # prints recorded numbers
+  cargo run  --release -p viz --bin gen_universality                                # → the figure
+  ```
+- **Determinism:** pure f64, closed-form free-fermion spectrum (no wall-clock, no RNG, no Monte Carlo).
+  Critical transverse-field Ising chain, `h_c = 1`, dispersion `ε(k,h) = 2√(1+h²−2h cos k)`. Ground-state
+  energy (Neveu–Schwarz sector) `E₀(L) = −½ Σ_{m=0}^{L−1} ε(π(2m+1)/L, 1)`. Finite-size scaling fit
+  `E₀/L = e∞ + b/L² + d/L⁴` (3-param least squares) over `L ∈ {16,32,64,128,256,512}`; velocity
+  `v = ε(k→0)/k` measured at `k = 2π/8192`; central charge `c = −6b/(πv)`. `ν` from
+  `power_law_fit(|h−1|, v/ε(0,h))` over `Δh ∈ {0.2,…,0.005}`; `z` from `power_law_fit(L, ε(π/L,1))`.
+- **Data files:** `data/fss.csv` — per `L`: `E₀/L`; `data/nu.csv` — per `Δh`: correlation length `ξ`;
+  `data/exponents.csv` — `c, ν, z, e∞, v` (+ cited `β`) with their exact targets.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

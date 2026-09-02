@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-3-shield/0305-doubleslit-mirror/spec.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-3-shield/0305-doubleslit-mirror/spec.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0305 — warp-3.5: the double-slit demo&#x27;s mirror asymmetry — cause and two exact repairs
+
+**Chapter:** [`..`](..) · **Gate:** `core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs` ·
+**Status:** CONFIRMED (P0–P3; run `490f006`, see `eval.md`) · **Issues:** #252, #250 (under #137&#x27;s discipline)
+
+## Goal (one paragraph)
+
+The public double-slit demo (viz/doubleslit.html, the committed `gen_doubleslit` snapshot) shows a
+y-asymmetric &quot;two-slit&quot; pattern (#252: slit-lobe ratio ~3.4×) on a provably y-symmetric scene. The
+diagnosed cause is `mesh_2d_triangle_grid`&#x27;s uniform cell diagonal — a vertex stencil invariant
+under 180° rotation but not under y → −y — the documented `⋆=I` / #23 anisotropy family, showing up
+in a public-facing page. This rung measures the asymmetry as a registered observable at the demo&#x27;s
+exact parameters and tests two repairs against it: (i) the alternating-diagonal
+(`mesh_2d_triangle_grid_crossed`) mesh, whose y-mirror is an exact mesh automorphism for even H;
+(ii) the geometric 2-D cotan ⋆ (the #23 fix), under which every diagonal edge has weight exactly 0
+(both opposite angles are 90°) and the interior operator collapses to the y-symmetric 5-point
+stencil. It also measures the lattice fringe spacing against the page&#x27;s continuum formula
+Δy = λL/d (#250) so the page&#x27;s caveat carries a number rather than a disclaimer.
+
+## Firewall (R3)
+
+Toy DEC scalar wave `φ̈ = −c²Δ₀φ`, `Δ₀ = ⋆₀⁻¹D₀ᵀ⋆₁D₀`, on a 200×140 2-D triangle lattice with
+Dirichlet walls, sponge damping, and a pinned two-column plane-wave drive — the demo&#x27;s exact scene
+(`solve::scene::ScalarScene`). *Slit, screen, fringe, intensity* name lattice features and derived
+observables, never claims about nature. This is not a Maxwell/EM simulation; no claim about
+physical double-slit experiments is made. The continuum formula Δy = λL/d appears ONLY as the
+textbook comparison the page currently displays; the lattice is under no obligation to match it,
+and the measured mismatch is a statement about the demo&#x27;s regime, not about optics. c = 1
+throughout (demo units).
+
+## Predictions (registered before the run; every threshold probe-informed —
+`core/uniforge/examples/doubleslit_mirror_probe.rs`, probe commit on this branch)
+
+Metrics (all deterministic; no RNG anywhere in the pipeline):
+`asym(f) = Σ_y|f(y) − f(H−y)| / Σ_y|f(y)|` over the sponge-free band y ∈ [12, 128], evaluated on
+the final-frame field column at x ∈ {32, 66, 120, 188} and on the time-mean screen intensity;
+the slit-lobe ratio `max|φ|` in ±8 windows about the two slit centers (y = 38, 102) at x = 66;
+the wavefront arrival frame at the screen column (threshold as stated per arm); fringe centers =
+clustered local maxima of the screen intensity (gap ≤ 4 merges), and their mean spacing.
+
+- **P0 (control — the committed demo reproduces):** arm A (`mesh_2d_triangle_grid`, ⋆=I, 340
+  frames, threshold 0.01) has front-arrival frame **exactly 231** (matches the committed
+  snapshot), slit-lobe ratio ∈ **[3.0, 4.5]** (probed 3.758; #252&#x27;s 3.4× at its own frame/metric),
+  and screen-intensity asym &gt; **0.5** (probed 1.372). *If P0 fails the run is inconclusive.*
+- **P1 (the drop-in repair):** arm C (`mesh_2d_triangle_grid_crossed`, ⋆=I, same params) has
+  final-frame asym &lt; **1e-12** at ALL four stations and intensity asym &lt; **1e-12** (probed
+  ≤ 5.2e-15 / 4.4e-16 — machine); front-arrival frame ∈ **[200, 260]** (probed 228: the demo&#x27;s
+  timing survives); max screen intensity &gt; 0; and the fringe centers pair under y → 140−y to
+  within **1 cell** (probed exactly: 32↔108, 53↔87, 70 fixed).
+- **P2 (the #23 fix, scoped):** arm B (uniform-diagonal mesh, geometric 2-D ⋆, 800 frames,
+  threshold 0.002) has final-frame asym &lt; **1e-5** at all stations — 5+ orders below arm A but
+  registered ABOVE machine, because the open mesh&#x27;s boundary ⋆₀ is itself mirror-asymmetric
+  (probed corner defect 1.667e-1; measured field asym up to 1.4e-7). Arm D (crossed mesh +
+  geometric ⋆) has ⋆₀ mirror-defect **exactly 0** and asym &lt; **1e-12** (probed ≤ 4.3e-15). Scope:
+  these bounds are for the OPEN 200×140 mesh at the demo parameters; the geometric-⋆ statement
+  is about this mesh family, not all meshes.
+- **P3 (the #250 number):** on the repaired arm C, the measured mean fringe spacing ∈ **[17, 22]**
+  (probed 19.0) and differs from the page&#x27;s continuum Δy = λL/d = 27.125 by **&gt; 20%** relative
+  (probed 30%). Pre-registered direction: the lattice spacing is SMALLER than the formula&#x27;s. The
+  demo geometry&#x27;s Fresnel parameter d²/(λL) = 64²/(14·124) = 2.36 &gt; 1 (near field) — the far-field
+  formula is out of its validity regime at these parameters independent of any lattice effect;
+  the gate asserts this arithmetic as documentation.
+
+## Method (sketch)
+
+`geom::mesh_2d_triangle_grid` / `geom::mesh_2d_triangle_grid_crossed` (new builder, unit-tested
+mirror automorphism) × {⋆=I via `MeshWaveSolver::new`, geometric 2-D cotan ⋆ via
+`MeshWaveSolver::with_geometric_hodge`}; the scene is `solve::scene::ScalarScene` built with the
+demo&#x27;s exact wall/slit/damping/source constructors (copied verbatim from `gen_doubleslit`). The
+gate runs all four arms (~2 s total), prints a scorecard, writes `data/arms.csv` (per-arm metrics)
+and `data/screen_intensity.csv` (per-arm profiles), and asserts P0–P3.
+
+## What would falsify this
+
+P1: any station of the crossed-mesh arm showing asym above 1e-12 (the automorphism argument would
+be wrong or the builder broken), or the front arriving outside [200, 260] (the repair would not be
+drop-in). P2: arm B failing to beat 1e-5 (the diagonal-weight-zero collapse would not hold), or
+arm D failing 1e-12 (the ⋆₀-defect mechanism would be wrong). P3: the measured spacing landing
+within 20% of 27.125 (the page&#x27;s formula would be fine as displayed and #250 overstated).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

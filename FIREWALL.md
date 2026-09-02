@@ -45,10 +45,17 @@ None of them is being used to say something about the world outside the computer
 ## Why you can check us anyway
 
 A toy result can still be honest or dishonest, and the difference is whether you can go and look.
-So every number the book leans on is quoted from a record kept in another repository, the **UniForge**
-engine, pinned to one commit in [`record.lock`](record.lock) — and the appendix tells you which file
-carries it. The book cannot be built without that record present; a quotation that stopped being
-true stops the build and names itself.
+
+So every number the book leans on is quoted from a record made in another repository — the
+**UniForge** engine — pinned to one commit in [`record.lock`](record.lock). The appendix tells you
+which file carries each one, and those files travel with the book: [`record/`](record) is a verbatim
+copy of them, taken at that commit, so the link under a number opens the thing it came from. You do
+not have to take our word for which sentence an `eval.md` contains; the `eval.md` is right there.
+
+A copy could of course be a doctored copy, so it is checked from both sides. Every quotation is
+verified verbatim against `record/` on every build — one that stopped being true stops the build and
+names itself. And whenever the engine is reachable, `record/` is diffed against the real repository
+at the pinned commit, byte for byte, so the copy cannot quietly drift from the original.
 
 That is the whole guarantee, and it is worth being precise about its size. It says: *the book
 faithfully reports what the experiment recorded.* It does not say the experiment was about nature.

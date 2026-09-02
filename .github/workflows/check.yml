@@ -5,16 +5,15 @@
 # same pass and then publishes; splitting it this way keeps `main` from building the book twice.
 #
 # Runner: `ubuntu-latest`. This repository is public, so GitHub-hosted minutes are free — the
-# no-paid-runners rule that sends UniForge's CI to a self-hosted box does not bind here, and there
+# no-paid-runners rule that sends the engine's CI to a self-hosted box does not bind here, and there
 # is no self-hosted runner registered to this repository in any case.
 #
-# THE RECORD, AND THE ONE THING THIS CANNOT CHECK BY ITSELF. The book verifies its quotations against
-# the UniForge engine at the commit `record.lock` pins — and that repository is **private**. CI can
-# only fetch it if a `RECORD_TOKEN` secret exists (a fine-grained PAT with Contents:read on
-# UniForge). Without one, this workflow builds the book and checks everything that does not need the
-# record, and says loudly in the job summary that the record contract went unverified. It does not
-# pretend to have checked it. Set the secret — or make the record repository public — and the
-# quotation check becomes a merge gate with no other change.
+# WHAT IS AND IS NOT GATED HERE. The book's quotations are verified against `record/`, the committed
+# snapshot, so **the quotation gate always runs** — in CI, in a clean clone, on a machine that has
+# never seen the engine. What needs engine access is the second layer: proving that snapshot is
+# still the engine at the pinned commit, byte for byte. The engine is private, so that layer runs
+# only when a `RECORD_TOKEN` secret exists (a fine-grained PAT with Contents:read on it). Without
+# one the job says "snapshot integrity unverified" and carries on; it never implies it checked.
 
 name: check
 
@@ -49,41 +48,31 @@ jobs:
           curl -fsSL "$url" | tar -xz -C "$HOME/.local/bin"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Fetch the pinned record
+      - name: Fetch the pinned engine (for the snapshot-integrity layer)
         id: record
+        continue-on-error: true
         env:
           RECORD_TOKEN: ${{ secrets.RECORD_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "${RECORD_TOKEN:-}" ]; then
-            echo "have=false" >> "$GITHUB_OUTPUT"
-            echo "::warning title=Record contract unverified::RECORD_TOKEN is not set, so the private engine record could not be fetched. Quotations were NOT verified in this run."
+            echo "::warning title=Snapshot integrity unverified::RECORD_TOKEN is not set, so the private engine could not be fetched and record/ was not diffed against it. Quotations are still gated against the committed snapshot."
             {
-              echo "### :warning: the record contract was not verified"
+              echo "### :warning: snapshot integrity unverified — RECORD_TOKEN not set"
               echo
-              echo "\`RECORD_TOKEN\` is not set on this repository, so \`.record/\` could not be fetched."
-              echo "\`check_edition.py\` needs the record for almost everything it asserts and refuses to run"
-              echo "without it, so **it did not run at all** — no quotation, link, prose or exclusion check."
-              echo "What did run: the book built, and the generated appendix was confirmed to be in step with"
-              echo "\`edition.json\` and the reading order."
+              echo "The engine repository is private and no \`RECORD_TOKEN\` secret is configured, so"
+              echo "\`.record/\` could not be fetched and **\`record/\` was not diffed against the engine**."
               echo
-              echo "Set \`RECORD_TOKEN\` (a fine-grained PAT with Contents:read on the engine repository), or"
-              echo "make that repository public, and this becomes the full gate with no other change."
+              echo "**Still gated in this run:** all 35 declared quotations, verbatim against the committed"
+              echo "\`record/\` snapshot; the excluded-claims guard and its probes; the reading order, prose"
+              echo "rules, internal links and every record link in the built book."
+              echo
+              echo "**Not checked:** whether \`record/\` is still byte-for-byte the engine at the pinned commit."
+              echo "Add \`RECORD_TOKEN\` (a fine-grained PAT with Contents:read on the engine) to close that gap."
             } >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          echo "have=true" >> "$GITHUB_OUTPUT"
           tools/fetch_record.sh
 
-      - name: Tier 0 — check the edition against the record, build, check the built pages
-        if: steps.record.outputs.have == 'true'
+      - name: Tier 0 — integrity, quotations, build, rendered links
         run: tools/check.sh
-
-      - name: Build and check what does not need the record
-        if: steps.record.outputs.have != 'true'
-        run: |
-          set -euo pipefail
-          mdbook build
-          # The appendix is generated from edition.json and the reading order — no record needed — so
-          # its freshness is checkable here, and it is the check most likely to catch a stale commit.
-          git diff --exit-code -- chapters/the-simulations.md

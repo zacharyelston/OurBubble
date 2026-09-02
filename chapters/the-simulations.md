@@ -44,9 +44,9 @@ the chapters link to.
 
 **Standards and record this section rests on.**
 
-- [`book/LESSON_STANDARD.md`](../.record/book/LESSON_STANDARD.md)
-- [`FIREWALL.md`](../.record/FIREWALL.md)
-- [`PREDICTIONS.md`](../.record/PREDICTIONS.md)
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
+- [`FIREWALL.md`](record/FIREWALL.md)
+- [`PREDICTIONS.md`](record/PREDICTIONS.md)
 
 **Numbers.** None. This section's chapter carries no quoted measurement.
 
@@ -87,21 +87,21 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
-- [`viz/synthesis-slow-ramp.html`](../.record/viz/synthesis-slow-ramp.html)
-- [`viz/synthesis.html`](../.record/viz/synthesis.html)
+- [`viz/synthesis-slow-ramp.html`](record/viz/synthesis-slow-ramp.html)
+- [`viz/synthesis.html`](record/viz/synthesis.html)
 
 **Standards and record this section rests on.**
 
-- [`book/chapters/00-the-object/chapter.md`](../.record/book/chapters/00-the-object/chapter.md)
-- [`book/chapters/README.md`](../.record/book/chapters/README.md)
+- [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
+- [`book/chapters/README.md`](record/book/chapters/README.md)
 
 **Numbers the narrative may quote.**
 
 | value | what it is | read from |
 |---|---|---|
-| `70.5288°` | the angle between two faces of one tetrahedron, meeting along an edge | [`book/chapters/00-the-object/chapter.md`](../.record/book/chapters/00-the-object/chapter.md) |
-| `5.1043` | how many such tetrahedra it would take to close a full turn around that edge — not a whole number | [`book/chapters/00-the-object/chapter.md`](../.record/book/chapters/00-the-object/chapter.md) |
-| `7.3561°` | the wedge left over once five are packed in: what no sixth tetrahedron can fill | [`book/chapters/00-the-object/chapter.md`](../.record/book/chapters/00-the-object/chapter.md) |
+| `70.5288°` | the angle between two faces of one tetrahedron, meeting along an edge | [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md) |
+| `5.1043` | how many such tetrahedra it would take to close a full turn around that edge — not a whole number | [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md) |
+| `7.3561°` | the wedge left over once five are packed in: what no sixth tetrahedron can fill | [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -126,32 +126,32 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
-- [`lab/warp-1-move/0115-lattice-matched-isotropy`](../.record/lab/warp-1-move/0115-lattice-matched-isotropy)
-- [`lab/warp-1-move/0117-dispersion-isotropy`](../.record/lab/warp-1-move/0117-dispersion-isotropy)
-- [`lab/warp-3-shield/0305-doubleslit-mirror`](../.record/lab/warp-3-shield/0305-doubleslit-mirror)
+- [`lab/warp-1-move/0115-lattice-matched-isotropy`](record/lab/warp-1-move/0115-lattice-matched-isotropy)
+- [`lab/warp-1-move/0117-dispersion-isotropy`](record/lab/warp-1-move/0117-dispersion-isotropy)
+- [`lab/warp-3-shield/0305-doubleslit-mirror`](record/lab/warp-3-shield/0305-doubleslit-mirror)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf1_5_lattice_matched_gate.rs`](../.record/core/uniforge/tests/uf1_5_lattice_matched_gate.rs)
-- [`core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs`](../.record/core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs)
-- [`core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs`](../.record/core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs)
+- [`core/uniforge/tests/uf1_5_lattice_matched_gate.rs`](record/core/uniforge/tests/uf1_5_lattice_matched_gate.rs)
+- [`core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs`](record/core/uniforge/tests/uf1_7_dispersion_isotropy_gate.rs)
+- [`core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs`](record/core/uniforge/tests/uf3_5_doubleslit_mirror_gate.rs)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
-- [`lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html`](../.record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)
-- [`lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html`](../.record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)
+- [`lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html`](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)
+- [`lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html`](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)
 
 **Numbers the narrative may quote.**
 
 | value | read from |
 |---|---|
-| `22.4%` | [`book/chapters/01-the-light-cone/chapter.md`](../.record/book/chapters/01-the-light-cone/chapter.md) |
-| `2.2%` | [`book/chapters/01-the-light-cone/chapter.md`](../.record/book/chapters/01-the-light-cone/chapter.md) |
-| `10.2` | [`book/chapters/01-the-light-cone/chapter.md`](../.record/book/chapters/01-the-light-cone/chapter.md) |
-| `1.00 ± 0.016` | [`book/chapters/01-the-light-cone/chapter.md`](../.record/book/chapters/01-the-light-cone/chapter.md) |
-| `33.2%` | [`book/chapters/01-the-light-cone/chapter.md`](../.record/book/chapters/01-the-light-cone/chapter.md) |
-| `3.8×` | [`book/chapters/03-the-shield/chapter.md`](../.record/book/chapters/03-the-shield/chapter.md) |
-| `5×10⁻¹⁵` | [`book/chapters/03-the-shield/chapter.md`](../.record/book/chapters/03-the-shield/chapter.md) |
+| `22.4%` | [`book/chapters/01-the-light-cone/chapter.md`](record/book/chapters/01-the-light-cone/chapter.md) |
+| `2.2%` | [`book/chapters/01-the-light-cone/chapter.md`](record/book/chapters/01-the-light-cone/chapter.md) |
+| `10.2` | [`book/chapters/01-the-light-cone/chapter.md`](record/book/chapters/01-the-light-cone/chapter.md) |
+| `1.00 ± 0.016` | [`book/chapters/01-the-light-cone/chapter.md`](record/book/chapters/01-the-light-cone/chapter.md) |
+| `33.2%` | [`book/chapters/01-the-light-cone/chapter.md`](record/book/chapters/01-the-light-cone/chapter.md) |
+| `3.8×` | [`book/chapters/03-the-shield/chapter.md`](record/book/chapters/03-the-shield/chapter.md) |
+| `5×10⁻¹⁵` | [`book/chapters/03-the-shield/chapter.md`](record/book/chapters/03-the-shield/chapter.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -177,23 +177,23 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
-- [`lab/warp-2-energy/0200-shaped-shift-energy`](../.record/lab/warp-2-energy/0200-shaped-shift-energy)
+- [`lab/warp-2-energy/0200-shaped-shift-energy`](record/lab/warp-2-energy/0200-shaped-shift-energy)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf2_energy_structure_gate.rs`](../.record/core/uniforge/tests/uf2_energy_structure_gate.rs)
+- [`core/uniforge/tests/uf2_energy_structure_gate.rs`](record/core/uniforge/tests/uf2_energy_structure_gate.rs)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
-- [`lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html`](../.record/lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html)
+- [`lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html`](record/lab/warp-2-energy/0200-shaped-shift-energy/figures/energy_structure.html)
 
 **Numbers the narrative may quote.**
 
 | value | read from |
 |---|---|
-| `336×` | [`book/chapters/02-the-price-of-warp/chapter.md`](../.record/book/chapters/02-the-price-of-warp/chapter.md) |
-| `1360×` | [`book/chapters/02-the-price-of-warp/chapter.md`](../.record/book/chapters/02-the-price-of-warp/chapter.md) |
-| `6.1×` | [`book/chapters/02-the-price-of-warp/chapter.md`](../.record/book/chapters/02-the-price-of-warp/chapter.md) |
+| `336×` | [`book/chapters/02-the-price-of-warp/chapter.md`](record/book/chapters/02-the-price-of-warp/chapter.md) |
+| `1360×` | [`book/chapters/02-the-price-of-warp/chapter.md`](record/book/chapters/02-the-price-of-warp/chapter.md) |
+| `6.1×` | [`book/chapters/02-the-price-of-warp/chapter.md`](record/book/chapters/02-the-price-of-warp/chapter.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -218,25 +218,25 @@ cargo run  --release -p viz     --bin gen_energy
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
-- [`lab/warp-3-shield/0300-shield-imbalance-inertia`](../.record/lab/warp-3-shield/0300-shield-imbalance-inertia)
-- [`lab/warp-3-shield/0304-four-source-null`](../.record/lab/warp-3-shield/0304-four-source-null)
+- [`lab/warp-3-shield/0300-shield-imbalance-inertia`](record/lab/warp-3-shield/0300-shield-imbalance-inertia)
+- [`lab/warp-3-shield/0304-four-source-null`](record/lab/warp-3-shield/0304-four-source-null)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf3_shield_imbalance_gate.rs`](../.record/core/uniforge/tests/uf3_shield_imbalance_gate.rs)
-- [`core/uniforge/tests/uf3_4_four_source_null_gate.rs`](../.record/core/uniforge/tests/uf3_4_four_source_null_gate.rs)
+- [`core/uniforge/tests/uf3_shield_imbalance_gate.rs`](record/core/uniforge/tests/uf3_shield_imbalance_gate.rs)
+- [`core/uniforge/tests/uf3_4_four_source_null_gate.rs`](record/core/uniforge/tests/uf3_4_four_source_null_gate.rs)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
-- [`lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html`](../.record/lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html)
-- [`lab/warp-3-shield/0304-four-source-null/figures/null.html`](../.record/lab/warp-3-shield/0304-four-source-null/figures/null.html)
+- [`lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html`](record/lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html)
+- [`lab/warp-3-shield/0304-four-source-null/figures/null.html`](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)
 
 **Numbers the narrative may quote.**
 
 | value | read from |
 |---|---|
-| `2.0×10⁻⁶` | [`book/chapters/03-the-shield/chapter.md`](../.record/book/chapters/03-the-shield/chapter.md) |
-| `0.86` | [`book/chapters/03-the-shield/chapter.md`](../.record/book/chapters/03-the-shield/chapter.md) |
+| `2.0×10⁻⁶` | [`book/chapters/03-the-shield/chapter.md`](record/book/chapters/03-the-shield/chapter.md) |
+| `0.86` | [`book/chapters/03-the-shield/chapter.md`](record/book/chapters/03-the-shield/chapter.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -263,28 +263,28 @@ cargo run  --release -p viz     --bin gen_null
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
-- [`lab/warp-4-vacuum/0400-casimir-negative-energy`](../.record/lab/warp-4-vacuum/0400-casimir-negative-energy)
-- [`lab/warp-4-vacuum/0402-automated-bench`](../.record/lab/warp-4-vacuum/0402-automated-bench)
+- [`lab/warp-4-vacuum/0400-casimir-negative-energy`](record/lab/warp-4-vacuum/0400-casimir-negative-energy)
+- [`lab/warp-4-vacuum/0402-automated-bench`](record/lab/warp-4-vacuum/0402-automated-bench)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf4_casimir_energy_gate.rs`](../.record/core/uniforge/tests/uf4_casimir_energy_gate.rs)
-- [`core/uniforge/tests/uf4_casimir_force_gate.rs`](../.record/core/uniforge/tests/uf4_casimir_force_gate.rs)
-- [`core/uniforge/tests/uf4_automated_bench_gate.rs`](../.record/core/uniforge/tests/uf4_automated_bench_gate.rs)
+- [`core/uniforge/tests/uf4_casimir_energy_gate.rs`](record/core/uniforge/tests/uf4_casimir_energy_gate.rs)
+- [`core/uniforge/tests/uf4_casimir_force_gate.rs`](record/core/uniforge/tests/uf4_casimir_force_gate.rs)
+- [`core/uniforge/tests/uf4_automated_bench_gate.rs`](record/core/uniforge/tests/uf4_automated_bench_gate.rs)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
-- [`lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html`](../.record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)
+- [`lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html`](record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)
 
 **Numbers the narrative may quote.**
 
 | value | read from |
 |---|---|
-| `−0.13099` | [`book/chapters/04-the-vacuum/chapter.md`](../.record/book/chapters/04-the-vacuum/chapter.md) |
-| `−π/24 = −0.13090` | [`book/chapters/04-the-vacuum/chapter.md`](../.record/book/chapters/04-the-vacuum/chapter.md) |
-| `0.07%` | [`book/chapters/04-the-vacuum/chapter.md`](../.record/book/chapters/04-the-vacuum/chapter.md) |
-| `−0.9997` | [`book/chapters/04-the-vacuum/chapter.md`](../.record/book/chapters/04-the-vacuum/chapter.md) |
-| `−2.007` | [`book/chapters/04-the-vacuum/chapter.md`](../.record/book/chapters/04-the-vacuum/chapter.md) |
+| `−0.13099` | [`book/chapters/04-the-vacuum/chapter.md`](record/book/chapters/04-the-vacuum/chapter.md) |
+| `−π/24 = −0.13090` | [`book/chapters/04-the-vacuum/chapter.md`](record/book/chapters/04-the-vacuum/chapter.md) |
+| `0.07%` | [`book/chapters/04-the-vacuum/chapter.md`](record/book/chapters/04-the-vacuum/chapter.md) |
+| `−0.9997` | [`book/chapters/04-the-vacuum/chapter.md`](record/book/chapters/04-the-vacuum/chapter.md) |
+| `−2.007` | [`book/chapters/04-the-vacuum/chapter.md`](record/book/chapters/04-the-vacuum/chapter.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -313,40 +313,40 @@ cargo run  --release -p viz     --bin gen_casimir
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
-- [`lab/warp-5-universality/0500-ising-universality`](../.record/lab/warp-5-universality/0500-ising-universality)
-- [`lab/warp-5-universality/0501-montecarlo-prediction`](../.record/lab/warp-5-universality/0501-montecarlo-prediction)
-- [`lab/warp-5-universality/0502-self-contained`](../.record/lab/warp-5-universality/0502-self-contained)
-- [`lab/warp-5-universality/0503-blind-3d`](../.record/lab/warp-5-universality/0503-blind-3d)
-- [`lab/warp-5-universality/0509-bond-locator-reprocess`](../.record/lab/warp-5-universality/0509-bond-locator-reprocess)
-- [`lab/warp-5-universality/0510-site-locator-reprocess`](../.record/lab/warp-5-universality/0510-site-locator-reprocess)
+- [`lab/warp-5-universality/0500-ising-universality`](record/lab/warp-5-universality/0500-ising-universality)
+- [`lab/warp-5-universality/0501-montecarlo-prediction`](record/lab/warp-5-universality/0501-montecarlo-prediction)
+- [`lab/warp-5-universality/0502-self-contained`](record/lab/warp-5-universality/0502-self-contained)
+- [`lab/warp-5-universality/0503-blind-3d`](record/lab/warp-5-universality/0503-blind-3d)
+- [`lab/warp-5-universality/0509-bond-locator-reprocess`](record/lab/warp-5-universality/0509-bond-locator-reprocess)
+- [`lab/warp-5-universality/0510-site-locator-reprocess`](record/lab/warp-5-universality/0510-site-locator-reprocess)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf5_universality_gate.rs`](../.record/core/uniforge/tests/uf5_universality_gate.rs)
-- [`core/uniforge/tests/uf5_3_blind3d_gate.rs`](../.record/core/uniforge/tests/uf5_3_blind3d_gate.rs)
-- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](../.record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs)
-- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](../.record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs)
+- [`core/uniforge/tests/uf5_universality_gate.rs`](record/core/uniforge/tests/uf5_universality_gate.rs)
+- [`core/uniforge/tests/uf5_3_blind3d_gate.rs`](record/core/uniforge/tests/uf5_3_blind3d_gate.rs)
+- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs)
+- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
-- [`lab/warp-5-universality/0500-ising-universality/figures/universality.html`](../.record/lab/warp-5-universality/0500-ising-universality/figures/universality.html)
+- [`lab/warp-5-universality/0500-ising-universality/figures/universality.html`](record/lab/warp-5-universality/0500-ising-universality/figures/universality.html)
 
 **Numbers the narrative may quote.**
 
 | value | read from |
 |---|---|
-| `0.4999999` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `1.000000` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `0.9996` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `0.315` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `1.259` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `0.325` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `1.24` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `T_c = 4.5099` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `4.5115` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `0.036%` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `0.630` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
-| `0.766` | [`book/chapters/05-universality/chapter.md`](../.record/book/chapters/05-universality/chapter.md) |
+| `0.4999999` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `1.000000` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `0.9996` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `0.315` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `1.259` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `0.325` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `1.24` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `T_c = 4.5099` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `4.5115` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `0.036%` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `0.630` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `0.766` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -373,23 +373,23 @@ The chapter guards the vocabulary it actually uses — cavity, resonance, materi
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
-- [`lab/dna-thz/0001-dna-permittivity-shift-law`](../.record/lab/dna-thz/0001-dna-permittivity-shift-law)
+- [`lab/dna-thz/0001-dna-permittivity-shift-law`](record/lab/dna-thz/0001-dna-permittivity-shift-law)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
-- [`core/uniforge/tests/uf6_1_thz_shift_law_gate.rs`](../.record/core/uniforge/tests/uf6_1_thz_shift_law_gate.rs)
+- [`core/uniforge/tests/uf6_1_thz_shift_law_gate.rs`](record/core/uniforge/tests/uf6_1_thz_shift_law_gate.rs)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
-- [`lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html`](../.record/lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html)
+- [`lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html`](record/lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html)
 
 **Numbers the narrative may quote.**
 
 | value | read from |
 |---|---|
-| `p = −0.2753` | [`book/chapters/06-dna-thz/chapter.md`](../.record/book/chapters/06-dna-thz/chapter.md) |
-| `R² = 0.9774` | [`book/chapters/06-dna-thz/chapter.md`](../.record/book/chapters/06-dna-thz/chapter.md) |
-| `p = −1/2` | [`book/chapters/06-dna-thz/chapter.md`](../.record/book/chapters/06-dna-thz/chapter.md) |
+| `p = −0.2753` | [`book/chapters/06-dna-thz/chapter.md`](record/book/chapters/06-dna-thz/chapter.md) |
+| `R² = 0.9774` | [`book/chapters/06-dna-thz/chapter.md`](record/book/chapters/06-dna-thz/chapter.md) |
+| `p = −1/2` | [`book/chapters/06-dna-thz/chapter.md`](record/book/chapters/06-dna-thz/chapter.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -409,16 +409,15 @@ cargo run  --release -p viz     --bin gen_shift_law
 
 **Standards and record this section rests on.**
 
-- [`PREDICTIONS.md`](../.record/PREDICTIONS.md)
-- [`book/LESSON_STANDARD.md`](../.record/book/LESSON_STANDARD.md)
-- [`docs/DEMOS.md`](../.record/docs/DEMOS.md)
+- [`PREDICTIONS.md`](record/PREDICTIONS.md)
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
+- [`docs/DEMOS.md`](record/docs/DEMOS.md)
 
 **Numbers.** None. This section's chapter carries no quoted measurement.
 
 **Regenerate.** From this repository's root:
 
 ```sh
-tools/fetch_record.sh
 python3 check_edition.py
 mdbook build
 python3 check_edition.py --rendered

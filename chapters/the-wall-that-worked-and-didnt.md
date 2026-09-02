@@ -55,7 +55,7 @@ have built a machine that damps everything, and the isolation figure would have 
 So: a real, local, measured imbalance. The inside of the room genuinely does not know what is going on
 outside.
 
-**[Open the data-true shield figure](../.record/lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html)**
+**[Open the data-true shield figure](record/lab/warp-3-shield/0300-shield-imbalance-inertia/figures/shield.html)**
 
 ## Question two: no, and not marginally
 
@@ -102,7 +102,7 @@ The energies add. You can cancel a field at a point, and you can cancel it on a 
 free-space volume where everything is zero is not something you can build out of sources aimed at it
 from outside — and the reason is structural rather than a matter of trying harder.
 
-**[Open the data-true null figure](../.record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
+**[Open the data-true null figure](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
 
 Two chapters, three negatives, and the barrier from
 [the bubble and its bill](the-bubble-and-its-bill.md) still standing. This is the point in a project

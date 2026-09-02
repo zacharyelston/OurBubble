@@ -68,7 +68,7 @@ the exact answer is **−π/24 = −0.13090** — a match to **0.07%**.
 Nobody typed π into the fitter. Nobody typed the exponent in. The analysis was done by the harness,
 not by a person hoping for a particular answer, which is the only reason the agreement means anything.
 
-**[Open the data-true Casimir figure](../.record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)**
+**[Open the data-true Casimir figure](record/lab/warp-4-vacuum/0400-casimir-negative-energy/figures/casimir.html)**
 
 ## Two things this does not mean
 

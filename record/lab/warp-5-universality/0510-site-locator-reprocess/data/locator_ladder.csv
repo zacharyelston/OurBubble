@@ -1,0 +1,12 @@
+family,label,p,d_f,sigma_df,smax_a,smax_b,smax_c,smax_d,smax_e
+stella_site,5.6-located,0.174453,2.43793,0.01956,425.955,873.613,2360.189,4730.762,
+stella_site,5.6-registered-constant,0.175200,2.52498,0.01932,441.977,918.821,2558.815,5288.156,
+stella_site,per-batch-extrap,0.174369,2.42851,0.02046,424.423,868.367,2343.226,4670.254,
+stella_site,extrap-minus-delta,0.174311,2.42190,0.01935,423.550,864.671,2329.421,4628.531,
+stella_site,extrap (5.8 locator),0.174911,2.49050,0.02197,435.960,901.428,2479.899,5064.451,
+stella_site,extrap-plus-delta,0.175511,2.55795,0.01737,449.407,939.690,2637.844,5536.880,
+triangular,exact key p=1/2 (0 loc err),0.500000,1.89613,0.00722,239.204,406.485,890.489,1522.326,3311.239
+triangular,exact key minus delta,0.495000,1.83392,,,,,,
+triangular,exact key plus delta,0.505000,1.93692,,,,,,
+fcc_site,published key (0 loc err),0.1992365,2.50814,0.01334,486.861,1032.668,2838.772,5878.735,
+fcc_site,extrap (5.8 locator),0.1988483,2.46954,,,,,,

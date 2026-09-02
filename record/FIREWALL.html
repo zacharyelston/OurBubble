@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>FIREWALL.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>FIREWALL.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../index.html">Our Bubble</a>.</div><pre># FIREWALL — scope of claims
+
+**StellaMaxCore is a computational electromagnetism library.** It solves
+Maxwell&#x27;s equations with Discrete Exterior Calculus on tetrahedral
+simplicial complexes. That is the entire claim.
+
+- The terms *photon, charge, flux quantum, stella-octangula* name features
+  of the discretization and its geometry. They are standard EM / lattice
+  vocabulary, used literally for the solver — not metaphysical claims.
+- **&quot;It is Maxwell&quot;** means: the DEC operators reproduce the Maxwell /
+  wave operator and dispersion on the lattice, validated in `tests/`. It
+  does **not** assert anything about a theory of nature.
+- **&quot;Faster&quot;** is a *performance hypothesis* about this solver vs a
+  traditional grid (FDTD) solver. It is **not demonstrated in this crate
+  yet** — there is no benchmark-vs-FDTD here. Do not claim &quot;faster&quot; until
+  that benchmark (README Roadmap #1) is run with matched accuracy.
+- **`quaternion_link` / `weyl_scale`** are connection *primitives* — the edge
+  link generalized to `ℍ* = ℝ₊ × SU(2)` (scale × spinor) and the Weyl-scale
+  sector&#x27;s dynamics. They are in core only because `quaternion_link` is a
+  *validated strict superset of the Maxwell connection* (the U(1) sub-case
+  reproduces `compute_d_a` to machine precision) — engine, not theory. The
+  *research* that uses them (localization-is-curvature, scale-doesn&#x27;t-self-
+  bind, pair+channel binding) stays in the parent project, firewalled.
+
+The **legacy** exploratory research built on this engine in the parent
+`stellamax` project (lattice Abelian–Higgs, binder searches,
+effective-medium &quot;warp/polarity&quot; studies, any constant-derivation) stays in
+that read-only repo and carried its own firewall there.
+
+**One research arc lives here by design** (the &quot;clean break&quot;): the
+**Above-the-stella** higher-dimensional program (`docs/ABOVE_THE_STELLA.md`),
+tracked under `lab/` and run per the R-rules in [`docs/STELLAMAX.md`](docs/STELLAMAX.md). It is a **toy-model**
+study — its terms (*photon, charge, θ-term, statistics, spin, bulk*) are
+scaffolding, and any &quot;forced&quot; result (e.g. a forced θ = π) is a **derivation
+within the construct**, fenced from any claim about nature, exactly the
+discipline the legacy firewall demands. Engine and research claims stay
+distinct: validated EM-core claims live in `tests/`; research claims live in
+`lab/&lt;...&gt;/eval.md` with predictions registered before the run (R1).
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="README.html">What this directory is</a>.</footer></main></body></html>

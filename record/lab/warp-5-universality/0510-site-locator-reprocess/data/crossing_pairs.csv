@@ -1,0 +1,14 @@
+family,l_eff,p_star
+triangular,19.5959,0.494225
+triangular,27.7128,0.505682
+triangular,39.1918,0.497813
+triangular,55.4256,0.503828
+triangular,78.3837,0.499565
+fcc_site,14.6969,0.200500
+fcc_site,20.7846,0.199286
+fcc_site,29.3939,0.198451
+fcc_site,41.5692,0.199830
+stella_site,14.6969,0.175786
+stella_site,20.7846,0.174481
+stella_site,29.3939,0.175175
+stella_site,41.5692,0.175294

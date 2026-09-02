@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0510-site-locator-reprocess/data/probe_log.txt · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0510-site-locator-reprocess/data/probe_log.txt</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../../index.html">Our Bubble</a>.</div><pre>######## probe: 0510 — 5.8&#x27;s locator + 5.9&#x27;s band on 5.6&#x27;s SITE curves (#306, #305) ########
+FIREWALL (R3): site-diluted toy graphs; class-membership resolution, computed.
+
+[triangular] 5 pairs at L_eff [19.6, 27.71, 39.19, 55.43, 78.38]
+  p* = [0.494225, 0.505682, 0.497813, 0.503828, 0.499565]
+  w=2: p_c = 0.502530 ± 0.003137 (OLS intercept se)  c = -2.28615  r2 = 0.2424
+  best-w: w = 2.6 p_c = 0.502271; w-spread[1.6,2.4] = 0.000479
+  naive mean: all = 0.500223, excl smallest = 0.501722
+  ** ANSWER-KEY CALIBRATION vs 0.5: |err| = 0.002530 = 0.81x the OLS se, 5.28x the w-spread
+     (naive-mean-all error 0.000223, naive-excl error 0.001722)
+[fcc] 4 pairs at L_eff [14.7, 20.78, 29.39, 41.57]
+  p* = [0.2005, 0.199286, 0.198451, 0.19983]
+  w=2: p_c = 0.198848 ± 0.000704 (OLS intercept se)  c = 0.30799  r2 = 0.4050
+  best-w: w = 2.6 p_c = 0.198944; w-spread[1.6,2.4] = 0.000173
+  naive mean: all = 0.199517, excl smallest = 0.199189
+  ** ANSWER-KEY CALIBRATION vs 0.1992365: |err| = 0.000388 = 0.55x the OLS se, 2.25x the w-spread
+     (naive-mean-all error 0.000280, naive-excl error 0.000048)
+[stella] 4 pairs at L_eff [14.7, 20.78, 29.39, 41.57]
+  p* = [0.175786, 0.174481, 0.175175, 0.175294]
+  w=2: p_c = 0.174911 ± 0.000514 (OLS intercept se)  c = 0.12589  r2 = 0.1758
+  best-w: w = 2.6 p_c = 0.174933; w-spread[1.6,2.4] = 0.000041
+  naive mean: all = 0.175184, excl smallest = 0.174984
+[triangular batch 0] naive(5.6&#x27;s) = 0.503825  extrap(w=2) = 0.499313 (r2 = 0.0011, 5 pairs)
+[triangular batch 1] naive(5.6&#x27;s) = 0.502745  extrap(w=2) = 0.503246 (r2 = 0.1844, 5 pairs)
+[triangular batch 2] naive(5.6&#x27;s) = 0.501748  extrap(w=2) = 0.504257 (r2 = 0.6789, 5 pairs)
+[triangular batch 3] naive(5.6&#x27;s) = 0.496043  extrap(w=2) = 0.495346 (r2 = 0.1411, 5 pairs)
+[triangular batch 4] naive(5.6&#x27;s) = 0.500568  extrap(w=2) = 0.501668 (r2 = 0.0011, 5 pairs)
+[triangular] per-batch EXTRAP 0.500766 ± 0.001591   per-batch NAIVE (5.6&#x27;s own) 0.500986 ± 0.001348   [900.074208ms]
+  ** ORDERING SYSTEMATIC |aggregate-extrap − per-batch-extrap| = 0.001764
+  ** KEY 0.5: agg-extrap err +0.002530 | per-batch-extrap err +0.000766 | per-batch-naive (5.6&#x27;s) err +0.000986
+     ORDERING VERDICT on this key: PER-BATCH closer
+[fcc batch 0] naive(5.6&#x27;s) = 0.200156  extrap(w=2) = 0.199391 (r2 = 0.0562, 4 pairs)
+[fcc batch 1] naive(5.6&#x27;s) = 0.199215  extrap(w=2) = 0.199052 (r2 = 0.0608, 4 pairs)
+[fcc batch 2] naive(5.6&#x27;s) = 0.200007  extrap(w=2) = 0.200029 (r2 = 0.0654, 4 pairs)
+[fcc batch 3] naive(5.6&#x27;s) = 0.198508  extrap(w=2) = 0.198778 (r2 = 0.0657, 4 pairs)
+[fcc batch 4] naive(5.6&#x27;s) = 0.199398  extrap(w=2) = 0.199329 (r2 = 0.0169, 4 pairs)
+[fcc] per-batch EXTRAP 0.199316 ± 0.000209   per-batch NAIVE (5.6&#x27;s own) 0.199457 ± 0.000296   [5.31453325s]
+  ** ORDERING SYSTEMATIC |aggregate-extrap − per-batch-extrap| = 0.000467
+  ** KEY 0.1992365: agg-extrap err -0.000388 | per-batch-extrap err +0.000079 | per-batch-naive (5.6&#x27;s) err +0.000220
+     ORDERING VERDICT on this key: PER-BATCH closer
+[stella batch 0] naive(5.6&#x27;s) = 0.174932  extrap(w=2) = 0.175064 (r2 = 0.9231, 4 pairs)
+[stella batch 1] naive(5.6&#x27;s) = 0.175041  extrap(w=2) = 0.174938 (r2 = 0.0024, 4 pairs)
+[stella batch 2] naive(5.6&#x27;s) = 0.173441  extrap(w=2) = 0.172897 (r2 = 0.1308, 4 pairs)
+[stella batch 3] naive(5.6&#x27;s) = 0.175363  extrap(w=2) = 0.175177 (r2 = 0.1295, 4 pairs)
+[stella batch 4] naive(5.6&#x27;s) = 0.173489  extrap(w=2) = 0.173768 (r2 = 0.1288, 4 pairs)
+[stella] per-batch EXTRAP 0.174369 ± 0.000446   per-batch NAIVE (5.6&#x27;s own) 0.174453 ± 0.000410   [5.812582458s]
+  ** ORDERING SYSTEMATIC |aggregate-extrap − per-batch-extrap| = 0.000542
+  sweep stage took 12.027220208s
+
+[stella d_f] 5.6 located (oracle)     p = 0.174453 -&gt; d_f = 2.43793 ± 0.01956 (stat)  [1.435026042s]
+[stella d_f] 5.6 registered (oracle)  p = 0.175200 -&gt; d_f = 2.52498 ± 0.01932 (stat)  [1.339576709s]
+[stella d_f] per-batch extrap         p = 0.174369 -&gt; d_f = 2.42851 ± 0.02046 (stat)  [1.330559875s]
+[stella d_f] agg extrap - d           p = 0.174311 -&gt; d_f = 2.42190 ± 0.01935 (stat)  [1.37834525s]
+[stella d_f] agg extrap (5.8)         p = 0.174911 -&gt; d_f = 2.49050 ± 0.02197 (stat)  [1.542004625s]
+[stella d_f] agg extrap + d           p = 0.175511 -&gt; d_f = 2.55795 ± 0.01737 (stat)  [1.390547292s]
+  ** COPY FIDELITY: d_f @ 5.6&#x27;s located p_c 2.43793 vs committed 2.43782 (|Δ| = 1.15e-4); @ its registered constant 2.52498 vs committed 2.52498 (|Δ| = 7.24e-7)
+  ** LOCAL SENSITIVITY at the new locator: ∂d_f/∂p = 113.4  (LESSONS says ~117 for site; 5.6&#x27;s own secant recomputes to 116.7)
+  ** PROPAGATED BAND: √((sens·se)² + σ_stat²) = √((0.0583)² + (0.0220)²) = ±0.0623 (1σ)
+     d_f(5.8 locator) = 2.49050; |d_f − 2.52295| = 0.0325 = 0.52σ  (5.6&#x27;s miss was 0.0851 = 1.37σ of the same band)
+     5.6&#x27;s REGISTERED band was ±0.06 → the 5.8 locator is INSIDE it
+     d_f-anchored inversion (stella): p = 0.175197
+[tri d_f @ the EXACT 1/2] 1.89613 ± 0.00722 vs exact 91/48 = 1.895833; |Δ| = 0.00030 (0.04σ_stat)
+  (5.6&#x27;s own value at its LOCATED 0.500986 was 1.90602)
+[fcc d_f @ the PUBLISHED 0.1992365] 2.50814 ± 0.01334 vs class 2.52295; |Δ| = 0.01481
+  (5.6&#x27;s own value at its LOCATED 0.199457 was 2.52727)
+[fcc d_f @ its extrapolated locator 0.1988483] 2.46954; sens_fcc = 99.4
+  ** d_f-ANCHORED INVERSION (fcc): p = 0.1993855 vs key 0.1992365 (err +0.0001490); mechanism check: bias/sens = 0.0001490
+[tri sensitivity] d_f(0.5−0.005) = 1.83392, d_f(0.5+0.005) = 1.93692 ⇒ ∂d_f/∂p = 10.3
+  ** d_f-ANCHORED INVERSION (tri, EXACT key both ends): p = 0.4999708 vs exact 1/2 (err -0.0000292)
+  ** SENSITIVITY TABLE (amplification is dimension- AND dilution-rule dependent):
+     2-D site (tri)    10.3   |  3-D site (fcc)   99.4  (stella  113.4)
+     3-D bond, rung 5.9&#x27;s committed record: fcc 275.7, stella 340.1  ⇒ bond ≈ 3x site, site ≈ 10x 2-D
+
+  ** ORDERING-ROBUST VERDICT CHECK (each locator with its own quoted error):
+     5.6&#x27;s own located p_c    p=0.174453 d_f=2.43793 loc_err=0.000410 band=±0.0504 |Δ|=0.0850 z=1.69
+     per-batch extrapolated   p=0.174369 d_f=2.42851 loc_err=0.000446 band=±0.0546 |Δ|=0.0944 z=1.73
+     aggregate extrapolated   p=0.174911 d_f=2.49050 loc_err=0.000514 band=±0.0623 |Δ|=0.0325 z=0.52
+     5.6&#x27;s REGISTERED tolerance was ±0.06; its own quoted replica σ propagates to ±0.0478 (80% of it)
+
+[probe done] total 23.973717833s
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../../README.html">What this directory is</a>.</footer></main></body></html>

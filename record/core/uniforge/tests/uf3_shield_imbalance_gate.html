@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf3_shield_imbalance_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf3_shield_imbalance_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! lab/0300 — Warp-3.0: the shield, the imbalance, and inertia.
+//!
+//! The hypothesis: a shield decouples a region from its environment (an information imbalance) — does that
+//! reduce the region&#x27;s inertia (a start on gravity manipulation)? Split into the provable half and the
+//! honest null:
+//!   PART A (the imbalance, provable): a shield barrier suppresses the interior↔exterior linear response
+//!     (the screened-Poisson Green&#x27;s function). The inside &quot;sees less&quot; of the outside.
+//!   PART B (inertia, a registered NULL): in standard field theory the barrier is a potential / effective-
+//!     mass² term, NOT a change to the inertial (φ̈) coefficient. Inside the bubble V≡0, so the interior
+//!     evolution is unchanged ⇒ inertia unchanged. If anything the barrier is a POSITIVE mass² (more inert
+//!     at the wall). The null names the extra ingredient &quot;gravity manipulation&quot; would require.
+//!
+//! Run: `cargo test -p uniforge --release --test uf3_shield_imbalance_gate -- --nocapture`
+//!
+//! FIREWALL (R3): shield/information/inertia/gravity name a prescribed barrier + a probe field&#x27;s linear
+//! response on a TOY lattice. Real EM does NOT screen gravity; the entropic-inertia idea (Mach/Verlinde/
+//! MiHsC) is contested prior physics, used only as a fenced hypothesis-consequence (in the eval), never a
+//! derivation. c = 1.
+
+use kinematics::Grid;
+use std::io::Write;
+use uniforge::mesh::mesh_3d_tetrahedral_grid;
+use uniforge::wave_solver::MeshWaveSolver;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+const N: usize = 24;
+const R: f64 = 9.0; // shield shell radius
+const W: f64 = 1.0; // shell thickness
+const V0: f64 = 40.0; // shield height (effective mass² of the wall)
+const K0: f64 = 0.02; // screened-Poisson regularizer κ₀²
+
+fn dot(x: &amp;[f64], y: &amp;[f64]) -&gt; f64 {
+    x.iter().zip(y).map(|(a, b)| a * b).sum()
+}
+
+fn main_setup() -&gt; (Grid, Vec&lt;[f64; 3]&gt;, MeshWaveSolver, Vec&lt;f64&gt;) {
+    let g = Grid::new(N);
+    let c0 = N as f64 / 2.0;
+    let coords: Vec&lt;[f64; 3]&gt; = (0..g.nv())
+        .map(|v| {
+            let (i, j, k) = g.coord(v);
+            [i as f64, j as f64, k as f64]
+        })
+        .collect();
+    let solver = MeshWaveSolver::with_geometric_hodge(mesh_3d_tetrahedral_grid(N, N, N), &amp;coords);
+    // spherical shell shield V(r) = V0·exp(−((r−R)/W)²), COMPACTLY SUPPORTED (exactly 0 for |r−R| ≥ 3W)
+    // so the deep interior (r &lt; R−3W) has V ≡ 0 exactly — the honest &quot;inside the bubble&quot; region.
+    let v: Vec&lt;f64&gt; = coords
+        .iter()
+        .map(|p| {
+            let r = ((p[0] - c0).powi(2) + (p[1] - c0).powi(2) + (p[2] - c0).powi(2)).sqrt();
+            if (r - R).abs() &lt; 3.0 * W {
+                V0 * (-((r - R) / W).powi(2)).exp()
+            } else {
+                0.0
+            }
+        })
+        .collect();
+    (g, coords, solver, v)
+}
+
+/// A φ = (Δ + κ₀² + Vmask) φ, the SPD screened-Poisson operator (Δ = positive d†d).
+fn apply(solver: &amp;MeshWaveSolver, kpv: &amp;[f64], phi: &amp;[f64]) -&gt; Vec&lt;f64&gt; {
+    let lap = solver.compute_laplacian_0form(phi);
+    lap.iter().zip(kpv).zip(phi).map(|((l, k), p)| l + k * p).collect()
+}
+
+/// Conjugate-gradient solve of A φ = b for the SPD screened-Poisson operator.
+fn cg(solver: &amp;MeshWaveSolver, kpv: &amp;[f64], b: &amp;[f64], tol: f64, maxit: usize) -&gt; Vec&lt;f64&gt; {
+    let n = b.len();
+    let mut x = vec![0.0; n];
+    let mut r = b.to_vec();
+    let mut p = r.clone();
+    let mut rs = dot(&amp;r, &amp;r);
+    let bnorm = dot(b, b).sqrt().max(1e-300);
+    for _ in 0..maxit {
+        let ap = apply(solver, kpv, &amp;p);
+        let alpha = rs / dot(&amp;p, &amp;ap).max(1e-300);
+        for i in 0..n {
+            x[i] += alpha * p[i];
+            r[i] -= alpha * ap[i];
+        }
+        let rs_new = dot(&amp;r, &amp;r);
+        if rs_new.sqrt() / bnorm &lt; tol {
+            break;
+        }
+        let beta = rs_new / rs;
+        for i in 0..n {
+            p[i] = r[i] + beta * p[i];
+        }
+        rs = rs_new;
+    }
+    x
+}
+
+/// Evolve the scalar wave φ̈ = −c²Δφ − Vφ for `steps` (velocity-Verlet, uf1_44 scheme). Returns final φ.
+fn evolve(solver: &amp;MeshWaveSolver, vpot: &amp;[f64], mut phi: Vec&lt;f64&gt;, mut phi_old: Vec&lt;f64&gt;, c: f64, dt: f64, steps: usize) -&gt; Vec&lt;f64&gt; {
+    for _ in 0..steps {
+        let lap = solver.compute_laplacian_0form(&amp;phi);
+        let nx: Vec&lt;f64&gt; = (0..phi.len())
+            .map(|i| 2.0 * phi[i] - phi_old[i] - dt * dt * (c * c * lap[i] + vpot[i] * phi[i]))
+            .collect();
+        phi_old = phi;
+        phi = nx;
+    }
+    phi
+}
+
+#[test]
+fn uf3_shield_imbalance_gate() {
+    rec!(&quot;\n######## lab/0300 — Warp-3.0: the shield, the imbalance, and inertia ########&quot;);
+    rec!(&quot;FIREWALL (R3): a barrier + a probe field&#x27;s linear response on a TOY lattice. Real EM does NOT screen&quot;);
+    rec!(&quot;  gravity; entropic inertia (Mach/Verlinde/MiHsC) is contested — fenced hypothesis only. n={N} R={R} V0={V0}. c=1.\n&quot;);
+
+    let (g, coords, solver, v) = main_setup();
+    let c0 = N as f64 / 2.0;
+    let idx = |i: usize, j: usize, k: usize| g.vid(i, j, k);
+    let cc = c0 as usize; // 12
+
+    // ---- PART A: information imbalance via the screened-Poisson Green&#x27;s function ----
+    let x_src = idx(3, 3, 3); // exterior source in the far corner (r≈15.6, well outside the shell R=9)
+    let p_in = idx(cc, cc, cc); // interior probe (bubble centre, r=0) — path to source CROSSES the shell
+    let p_ctrl = idx(5, 3, 3); // exterior control (adjacent to source, far from the shell — path does NOT cross it)
+
+    let mut b = vec![0.0; g.nv()];
+    b[x_src] = 1.0;
+    let kpv_open = vec![K0; g.nv()];
+    let kpv_shield: Vec&lt;f64&gt; = v.iter().map(|vv| K0 + vv).collect();
+
+    let phi_open = cg(&amp;solver, &amp;kpv_open, &amp;b, 1e-9, 3000);
+    let phi_shield = cg(&amp;solver, &amp;kpv_shield, &amp;b, 1e-9, 3000);
+
+    let g_in_open = phi_open[p_in];
+    let g_in_sh = phi_shield[p_in];
+    let g_ct_open = phi_open[p_ctrl];
+    let g_ct_sh = phi_shield[p_ctrl];
+    let r_in = g_in_sh / g_in_open;
+    let r_ctrl = g_ct_sh / g_ct_open;
+
+    rec!(&quot;[A] information coupling (exterior source → probe), open vs shielded:&quot;);
+    rec!(&quot;    interior (centre): open {g_in_open:.4e}  shielded {g_in_sh:.4e}  ratio {r_in:.2e}  (want &lt; 0.3 — the imbalance)&quot;);
+    rec!(&quot;    exterior control:  open {g_ct_open:.4e}  shielded {g_ct_sh:.4e}  ratio {r_ctrl:.4}  (want ≈ 1 — shield is local)&quot;);
+
+    // ---- PART B: does the imbalance change inertia? ----
+    // B1 — interior evolution is unchanged (V≡0 inside): an interior packet moves identically shield on/off.
+    let (sig, u, dt, c, steps) = (1.8_f64, 0.4_f64, 0.05_f64, 1.0_f64, 16usize);
+    let packet = |shift: f64| -&gt; Vec&lt;f64&gt; {
+        coords
+            .iter()
+            .map(|p| {
+                let (x, y, z) = (p[0] - c0 - shift, p[1] - c0, p[2] - c0);
+                (-(x * x + y * y + z * z) / (2.0 * sig * sig)).exp()
+            })
+            .collect()
+    };
+    let phi0 = packet(u * dt); // moving +x
+    let phi_old0 = packet(0.0);
+    let zeros = vec![0.0; g.nv()];
+    let fin_open = evolve(&amp;solver, &amp;zeros, phi0.clone(), phi_old0.clone(), c, dt, steps);
+    let fin_sh = evolve(&amp;solver, &amp;v, phi0, phi_old0, c, dt, steps);
+    // The interior (r &lt; R−3W = 6) has V ≡ 0 exactly (compact shell), so the shield contributes NOTHING to
+    // the interior equation of motion — the airtight null. (Note: on the lattice the numerical domain of
+    // dependence is ~1 cell/step, not c·dt, so over T steps the wall&#x27;s *reflected wave* does leak inward as
+    // a small field difference — that is a change in the signal, not the inertia; we report it separately.)
+    let r_interior = R - 3.0 * W;
+    let (mut maxdiff_in, mut v_interior_max) = (0.0_f64, 0.0_f64);
+    let (mut cm_open, mut cm_sh, mut wt) = (0.0, 0.0, 0.0);
+    for vtx in 0..g.nv() {
+        let (i, j, k) = g.coord(vtx);
+        let r = ((i as f64 - c0).powi(2) + (j as f64 - c0).powi(2) + (k as f64 - c0).powi(2)).sqrt();
+        if r &lt; r_interior {
+            v_interior_max = v_interior_max.max(v[vtx].abs());
+            maxdiff_in = maxdiff_in.max((fin_open[vtx] - fin_sh[vtx]).abs());
+            let w2 = fin_open[vtx] * fin_open[vtx];
+            cm_open += (i as f64 - c0) * w2;
+            cm_sh += (i as f64 - c0) * fin_sh[vtx] * fin_sh[vtx];
+            wt += w2;
+        }
+    }
+    cm_open /= wt;
+    cm_sh /= wt.max(1e-300);
+    let cm_diff = (cm_open - cm_sh).abs();
+
+    // B2 — inertia = the φ̈ coefficient. From rest, unit impulse ⇒ a = S/m_eff = S, V-independent.
+    let m_eff_open = 1.0; // coefficient of φ̈ in φ̈ = −c²Δφ − Vφ + S
+    let m_eff_sh = 1.0; // V multiplies φ (a potential), never φ̈ ⇒ inertia unchanged
+
+    // B3 — the barrier is a positive effective mass² term m²_eff(x) = V(x)
+    let m2_centre = v[p_in];
+    let m2_wall = v[idx(cc, cc, cc + 9)]; // a wall vertex (r≈R)
+
+    rec!(&quot;[B] inertia:&quot;);
+    rec!(&quot;    interior EOM: max|V| inside (r&lt;{r_interior}) = {v_interior_max:.2e} (want 0 — shield adds nothing to the interior equation)&quot;);
+    rec!(&quot;    interior packet: displacement open {cm_open:.6}, shielded {cm_sh:.6}, |Δ| = {cm_diff:.2e} (unchanged); reflected-wave field leak = {maxdiff_in:.2e}&quot;);
+    rec!(&quot;    effective inertia (φ̈ coeff): open {m_eff_open}, shielded {m_eff_sh} — a shield is a potential, not an inertia change&quot;);
+    rec!(&quot;    effective mass² m²_eff=V: centre {m2_centre:.3e} (≈0, unchanged), wall {m2_wall:.3} (&gt;0 — MORE inert at the wall)&quot;);
+
+    // R10 artifacts
+    let dir = concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/../../lab/warp-3-shield/0300-shield-imbalance-inertia/data&quot;);
+    std::fs::create_dir_all(dir).expect(&quot;create lab data dir&quot;);
+    std::fs::write(
+        format!(&quot;{dir}/shield.csv&quot;),
+        format!(&quot;pair,G_open,G_shielded,ratio\ninterior,{g_in_open:.6e},{g_in_sh:.6e},{r_in:.6}\nexterior_control,{g_ct_open:.6e},{g_ct_sh:.6e},{r_ctrl:.6}\n&quot;),
+    ).expect(&quot;write shield.csv&quot;);
+    std::fs::write(
+        format!(&quot;{dir}/inertia.csv&quot;),
+        format!(&quot;quantity,value\nm_eff_open,{m_eff_open}\nm_eff_shielded,{m_eff_sh}\ninterior_field_maxdiff,{maxdiff_in:.6e}\npacket_disp_open,{cm_open:.6}\npacket_disp_shielded,{cm_sh:.6}\nm2_centre,{m2_centre:.6e}\nm2_wall,{m2_wall:.6}\ncoupling_ratio_interior,{r_in:.6}\n&quot;),
+    ).expect(&quot;write inertia.csv&quot;);
+
+    // ---- verdicts ----
+    let p0 = (0.7..=1.4).contains(&amp;r_ctrl);
+    let p1 = r_in &lt; 0.3;
+    let p2 = v_interior_max == 0.0 &amp;&amp; cm_diff &lt; 1e-4;
+    let p3 = m2_centre &lt; 1e-6 &amp;&amp; m2_wall &gt; 0.0;
+
+    let verdict = if p0 &amp;&amp; p1 &amp;&amp; p2 &amp;&amp; p3 {
+        format!(
+            &quot;IMBALANCE YES, INERTIA NO (R5/R10) — the shield PROVABLY decouples the interior: exterior→centre \
+             coupling drops to {r_in:.1e}× of open (the inside sees less of the outside), while a path that \
+             doesn&#x27;t cross the shell is unchanged ({r_ctrl:.2}×). But that imbalance does NOT reduce inertia: \
+             inside the bubble V≡0 exactly (the shield adds nothing to the interior equation), so an interior \
+             packet moves identically (Δdisplacement {cm_diff:.0e}); the only shielded-vs-open field difference \
+             is the reflected wall-wave leaking in at lattice speed ({maxdiff_in:.0e}) — a change in the signal, \
+             not the inertia. In standard field theory the barrier is a potential / positive mass² (centre \
+             {m2_centre:.0e}, wall {m2_wall:.0} — if anything MORE inert at the wall), never a change to the φ̈ \
+             (inertia) coefficient. The imbalance is real; converting it to \
+             inertia needs an extra law tying mass to environmental coupling (entropic inertia) — a separate, \
+             fenced hypothesis, priced in the eval. FIREWALL (R3): toy lattice; c=1.&quot;
+        )
+    } else {
+        format!(&quot;CHECK (R5) — p0={p0} p1={p1} p2={p2} p3={p3}; r_in={r_in:.3} r_ctrl={r_ctrl:.3} maxdiff={maxdiff_in:.2e} m2c={m2_centre:.2e} m2w={m2_wall:.2}. FIREWALL (R3).&quot;)
+    };
+    rec!(&quot;\n[lab/0300 VERDICT] {verdict}&quot;);
+    rec!(&quot;\n  [recorded: p0={p0} p1={p1} p2={p2} p3={p3} r_in={r_in:.6} r_ctrl={r_ctrl:.6} v_interior_max={v_interior_max:.2e} cm_diff={cm_diff:.3e} reflected_leak={maxdiff_in:.3e} m2_centre={m2_centre:.3e} m2_wall={m2_wall:.4}]&quot;);
+
+    assert!(p0, &quot;P0: the shield acts locally (exterior control coupling unchanged)&quot;);
+    assert!(p1, &quot;P1: the shield suppresses interior↔exterior coupling (the information imbalance)&quot;);
+    assert!(p2, &quot;P2: the shield adds nothing to the interior EOM (V≡0 inside) and interior inertia/displacement is unchanged&quot;);
+    assert!(p3, &quot;P3: the barrier is a positive effective mass² (centre ≈0 unchanged, wall &gt; 0)&quot;);
+}
+
+// The gate is exercised through the `#[test]` above; `main_setup` keeps setup out of the test body.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

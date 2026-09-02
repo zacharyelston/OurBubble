@@ -59,7 +59,7 @@ It came back with **p = −0.2753**, at a fit quality of **R² = 0.9774**.
 The expectation was −1/2. The measurement is a little over half that steep. This is not a near miss
 inside an error bar; the law we proposed is the wrong law for this geometry, and it is refused.
 
-**[Open the data-true shift-law figure](../.record/lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html)**
+**[Open the data-true shift-law figure](record/lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html)**
 
 ## Why it failed, and why that is a question rather than a rescue
 

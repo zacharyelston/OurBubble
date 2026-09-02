@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Warp-5.9 · d_f vs the locator — a negative that was our own estimator</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#34d399}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:940px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 12px}
+  canvas{width:100%;height:auto;display:block;background:#0a0d12;border:1px solid var(--line);border-radius:8px}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:6px}
+  .tile{background:#0a0d12;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  .tile .k{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
+  .tile .v{font-size:18px;font-variant-numeric:tabular-nums;margin-top:2px}
+  .tile .n{font-size:11px;color:var(--faint)}
+  .pass{color:var(--green)} .fail{color:var(--red)}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+  table.disp{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums;margin-top:6px}
+  table.disp th{color:var(--faint);font-weight:500;text-align:right;padding:4px 8px;border-bottom:1px solid var(--line)}
+  table.disp td{text-align:right;padding:4px 8px;color:var(--mute)}
+  table.disp th:first-child,table.disp td:first-child{text-align:left}
+  table.disp tr.rep td{color:var(--faint);font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>d<sub>f</sub> is not a class test here — it is a thermometer for the locator</h1>
+  <p class="sub">Rung 5.7 registered a <b>negative</b>: on the stella tet-oct graph under bond dilution the
+     fractal dimension came out <code>2.028</code> where the 3-D percolation class says <code>2.52295</code> —
+     a miss of <code>0.495</code>, correctly predicted in advance from a probed <code>∂d_f/∂p ≈ 338</code>.
+     Rung 5.8 then built a better <em>locator</em> and only ever applied it to 5.6's site curves. This rung
+     applies it to 5.7's committed bond curves and asks whether the miss <b>moves</b>.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Edge-diluted <b>toy</b> graphs. <code>p_c(stella-bond)</code> is a 🔵
+     constant of this complex — graph mathematics, exact and un-tuned — <b>never</b> a property of matter.
+     <code>d_f</code> is a dimensionless invariant of the 3-D percolation class: what is claimed is
+     class-membership <em>resolution</em>, computed. Where a previous miss dissolves, it dissolves into a
+     statement about <b>our own estimator</b>, not about nature. FCC-bond is an independent published answer
+     key used to license method, not a discovery. Every number below comes from the run's committed
+     <code>data/</code>.</div>
+
+  <div class="panel">
+    <h2>The money plot — d<sub>f</sub> against the locator, on one axis</h2>
+    <p class="q">Each ● is a full finite-size measurement of <code>d_f</code> (R = 2400 samples per size,
+       <code>L ∈ {18,24,36,48}</code>, largest three fitted) at one candidate threshold, with its statistical
+       error bar. The horizontal line is the class value; the shaded band is <b>not</b> a fudge — it is the
+       locator's own standard error propagated through the <i>measured</i> local sensitivity
+       (<code>band = sens × se</code>, both measured in this run). The vertical marks are the candidate
+       locators: 5.7's two, the per-batch ordering, and 5.8's estimator applied here (◆, with its ± se).</p>
+    <canvas id="money" width="880" height="380"></canvas>
+    <div class="take" id="moneytake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The control that decides it — FCC-bond at a <em>published</em> threshold</h2>
+    <p class="q">The only clean way to ask whether <code>d_f</code> itself is sound at these sizes is to
+       remove the locator from the experiment: measure it at a threshold somebody else published
+       (<code>p_c(FCC-bond) = 0.1201635</code>, Lorenz &amp; Ziff 1998). Zero location error. Same code path,
+       same seeds, same fit window.</p>
+    <canvas id="ctrl" width="880" height="250"></canvas>
+    <div class="take" id="ctrltake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Which number is the locator's error bar? (the mistake this rung found)</h2>
+    <p class="q">Rung 5.8 quoted the spread of <code>p_c</code> across a range of the fixed drift exponent
+       <code>w</code> as evidence its systematic had "collapsed". On the one bond lattice with a published
+       answer, that spread can be checked against the fit's <b>actual</b> distance from the truth — and
+       against the fit's own least-squares intercept standard error. Bars are on a log axis, all in units of
+       <code>p</code>.</p>
+    <canvas id="bars" width="880" height="250"></canvas>
+    <div class="take" id="barstake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Against the registered predictions (R1)</h2>
+    <table class="disp" id="verdict"></table>
+    <div class="tiles" id="tiles" style="margin-top:12px"></div>
+    <div class="take" id="vtake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"ladder":[{"family":"stella_bond","label":"5.7-located","p":0.099641,"d_f":2.02746,"sigma_df":0.01091,"smax":[1062.449,2067.970,4778.870,8415.065]},{"family":"stella_bond","label":"per-batch-extrap","p":0.099318,"d_f":1.91924,"sigma_df":0.00974,"smax":[1013.735,1932.610,4310.799,7288.503]},{"family":"stella_bond","label":"extrap-minus-delta","p":0.100048,"d_f":2.17457,"sigma_df":0.01528,"smax":[1124.780,2239.615,5438.464,10104.139]},{"family":"stella_bond","label":"extrap (5.8 locator)","p":0.100648,"d_f":2.37985,"sigma_df":0.01076,"smax":[1223.400,2524.830,6591.312,13149.819]},{"family":"stella_bond","label":"extrap-plus-delta","p":0.101248,"d_f":2.58272,"sigma_df":0.01019,"smax":[1325.579,2826.733,7919.860,16968.517]},{"family":"stella_bond","label":"5.7-registered-constant (from 0507 data)","p":0.099280,"d_f":1.90585,"sigma_df":null,"smax":[1008.468,1916.692,4259.792,7160.165]},{"family":"fcc_bond","label":"published key (0 loc err)","p":0.1201635,"d_f":2.51943,"sigma_df":0.01323,"smax":[1329.478,2723.021,7535.928,15619.293]},{"family":"fcc_bond","label":"extrap (5.8 locator)","p":0.1198036,"d_f":2.42019,"sigma_df":0.01724,"smax":[1273.414,2561.204,6861.846,13701.753]}],"estimates":[{"family":"stella_bond","kind":"threshold","estimator":"aggregate-extrapolated (w=2)","p_c_or_width":0.1006479,"error_bar":0.000518,"r2":0.0022,"err_vs_key":null},{"family":"stella_bond","kind":"threshold","estimator":"aggregate-naive (all pairs)","p_c_or_width":0.1006196,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_bond","kind":"threshold","estimator":"aggregate-naive (excl smallest)","p_c_or_width":0.1005334,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_bond","kind":"threshold","estimator":"per-batch-extrapolated","p_c_or_width":0.0993182,"error_bar":0.000364,"r2":null,"err_vs_key":null},{"family":"stella_bond","kind":"threshold","estimator":"per-batch-naive (5.7's registered)","p_c_or_width":0.0996406,"error_bar":0.000312,"r2":null,"err_vs_key":null},{"family":"stella_bond","kind":"error_bar_candidate","estimator":"OLS intercept standard error","p_c_or_width":0.0005184,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_bond","kind":"error_bar_candidate","estimator":"w-scan spread over w in [1.6..2.4] (5.8's yardstick)","p_c_or_width":0.0000641,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_bond","kind":"error_bar_candidate","estimator":"per-batch replica sigma","p_c_or_width":0.0003636,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_bond","kind":"threshold","estimator":"aggregate-extrapolated (w=2)","p_c_or_width":0.1198036,"error_bar":0.000326,"r2":0.1527,"err_vs_key":0.000360},{"family":"fcc_bond","kind":"threshold","estimator":"aggregate-naive (all pairs)","p_c_or_width":0.1199627,"error_bar":null,"r2":null,"err_vs_key":0.000201},{"family":"fcc_bond","kind":"threshold","estimator":"aggregate-naive (excl smallest)","p_c_or_width":0.1198887,"error_bar":null,"r2":null,"err_vs_key":0.000275},{"family":"fcc_bond","kind":"threshold","estimator":"per-batch-extrapolated","p_c_or_width":0.1195750,"error_bar":0.000622,"r2":null,"err_vs_key":0.000588},{"family":"fcc_bond","kind":"threshold","estimator":"per-batch-naive (5.7's registered)","p_c_or_width":0.1197238,"error_bar":0.000471,"r2":null,"err_vs_key":0.000440},{"family":"fcc_bond","kind":"error_bar_candidate","estimator":"OLS intercept standard error","p_c_or_width":0.0003258,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_bond","kind":"error_bar_candidate","estimator":"w-scan spread over w in [1.6..2.4] (5.8's yardstick)","p_c_or_width":0.0000591,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_bond","kind":"error_bar_candidate","estimator":"per-batch replica sigma","p_c_or_width":0.0006221,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_bond","kind":"threshold","estimator":"published (Lorenz-Ziff 1998)","p_c_or_width":0.1201635,"error_bar":null,"r2":null,"err_vs_key":0.000000},{"family":"fcc_bond","kind":"threshold","estimator":"d_f-anchored inversion","p_c_or_width":0.1201763,"error_bar":null,"r2":null,"err_vs_key":0.000013},{"family":"stella_bond","kind":"threshold","estimator":"d_f-anchored inversion","p_c_or_width":0.1010686,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"fcc_bond","kind":"error_bar_candidate","estimator":"actual error of the aggregate-extrapolated fit vs the key","p_c_or_width":0.0003599,"error_bar":null,"r2":null,"err_vs_key":null},{"family":"stella_bond","kind":"error_bar_candidate","estimator":"aggregate-vs-per-batch ordering systematic","p_c_or_width":0.0013297,"error_bar":null,"r2":null,"err_vs_key":null}],"verdict":[{"prediction":"P0a","quantity":"stella per-batch naive mean / sigma (5.7 copy fidelity)","measured":"0.099641 / 0.000312","registered":"0.099641 / 0.000312 (±0.000001)","pass":"true"},{"prediction":"P0b","quantity":"d_f at 5.7's located p_c","measured":"2.02746","registered":"2.02762 (±0.001)","pass":"true"},{"prediction":"P0c","quantity":"d_f (fcc) at the PUBLISHED threshold","measured":"2.51943","registered":"2.52295 (±0.05)","pass":"true"},{"prediction":"P1a","quantity":"p_c (stella aggregate-extrapolated)","measured":"0.100648","registered":"0.100648 (±0.00001) and > 0.099641","pass":"true"},{"prediction":"P1b","quantity":"OLS intercept se (stella) / r2 stella / r2 fcc","measured":"0.000518 / 0.0022 / 0.1527","registered":"[0.0003..0.0008] / both < 0.3","pass":"true"},{"prediction":"P1c","quantity":"fcc key error in units of (se | w-spread)","measured":"1.10 / 6.09","registered":"< 2.5 and > 3","pass":"true"},{"prediction":"P2a","quantity":"local ∂d_f/∂p at the new locator","measured":"340.1","registered":"[250..450]","pass":"true"},{"prediction":"P2b","quantity":"ordering systematic (aggregate vs per-batch)","measured":"0.001330","registered":"[0.0008..0.002] aggregate higher","pass":"true"},{"prediction":"P2c","quantity":"fcc key error aggregate vs per-batch","measured":"0.000360 vs 0.000588","registered":"aggregate closer","pass":"true"},{"prediction":"P2d","quantity":"propagated 1-sigma band in d_f","measured":"0.1766","registered":"[0.1..0.3]","pass":"true"},{"prediction":"P3a","quantity":"d_f at the 5.8 locator","measured":"2.37985","registered":"2.37985 (±0.01)","pass":"true"},{"prediction":"P3b","quantity":"|d_f − class| vs 5.7's miss","measured":"0.1431 vs 0.49533","registered":"< 0.5 × 5.7's miss and upward","pass":"true"},{"prediction":"P3c","quantity":"z = |d_f − class| / band (DISSOLVE if < 2)","measured":"0.81","registered":"< 2 (H-DISSOLVE branch)","pass":"true"},{"prediction":"P4a","quantity":"d_f-anchored inversion (fcc) vs the published key","measured":"+0.0000128","registered":"±0.00005","pass":"true"},{"prediction":"report-only","quantity":"d_f at the per-batch-extrapolated locator","measured":"1.91924","registered":"—","pass":""},{"prediction":"report-only","quantity":"p_c(d_f-anchored | stella) [derived | = P3c in p-space]","measured":"0.101069","registered":"—","pass":""},{"prediction":"report-only","quantity":"fcc aggregate-naive error vs the key","measured":"0.000201","registered":"— (vs extrapolated 0.000360)","pass":""}],"source":{"commit":"8831c45"}};
+const fmt=(v,d)=>Number(v).toFixed(d===undefined?6:d);
+const CLASS_DF = 2.52295;           // 3 − β/ν, Wang et al. PRE 87, 052107 (2013) — the answer key
+const PC_FCC_LIT = 0.1201635;       // Lorenz & Ziff, PRE 57, 230 (1998)
+const MISS_57 = 0.49533;            // rung 5.7's registered miss (its committed record)
+const C={st:'#c084fc', fcc:'#eab308', key:'#34d399', old:'#ef4444', mid:'#06b6d4'};
+
+const lad  = f => D.ladder.filter(r=>r.family===f);
+const est  = (f,k) => D.estimates.filter(r=>r.family===f && r.kind===k);
+const estv = (f,k,name) => { const r=est(f,k).find(x=>x.estimator===name); return r?r.p_c_or_width:null; };
+// prefix match — the CSV's free-text estimator labels must never be matched on punctuation
+const estp = (f,k,pre) => { const r=est(f,k).find(x=>x.estimator.startsWith(pre)); return r?r.p_c_or_width:null; };
+const vrow = p => D.verdict.find(r=>r.prediction===p);
+const vnum = p => { const r=vrow(p); return r?parseFloat(r.measured):null; };
+
+// the run's own measured band + sensitivity, read from the verdict table (never re-derived here)
+const SENS = vnum('P2a'), BAND = vnum('P2d'), Z = vnum('P3c');
+const stAgg = D.estimates.find(r=>r.family==='stella_bond'&&r.kind==='threshold'&&r.estimator.startsWith('aggregate-extrapolated'));
+const SE_ST = stAgg ? stAgg.error_bar : null;
+
+function tile(el,k,v,n,cls){
+  const d=document.createElement('div'); d.className='tile';
+  d.innerHTML='<div class="k">'+k+'</div><div class="v'+(cls?' '+cls:'')+'">'+v+'</div>'+(n?'<div class="n">'+n+'</div>':'');
+  document.getElementById(el).appendChild(d);
+}
+
+// ---------- Panel 1: d_f vs locator ----------
+(function(){
+  const c=document.getElementById('money'), x=c.getContext('2d');
+  const W=c.width,H=c.height,L=64,R=210,T=26,B=58;
+  const rows=lad('stella_bond').slice().sort((a,b)=>a.p-b.p);
+  const ps=rows.map(r=>r.p);
+  const inv=estp('stella_bond','threshold','d_f-anchored');
+  const xlo=Math.min(...ps)-0.00025, xhi=Math.max(...ps,inv)+0.00035;
+  const dfs=rows.map(r=>r.d_f);
+  const ylo=Math.min(...dfs)-0.12, yhi=Math.max(CLASS_DF+BAND, ...dfs)+0.12;
+  const X=v=>L+((v-xlo)/(xhi-xlo))*(W-L-R), Y=v=>H-B-((v-ylo)/(yhi-ylo))*(H-T-B);
+
+  // the propagated band around the class value — the registered acceptance region
+  x.fillStyle='rgba(52,211,153,.11)';
+  x.fillRect(L,Y(CLASS_DF+BAND),W-L-R,Y(CLASS_DF-BAND)-Y(CLASS_DF+BAND));
+  x.strokeStyle=C.key; x.lineWidth=1.6;
+  x.beginPath(); x.moveTo(L,Y(CLASS_DF)); x.lineTo(W-R,Y(CLASS_DF)); x.stroke();
+  x.fillStyle=C.key; x.font='11px system-ui'; x.textAlign='left';
+  x.fillText('3-D percolation class  d_f = '+CLASS_DF, L+6, Y(CLASS_DF)-6);
+  x.fillStyle='rgba(52,211,153,.75)'; x.font='10px system-ui';
+  x.fillText('± '+fmt(BAND,4)+'  = the locator’s own se × the measured ∂d_f/∂p', L+6, Y(CLASS_DF-BAND)-6);
+
+  // axes
+  x.strokeStyle='#233042'; x.lineWidth=1;
+  x.beginPath(); x.moveTo(L,T); x.lineTo(L,H-B); x.lineTo(W-R,H-B); x.stroke();
+  x.fillStyle='#6b7c90'; x.font='11px system-ui'; x.textAlign='right';
+  for(let v=Math.ceil(ylo*10)/10; v<=yhi; v+=0.2) x.fillText(v.toFixed(1), L-8, Y(v)+4);
+  x.textAlign='center';
+  for(const p of [0.0993,0.0996,0.0999,0.1002,0.1005,0.1008,0.1011])
+    if(p>xlo&&p<xhi) x.fillText(p.toFixed(4), X(p), H-B+17);
+  x.fillText('locator  p  (candidate threshold)', (L+W-R)/2, H-14);
+  x.save(); x.translate(20,(T+H-B)/2+30); x.rotate(-Math.PI/2);
+  x.fillStyle='#9fb0c3'; x.fillText('measured  d_f',0,0); x.restore();
+
+  // the measured curve through the ladder
+  x.strokeStyle='rgba(192,132,252,.5)'; x.lineWidth=1.4; x.setLineDash([3,3]);
+  x.beginPath(); rows.forEach((r,i)=> i? x.lineTo(X(r.p),Y(r.d_f)) : x.moveTo(X(r.p),Y(r.d_f)));
+  x.stroke(); x.setLineDash([]);
+
+  // vertical locator marks
+  const marks=[
+    ['5.7 registered constant', 0.09928, C.old],
+    ['5.7 located (naive)', vnum('P0a')!==null?0.099641:0.099641, C.old],
+    ['per-batch ordering', estp('stella_bond','threshold','per-batch-extrapolated'), C.mid],
+    ['5.8 locator (this rung)', estp('stella_bond','threshold','aggregate-extrapolated'), C.st]
+  ];
+  marks.forEach(m=>{
+    if(m[1]===null) return;
+    x.strokeStyle=m[2]; x.globalAlpha=.35; x.setLineDash([2,4]); x.lineWidth=1;
+    x.beginPath(); x.moveTo(X(m[1]),T); x.lineTo(X(m[1]),H-B); x.stroke();
+    x.setLineDash([]); x.globalAlpha=1;
+  });
+
+  // points + stat error bars
+  rows.forEach(r=>{
+    const col = Math.abs(r.p-0.09928)<1e-9 || Math.abs(r.p-0.099641)<1e-9 ? C.old
+              : (Math.abs(r.p-marks[3][1])<1e-9 ? C.st : '#7c8ea3');
+    if(r.sigma_df!==null){
+      x.strokeStyle=col; x.lineWidth=1.4;
+      x.beginPath(); x.moveTo(X(r.p),Y(r.d_f-r.sigma_df)); x.lineTo(X(r.p),Y(r.d_f+r.sigma_df)); x.stroke();
+    }
+    const big = Math.abs(r.p-marks[3][1])<1e-9;
+    x.fillStyle=col;
+    if(big){ x.beginPath(); const ix=X(r.p),iy=Y(r.d_f);
+      x.moveTo(ix,iy-7);x.lineTo(ix+7,iy);x.lineTo(ix,iy+7);x.lineTo(ix-7,iy);x.closePath();x.fill();
+      // the locator's own +- se, drawn horizontally: the dominant uncertainty
+      if(SE_ST){ x.strokeStyle=C.st; x.lineWidth=1.4;
+        x.beginPath(); x.moveTo(X(r.p-SE_ST),iy); x.lineTo(X(r.p+SE_ST),iy); x.stroke();
+        for(const s of [-1,1]){ x.beginPath(); x.moveTo(X(r.p+s*SE_ST),iy-4); x.lineTo(X(r.p+s*SE_ST),iy+4); x.stroke(); } }
+    } else { x.beginPath(); x.arc(X(r.p),Y(r.d_f),4,0,7); x.fill(); }
+    x.fillStyle=col; x.font='10px system-ui'; x.textAlign='center';
+    // two candidate locators sit 3e-5 apart (5.7's registered constant and the per-batch ordering),
+    // so a label always placed above would collide — drop the crowded one below its point.
+    const crowded = rows.some(o=>o!==r && Math.abs(o.p-r.p)<2.0e-4 && o.p<r.p);
+    x.fillText(fmt(r.d_f,3), X(r.p), crowded ? Y(r.d_f)+16 : Y(r.d_f)-(big?13:11));
+  });
+
+  // the d_f-anchored inversion (where the ladder crosses the class line)
+  if(inv!==null){
+    x.strokeStyle=C.key; x.setLineDash([5,3]); x.lineWidth=1.2;
+    x.beginPath(); x.moveTo(X(inv),Y(CLASS_DF)); x.lineTo(X(inv),H-B); x.stroke(); x.setLineDash([]);
+    x.fillStyle=C.key; x.beginPath(); x.arc(X(inv),Y(CLASS_DF),3.5,0,7); x.fill();
+  }
+
+  // legend
+  const leg=[['5.7’s locators (the negative)',C.old],['per-batch ordering',C.mid],
+             ['5.8 locator + its ± se',C.st],['d_f-anchored inversion',C.key]];
+  x.textAlign='left'; x.font='11px system-ui';
+  leg.forEach((l,i)=>{ x.fillStyle=l[1]; x.fillRect(W-R+12,T+8+i*18,9,9);
+    x.fillStyle='#9fb0c3'; x.fillText(l[0], W-R+27, T+17+i*18); });
+  x.fillStyle='#6b7c90'; x.font='10px system-ui';
+  x.fillText('∂d_f/∂p = '+fmt(SENS,1)+' (measured,', W-R+12, T+96);
+  x.fillText('paired central difference)', W-R+12, T+109);
+
+  const dfNew=vnum('P3a'), missNew=parseFloat(vrow('P3b').measured.split(' ')[0]);
+  document.getElementById('moneytake').innerHTML =
+    'Read it left to right: the same graph, the same code, the same seeds — only <i>where</i> you think the '+
+    'critical point is. Over a span of '+fmt(0.101248-0.09928,5)+' in <code>p</code>, <code>d_f</code> sweeps '+
+    'from <b>1.906</b> to <b>2.583</b> straight through the class value. 5.7’s two locators sit on the low '+
+    'shoulder; 5.8’s locator lands at <b>'+fmt(dfNew,3)+'</b>, closing <b>'+
+    (100*(1-missNew/MISS_57)).toFixed(0)+'%</b> of 5.7’s '+MISS_57+' miss and finishing <b>'+fmt(Z,2)+
+    'σ</b> from the class value once the locator’s own error is propagated. The honest reading is not '+
+    '"the exponent is confirmed" — the band is <b>±'+fmt(BAND,3)+'</b> wide, so at this locator precision '+
+    '<code>d_f</code> simply <b>cannot</b> resolve class membership. The miss was never evidence against the '+
+    'class; it was evidence about our threshold.';
+})();
+
+// ---------- Panel 2: the FCC-bond zero-location-error control ----------
+(function(){
+  const c=document.getElementById('ctrl'), x=c.getContext('2d');
+  const W=c.width,H=c.height,L=64,R=220,T=24,B=52;
+  const rows=lad('fcc_bond').slice().sort((a,b)=>a.p-b.p);
+  const xlo=Math.min(...rows.map(r=>r.p))-0.00012, xhi=Math.max(...rows.map(r=>r.p))+0.00012;
+  const ylo=2.36, yhi=2.60;
+  const X=v=>L+((v-xlo)/(xhi-xlo))*(W-L-R), Y=v=>H-B-((v-ylo)/(yhi-ylo))*(H-T-B);
+  x.strokeStyle=C.key; x.lineWidth=1.6;
+  x.beginPath(); x.moveTo(L,Y(CLASS_DF)); x.lineTo(W-R,Y(CLASS_DF)); x.stroke();
+  x.fillStyle=C.key; x.font='11px system-ui'; x.textAlign='left';
+  x.fillText('class  '+CLASS_DF, L+6, Y(CLASS_DF)-6);
+  x.strokeStyle='#233042'; x.lineWidth=1;
+  x.beginPath(); x.moveTo(L,T); x.lineTo(L,H-B); x.lineTo(W-R,H-B); x.stroke();
+  x.fillStyle='#6b7c90'; x.font='11px system-ui'; x.textAlign='right';
+  for(let v=2.4; v<=yhi; v+=0.1) x.fillText(v.toFixed(1), L-8, Y(v)+4);
+  x.textAlign='center';
+  rows.forEach(r=>x.fillText(r.p.toFixed(5), X(r.p), H-B+17));
+  x.fillText('locator  p  (FCC-bond)', (L+W-R)/2, H-14);
+  // the published-threshold marker
+  x.strokeStyle=C.key; x.globalAlpha=.4; x.setLineDash([2,4]);
+  x.beginPath(); x.moveTo(X(PC_FCC_LIT),T); x.lineTo(X(PC_FCC_LIT),H-B); x.stroke();
+  x.setLineDash([]); x.globalAlpha=1;
+  rows.forEach(r=>{
+    const key=Math.abs(r.p-PC_FCC_LIT)<1e-9, col=key?C.key:C.fcc;
+    x.strokeStyle=col; x.lineWidth=1.4;
+    x.beginPath(); x.moveTo(X(r.p),Y(r.d_f-r.sigma_df)); x.lineTo(X(r.p),Y(r.d_f+r.sigma_df)); x.stroke();
+    x.fillStyle=col; x.beginPath(); x.arc(X(r.p),Y(r.d_f),4.5,0,7); x.fill();
+    x.font='11px system-ui'; x.textAlign='center';
+    x.fillText(fmt(r.d_f,4), X(r.p), Y(r.d_f)-12);
+    x.fillStyle='#6b7c90'; x.font='10px system-ui';
+    x.fillText(key?'published (0 loc. error)':'our extrapolated locator', X(r.p), H-B+31);
+  });
+  const dkey=rows.find(r=>Math.abs(r.p-PC_FCC_LIT)<1e-9), dex=rows.find(r=>Math.abs(r.p-PC_FCC_LIT)>=1e-9);
+  x.textAlign='left'; x.font='11px system-ui'; x.fillStyle='#9fb0c3';
+  x.fillText('|d_f − class| at the', W-R+12, T+16);
+  x.fillStyle=C.key; x.fillText('published p_c:  '+fmt(Math.abs(dkey.d_f-CLASS_DF),4), W-R+12, T+32);
+  x.fillStyle='#9fb0c3'; x.fillText('…and 5.7’s registered', W-R+12, T+56);
+  x.fillStyle=C.old; x.fillText('stella miss:  '+MISS_57, W-R+12, T+72);
+  x.fillStyle='#6b7c90'; x.font='10px system-ui';
+  x.fillText('a factor of '+(MISS_57/Math.abs(dkey.d_f-CLASS_DF)).toFixed(0)+'.', W-R+12, T+88);
+  document.getElementById('ctrltake').innerHTML =
+    'With the locator removed, the finite-size machinery lands on the class value to <b>'+
+    fmt(Math.abs(dkey.d_f-CLASS_DF),4)+'</b> — about a quarter of one statistical σ, and '+
+    (MISS_57/Math.abs(dkey.d_f-CLASS_DF)).toFixed(0)+'× smaller than 5.7’s miss. Put our own '+
+    'extrapolated locator back (off the published value by only <b>3.6×10⁻⁴</b>) and the same '+
+    'code returns <b>'+fmt(dex.d_f,4)+'</b>. That single pair of points is the whole rung in miniature: '+
+    '<code>d_f</code> is sound, and a sub-milli error in <code>p</code> is worth a tenth of an exponent.';
+})();
+
+// ---------- Panel 3: which number is the error bar ----------
+(function(){
+  const c=document.getElementById('bars'), x=c.getContext('2d');
+  const W=c.width,H=c.height,L=310,R=110,T=22,B=44;
+  const bars=[
+    ["w-scan spread, w∈[1.6,2.4] (5.8’s yardstick)", estp('fcc_bond','error_bar_candidate','w-scan spread'), '#64748b'],
+    ["OLS intercept standard error (this rung)", estp('fcc_bond','error_bar_candidate','OLS intercept standard error'), C.st],
+    ["the fit’s ACTUAL error vs the published key", estp('fcc_bond','error_bar_candidate','actual error'), C.key],
+    ["per-batch replica σ (FCC)", estp('fcc_bond','error_bar_candidate','per-batch replica sigma'), '#94a3b8'],
+    ["ordering systematic, stella (P2b)", estp('stella_bond','error_bar_candidate','aggregate-vs-per-batch'), C.old]
+  ].filter(b=>b[1]!==null&&b[1]!==undefined);
+  const vals=bars.map(b=>b[1]);
+  const lo=Math.min(...vals)/1.7, hi=Math.max(...vals)*1.7;
+  const X=v=>L+(Math.log(v/lo)/Math.log(hi/lo))*(W-L-R);
+  const bh=(H-T-B)/bars.length;
+  x.strokeStyle='#233042'; x.beginPath(); x.moveTo(L,T); x.lineTo(L,H-B); x.lineTo(W-R,H-B); x.stroke();
+  x.fillStyle='#6b7c90'; x.font='10px system-ui'; x.textAlign='center';
+  for(const t of [1e-5,3e-5,1e-4,3e-4,1e-3,3e-3]) if(t>lo&&t<hi){
+    x.strokeStyle='#1a2430'; x.beginPath(); x.moveTo(X(t),T); x.lineTo(X(t),H-B); x.stroke();
+    x.fillText(t.toExponential(0).replace('e-','e−'), X(t), H-B+16);
+  }
+  x.fillText('width in units of p  (log scale)', (L+W-R)/2, H-12);
+  bars.forEach((b,i)=>{
+    const y=T+i*bh+bh*0.22, h=bh*0.52;
+    x.fillStyle=b[2]; x.globalAlpha=.75; x.fillRect(L,y,X(b[1])-L,h); x.globalAlpha=1;
+    x.fillStyle='#9fb0c3'; x.font='11px system-ui'; x.textAlign='right';
+    x.fillText(b[0], L-10, y+h/2+4);
+    x.fillStyle=b[2]; x.textAlign='left'; x.font='11px system-ui';
+    x.fillText(b[1].toExponential(2).replace('e-','e−'), X(b[1])+7, y+h/2+4);
+  });
+  const r=vrow('P1c');
+  document.getElementById('barstake').innerHTML =
+    'On the answer key the fit’s real error sits <b>'+r.measured.split(' / ')[0]+'×</b> its own '+
+    'least-squares standard error — covered, as an error bar should be — but <b>'+
+    r.measured.split(' / ')[1]+'×</b> the <code>w</code>-scan spread. A <code>w</code>-scan measures '+
+    '<i>fit-choice stability</i>, not accuracy; quoting it as the locator’s uncertainty understates the '+
+    'real error by roughly six-fold here. And the largest bar is one nobody had registered at all: whether '+
+    'you extrapolate the batch-<b>averaged</b> curve or average the <b>per-batch</b> extrapolations moves the '+
+    'stella threshold by <b>'+vrow('P2b').measured+'</b> — several times the window systematic 5.8 was '+
+    'built to remove. The published key licenses the aggregate ordering ('+vrow('P2c').measured+'), which is '+
+    'why that choice is now a gate rather than a habit.';
+})();
+
+// ---------- Panel 4: verdict ----------
+(function(){
+  const t=document.getElementById('verdict');
+  let h='<tr><th>prediction</th><th>quantity</th><th>measured</th><th>registered</th><th>verdict</th></tr>';
+  for(const r of D.verdict){
+    const rep = r.prediction==='report-only';
+    const ok = String(r.pass)==='true';
+    h+='<tr'+(rep?' class="rep"':'')+'><td>'+r.prediction+'</td><td style="text-align:left">'+r.quantity+
+       '</td><td style="color:#e6edf5">'+r.measured+'</td><td>'+r.registered+'</td><td class="'+
+       (rep?'':(ok?'pass':'fail'))+'">'+(rep?'—':(ok?'PASS':'FAIL'))+'</td></tr>';
+  }
+  t.innerHTML=h;
+  const gated=D.verdict.filter(r=>r.prediction!=='report-only');
+  const all=gated.every(r=>String(r.pass)==='true');
+  tile('tiles','p_c(stella-bond), re-located',fmt(estp('stella_bond','threshold','aggregate-extrapolated')),
+       '±'+fmt(SE_ST)+' (the fit’s own se) — 5.7 had 0.099641');
+  tile('tiles','d_f there',fmt(vnum('P3a'),4),'5.7: 2.02762 — class '+CLASS_DF);
+  tile('tiles','distance from the class value',fmt(Z,2)+'σ','was a '+MISS_57+' miss; band ±'+fmt(BAND,3),'pass');
+  tile('tiles','verdict', all?'H-DISSOLVE':'H-CERTIFY', 'both branches registered before the run (P3c)', all?'pass':'fail');
+  document.getElementById('vtake').innerHTML = all
+    ? 'All fourteen gated predictions hold, and the registered <b>H-DISSOLVE</b> branch is the outcome: '+
+      '5.7’s scope-statement stands verbatim — its windows, its sizes, its numbers, its pre-registered '+
+      'miss bands all held — while its <i>interpretation</i> is upgraded. What 5.7 measured was our own '+
+      'estimator. The honest scope of the upgrade: this does <b>not</b> confirm the exponent (the band is far '+
+      'too wide for that, by design and by measurement), and it does not make the extrapolation demonstrably '+
+      '<i>more accurate</i> on bond data — the drift is unresolvable there (R² = 0.002), and the plain '+
+      'aggregate mean is actually closer to the FCC key. What it does is centre the locator honestly and '+
+      'carry an error bar that survives contact with an answer key.'
+    : 'A registered prediction failed — see <code>eval.md</code>. If it is P3c, this is the pre-registered '+
+      '<b>H-CERTIFY</b> outcome, not a broken rung (R5).';
+})();
+
+document.getElementById('cap').innerHTML =
+  'Gate: <code>core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs</code> · spec: '+
+  '<code>lab/warp-5-universality/0509-bond-locator-reprocess/spec.md</code> (R1, committed before the run) '+
+  '· data: this entry’s committed <code>data/</code>, whose input is rung 5.7’s '+
+  '<code>rw_curves.csv</code> read-only · answer keys: Lorenz &amp; Ziff, PRE 57, 230 (1998) and Wang, '+
+  'Zhou, Zhang, Garoni, Deng, PRE 87, 052107 (2013) · regenerate: <code>cargo run -p viz --bin '+
+  'gen_bond_locator -- '+D.source.commit+'</code> · commit <code>'+D.source.commit+'</code>. '+
+  'Self-contained, no external assets (R10).';
+</script>
+</body>
+</html>
