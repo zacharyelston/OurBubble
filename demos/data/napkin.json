@@ -1262,6 +1262,7 @@
       "never_returns": true,
       "printable_rows": 3,
       "push_at_a_middle": 8,
+      "repeat_search_ticks": 60,
       "stable_tried": [
         {
           "k": "39/100",

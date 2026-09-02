@@ -8,18 +8,26 @@
 // core under node and holds it to `demos/data/napkin.json`, which `tools/napkin_export.py` derives
 // from `tools/napkin.py` and `tools/octahedron.py` on every build.
 //
-// Three things are checked, and the third is the one that matters most.
+// **What is checked, exactly.** Three things, and then one that is deliberately not.
 //
-//   1. **Every number the core computes equals the export exactly** — compared as exact rational
-//      strings, never as floats with a tolerance.
-//   2. **The steps are the outline's beats**, in order, with no beat missing and none repeated.
-//   3. **No step shows a number the napkin did not compute.** Every numeric token in every table
-//      cell of every step of every chapter must be a value the export contains, in one of the forms
-//      this page is allowed to write it in — or be one of the few structural counts declared by
-//      name below, with its reason. This is the check that answers the attack the discipline exists
-//      for: typing a number into a demo that no arithmetic produced.
+//   1. **Every value the core computes equals the napkin's** — compared as exact rational strings,
+//      never as floats with a tolerance. This is the check that carries the weight.
+//   2. **No number appears on any surface that the export does not contain.** Every numeric token in
+//      every table cell, table heading, table caption, step title, step prose, step note and piece
+//      of text inside every drawing — at every tick of every step of every chapter.
+//   3. **No digit is typed into a step at all.** The source of the step definitions is read, and any
+//      string literal containing a digit fails, in any quote style, with a template's `${…}` cut out
+//      first because that is code. A count arrives as `String(cut.dots)` or it does not arrive.
+//      Exactly three numbers on these pages are not values of the object; they are named constants
+//      above the step region, and this file holds the same three.
 //
-// A failure prints the chapter, the beat, the table and the cell.
+//   4. **What this cannot catch, and does not claim to:** a number computed correctly from the
+//      object and then *put in the wrong place* — `cut.octDots` printed in the "lines" column, or
+//      `cut.dots + 1` where `cut.dots` belongs. Every such value is one the export contains, so no
+//      scan over the numbers can see it; only reading the page can. That is what the proof-reader
+//      pass is for, and `demos/DEMOS.md` says so in the same words.
+//
+// A failure prints the chapter, the beat, the tick, the surface and the text.
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -30,7 +38,7 @@ import {
   ceiling, census, cellName, fracText, midFaces, midLines, midpointCut, numberText,
   octahedronFaceSum, octahedronPoke, secondTetrahedron, signedText, simplices, stellaCensus,
   stellaLines, stellaPoints, stellaRunaway, stellaSmallerTicks, sum, tetraRuns, tetrahedron,
-  netSegments, netLabels, thousands, ringPlanarity, drawRing,
+  netSegments, netLabels, thousands, ringPlanarity, drawRing, REPEAT_SEARCH_TICKS,
 } from "./core.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -82,6 +90,60 @@ const STRUCTURAL = new Map([
   ["1", "how many rules the law has"],
   ["2", "the two coming-home facts, and the two shapes chapter 4 ends with"],
 ]);
+
+/**
+ * Every string literal in `source`, with a template's `${…}` cut out, and comments skipped.
+ *
+ * A regex over quotes is not enough for this and was not: `["dots", 0], ["lines", 1]` contains the
+ * two-character span `", "` between two array literals, and a naive pattern reads that as a string
+ * holding a digit. So the source is walked once, character by character, tracking what it is inside.
+ */
+function stringLiterals(source) {
+  const out = [];
+  let line = 1;
+  let i = 0;
+  while (i < source.length) {
+    const c = source[i];
+    if (c === "\n") { line += 1; i += 1; continue; }
+    if (c === "/" && source[i + 1] === "/") {
+      while (i < source.length && source[i] !== "\n") i += 1;
+      continue;
+    }
+    if (c === "/" && source[i + 1] === "*") {
+      i += 2;
+      while (i < source.length && !(source[i] === "*" && source[i + 1] === "/")) {
+        if (source[i] === "\n") line += 1;
+        i += 1;
+      }
+      i += 2;
+      continue;
+    }
+    if (c !== '"' && c !== "'" && c !== "`") { i += 1; continue; }
+    const quote = c;
+    const startedAt = line;
+    let text = "";
+    let depth = 0;
+    i += 1;
+    while (i < source.length) {
+      const d = source[i];
+      if (d === "\\") { i += 2; continue; }
+      if (d === "\n") { line += 1; }
+      if (quote === "`" && d === "$" && source[i + 1] === "{") { depth += 1; i += 2; continue; }
+      if (depth > 0) {
+        if (d === "{") depth += 1;
+        else if (d === "}") depth -= 1;
+        else if (d === "\n") { /* counted above */ }
+        i += 1;
+        continue;
+      }
+      if (d === quote) { i += 1; break; }
+      text += d;
+      i += 1;
+    }
+    out.push({ text, line: startedAt });
+  }
+  return out;
+}
 
 // ── 1 · the object, and the two coming-home facts ─────────────────────────────────────────────────
 
@@ -256,6 +318,7 @@ section("the ceilings, certified without an eigensolver, and the runaway");
   sameList("refusal.runaway.look.ticks", runaway.look.map((entry) => String(entry.tick)),
     e.runaway.look.map((entry) => String(entry.tick)));
 
+  same("refusal.runaway.repeat_search_ticks", REPEAT_SEARCH_TICKS, e.runaway.repeat_search_ticks);
   const smaller = stellaSmallerTicks();
   sameList("refusal.runaway.stable_tried.k", smaller.map((row) => row.k),
     e.runaway.stable_tried.map((row) => row.k));
@@ -346,31 +409,24 @@ section("the steps are the outline's beats, in order");
   }
 }
 
-section("no step shows a number the napkin did not compute");
+section("no step shows a number the napkin did not compute — on any surface");
 {
   // Every exact value the export carries, in every form a demo is allowed to write it in: the exact
-  // string, `numberText`'s short decimal (with the typeset minus), `signedText`'s explicit plus, and
-  // `fracText`'s fraction. A cell may contain no other number.
+  // string, `numberText`'s short decimal (with the typeset minus), `signedText`'s explicit plus,
+  // `fracText`'s fraction, that value negated (a line walked the other way round), and a big whole
+  // number with its group separators.
   const allowed = new Set();
   const offer = (text) => {
     const trimmed = String(text).trim();
     if (!/^-?\d+(?:\/\d+)?$/.test(trimmed)) return;
     const value = Frac.parse(trimmed);
-    allowed.add(trimmed);
-    allowed.add(fracText(value));
-    try { allowed.add(numberText(value)); allowed.add(signedText(value)); } catch { /* refused, rightly */ }
-    // A count is often written as its own plain digits with the ASCII sign the export uses.
+    for (const form of [value, value.neg()]) {
+      allowed.add(form.toString());
+      allowed.add(fracText(form));
+      try { allowed.add(numberText(form)); allowed.add(signedText(form)); } catch { /* refused */ }
+    }
     allowed.add(String(value.n));
     if (value.d !== 1n) allowed.add(String(value.d));
-    // A line walked the other way round carries its number negated — the coboundary's own sign, and
-    // the whole reason the walks cancel. So the negation of every exported value is allowed too, and
-    // nothing else is.
-    const negated = value.neg();
-    allowed.add(negated.toString());
-    allowed.add(fracText(negated));
-    try { allowed.add(numberText(negated)); allowed.add(signedText(negated)); } catch { /* refused */ }
-    // And a big whole number is written with group separators, which is a presentation of the same
-    // value rather than a different one.
     if (value.d === 1n) allowed.add(thousands(value.n));
   };
   const walkExport = (node) => {
@@ -383,8 +439,9 @@ section("no step shows a number the napkin did not compute");
 
   // Every whole number the export's own structure makes countable, and no others: the length of a
   // list it carries, and every index into one. A tick number in the first column of a run's table is
-  // an index into that run; a count of dots is a length. An earlier version allowed every whole
-  // number up to sixty, which let a page display eleven dots over an export that said ten.
+  // an index into that run; a count of dots is a length. What this deliberately does NOT do is allow
+  // every small whole number — an earlier version allowed everything up to sixty, and a page could
+  // then have shown eleven dots over an export that said ten.
   const offerIndices = (node) => {
     if (Array.isArray(node)) {
       offer(String(node.length));
@@ -395,29 +452,46 @@ section("no step shows a number the napkin did not compute");
     if (node && typeof node === "object") Object.values(node).forEach(offerIndices);
   };
   offerIndices(EXPORT);
-
-  // The three numbers a step writes that are not values of the object at all — declared here, and
-  // matched against the same three declared in `core.mjs`. Nothing else may join them without a
-  // reason written in both places, and the lint below refuses any other bare number in a step.
   for (const value of STRUCTURAL.keys()) allowed.add(value);
 
   // A group-separated integer is one token, not three: `8,500` is one number.
   const TOKEN = /[−-]?\d{1,3}(?:,\d{3})+|[−-]?\d+(?:\.\d+)?(?:\/\d+)?/g;
+  const TEXT_NODE = /<(?:text|title|desc)\b[^>]*>([^<]*)<\/(?:text|title|desc)>/g;
+
+  // EVERY surface a reader meets, not only the table cells. The first version of this scanned the
+  // cells alone, and a fresh reviewer walked a wrong number straight through a table's caption, a
+  // step's own title, its prose, its notes, the drawing, and the SVG description a screen reader
+  // reads out. A number is a number wherever the page prints it.
+  const surfaces = (slug, step, tick, rendered) => {
+    const out = [
+      ["the step's title", step.title],
+      ["the step's prose", step.body],
+    ];
+    rendered.notes.forEach((note, i) => out.push([`note ${i + 1}`, note]));
+    for (const spec of rendered.tables) {
+      out.push([`the caption of "${spec.caption}"`, spec.caption]);
+      for (const row of [spec.head, ...spec.rows]) {
+        for (const cell of row) out.push([`a cell of "${spec.caption}"`, String(cell)]);
+      }
+    }
+    for (const match of rendered.drawing.matchAll(TEXT_NODE)) {
+      out.push(["the drawing", match[1]]);
+    }
+    void slug; void tick;
+    return out;
+  };
+
   for (const [slug, chapter] of Object.entries(CHAPTERS)) {
     for (const step of chapter.steps()) {
       const ticks = step.ticks ? step.ticks + 1 : 1;
       for (let tick = 0; tick < ticks; tick += 1) {
         const rendered = step.render(tick);
-        for (const spec of rendered.tables) {
-          for (const row of [spec.head, ...spec.rows]) {
-            for (const cell of row) {
-              for (const token of String(cell).match(TOKEN) || []) {
-                checks += 1;
-                if (!allowed.has(token)) {
-                  fail(`${slug} beat ${step.beat} tick ${tick}, table "${spec.caption}": the cell `
-                    + `${JSON.stringify(String(cell))} shows ${token}, which the napkin did not compute`);
-                }
-              }
+        for (const [where, text] of surfaces(slug, step, tick, rendered)) {
+          for (const token of String(text).match(TOKEN) || []) {
+            checks += 1;
+            if (!allowed.has(token)) {
+              fail(`${slug} beat ${step.beat} tick ${tick}: ${where} shows ${token}, which the `
+                + `napkin did not compute — in ${JSON.stringify(String(text).slice(0, 90))}`);
             }
           }
         }
@@ -432,49 +506,44 @@ section("no step shows a number the napkin did not compute");
   }
 }
 
-section("no bare number is typed into a step");
+section("no digit is typed into a step, in any quote");
 {
-  // The check above catches a number no arithmetic on this object produces. It cannot catch a small
-  // whole number swapped for another small whole number, because a page that legitimately shows a
-  // twelfth tick makes 11 a number the export contains. So the swap is closed from the other side,
-  // at the source: inside the step definitions, a string that is nothing but digits is refused.
+  // The scan above catches a number no arithmetic on this object produces. It cannot catch a small
+  // whole number swapped for another, because a page that legitimately shows a twelfth tick makes 11
+  // a number the export contains. So the typed number is closed from the other side, at the source:
+  // **inside the step definitions, no string literal may contain a digit at all** — double-quoted,
+  // single-quoted, or a template's text (a template's `${…}` is code, and is cut out before the
+  // check). A count therefore has to arrive as `String(cut.dots)`, and the difference between that
+  // and `"10"` is visible in a diff.
   //
-  // A count in a table therefore has to arrive as `String(cut.dots)` and not as `"10"`, which is
-  // what makes the difference between the two visible in a diff. The three exceptions are the
-  // numbers that are not values of the object at all, and they are named constants — so the
-  // allowlist is three identifiers rather than three digits, and adding a fourth means writing down
-  // what it counts.
+  // A reviewer got past the first version of this with a backtick, with a single quote, and with a
+  // digit in a caption; all three now fail here. The three exceptions are declared above the step
+  // region as named constants, so the allowlist is three identifiers rather than three digits.
   const source = readFileSync(join(HERE, "core.mjs"), "utf8");
   const from = source.indexOf("// ── the steps ");
   const to = source.indexOf("/** Every chapter's steps, keyed by");
   checks += 1;
   if (from < 0 || to < 0 || to < from) {
-    fail("no bare number: could not find the step definitions in core.mjs");
+    fail("no digit typed: could not find the step definitions in core.mjs");
   } else {
-    const region = source.slice(from, to);
-    const named = new Map([["NONE", "0"], ["ONLY", "1"], ["PAIR", "2"]]);
-    for (const [name, digits] of named) {
+    for (const [name, digits] of [["NONE", "0"], ["ONLY", "1"], ["PAIR", "2"]]) {
       checks += 1;
-      const declared = new RegExp(`^const ${name} = "${digits}";`, "m");
-      if (!declared.test(source)) {
-        fail(`no bare number: core.mjs does not declare ${name} as "${digits}", so the two sides of `
-          + `the allowlist have come apart`);
+      if (!new RegExp(`^const ${name} = "${digits}";`, "m").test(source.slice(0, from))) {
+        fail(`no digit typed: core.mjs does not declare ${name} as "${digits}" above the step `
+          + `definitions, so the two sides of the allowlist have come apart`);
       }
       if (!STRUCTURAL.has(digits)) {
-        fail(`no bare number: core.mjs declares ${name} = "${digits}", which this test does not `
+        fail(`no digit typed: core.mjs declares ${name} = "${digits}", which this test does not `
           + `allow as a structural number`);
       }
     }
-    region.split("\n").forEach((line, index) => {
-      // The declarations themselves are where the three literals live.
-      if (/^const (NONE|ONLY|PAIR) = /.test(line)) return;
-      for (const match of line.matchAll(/"(\d+)"/g)) {
-        checks += 1;
-        fail(`no bare number: core.mjs line ${index + 1} of the step definitions writes `
-          + `${JSON.stringify(match[0])} — compute it, or name it the way NONE, ONLY and PAIR are `
-          + `named: ${line.trim().slice(0, 90)}`);
-      }
-    });
+    for (const found of stringLiterals(source.slice(from, to))) {
+      if (!/\d/.test(found.text)) continue;
+      checks += 1;
+      fail(`no digit typed: line ${found.line} of the step definitions writes a digit in `
+        + `${JSON.stringify(found.text.slice(0, 70))} — compute it, or name it the way NONE, ONLY `
+        + `and PAIR are named`);
+    }
   }
 }
 

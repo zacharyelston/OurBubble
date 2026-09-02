@@ -544,11 +544,15 @@ def check_napkin_export(errors: List[str]) -> str:
 def check_demo_cross_check(errors: List[str]) -> str:
     """Run the demos' core under node and hold every number it computes to the napkin's export.
 
-    This is the discipline the demos stand on: **a demo may not show a number the napkin did not
-    compute.** `demos/core.test.mjs` compares the two implementations value by value as exact
-    rational strings, and it also scans every table cell of every step of every chapter for a
-    numeric token the export does not contain — which is the attack the rule exists for, someone
-    typing a number into a page that no arithmetic produced.
+    Three things, precisely. Every value the browser computes equals the napkin's, compared as exact
+    rational strings. No numeric token appears on any surface a reader meets — cell, heading,
+    caption, title, prose, note, or text inside a drawing — that the export does not contain. And no
+    digit is typed into a step at all: the step definitions' own source is read, and a string literal
+    holding a digit fails, in any quote style.
+
+    What it does not catch, and `demos/DEMOS.md` says so in the same words: a number computed
+    correctly and put in the wrong place. Every such value is one the export contains, so no scan
+    over the numbers can see it — only reading the page can.
 
     **When node is absent this reports `unverified`, and never a pass.** That is the same shape as
     the snapshot-integrity layer: a check that could not run says so, on its own line, rather than

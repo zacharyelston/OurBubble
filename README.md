@@ -81,12 +81,16 @@ plain static pages — one shared vanilla-JS module, one stylesheet, nothing loa
 they are published beside the book, at `…/OurBubble/demos/`, through the `chapters/demos` symlink
 that mdBook copies.
 
-The rule they live under is the book's own, one layer out: **a demo may not show a number the napkin
-did not compute.** `tools/napkin_export.py` dumps the napkin's data (not its prose) to
-`demos/data/napkin.json` on every build; `node demos/core.test.mjs` runs the browser's arithmetic and
-compares it to that export value by value, as exact rational strings, and refuses any numeric token in
-any table cell that the export does not contain. Both run inside `make check`, and when node is not
-installed the line says `unverified — node absent` rather than passing.
+The rule they live under is the book's own, one layer out: **every number a demo shows is one it
+computed, it equals the napkin's to the last digit, and no number is typed into a demo by hand.**
+`tools/napkin_export.py` dumps the napkin's data (not its prose) to `demos/data/napkin.json` on every
+build; `node demos/core.test.mjs` runs the browser's arithmetic and compares it to that export value
+by value as exact rational strings, refuses any numeric token the export does not contain on any
+surface a reader meets — cell, caption, title, prose, note or drawing — and refuses any digit typed
+into the step definitions at all. Both run inside `make check`, and when node is not installed the
+line says `unverified — node absent` rather than passing. What no such check can catch is a number
+computed correctly and put in the wrong place; `demos/DEMOS.md` says so rather than implying
+otherwise.
 
 [`demos/DEMOS.md`](demos/DEMOS.md) is the full statement: the cross-check, the two drawing
 conventions and why the octahedron does not get a net, and how the stills these pages produce are

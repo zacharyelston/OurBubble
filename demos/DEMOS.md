@@ -14,9 +14,10 @@ as you read**, in exact arithmetic.
 | [`make-it-move.html`](make-it-move.html) | Make it move | 27–35 |
 | [`the-shape-between.html`](the-shape-between.html) | The shape between | 36–46 |
 
-## The one rule these pages live under
+## What these pages guarantee, and what they do not
 
-**A demo may not show a number the napkin did not compute.**
+**Every number a demo shows is one it computed, it equals the napkin's to the last digit, and no
+number is typed into a demo by hand.**
 
 The pages recompute the book's arithmetic rather than displaying numbers Python worked out — that is
 the point of them, and it is also the whole risk, because two implementations of the same arithmetic
@@ -29,31 +30,33 @@ are two places the book can disagree with itself. So the boundary between them i
 2. It is written on **every build**, by [`preprocessor.py`](../preprocessor.py), for the same reason
    the appendix is: `git status` is then the check.
 3. [`core.test.mjs`](core.test.mjs) runs [`core.mjs`](core.mjs) under node and compares the two
-   implementations **value by value, as exact strings** — never with a tolerance.
-4. It also **scans every table cell of every step of every chapter** for a numeric token the export
-   does not contain — where "contain" means an exact value it carries, that value negated (a line
-   walked the other way), a length of one of its lists, or an index into one, and nothing else. That
-   is the attack the rule exists for: someone typing a number into a page that no arithmetic
-   produced.
-5. And the swap that a cell scan **cannot** catch is closed from the other side. A small whole number
-   traded for another small whole number gets past any such scan, because a page that legitimately
-   shows a twelfth tick makes `11` a number the export contains. So the test also reads
-   `core.mjs`'s own source and **refuses any string of nothing but digits inside the step
-   definitions**: a count has to arrive as `String(cut.dots)`, never as `"10"`. Exactly three
-   numbers on these pages are not values of the object — how many rules the law has, how many
-   exceptions and assumptions there are, and the two coming-home facts — and those are named
-   constants (`ONLY`, `NONE`, `PAIR`) whose values the test checks against its own list. A fourth
-   means writing down what it counts, in both places.
+   implementations **value by value, as exact strings** — never with a tolerance. This is the check
+   that carries the weight.
+4. It then scans **every surface a reader meets** for a numeric token the export does not contain:
+   every table cell, heading and caption, every step's title, prose and notes, and every piece of
+   text inside every drawing — including the SVG `<desc>`, which is all a screen-reader user gets
+   from a picture — at every tick of every step. "Contain" means an exact value the export carries,
+   that value negated (a line walked the other way), a length of one of its lists, or an index into
+   one, and nothing else.
+5. And it reads `core.mjs`'s own source and **refuses any digit inside any string literal in the step
+   definitions** — double-quoted, single-quoted, or a template's text, with `${…}` cut out because
+   that is code. A count arrives as `String(cut.dots)` or it does not arrive. Exactly three numbers
+   on these pages are not values of the object at all (how many rules the law has, how many
+   exceptions and assumptions there are, and the two coming-home facts); those are named constants
+   declared above the step region, and the test holds the same three.
 
-   Three mutations, run against this pair: eleven dots where the napkin says ten (caught by the
-   lint), fifteen dots where it says fourteen (caught by the lint), a third of the whole where it
-   says a half (caught by the scan).
-6. `check_edition.py` runs both through `status()`, so the verdict comes from the error count and a
-   failing check cannot narrate a clean one. **If node is absent the line reads
-   `unverified — node absent`.** It never passes silently; CI has node.
-7. The `--rendered` pass then checks the built site actually carries the pages and that every link in
-   them resolves, because the wiring that publishes `demos/` is a thing nothing else would notice
-   breaking.
+### What no check here can catch
+
+**A number computed correctly and then put in the wrong place.** `cut.octDots` printed in the "lines"
+column reads as *six lines, twelve dots*, and every value in it is one the napkin computed — so no
+scan over the numbers can see it. Nor can one see `cut.dots + 1`, because eleven is a number the
+export contains as an index. Only reading the page catches those, which is what the proof-reader pass
+is for, and it is why this section is written down rather than left implied.
+
+The first version of this file claimed more than it checked. A fresh reviewer walked twelve wrong
+numbers past it — through a caption, a title, a body, a note, a drawing, an SVG description, a
+backtick and a single quote — with every check green. Seven of those classes are closed above; the
+three that remain are the paragraph you have just read.
 
 Run it by hand:
 
@@ -84,9 +87,16 @@ mirrored. The coordinates are `tools/canon.py`'s own, in its exact `(x, u·√3)
 `core.test.mjs` checks that all nineteen labels land where `canon.py` puts them, to the precision a
 drawing has.
 
-Numbers are written **on the pieces they belong to**: directly under a piece's own name, at that
-name's canonical position, so CANON.md's three placement rules are untouched. `D` appears three
-times and carries the same number three times, because it is one dot.
+Numbers are written **on the pieces they belong to**, and the *name never moves*: it stays at its
+canonical position and the number takes a fixed step from it — into the panel for a dot, straight
+down for a line or a face. That rule is worth stating because the two obvious alternatives both
+failed. Moving the name and the number inward together piles a panel's four labels onto its middle;
+stepping a line's number sideways pushes it onto the next line's name across the fold. `D` appears
+three times and carries the same number three times, because it is one dot.
+
+Chapter 1 draws its dots as dots, and the net does not. That is not an inconsistency to be tidied
+away: in the net a corner is where lines meet, and there is always a line. In beat 9 there is not —
+the beat is *where could you put a number*, and its answer needs something to point at.
 
 Chapter 1's triangle is the net's central panel, framed to itself — same anchor, same orientation,
 `AB` horizontal with `A` on the left. Nothing is learned twice: when the fourth dot arrives, the

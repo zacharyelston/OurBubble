@@ -260,9 +260,22 @@ def stella() -> Dict[str, Any]:
     }
 
 
+#: How far `stella_runaway` looks for a repeat before reporting that there is none. Pinned here
+#: because the demos print it, and re-run below so the number and the claim cannot come apart.
+REPEAT_SEARCH_TICKS = 60
+
+
 def refusal() -> Dict[str, Any]:
     ceilings = octahedron.napkin_ceilings()
     runaway = octahedron.stella_runaway()
+    lines = octahedron.stella_lines(cut=False)
+    for entry in runaway["stable_tried"]:
+        found = octahedron.period_of(14, lines, 0, entry["k"], REPEAT_SEARCH_TICKS)
+        assert found == entry["period"] == 0, (
+            f"at k = {entry['k']} the run repeats after {found} steps within "
+            f"{REPEAT_SEARCH_TICKS} ticks, so the demos' 'never' would be a shorter search "
+            f"rather than a fact about the object"
+        )
     return {
         "tick": frac(ceilings["tick"]),
         "leapfrog_bound": ceilings["bound"],
@@ -288,6 +301,11 @@ def refusal() -> Dict[str, Any]:
                 {"k": frac(entry["k"]), "printable": entry["printable"], "period": entry["period"]}
                 for entry in runaway["stable_tried"]
             ],
+            # How far the search for a repeat runs before it reports there is none. The demos print
+            # this number, so it has to be the napkin's rather than the demos' own: it is re-run
+            # here at that depth, on the same object and the same tick sizes, and the answer is
+            # asserted to be the same "never" `stella_runaway` already asserted.
+            "repeat_search_ticks": REPEAT_SEARCH_TICKS,
         },
         "denominators_number_prints": list(octahedron.NAPKIN_DENOMINATORS),
     }
