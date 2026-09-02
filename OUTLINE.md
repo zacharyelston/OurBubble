@@ -19,8 +19,8 @@ subject. By the time the first result appears, she owns the whole vocabulary fro
 that is the only kind of "too fast" there is. And mark any beat whose question you would not
 actually ask — that is a chapter narrating us instead of her.
 
-**The ritual.** From chapter 5 on, every chapter has one beat marked ✎ *Before we look*: the reader
-writes her guess. Then the look, then the comparison. The book's whole method, performed by the
+**The ritual.** From chapter 5 on, every chapter that runs an experiment has one beat marked ✎ *Before
+we look*: the reader writes her guess. (The history chapter, 11, runs none and has no ✎ by design.) Then the look, then the comparison. The book's whole method, performed by the
 reader every time instead of explained to her once.
 
 ---
