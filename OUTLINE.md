@@ -138,7 +138,7 @@ reader every time instead of explained to her once.
 82. Point it at the solved case — what comes back?  *(Onsager's numbers, to six and seven digits — a calibration, not a discovery)*  [picture: markers on the known line]
 83. Now take the answer key away — the case nobody has solved?  *(exponents agreeing with real matter to a few percent; no parameter they could have entered through)*
 84. What was it still handed, and what happened when that was taken away too?  *(the transition temperature and one class number; the fully blind run found T_c to four parts in ten thousand)*
-85. Did it miss anything — and had it said so first?  *(one quantity, too high, in exactly the direction registered in advance)*  [picture: the marker outside the band drawn first]
+85. Did it miss anything — and had it said so first?  *(one quantity, too high, in exactly the direction registered in advance)*  [no figure in the record for this one (0503 has none) — the band and the miss are stated in the appendix]
 86. What is left for an instrument to prove?  *(that it can tell us we were wrong)*
 
 ## 10 · When the world you built says no
