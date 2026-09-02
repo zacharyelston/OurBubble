@@ -116,26 +116,27 @@ Step three is the one people skip. It is uncomfortable, it slows everything down
 step that makes the other three worth anything. Without it you have a story that fits — and stories
 that fit are cheap, because you can always find one after you know the answer.
 
+So put the child back in the yard, with her stick and her two marks, and ask what she is still
+missing.
+
 ## Back to the child
 
 Go back to her, and to the two marks in the ground.
 
-She is one step away from Eratosthenes, and it is not a large step. She has something that changed
-and a number for how much it changed. What she does not have is the thing step two and step three
-would give her: a structure small enough to hold in her head, and a statement of what it would do
-that could turn out to be false.
+She is one step from Eratosthenes and it is not a large one. She has something that changed and a
+number for how much. What she lacks is what steps two and three would give her: a structure small
+enough to hold in her head, and a statement of what it would do that could turn out false.
 
-That is the hard part. It is also, conveniently, something she could build from nothing on the back
-of an envelope.
+That is the hard part. It is also, conveniently, something you can build from nothing on the back of
+an envelope — and that is where she hands the book over. She got you this far; you take it from the
+blank page.
 
-*One piece of furniture, while we are here. Every chapter ends with a line like the one below, in
-italics. It says which files back up what the chapter claimed — and which parts of it nothing backs
-up, which is the half worth reading. The last chapter is about going and looking for yourself.*
+So that is what the rest of this does. Every chapter builds a little more of a small world, says
+what it should do before it does it, and then lets it answer, starting with nothing at all and how
+little it turns out you need.
 
-So that is what the rest of this book does — and from here it is your envelope, not hers. She got
-you this far; you take it from the blank page. Every chapter after this one builds a little more of
-a small world, says what it should do before it does it, and then lets it answer, starting with
-nothing at all and how little it turns out you need.
+*Every chapter ends with a line like this one: which files back up the chapter's claims, and which
+parts nothing backs up. The last chapter is about going and looking yourself.*
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-the-shadow).*

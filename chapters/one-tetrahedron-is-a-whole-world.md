@@ -83,35 +83,33 @@ The four faces are the boundary of the inside, the way the three lines were the 
 triangle's face. So do to the faces what you did to the lines — add the four face-numbers up around
 the inside.
 
-There is one thing to settle first, and it is the only rule in these two chapters you could not have
-guessed. Walking round a triangle, you knew which way to go because you were following a route.
-There is no route round four faces, so you need a convention for which way each one faces, and here
-it is. Each face is the three corners you get by leaving one out. Take them in the order the table
-uses — ABC, ABD, ACD, BCD, which is leaving out D, then C, then B, then A — and **alternate the
-signs as you go: minus, plus, minus, plus.**
+One thing to settle first. Round a single triangle it never mattered which way you went — reverse it
+and every difference flips sign, so the total flips from zero to zero. Direction matters only once
+you add *several* faces, because then they must agree with each other.
 
-That is the rule. Apply it and add.
+So make them agree: **walk all four faces the same way round as seen from outside.** Stand outside,
+look at a face, go clockwise. All four.
 
 {{napkin:tetra_inside_sum}}
 
-Zero again, exactly — and now you can check the cancellation with the arrows row and a pencil.
+Zero again, exactly — and the reason is visible in the table.
 
-Take any line and find the two faces it lies on. Every line lies on exactly two: line AB is on ABC
-and on ABD, and nowhere else. Walk each of those faces and you will find AB going in with the same
-sign both times, contributing its arrow of 3 to each. But ABC enters the total with a minus and ABD
-with a plus, so those two threes are equal and opposite, and they kill each other.
+Pick any line and find the two faces meeting along it; every line has exactly two. Both are walked
+from outside and they sit on opposite sides of that line, so each walks it *the other way*. Look at
+AB: the first row goes B → A, the second A → B. Its arrow of 3 enters the total once as +3 and once
+as −3.
 
-Do that for all six lines and nothing is left over. That is why the total is zero rather than merely
-small: every line gets counted exactly twice, once with each sign.
-
-You have now met the same fact twice: walk the boundary of a closed thing and the total comes home
-to zero. It is the one structural truth in this book, and it did not cost anything.
+Every line, no exceptions. Twelve appearances, six cancelling pairs, nothing left over.
 
 So how many kinds of number can this world hold?
 
 ## Four kinds, and that is all there will ever be
 
-Count the places a number can live: on a dot, on a line, on a face, on the solid inside. Four kinds.
+You have now met the same fact twice — walk the boundary of a closed thing and the total comes home
+to zero — and it cost nothing either time.
+
+So count the places a number can live: on a dot, on a line, on a face, on the solid inside. Four
+kinds.
 
 And that is the complete list of *places* — not for the tetrahedron, but for this book. However many
 dots a later chapter uses, a number stored in the little world sits on a dot, a line, a face or an

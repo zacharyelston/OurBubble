@@ -8,9 +8,9 @@
 <!-- NOTE(figure): (a) the wedge — caption: "Analogy — not data. Five tetrahedra packed around one shared edge, and the gap the sixth cannot fill. The measured angles are in the appendix." -->
 <!-- NOTE(figure): (a) alt — "Five identical tetrahedra fanned around a common edge, nearly closing a full turn, with the narrow remaining wedge picked out so it is visibly too thin to hold a sixth." -->
 <!-- NOTE(figure): (a) brief — the near-miss is the whole point, so the wedge must read as thin-but-real at a glance. Show the shared edge end-on. Do not exaggerate the gap; if it looks roomy the picture lies. -->
-<!-- NOTE(figure): (b) the two families — caption: "Analogy — not data. A cube's eight corners sorted by whether their coordinates add up odd or even: two tetrahedra threaded through each other, sharing no line." -->
-<!-- NOTE(figure): (b) alt — "A cube with its eight corners two-coloured, the four of one colour joined into one tetrahedron and the four of the other into a second, the two interpenetrating without any line in common." -->
-<!-- NOTE(figure): (b) brief — the two-colouring must read as a rule rather than a decoration: a reader should be able to re-derive which corner belongs to which family. Distinguish the families by more than hue. -->
+<!-- NOTE(figure): (b) one cube, its four kept corners, and the hole beside it — caption: "Analogy — not data. Colour a cube's corners so neighbours never match, keep one colour, and the four you kept are a tetrahedron. Stack cubes and the gaps between the tetrahedra are octahedra, each centred on a corner you threw away." -->
+<!-- NOTE(figure): (b) alt — "One cube with its eight corners two-coloured; the four corners of a single colour joined by face diagonals into a tetrahedron; and beside it the eight-sided hole that appears between such tetrahedra once the cubes are stacked, with a discarded corner at its centre." -->
+<!-- NOTE(figure): (b) brief — the two-colouring must read as a rule rather than a decoration: a reader should be able to re-derive which corners are kept. Distinguish kept from discarded by more than hue, and make the hole's centre visibly one of the discarded corners, because that identification is the beat. -->
 
 The last chapter left you stuck. One tetrahedron has no room in it, so it cannot have a ripple, so
 it cannot answer the only question you actually wanted to ask.
@@ -24,9 +24,9 @@ Do they stack?
 
 No, and the way they fail is one of the better stories in mathematics.
 
-Aristotle wrote that regular tetrahedra fill space, and the mistake stood for something like
-eighteen centuries before anyone checked properly. They come *very close*, and very close is the
-whole story.
+Aristotle wrote that tetrahedra all of one size and shape will fill space, and the mistake stood for
+something like eighteen centuries before anyone checked properly. They come *very close*, and very
+close is the whole story.
 
 Stack them around one shared line, like slices of a cake meeting at the spine. The angle at which
 two faces of a tetrahedron meet along the line they share is **70.5288°**, so closing a full turn of
@@ -51,38 +51,39 @@ If there is no perfect answer, what did we choose?
 
 ## The compromise we chose
 
-Every tetrahedral world is a compromise. That matters more than it sounds, because a compromise is a
-*choice*, a choice has consequences, and consequences can be measured.
+Every tetrahedral world is a compromise, and a compromise is a *choice* — which has consequences,
+which can be measured.
 
-Here is ours, and you can do it with a pencil. Take a cube and colour its eight corners in two
-colours, so that **no two corners joined by an edge of the cube ever share a colour.** There is
-exactly one way to do it and you will find it in about ten seconds: opposite corners of each face
-match, neighbouring ones never do.
+Here is ours, with a pencil. Colour a cube's eight corners in two colours so that **no two corners
+joined by an edge ever share a colour**. There is exactly one way, and you will find it in seconds:
+opposite corners of each face match, neighbouring ones never do.
 
-Now look at the four corners of one colour. Every pair of them is joined by a diagonal across one of
-the cube's faces, so all six gaps between them are the same size — which makes them the four corners
-of a tetrahedron. The same goes for the other colour. Two tetrahedra, threaded through each other,
-sharing no line.
+Now throw half away. **Keep one colour, discard the other.** The four you kept are joined to one
+another by diagonals across the cube's faces, so all six gaps between them are equal — which makes
+them one regular tetrahedron. One cube, one tetrahedron.
 
-Stack cubes coloured that way and space does fill. What pays for the wedge is that the tetrahedra
-are no longer all the same shape: the two inside each cube are, and the pieces left over in the
-corners between them are not. The near-miss did not go away. It got moved into the leftovers.
+Stack the cubes, keeping the same colour throughout. The tetrahedra never meet face to face, and the
+gaps between them are not thin wedges any more: each is shaped like an octahedron, and each is
+centred on one of the corners you threw away.
 
-And the choice handed us something we did not pay for.
+Octahedra are easy. Pick a long diagonal, cut along it, and one falls into four tetrahedra. Do that
+to every hole and space is filled entirely with tetrahedra — not all the same shape, which is the
+compromise, and no wedge left anywhere.
 
-## Two families, and a left and a right
+## Is any dot special?
 
-The two colours are not interchangeable, and that is worth a moment.
+Before poking anything, one question worth settling, because the next chapter depends on the answer.
 
-Either tetrahedron on its own is perfectly symmetrical — hold one up to a mirror and you cannot tell
-the reflection from the original. Hold up the *pair*, though, and you can. Reflecting the cube swaps
-the two colours: what went in as the first family comes back as the second. So the pair has a left
-and a right even though neither member does.
+You threw away half the corners, cut the holes along diagonals, and did all of it by recipe. It
+would be easy to end up with a lopsided thing — some dots in the thick of it, others out on a limb,
+a few sitting on seams where the recipe changed its mind. If that were so, poking one dot and poking
+another would not be the same experiment, and no comparison between directions would mean anything.
 
-Nobody added that. Nobody wrote a rule saying the two should differ. It fell out of colouring eight
-corners so that neighbours never match — which is to say it was in the object before a single number
-was stored on it, and it is a reason to build a world out of the smallest pieces you can rather than
-assembling one from the features you wanted.
+It is not so. Every dot in this world sees the same arrangement around it: the same lines, going the
+same ways, to neighbours the same distance off. There is no special place, no centre and no seam.
+
+That is exactly what a fair test of a ripple needs, and you now have it. So poke a dot in the middle
+of a great many, and watch.
 
 Now you have room. So: poke a dot in the middle of a great many, and watch.
 
@@ -144,15 +145,14 @@ Which means the question you have been unable to ask is finally available.
 You can now ask the stopwatch question. Poke a dot, count the ticks, and see how far the front has
 gone — and then do it again in a different direction and compare.
 
-Take stock of what it took to get here, because the list is short and all but one of its items was
-forced. Dots, because a number needs somewhere to sit. Lines, because change lives between. A
-triangle, because it was the first thing that closed. A tetrahedron, because that is the triangle's
-shape one dimension up — and later, when stacking came up, because it holds its shape and a cube
-does not. A clock and one rule, because nothing could happen. Many tetrahedra, because one had no
-room. The two-colouring, because tetrahedra will not stack. A wrap, because edges echo.
+Take stock, because the list is short and all but one item was forced. Dots, because a number needs
+somewhere to sit. Lines, because change lives between. A triangle, because it was the first thing
+that closed. A tetrahedron, because that is the triangle one dimension up — and, once stacking came
+up, because it holds its shape where a cube does not. A clock and one rule, because nothing could
+happen. Many tetrahedra, because one had no room. The two-colouring and the discarded half, because
+tetrahedra will not stack alone. A wrap, because edges echo.
 
-The exception is the dial, and it is the only thing on the list anybody chose. Nothing has forced a
-setting yet.
+The exception is the dial — the only thing anybody chose. Nothing has forced a setting yet.
 
 That is the object. Everything from here is this one thing, asked a different question — and the
 first question is whether the ring it makes is actually round.

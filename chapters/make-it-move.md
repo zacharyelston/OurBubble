@@ -49,11 +49,11 @@ The word to watch is **carries**. Take it out and you have the other rule, the o
 bit, and next tick starts again from wherever it landed. That is a drop of ink in water. It spreads,
 it flattens, it stops.
 
-Leave it in, and the push does not deliver the number anywhere this tick. It leans on the number's
-*motion*, and whatever motion the dot had already built up keeps going. So the differences set the
-change in the change rather than the change itself, and a dot already rising keeps rising for a
-moment after its neighbours have fallen below it — the push has to turn a motion around before it
-can reverse it.
+Leave it in, and the push still moves the number — but it does not hand the number a *destination*.
+It acts on the number's motion, and the motion is what carries it. So the differences set the change
+in the change rather than the change itself, and a dot already rising keeps rising for a moment
+after its neighbours have fallen below it: the push has to turn a motion around before it can
+reverse it.
 
 Which means a dot must remember one thing beyond where it is: where it was a tick ago. Ink in water
 needs no memory. A plucked string does.
@@ -83,19 +83,16 @@ yet. Then apply the rule ten times.
 {{napkin:slosh_table}}
 
 They slosh — and then they come back. Tick 3 holds the same four numbers as tick 0, in the same
-places. Not close; the same. It does it again at tick 4, and again at 7 and 8, and it will go on
-doing that forever.
+places. Not close; the same. It does it again at 4, and at 7 and 8, and it will go on forever.
 
-This is the beat to be surprised at. **Nothing settles.** Nothing spreads out, nothing levels off,
-nothing runs down. Under the other rule the four numbers would have converged on their average and
-stopped there, which is what ink in water does. This is the plucked string: it goes, it comes back,
-and with nothing to damp it, it does that again.
+**Nothing settles.** Under the other rule the four numbers would have converged on their average and
+stopped there, which is what ink in water does. This is the plucked string.
 
-One caveat, because the table is tidier than the rule deserves the credit for. That the world comes
-back *at all* is the rule's doing — there is nowhere for anything to leak away to, so it cannot run
-down. That it comes back on a whole tick, onto exactly those numbers, is a *setting*: the step size
-used here is the one value that lands the cycle on four ticks. Change it and the world still
-oscillates forever and still never settles. It just stops keeping such round hours.
+One caveat, because the table is tidier than the rule deserves credit for. That the world comes back
+*at all* is the rule's doing: nothing can leak away, so nothing can run down. That it comes back on
+a whole tick, onto those exact numbers, is a *setting* — the step size here is the one value that
+lands the cycle on four ticks. Change it and the world still never settles; it just stops keeping
+such round hours.
 
 Now add up the four numbers at each tick and look down that last column.
 
@@ -126,22 +123,19 @@ hard as a difference along the others. Then run the same ten ticks again.
 
 {{napkin:slosh_table_dialed}}
 
-Three things to notice, and the third is the one to keep.
+Three things, and the third is the one to keep.
 
-The motion along that line got faster and more violent. The two dots it joins swing further and
-sooner — one of them now goes *below every number the world started with*, which is worth a second
-look, because a levelling-off process could never do that. Overshooting past everything you began
-with is a wave's signature.
+The motion along that line got more violent. One of its two dots now goes *below every number the
+world started with* — worth a second look, because a levelling-off process could never do that.
+Overshooting everything you began with is a wave's signature.
 
-The rhythm got thinner. The even world came home at tick 3 and again at 4, then again at 7 and 8 —
-twice in every cycle. This one comes home at tick 3 and then not until 8. Count it off in both
-tables. The world now has two speeds in it instead of one, and they no longer agree on when to
-arrive.
+The rhythm got thinner. With every line counting the same, the world came home at tick 3 and again
+at 4, then at 7 and 8 — twice a cycle. This one comes home at 3, then not until 8. Count it off in
+both tables.
 
-And the total never moved, so neither did the average — there are always four numbers sharing it.
-The dial changed *how* the world moves. It did not change how much there is. Hold on to that: a
-later chapter is entirely about a dial set badly, and the tell was never in the totals — it was
-always in the motion.
+And the total never moved, so neither did the average. The dial changed *how* the world moves, not
+how much there is. Hold on to that: a later chapter is entirely about a dial set badly, and the tell
+was never in the totals — it was always in the motion.
 
 Now stop being gentle. Poke one dot hard — put a big number on it and leave the others alone. Watch.
 

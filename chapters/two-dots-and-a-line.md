@@ -44,9 +44,10 @@ That is the whole of the vocabulary so far: dots hold numbers, lines hold differ
 and you already own both.
 
 And here is the awkward thing about differences, which is going to drive the rest of the chapter.
-Once you write one down on a line, nothing checks it. You could write four, or forty; the line has
-no opinion. To catch a mistake you would need a second, independent route to the same place — and
-with two dots there is no second route to anywhere.
+The difference is determined — but you still have to work it out, and nothing checks your
+arithmetic. Subtract wrongly and the line carries your mistake with a perfectly straight face. To
+catch it you would need a second, independent route to the same place, and with two dots there is no
+second route to anywhere.
 
 Unless you could get back to where you started without going the way you came. Can you, with two
 dots and a line?
@@ -149,9 +150,13 @@ Go back over everything you have drawn and look for it. The dots are somewhere, 
 an inside, but the inside has no area. You have been walking around a shape without ever knowing how
 big it is, and the walk still came home, and the books still balanced.
 
-That is not a gap in the picture. It is the reason the zero is exact. A quantity that depends on no
-measured length cannot be spoiled by measuring a length badly. The exactness and the missing ruler
-are the same fact seen twice.
+It is tempting to say that this is *why* the zero is exact, and it is worth being careful, because
+it is not. The zero is exact because the sum telescopes — each corner number turns up twice with
+opposite signs — and that would still happen if every line had a length.
+
+What the missing ruler buys is something else, and arguably better. Since no length is an input, no
+choice of lengths can spoil the answer: whatever sizes you give these lines later, the walk still
+comes home to zero. Hold on to that, because the next chapter does hand the lines lengths.
 
 So what have you actually assumed, all told?
 

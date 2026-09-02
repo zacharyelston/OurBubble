@@ -249,7 +249,7 @@ def tetra_counts() -> str:
     counts = (len(c["dots"]), len(c["lines"]), len(c["faces"]), len(c["insides"]))
     assert counts == (4, 6, 4, 1), f"the tetrahedron's census came out {counts}"
     body = (
-        "| dots | lines | faces | inside |\n"
+        "| dots | lines | faces | solid inside |\n"
         "|---|---|---|---|\n"
         f"| {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |"
     )
@@ -324,24 +324,52 @@ def tetra_inside_sum() -> str:
 
     line_rows = " | ".join(edge_name(line) for line in lines)
     arrow_rows = " | ".join(number(a) for a in arrows)
-    face_rows = " | ".join(f"**{number(f)}**" for f in face_numbers)
-    face_heads = " | ".join(edge_name(face) for face in faces)
     inside_terms = walk_terms(c["d2"][0], face_numbers)
+
+    # K36 (proofread, tranche A round 2): the chapter tells the reader she can do this check with a
+    # pencil, and the appendix now promises the arithmetic is shown. So show it. Each face is walked
+    # the same way round as seen from OUTSIDE the tetrahedron, which is the orientation that makes
+    # every line get walked once in each direction — the reason the grand total is zero. Printing
+    # the walk makes both the direction and the sum checkable instead of inferred.
+    # Each face is shown walked the way the boundary operator actually takes it — outward. Where the
+    # incidence carries a minus, the face is displayed walked the other way round and its number
+    # negated, which is the same arithmetic and removes the alternating-sign convention from the
+    # reader's side of it: all four displayed numbers then simply add.
+    walk_rows = []
+    outward = []
+    for index, (face, total) in enumerate(zip(faces, face_numbers)):
+        sign = c["d2"][0][index]
+        row = [sign * value for value in c["d1"][index]]
+        letters = list(edge_name(face))
+        cycle = letters if sign > 0 else [letters[0], letters[2], letters[1]]
+        outward.append(sign * total)
+        walk_rows.append(
+            f"| {' → '.join(cycle + [cycle[0]])} | {walk_terms(row, arrows)} | "
+            f"**{number(sign * total)}** |"
+        )
+    walk_table = "\n".join(walk_rows)
+    assert sum(outward) == 0, f"the four outward face-numbers came to {sum(outward)}"
+    outward_terms = " ".join(
+        (f"+{number(v)}" if v > 0 else f"−{number(-v)}") for v in outward
+    ).lstrip("+")
+
     body = (
         "This time the six line-numbers are given, not worked out from the corners — six arrows in "
         "their own right. So a face's loop need not be zero, and it is not:\n\n"
         f"| line | {line_rows} |\n"
         f"|---|{'---|' * len(lines)}\n"
         f"| arrow | {arrow_rows} |\n\n"
-        f"| face | {face_heads} |\n"
-        f"|---|{'---|' * len(faces)}\n"
-        f"| how much goes round it | {face_rows} |\n\n"
-        f"Now walk those four face-numbers around the inside, minding the signs: "
-        f"{inside_terms} = **0**."
+        "Each face below is walked the same way round as seen from outside, which is what makes the "
+        "two faces meeting along any line walk that line in opposite directions:\n\n"
+        "| walked | its arrows, in order | how much goes round it |\n"
+        "|---|---|---|\n"
+        f"{walk_table}\n\n"
+        f"Now just add the four up: {outward_terms} = **0**."
     )
-    return block("tetra_inside_sum", body,
-                 "four non-zero face-numbers from six freely chosen line-numbers, and their "
-                 "oriented sum around the inside")
+    return block("tetra_inside_sum",
+                 body,
+                 "four non-zero face-numbers from six freely chosen line-numbers, each face's walk "
+                 "shown, and their oriented sum around the inside")
 
 
 def _slosh_body(history: Sequence[Sequence[Fraction]]) -> str:
@@ -378,10 +406,10 @@ def slosh_table() -> str:
     assert repeat, "the run did not repeat within the ticks computed"
     body = _slosh_body(history)
     return block("slosh_table", body,
-                 f"the engine's own wave rule, run {TICKS} ticks from rest on one tetrahedron with "
-                 f"every line counting the same; the total is conserved exactly, and with nothing to "
-                 f"damp it and no room to spread into, the whole world comes back to its start every "
-                 f"{repeat} ticks")
+                 f"the one rule, run {TICKS} ticks from rest on one tetrahedron with every line "
+                 f"counting the same; the total is conserved exactly, and with nothing to damp it and "
+                 f"no room to spread into the world never settles — at this step size it comes back "
+                 f"to its start every {repeat} ticks")
 
 
 DIALED_LINE: Tuple[int, ...] = (0, 1)
