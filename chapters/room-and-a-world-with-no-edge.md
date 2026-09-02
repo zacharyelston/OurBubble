@@ -72,23 +72,26 @@ the same shape, which is the compromise, and no wedge left anywhere.
 
 ## Is any dot special?
 
-One detail in that recipe matters more than it looks: which of the three diagonals you pick is
-decided by a rule, and the rule **twists as it goes**, coming back to where it started every third
-hole.
+One detail in that recipe matters more than it looks, and it is not your choice. Which of the three
+diagonals gets cut is decided by a rule of ours, and the rule **twists on purpose**: add up a hole's
+three coordinates, and the pick cycles as that total goes up. You will see in a moment what the
+twist buys.
 
-A twisting recipe is exactly the kind that could leave seams — dots in the thick of it, dots out on
-a limb, dots where the rule changed its mind. If poking one dot were not the same experiment as
-poking another, no comparison between directions would mean anything.
+A twisting rule is exactly the kind that could leave seams — dots in the thick of it, dots where the
+rule changed its mind. If poking one dot were not the same experiment as poking another, no
+comparison between directions would mean anything.
 
-None is singled out. But the twist leaves its mark: there are **three kinds of place** here, each
-the other two turned a third of the way round the cube's long diagonal. Every dot has the same
-number of lines leaving it; what differs is which way its two longest point. The record counted
-them, and they come in exact thirds.
+None is singled out. But the twist leaves its mark, and this is what it buys: there are **three
+kinds of place** here rather than one.
 
-So the world has a grain, and nothing is privileged — turn the whole lattice a third of a turn about
-that diagonal, slide it along, and it lands back on itself with the three kinds swapped round.
-Remember the grain when a ripple comes out lopsided, because a grain is one place lopsidedness can
-hide.
+{{napkin:vertex_classes}}
+
+Counted while the page was built: three kinds, in exact thirds. And the three are copies of one
+another — turn one a third of the way round and step it sideways, and it lands exactly on the next
+kind.
+
+So the world has a grain, and no dot is privileged. Remember the grain when a ripple comes out
+lopsided, because a grain is one place lopsidedness can hide.
 
 Now you have room. So poke a dot in the middle of a great many, and watch.
 

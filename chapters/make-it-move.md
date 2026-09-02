@@ -39,6 +39,8 @@ So the clock is ready and the object is ready. One tick passes. What should it *
 
 ## One rule
 
+<!-- beat 29 -->
+
 Here is the rule, and it is the only one in the book.
 
 **Each dot's number is pushed toward its neighbours' by the differences on its lines — and carries
@@ -53,11 +55,13 @@ Ours is the other one, and the difference is a single word.
 
 ## The word is *carries*
 
-Leave it in, and the push still moves the number — but it does not hand the number a *destination*.
-It acts on the number's motion, and the motion is what carries it. So the differences set the change
-in the change rather than the change itself, and a dot already rising keeps rising for a moment
-after its neighbours have fallen below it: the push has to turn a motion around before it can
-reverse it.
+<!-- beat 29 -->
+
+Leave *carries* in, and the push still moves the number — but it does not hand the number a
+*destination*. It acts on the number's motion, and the motion is what carries it. So the differences
+set the change in the change rather than the change itself, and a dot already rising keeps rising
+for a moment after its neighbours have fallen below it: the push has to turn a motion around before
+it can reverse it.
 
 Which means a dot must remember one thing beyond where it is: where it was a tick ago. Ink in water
 needs no memory. A plucked string does.
@@ -80,6 +84,8 @@ So run it. Four numbers on four corners: what do they do?
 
 ## Ten ticks
 
+<!-- beat 31 -->
+
 Put four different numbers on the four corners and start them **at rest** — which now means
 something checkable: each one was in the same place a tick ago, so there is no motion carried in
 yet. Then apply the rule ten times.
@@ -93,6 +99,8 @@ Count it off in the table before reading on, because the next paragraph is the p
 and it is easy to nod at.
 
 ## Nothing settles
+
+<!-- beat 31 -->
 
 **Nothing settles.** Under the other rule the four numbers would have converged on their average and
 stopped there, which is what ink in water does. This is the plucked string.

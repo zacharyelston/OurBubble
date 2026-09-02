@@ -130,17 +130,18 @@ now decide to say how long each one is, because you want to.
 
 Here is the awkward part, and the chapter would be dishonest without it. That decision is not read
 off the object. The object does not contain it. You are choosing how much each of the six lines
-counts — whether a long line and a short line are worth the same when a number travels along them,
-or whether the long one should count for less.
+counts — whether a long line and a short line are worth the same when something *travels* along
+them, or whether the long one should be the slower crossing.
 
-Call it the dial. Six lines, six settings, and every setting gives you a different world with the
-same dots in it.
+Call it the dial. Six lines, six settings, each giving a different world with the same dots in it.
 
-And the promise the last chapter made is kept here: turn the dial however you like and **both zeros
-survive**. Lengths were never an input to either, so no setting can disturb either. The two facts
-you have are the two the dial cannot touch. Nothing so far has needed the dial, which is why you
-have not met it until now. Almost every result later in this book turns out to depend on it, and one
-whole chapter is about what happens when it is set carelessly.
+And notice what it never touches. The dial weights the *journey*, not the numbers: the difference on
+a line is what it always was, whatever length you give the line. So the promise the last chapter
+made is kept — turn the dial however you like and **both zeros survive**.
+
+Nothing so far has needed the dial, which is why you have not met it until now. Almost every result
+later in this book depends on it, and one whole chapter is about what happens when it is set
+carelessly.
 
 Is that really enough to call a world?
 
