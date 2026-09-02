@@ -98,9 +98,93 @@ def sections(markdown: str) -> list[tuple[str, int | None, int, bool]]:
     return out
 
 
+def audit(beats: list[int], markdown: str) -> dict:
+    """Every finding for one chapter's prose against its beats. **Pure** — reads no files.
+
+    Split out of `main()` so the tool's own rules can be exercised on constructed prose. That is not
+    tidiness: on `main` there is not yet a single chapter carrying beat markers, so fixtures are the
+    only way to ratify this file at all, and a check that can only be tested by the thing it checks
+    is the shape that let K76 through in the first place.
+    """
+    secs = sections(markdown)
+    claimed = [b for _, b, _, _ in secs if b is not None]
+    return {
+        "secs": secs,
+        "claimed": claimed,
+        "unmarked": [h for h, b, _, pre in secs if b is None and not pre],
+        # EVERY beat, always. No excusal is inferred from any count — see K76 in the docstring.
+        "missing": [b for b in beats if b not in claimed],
+        "stray": sorted({b for b in claimed if b not in beats}),
+        "splits": sorted({b for b in claimed if claimed.count(b) > 1}),
+        "reordered": claimed != sorted(claimed),
+    }
+
+
+def _fixture(preamble_beat: int | None, section_beats: list[int], bodies: dict | None = None) -> str:
+    """A synthetic chapter: an opening, then one `##` section per beat listed."""
+    out = "# T\n\n> **Scope.** A toy.\n\n"
+    if preamble_beat is not None:
+        out += f"<!-- beat {preamble_beat} -->\n\n"
+    out += "Opening prose that carries no beat unless the marker above says so.\n\n"
+    for beat in section_beats:
+        text = (bodies or {}).get(beat, f"Prose belonging to beat {beat}.")
+        out += f"## S{beat}\n\n<!-- beat {beat} -->\n\n{text}\n\n"
+    return out
+
+
+def self_test() -> list[str]:
+    """Run the reader's attacks on constructed prose, every time, before trusting the tool.
+
+    K76 was not a logic slip; it was a check whose strictness depended on the thing being checked,
+    and it survived because nobody had made it fail on purpose. These are the attacks that found it
+    and the ones next door, pinned so they cannot come back — including the one the tool is
+    *documented not to catch*, asserted as a pass so the limit stays a stated limit rather than
+    quietly becoming a bug.
+    """
+    beats = [36, 37, 38, 39]
+    failures: list[str] = []
+
+    def expect(label: str, markdown: str, missing: list[int], reordered: bool = False):
+        found = audit(beats, markdown)
+        if found["missing"] != missing:
+            failures.append(f"self-test [{label}]: missing {found['missing']}, expected {missing}")
+        if found["reordered"] != reordered:
+            failures.append(
+                f"self-test [{label}]: reordered={found['reordered']}, expected {reordered}")
+
+    # the shape that must hold
+    expect("all four sections", _fixture(None, [36, 37, 38, 39]), [])
+    # the excusal, DECLARED — the opening prose says it carries the first beat
+    expect("first beat declared on the opening", _fixture(36, [37, 38, 39]), [])
+    # K76, the reader's exact attack: the first beat's section deleted, so the count comes up one
+    # short. The old heuristic read that as "the opening must be carrying it" and went green.
+    expect("K76 — first beat's section deleted", _fixture(None, [37, 38, 39]), [36])
+    # its neighbours, which the old version did catch — kept so a fix cannot trade one for another
+    expect("middle section deleted", _fixture(None, [36, 38, 39]), [37])
+    expect("last section deleted", _fixture(None, [36, 37, 38]), [39])
+    # every section deleted: the count is now three short, and all four beats are still required
+    expect("every section deleted", _fixture(None, []), [36, 37, 38, 39])
+    # a reorder that does NOT relabel is caught
+    expect("moved without relabelling", _fixture(None, [36, 38, 37, 39]), [], reordered=True)
+    # K77, asserted as a PASS: prose swapped and relabelled so the numbers still ascend. The tool
+    # cannot see this and says so in its docstring; if this ever starts failing, the docstring is
+    # what needs changing, not this line.
+    swapped = _fixture(None, [36, 37, 38, 39], bodies={38: "Prose belonging to beat 39.",
+                                                      39: "Prose belonging to beat 38."})
+    expect("K77 — swapped and relabelled (a stated limit, not a bug)", swapped, [])
+
+    # the opening is flagged as the preamble, so the grain never measures it against a beat's band
+    if not audit(beats, _fixture(36, [37]))["secs"][0][3]:
+        failures.append("self-test: the opening is not flagged as the preamble")
+
+    return failures
+
+
 def main() -> int:
     lo, hi = (int(sys.argv[1]), int(sys.argv[2])) if len(sys.argv) > 2 else (0, 99)
-    order, problems, grain, n_beats = reading_order(), [], [], 0
+    order, grain, n_beats = reading_order(), [], 0
+    # The guard is tested before it is trusted, on every run.
+    problems = self_test()
 
     for number, title, beats in outline_chapters():
         if not (lo <= number <= hi):
@@ -115,15 +199,10 @@ def main() -> int:
             problems.append(f"chapter {number}: {path.name} does not exist")
             continue
 
-        secs = sections(path.read_text(encoding="utf-8"))
-        claimed = [b for _, b, _, _ in secs if b is not None]
-        unmarked = [h for h, b, _, pre in secs if b is None and not pre]
-        expected = beats            # every beat, always — see K76 in the docstring
-
-        missing = [b for b in expected if b not in claimed]
-        stray = sorted({b for b in claimed if b not in beats})
-        splits = sorted({b for b in claimed if claimed.count(b) > 1})
-        reordered = claimed != sorted(claimed)
+        found = audit(beats, path.read_text(encoding="utf-8"))
+        secs, claimed = found["secs"], found["claimed"]
+        unmarked, missing = found["unmarked"], found["missing"]
+        stray, splits, reordered = found["stray"], found["splits"], found["reordered"]
 
         for h, b, n, pre in secs:
             if pre:
@@ -141,8 +220,8 @@ def main() -> int:
             problems.append(f"chapter {number} ({slug}): section claims beat(s) {stray}, "
                             f"which are not this chapter's")
         if reordered:
-            problems.append(f"chapter {number} ({slug}): sections claim beats {claimed}, "
-                            f"which is not the outline's order")
+            problems.append(f"chapter {number} ({slug}): the markers claim beats {claimed}, "
+                            f"which does not ascend")
         if splits:
             note.append(f"split: {splits}")
         n_secs = sum(1 for *_, pre in secs if not pre)
@@ -162,7 +241,9 @@ def main() -> int:
     if problems:
         print("\n" + "\n".join("PROBLEM: " + p for p in problems))
         return 1
-    print(f"\n{n_beats} beats in range; every one claimed by a section, in the outline's order.")
+    print(f"\n{n_beats} beats in range; every one claimed by a marker, and the claims ascend. "
+          f"A section moved and relabelled together still ascends, so this is not a statement "
+          f"about order — see the docstring.")
     return 0
 
 

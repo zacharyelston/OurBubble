@@ -13,14 +13,14 @@ One triangle, then one tetrahedron, for as long as they can carry the idea. Ever
 tetrahedra, to a world with no edge — is the answer to something she just asked, never a change of
 subject. By the time the first result appears, she owns the whole vocabulary from a napkin.
 
-**The grain, decided once (2026-09-02):** a beat is 100–200 words, hard ceiling 220. Any section over 200 is listed in the PR with its one-idea reason; the excess does not migrate between chapters. Split beats carry a `<!-- beat N -->` marker so coverage can be counted.
+**The grain, decided once (2026-09-02):** a beat is 100–200 words, hard ceiling 220, no hard floor. Any section over 200 is listed in the PR with its one-idea reason; the excess does not migrate between chapters. **✎ beats are exempt from the band by design** — a prompt to write your guess down is supposed to be short. Any other section under 100 is listed with its reason the same way. Every section — including a chapter's opening prose — carries a `<!-- beat N -->` marker; nothing is inferred.
 
 **Two rules for reading this:** mark any beat that arrives before its predecessor has earned it —
 that is the only kind of "too fast" there is. And mark any beat whose question you would not
 actually ask — that is a chapter narrating us instead of her.
 
-**The ritual.** From chapter 5 on, every chapter has one beat marked ✎ *Before we look*: the reader
-writes her guess. Then the look, then the comparison. The book's whole method, performed by the
+**The ritual.** From chapter 5 on, every chapter that runs an experiment has one beat marked ✎ *Before
+we look*: the reader writes her guess. (The history chapter, 11, runs none and has no ✎ by design.) Then the look, then the comparison. The book's whole method, performed by the
 reader every time instead of explained to her once.
 
 ---
