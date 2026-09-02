@@ -1,0 +1,69 @@
+# The reader's note form.
+#
+# Reached from the "Leave a note on this section" link under every section heading in the book, which
+# arrives with the first two fields already filled in — see `tools/reader_note.py` for the URL and
+# `preprocessor.py` for where the links come from. It is written to be answerable by someone who has
+# never opened a diff: no rung labels, no beat numbers to look up, and nothing asked that a reader
+# would have to go and find out.
+#
+# The field ids are load-bearing. The prefill is by id in the query string, and
+# `check_edition.py --rendered` parses `section` and `page` back out of every link in the built book,
+# so renaming one here means changing it there too.
+name: A note on a section
+description: Tell us how one section of the book read to you. No account of the maths required.
+title: "note · a chapter · a section"
+labels: ["reader-note"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for this. A note is a gift, not a test — you do not need to be right about the
+        physics, or to have finished the book, or to suggest a fix. "I lost the thread here" is a
+        complete and useful note.
+
+  - type: input
+    id: section
+    attributes:
+      label: The section
+      description: Filled in by the link you followed. Please leave it as it is.
+      placeholder: A chapter · a section · beat 0
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: The page
+      description: Also filled in by the link — it takes us to the exact paragraph you were reading.
+      placeholder: https://zacharyelston.github.io/OurBubble/
+    validations:
+      required: true
+
+  - type: textarea
+    id: read-differently
+    attributes:
+      label: What the section says that you read differently
+      description: >
+        Quote or paraphrase the sentence, and say what it said to you. If it simply did not land,
+        say that — where you stopped is the useful part.
+      placeholder: It says the shape has eight faces, but I counted the picture and got …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What you thought was coming next, or what you thought the answer would be.
+    validations:
+      required: false
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything else
+      description: >
+        Anything at all: a word that tripped you, a picture you wanted, a question the section left
+        you holding.
+    validations:
+      required: false

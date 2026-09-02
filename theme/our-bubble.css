@@ -30,3 +30,59 @@
     margin-inline: -0.35rem;
   }
 }
+
+/* The reader's note link — one under every section heading, put there at build time by
+   `preprocessor.py`. It has to be findable and it has to be ignorable, in that order of difficulty:
+   a reader who wants to say something should not have to hunt for the way to say it, and a reader
+   who is reading should not be asked anything on every screen.
+
+   So it is a plain sentence in the heading's own colour at half strength, right-aligned and pulled up
+   under the heading's baseline — a margin mark rather than a button, no icon, no box, nothing that
+   competes with the heading it belongs to. Colour comes from `--fg` and `currentColor` only, so it
+   is the same distance from the page in every mdBook theme, light or dark, without this file
+   knowing which one is on. Hover, focus and keyboard focus bring it to full strength.
+
+   Not printed: a paper copy cannot be clicked, and the words would be a puzzle.
+
+   Two mdBook details this has to be written around, both found by measuring the built page rather
+   than by reading the stylesheet: mdBook sets the root font size to 62.5%, so `1rem` here is 10px
+   and a size in `rem` comes out a third smaller than it looks in the source — every length below is
+   therefore in `em`, relative to the block's own size. And `a:link` beats a bare class on
+   specificity, so a link colour set on `.section-note-link` alone is silently overridden by the
+   theme's own link blue; the colour is set on `.section-note a:link` instead. */
+.section-note {
+  margin: -1.1em 0 1.4em;
+  text-align: right;
+  line-height: 1.2;
+  font-size: 0.8em;
+  letter-spacing: 0.01em;
+}
+
+.section-note a:link,
+.section-note a:visited {
+  color: var(--fg);
+  opacity: 0.5;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  padding-bottom: 0.1em;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.section-note a:hover,
+.section-note a:focus,
+.section-note a:focus-visible {
+  color: var(--fg);
+  opacity: 0.95;
+}
+
+@media (max-width: 700px) {
+  .section-note {
+    margin-top: -0.6em;
+  }
+}
+
+@media print {
+  .section-note {
+    display: none;
+  }
+}
