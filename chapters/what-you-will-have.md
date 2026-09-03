@@ -17,34 +17,34 @@ reputation. Push a stick into the ground. Mark where its shadow falls. Come back
 again. Take the difference between the marks, add the differences up, and see whether they come home
 to what you expected.
 
-That is the art of collecting data: the patient half of every science, and the half nobody makes
-films about. A telescope is a better stick. A sequencing machine is a better mark. A computer is a
-very fast way of adding differences up. Between a child in a yard and a laboratory the instruments
-change and the bookkeeping gets more careful; the moves do not change at all. The only difference
+That is the art of collecting data: the patient half of every science, and the half nobody films. A
+telescope is a better stick, and so is a sequencing machine. A photographic plate is a better mark.
+A computer adds differences up very fast. Between a child in a yard and a laboratory
+the instruments change and the bookkeeping gets more careful; the moves do not. The only difference
 between you and the child watching her shadow is that you are older, and there are more tools on the
 table.
 
-Because the moves do not change, they can be written down once, in one syntax, and used everywhere.
-People who do this for a living have a name for that syntax — *discrete exterior calculus* — and you
-may put it straight back down. You will not need it again.
+Because the moves do not change, they can be written down once, in one syntax — which is what this
+book does with them. People who do this for a living have a name for that syntax — *discrete
+exterior calculus* — and you may put it straight back down. You will not need it again.
 
 ## What you get
 
 <!-- beat 2 -->
 
 The ideas themselves by the last page, not a rumour of them: a whole world you can hold in your head
-and count; the one rule everything else here is made of; why the tick a world runs on belongs to its
+and count; the one rule everything here is made of; why the tick a world runs on belongs to its
 shape; a machine's honest *no*, told apart from a mistake; and a path from any number we produced
-back to where it came from — a file in the record, or arithmetic done in front of you.
+to where it came from — a file in the record, or arithmetic done in front of you.
 
-Then the part worth more than any of that. The sciences whose papers look like a wall are making
-marks, taking differences and adding them up, in their own notation. You will not know their
-subjects, but you will recognise what they are doing — you will have held the whole grammar in your
-hands.
+Then something we claim, rather than something the book proves. The sciences whose papers look
+like a wall are making marks, taking differences and adding them up, in their own notation. This
+book will not teach you one of them. What it does is put the moves in your hands, on an
+object small enough to count.
 
-You will not be asked to believe anything: until the pencil runs out, every number you check is one
-you can do by hand, and after that they come from a record that travels with the book. And one thing
-you will not have matters most: a claim about the world. What we built is a toy, and a borrowed
+You are not asked to believe anything: until the pencil runs out, every number you are asked to
+check is one you can do by hand, and after that from a record that travels with the book. And one
+thing you will not have matters most: a claim about the world. What we built is a toy, and a borrowed
 physics word names a feature of it.
 
 ## The road
@@ -73,12 +73,12 @@ This is for someone curious who is not a physicist. There is nothing you have to
 and taking away. Numbers a machine worked out go past you; you are never asked to reproduce one by
 hand, only to see what it was compared against — though the last chapter hands you the commands.
 
-Read it in order: each chapter earns the next one's question. And do the ✎ moments — every chapter
-that runs an experiment stops just before the answer and asks you to write your guess down. That
-pause is the method, performed instead of described, and it only works if you commit.
+Read it in order: each chapter earns the next one's question. And do the ✎ moments — from partway in,
+every chapter that runs an experiment stops just before the answer and asks you to write your guess
+down. That pause is the method, performed instead of described, and it works only if you commit.
 
 Sticks and light, dots and lines. That is what we have had since the first shadows anyone watched on
-a cave wall, it is all this book uses, and it turns out to be enough for everything in here.
+a cave wall, it is all this book uses, and it was enough for everything in here.
 
 We start where measuring started: a shadow, and a man in Alexandria who did the smallest possible
 next thing about one.

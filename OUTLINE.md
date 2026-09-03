@@ -225,14 +225,23 @@ and this page carries no count now.
 about method and about this book's toy. That the moves are what every science does is a claim about
 method. That dots and lines were enough is a claim about *everything in this book* — never that the
 world is made of them, never that anything here is unified — and the page says in the same breath
-what she will not have: a claim about the world. It carries no figure, no number and no quotation, by
-design, so there is nothing in it a reader has to take on trust before the book has earned any: the
+what she will not have: a claim about the world. **A third sentence reached further than either of
+them and was not covered by this note** (a proofreader, round 4): "written down once, in one syntax,
+and used everywhere", read by someone who skipped the grey box, is one notation covering all of
+science — the shape the README refuses. It is bounded now to what the book does with the syntax, and
+beat 2's recognition promise with it, because no chapter here teaches another science: that the
+moves are the same under other people's notation is **our claim, said as ours**, and what the book
+delivers is the moves in her hands.
+
+The page carries no figure, no number and no quotation, by design, so there is nothing in it a reader has to take on trust before the book has earned any: the
 census it once retyped from memory was cut when a mutation showed no guard would have caught it being
 wrong. Every promise it makes is a later chapter's to keep, and the appendix section says so rather
 than vouching for them.
 
 **Every count on this page wants a human's eye on every edit** (a proofreader, round 2) — which is
-why the revision took the last of them off it. Nothing guards an unemphasised number in prose: the
+why the revision took the last of them off it. **A spelled-out number in prose is unguarded whether
+or not it is emphasised** — round 4 mutated `**9** chapters`, which the appendix-anchoring rule
+refused by name, and `**nine** chapters`, which it passed, so bolding a count buys nothing. The
 mutation "five chapters" → "nine chapters" leaves tier 0 green, and a wrong count was this one page's
 blocker in two consecutive rounds, the second being the first *moved* rather than fixed. The whole
 history, so it is not relearned: the seven forbidding names became five that were really there and
