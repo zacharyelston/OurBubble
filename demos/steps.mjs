@@ -208,7 +208,7 @@ export function chapterSteps(engine, draw) {
             tables: [
               table("what is on the paper", ["dots", "lines", "faces"],
                 [[count(rung(state.tick >= 2 ? 3 : 2, KINDS[0])), count(drawn),
-                  closed ? count(rung(3, KINDS[2])) : show(ZERO)]], { notASum: true }),
+                  closed ? count(rung(3, KINDS[2])) : "none"]], { notASum: true }),
               table("its lines, in the one order", ["line", "drawn"],
                 triangleLines.map((name, index) =>
                   [name, index < state.tick ? "yes" : "not yet"])),
@@ -593,7 +593,7 @@ export function chapterSteps(engine, draw) {
             table("the numbers, at this tick", ["tick", ...triangleNames],
               [[String(state.tick), ...triangleCorners.map(show)]], { notASum: true }),
             table("what moved", ["ticks so far", "numbers that changed"],
-              [[String(state.tick), show(ZERO)]]),
+              [[String(state.tick), "none"]]),
           ],
         }),
       },
@@ -757,7 +757,11 @@ export function chapterSteps(engine, draw) {
             }),
             tables: [
               runTable("every tick", run.history, run.totals, NAMES),
-              table("the total", ["at the start", "at this tick", "ticks apart"],
+              // Captioned for what it shows rather than "the total": the three numbers in this row
+              // are not a sum of one another, and a caption that reads like one invites the
+              // addition a reader was right to try.
+              table("the whole of it, then and now",
+                ["at the start", "at this tick", "ticks apart"],
                 [[show(run.totals[0]), show(run.totals[state.tick]), String(state.tick)]], { notASum: true }),
             ],
           };
@@ -805,7 +809,11 @@ export function chapterSteps(engine, draw) {
         controls: [{ kind: "tick", count: ticks, noun: "tick" }],
         render: (state) => {
           const run = engine.slosh("tetrahedron", unit(count(NAMES)), k, ticks);
-          const moved = run.history[state.tick]
+          // Dots that are not at nothing — which is not "dots that moved by this tick", the
+          // heading this used to carry. The engine's browser surface gives no tick-to-tick
+          // difference, so rather than compute one here the column says what the number is; the
+          // difference is asked for as a gap.
+          const notAtNothing = run.history[state.tick]
             .filter((value, index) => index > 0 && value !== ZERO);
           return {
             drawing: draw.drawNet({
@@ -820,8 +828,9 @@ export function chapterSteps(engine, draw) {
               table("how many lines from one dot to another", ["from", ...NAMES],
                 hops.map((row, index) => [NAMES[index], ...row.map(String)]), { notASum: true }),
               table("how far away anything is",
-                ["the furthest apart two dots are", "dots that moved by this tick"],
-                [[String(R.no_room.diameter), String(moved.length)]]),
+                ["the furthest apart two dots are", "other dots not at nothing"],
+                [[String(R.no_room.diameter), notAtNothing.length === 0 ? "none"
+                  : String(notAtNothing.length)]]),
             ],
           };
         },
@@ -855,7 +864,7 @@ export function chapterSteps(engine, draw) {
           }),
           tables: [
             table("what is inside it already", ["lines", "middles marked"],
-              [[count(LINES), state.pressed ? String(cut.middles) : show(ZERO)]]),
+              [[count(LINES), state.pressed ? String(cut.middles) : "none"]]),
             table("the middles, which keep their lines' names", ["middle"],
               MID.map((name) => [name])),
           ],
@@ -901,7 +910,9 @@ export function chapterSteps(engine, draw) {
                 count(cut.opposite_pairs.filter((pair) => pair.includes(name)))])),
             ...(state.pressed ? [table("the pairs joined by nothing",
               ["one", "the other", "lines between them"],
-              cut.opposite_pairs.map(([a, b]) => [a, b, show(ZERO)]))] : []),
+              // "none", not a nought. A zero in a column of counts reads as a measurement that
+              // came out at nothing; what this says is that there is nothing there to measure.
+              cut.opposite_pairs.map(([a, b]) => [a, b, "none"]))] : []),
           ],
         }),
       },

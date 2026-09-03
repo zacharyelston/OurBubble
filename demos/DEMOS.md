@@ -53,7 +53,14 @@ step's title and instruction, every control's label — is **under 250 words**, 
 prints each page's count on every run so it cannot drift back. Each distinct piece of text is counted
 once; a button labelled the same way on nine steps is one label, not nine. A table's caption and its
 column headings are **labels on data**, not prose, and are not counted — but they are held to the same
-rule about numbers as everything else. The counts today: 247 · 220 · 183 · 246 · 170.
+rule about numbers as everything else. **The counts are not quoted here.** They were, and they were
+wrong within two commits — prose counting the artefact beside it, guarded by nothing. The check
+prints all five on every run, which is the only place they cannot go stale.
+
+The furniture is worth naming beside the budget, because it is not small: on the two most visual
+pages the captions and column headings outweigh the prose they are excluded from. A reader still
+meets those words. They are excluded because they are labels on data and they are held to the same
+rule about numbers as the prose is — not because they are free.
 
 ### "If those lines are drawn from the code we're doomed."
 
@@ -164,7 +171,8 @@ fact about the object rather than about a program. The pages themselves read `..
 
 It used to compare **two implementations** and it no longer can, because there is one. So
 [`core.test.mjs`](core.test.mjs) asks a different question: **does the page show what the engine
-said?** Ten gates:
+said?** These gates — numbered for reference and not counted in the prose, because a count of them
+is one more figure to go stale:
 
 1. **The engine is the engine.** The vendored wasm answers the census question with the vendored
    JSON's own bytes — byte for byte, not value for value.
@@ -177,7 +185,7 @@ said?** Ten gates:
    string literal is refused**, in any quote style, with `${…}` cut out because that is code. The
    same rule is held over the pages' HTML: no digit in any text a reader sees, which is why the beat
    ranges on the pages are written by JavaScript at run time.
-4. **Every drawing is its own census — what its marks claim, and where they are.** Each convention
+4. **Every drawing is its own census — what its marks claim, where they are, and how many.** Each convention
    declares its kind, may emit **only** a whitelisted set of element names, and every mark in it
    **says what it is** — `data-line`, `data-dot`, `data-middle`, `data-absent`, `data-tip-line`,
    `data-edge`, `data-region`, `data-walk` — with what it says held to the engine's own data: the tetrahedron's four dots and six lines, the six middles and the twelve
@@ -237,7 +245,12 @@ said?** Ten gates:
    It is here because the hole was not hypothetical: this pass shipped two walks whose printed terms
    did not add to their printed total, and a fresh reader found both by doing the arithmetic the page
    invites her to do.
-8. **No label is struck through, and no two labels touch.** Every piece of text in every drawing, at
+8. **No label is struck through, no two labels touch, and none sits on a dot's ink.** A dot is a
+   disc, and the test used to ask whether its *centre* fell inside the label's box — a reader
+   counted 45 names overlapping a circle's ink, the worst by nine pixels. The placement and the
+   check now share one function, `boxMeetsDot`, imported rather than reimplemented, and both the
+   label gap and the clearance a label keeps from its own dot have a **floor in the check**: a
+   constant only the placement consults is a standard nothing enforces. Every piece of text in every drawing, at
    every state, has its box tested against every stroke, every dot **and every other label** in that
    drawing — read off the emitted SVG, not taken on the placement code's word. The label-versus-label
    half arrived last and by the worst route: the first version of the search dodged strokes
@@ -256,9 +269,11 @@ said?** Ten gates:
    drawings: no label on a stroke, none on a dot, no two labels overlapping. The net's *names* are
    exempt from the search and not from the gate — CANON.md's rule 4 forbids moving them — so only
    their numbers are placed, and the fixed names are obstacles like any other ink.
-9. **The sweep figures in DEMOS.md are the sweep's.** Every number the crossings paragraph above
-   quotes is asserted from the shipped 72×72 sweep, including the touching-pair counts at four
-   tolerances. That paragraph carried a wrong measured figure in three consecutive rounds while every
+9. **The sweep figures in DEMOS.md are the sweep's** — including the opening view's own yaw, pitch,
+   both degree figures and its 20/0/0, which a reader falsified all four of while the check stayed
+   green, because the window began *below* the blockquote they sit in. The window now starts at the
+   paragraph's first line and **every digit-run in it** is scanned, not only the emphasised ones: the
+   rule was never about typography, and an unbolded figure went through the version that was. That paragraph carried a wrong measured figure in three consecutive rounds while every
    number on the pages was gated; this is the gate it was missing.
 10. **Every still stands on its own.** The still button is the reason the drawing code exists, and it
    is the one surface a reader reaches by downloading rather than by looking — a proof-reader could
@@ -338,6 +353,7 @@ is narrowed to what the engine can answer. They are the register rows to ask Uni
 |---|---|
 | **the rule with the dial turned** — `slosh_json` runs with every line counted the same, so the reader cannot turn the dial and re-run | beat 36 offers the two positions the engine computed and vendored (`motion.plain`, `motion.dialed`, `AB` counted double), as a choice rather than a dial |
 | **the outward-oriented eight-face sum** — `loops_json` walks the octahedron's faces in the complex's own orientation, which does not sum to zero; the vendored `face_sum` is the outward walk, and it does | beat 43 walks the eight faces of the vendored arrow set; the reader steps through the faces rather than changing an arrow |
+| **a tick-to-tick difference** — `slosh_json` returns the history and no diff, so "which dots moved this tick" cannot be asked | beats 37–38 print *other dots not at nothing*, which is what the number is, rather than a difference computed in JavaScript |
 | **the two-dot complex** — `loops_json` answers for the book's four objects, and two dots and a line is not one of them | beat 10 asks the triangle for the difference on `AB` and reads `AB` alone. It is the same line and the same coboundary either way |
 
 The fourth: `certificate_json` panics on `"triangle"` rather than answering, so beat 33 shows the
@@ -473,6 +489,24 @@ number**: a face's name sits at its panel's own middle, so there is no "further 
 its number to take, and below it is the `AB` stroke. Three of the four face numbers sit below their
 names and `ABC`'s sits above, and that is the convention rather than a lapse — the distance is the
 same either way, so the pair still reads as a pair. Gate 8 guarantees neither touches anything.
+
+### An absence is "none", not a nought
+
+A zero in a column of counts reads as a measurement that came out at nothing. Where the honest
+statement is *there is nothing there to measure* — no line between two opposite dots, no number that
+changed, no middle marked yet — the cell says **none**. A reader pointed out that `0 0 0` under "a
+length · a direction · a clock" reads as three measurements rather than as three absences.
+
+### A heading says what its number is
+
+Two headings said what their numbers were not, and both were right numbers under wrong nouns —
+which is the defect class this whole lane keeps rediscovering, in prose instead of in a table cell.
+"How many digits before the point" was printing the engine's coarse floor for that tick (at tick
+twenty: a floor of 120000000, and nine digits); it now says **at least this big**. "Dots that moved
+by this tick" was counting dots not sitting at nothing, which is a different thing at every tick
+after the first; it now says **other dots not at nothing**, and the tick-to-tick difference is asked
+of the engine as a gap rather than computed here. And "the tick it ran at" is a constant of the run,
+so it reads **the tick it runs at**.
 
 ### Nothing draws without a title
 

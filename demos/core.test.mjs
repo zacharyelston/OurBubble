@@ -79,7 +79,8 @@ const ENGINE_DIR = path.join(ROOT, "engine");
 
 const { Engine } = await import(pathToFileURL(path.join(HERE, "engine.mjs")).href);
 const { drawings, viewCost, VIEW_GRID, project3d, textBox, boxMeetsSegment, boxesOverlap,
-  LABEL_GAP } = await import(pathToFileURL(path.join(HERE, "draw.mjs")).href);
+  boxMeetsDot, LABEL_GAP, DOT_CLEARANCE } = await import(
+  pathToFileURL(path.join(HERE, "draw.mjs")).href);
 const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")).href);
 const { joinSteps, statesOf, stillFrom } = await import(
   pathToFileURL(path.join(HERE, "core.mjs")).href);
@@ -95,6 +96,16 @@ const GAP_FLOOR = 3;
 if (LABEL_GAP < GAP_FLOOR) {
   fail(`draw.mjs sets LABEL_GAP to ${LABEL_GAP}, and this check will not go below ${GAP_FLOOR}: `
     + `two labels that close read as one token, which is the whole reason the gap exists`);
+}
+// And the same for the clearance a label keeps from the dot it names. A reader pointed out that a
+// constant only the placement consults is a standard nothing enforces: dropping it to nothing made
+// no visible overlap, because the ink test catches those — but it would have let a name sit against
+// its mark again the moment that test moved.
+const CLEARANCE_FLOOR = 12;
+if (DOT_CLEARANCE < CLEARANCE_FLOOR) {
+  fail(`draw.mjs sets DOT_CLEARANCE to ${DOT_CLEARANCE}, and this check will not go below `
+    + `${CLEARANCE_FLOOR}: the biggest dot these drawings put down has a radius of thirteen, and a `
+    + `name that starts inside it reads as attached to the mark rather than beside it`);
 }
 
 // ── 1 · the engine is the engine ──────────────────────────────────────────────────────────────────
@@ -260,16 +271,30 @@ const view = draw.wireDefaultView();
 // a reader opens on — not a finer one quoted for effect.
 
 const SWEEP = {
+  grid: 72,               // directions swept in each of the two angles
   directions: 5184,       // VIEW_GRID squared
   floor: 20,              // the lowest score any direction reaches
   atFloor: 200,           // how many reach it
   shape: "20/0/0",        // and every one of them has this shape: crossings / dots-on-lines / lost
   noCrossings: 12,        // directions with no crossings at all
   lostThere: 6,           // every one of which loses this many of the thirty-six edges
+  // And the opening view itself, which the paragraph quotes and nothing checked: a reader falsified
+  // the yaw, the pitch, the degree conversions and the view's own 20/0/0 and every gate stayed
+  // green, because the window started after the blockquote they sit in.
+  yaw: "5.585",
+  pitch: "−0.654",
+  yawDegrees: 320,
+  pitchDegrees: "−37.5",
+  openingCrossings: 20,
+  openingHidden: 0,
+  openingLost: 0,
 };
 
 {
   const { points, edges } = draw.wireframe();
+  if (VIEW_GRID !== SWEEP.grid) {
+    fail(`the sweep is ${VIEW_GRID} directions per angle and DEMOS.md says ${SWEEP.grid}`);
+  }
   if (VIEW_GRID * VIEW_GRID !== SWEEP.directions) {
     fail(`the sweep is ${VIEW_GRID}×${VIEW_GRID} and DEMOS.md quotes ${SWEEP.directions} directions`);
   }
@@ -291,6 +316,33 @@ const SWEEP = {
       if (cost.invented === 0) { noCrossings += 1; lostThere.add(cost.flattened); }
     }
   }
+  // The opening view, from the same call the page makes.
+  const opening = draw.wireDefaultView();
+  const openingCost = viewCost(points, edges, opening.yaw, opening.pitch);
+  const round3 = (value) => value.toFixed(3).replace("-", "−");
+  const degrees = (value) => Math.round((value * 180) / Math.PI * 10) / 10;
+  if (round3(opening.yaw) !== SWEEP.yaw) {
+    fail(`the opening view's yaw is ${round3(opening.yaw)}, and DEMOS.md says ${SWEEP.yaw}`);
+  }
+  if (round3(opening.pitch) !== SWEEP.pitch) {
+    fail(`the opening view's pitch is ${round3(opening.pitch)}, and DEMOS.md says ${SWEEP.pitch}`);
+  }
+  if (Math.round(degrees(opening.yaw)) !== SWEEP.yawDegrees) {
+    fail(`the opening yaw is ${degrees(opening.yaw)}°, and DEMOS.md says ${SWEEP.yawDegrees}°`);
+  }
+  if (String(degrees(opening.pitch)).replace("-", "−") !== SWEEP.pitchDegrees) {
+    fail(`the opening pitch is ${degrees(opening.pitch)}°, and DEMOS.md says ${SWEEP.pitchDegrees}°`);
+  }
+  for (const [what, got, said] of [
+    ["crossings", openingCost.invented, SWEEP.openingCrossings],
+    ["dots on lines", openingCost.hidden, SWEEP.openingHidden],
+    ["lost edges", openingCost.flattened, SWEEP.openingLost],
+  ]) {
+    if (got !== said) {
+      fail(`the opening view has ${got} ${what}, and DEMOS.md says ${said}`);
+    }
+  }
+
   if (floor !== SWEEP.floor) fail(`the sweep's score floor is ${floor}, and DEMOS.md says ${SWEEP.floor}`);
   if (atFloor !== SWEEP.atFloor) {
     fail(`${atFloor} directions reach the floor, and DEMOS.md says ${SWEEP.atFloor}`);
@@ -314,21 +366,37 @@ const SWEEP = {
   // This found a fifth wrong number the moment it was written — the sentence claiming how many
   // figures the paragraph had.
   const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
-  const from = doc.indexOf("Twenty is the floor of the **score**");
+  // From the paragraph's FIRST line — which is where the opening view's own figures sit, inside a
+  // blockquote. The window used to start below it, so a reader falsified the yaw, the pitch, both
+  // degree figures and the view's 20/0/0 and nothing noticed.
+  const from = doc.indexOf("**The default view is chosen by counting.**");
   const to = doc.indexOf("That is the argument for leaving the plane");
   if (from < 0 || to < 0) {
     fail("DEMOS.md no longer has the crossings paragraph this gate is written against");
   } else {
     const asserted = new Set(Object.values(SWEEP).map((value) => String(value)));
-    asserted.add(SWEEP.shape.split("/")[0]);
-    for (const found of doc.slice(from, to).matchAll(/\*\*([^*]*?)\*\*/g)) {
-      for (const token of found[1].match(/\d[\d\u202f\u00a0 ]*\d|\d/g) || []) {
-        const bare = token.replace(/[\u202f\u00a0 ]/g, "");
-        if (!asserted.has(bare)) {
-          fail(`DEMOS.md's crossings paragraph emphasises the figure ${token}, which SWEEP does not `
-            + `assert. Its own rule: delete it, do not correct it`);
-        }
-      }
+    for (const value of Object.values(SWEEP)) {
+      for (const part of String(value).split("/")) asserted.add(part);
+    }
+    // EVERY digit-run in the paragraph, not only the emphasised ones. A reader smuggled an
+    // unbolded figure through the bold-spans-only version, and the rule was never about typography.
+    // A few word-shapes are not figures about the sweep: a rule number, a heading's own count of
+    // terms. Those are listed rather than pattern-matched, so adding one is a decision.
+    // A handful of shapes in the window are not figures about the sweep: the three weights the
+    // score is built from, which the sentence explains in words, and nothing else. Listed rather
+    // than pattern-matched, so adding one is a decision somebody makes on purpose.
+    const NOT_A_SWEEP_FIGURE = new Set(["1", "4", "12"]);
+    const plain = (text) => text.replace(/[−–]/g, "-");
+    // Thousands written with a space are one figure, so they are joined before scanning; otherwise
+    // "5 184" reads as a 5 and a 184.
+    const window = doc.slice(from, to).replace(/(\d)[\u202f\u00a0 ](\d{3})\b/g, "$1$2");
+    const wanted = new Set([...asserted].map(plain));
+    for (const found of window.matchAll(/[−-]?\d[\d.]*\d|[−-]?\d/g)) {
+      const bare = plain(found[0]);
+      if (wanted.has(bare) || wanted.has(bare.replace(/^-/, ""))) continue;
+      if (NOT_A_SWEEP_FIGURE.has(bare)) continue;
+      fail(`DEMOS.md's crossings paragraph contains the figure ${found[0]}, which SWEEP does not `
+        + `assert. Its own rule: delete it, do not correct it`);
     }
   }
 }
@@ -389,7 +457,10 @@ const DRAWINGS = (() => {
       },
       // Every line and dot it draws, it draws once; a dot sits in one place.
       places: () => 1,
-      once: ["line", "dot"],
+      once: ["line", "dot", "leader"],
+      // Whatever dots the step shows, each of its lines must end on two of them. A reader found the
+      // triangle drawing NO dots at all and passing, because only the wireframe had a count.
+      endsOnDots: true,
     },
     net: {
       tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
@@ -419,8 +490,12 @@ const DRAWINGS = (() => {
         region: (value) => ringRegions.has(key(value)),
       },
       places: () => 1,
-      once: ["line", "absent", "tip-line", "dot"],
-      exactly: { line: midLines.size },
+      once: ["line", "absent", "tip-line", "dot", "leader"],
+      exactly: { line: midLines.size, dot: null },
+      // The ring's six middles are always drawn, and a tip is drawn only with its own lines: a
+      // reader found it drawing four of six dots, and drawing tip lines to a tip with no dot.
+      dotsAtLeast: MID,
+      tipsHaveDots: true,
     },
     wire: {
       tags: ["svg", "title", "desc", "g", "line", "circle", "text"],
@@ -430,8 +505,9 @@ const DRAWINGS = (() => {
         dot: (value) => stellaNames.has(value),
       },
       places: () => 1,
-      once: ["edge", "dot"],
+      once: ["edge", "dot", "leader"],
       exactly: { edge: stellaEdges.size, dot: stellaNames.size },
+      endsOnDots: true,
     },
   };
 })();
@@ -820,10 +896,48 @@ function censusOf(svg, where) {
     }
   }
   for (const [attribute, expected] of Object.entries(rules.exactly || {})) {
+    if (expected === null) continue;
     const total = Object.values(tally[attribute] || {}).reduce((sum, count) => sum + count, 0);
     if (total !== expected) {
       fail(`${where}: the ${kind} drawing put down ${total} ${attribute} mark(s); the engine `
         + `has ${expected}`);
+    }
+  }
+
+  // Every dot the convention always shows is shown.
+  for (const name of rules.dotsAtLeast || []) {
+    if (!(tally.dot || {})[name]) {
+      fail(`${where}: the ${kind} drawing has no dot for ${name}, and this convention draws all `
+        + `of them`);
+    }
+  }
+
+  // A tip that has lines drawn to it has a dot at the end of them.
+  if (rules.tipsHaveDots) {
+    for (const value of Object.keys(tally["tip-line"] || {})) {
+      const tip = value.split("|")[0];
+      if (!(tally.dot || {})[tip]) {
+        fail(`${where}: the ${kind} drawing draws lines to the tip ${tip} and no dot there`);
+      }
+    }
+  }
+
+  // And every stroke ends on a dot the drawing actually put down.
+  if (rules.endsOnDots) {
+    const dotPoints = marks.filter((mark) => mark.element === "circle"
+      && mark.named.some(([attribute]) => attribute === "dot"))
+      .map((mark) => mark.points[0]);
+    if (!dotPoints.length && strokes.length) {
+      fail(`${where}: the ${kind} drawing drew ${strokes.length} stroke(s) and no dots at all`);
+    }
+    for (const stroke of strokes) {
+      if (stroke.named.some(([attribute]) => attribute === "leader")) continue;
+      for (const end of stroke.points) {
+        if (!dotPoints.some((point) => near(point, end))) {
+          fail(`${where}: the ${kind} drawing's ${stroke.source.slice(0, 50)}… ends at `
+            + `${end.map((v) => v.toFixed(0)).join(",")}, where it has drawn no dot`);
+        }
+      }
     }
   }
 }
@@ -1061,6 +1175,13 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         // outright because it has no terms in front of it to be the total of.
         const totalish = (head) =>
           /\b(added up|the whole way round|total|altogether|sum|comes to)\b/i.test(String(head));
+        // The caption counts as a heading. A reader moved a total-shaped phrase from a column head
+        // into the caption and the check stopped looking; a reader does not read them differently.
+        if (totalish(table.caption) && table.rows.some((row) => rowNumbers(row).length >= 2)
+          && (!shape || shape.total === undefined)) {
+          fail(`${slug} ${step.label}: "${table.caption}" is captioned as a total over a row of `
+            + `numbers and the table does not declare which column that total is`);
+        }
         table.head.forEach((head, index) => {
           if (!totalish(head)) return;
           if (index === 0) {
@@ -1138,8 +1259,11 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
               leaderFor: (/data-leader="([^"]*)"/.exec(mark) || [])[1] }
             : null;
         }).filter(Boolean);
-        const marks = [...svg.matchAll(/<circle[^>]*cx="([-\d.]+)" cy="([-\d.]+)"/g)]
-          .map((found) => [+found[1], +found[2]]);
+        // With the radius, and with the clearance the placement claims to keep. The test used to
+        // ask whether a dot's CENTRE was inside the label's box, so a name overlapping a circle's
+        // ink by nine pixels passed — 45 of them across the pages.
+        const marks = [...svg.matchAll(/<circle[^>]*cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)"/g)]
+          .map((found) => ({ at: [+found[1], +found[2]], r: +found[3] }));
         const boxes = [];
         for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
           const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
@@ -1153,8 +1277,11 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
             && boxMeetsSegment(box, stroke.ends[0], stroke.ends[1]))) {
             fail(`${slug} ${step.label}: the label "${found[2]}" is drawn across a stroke`);
           }
-          if (marks.some(([x, y]) => x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1)) {
-            fail(`${slug} ${step.label}: the label "${found[2]}" is drawn on top of a dot`);
+          // `boxMeetsDot` is imported rather than reimplemented, so the standard the placement
+          // keeps and the standard the check enforces are one function.
+          const touching = marks.filter((dot) => boxMeetsDot(box, [...dot.at, dot.r]));
+          if (touching.length) {
+            fail(`${slug} ${step.label}: the label "${found[2]}" overlaps the ink of a dot`);
           }
           boxes.push({ ...box, text: found[2] });
         }

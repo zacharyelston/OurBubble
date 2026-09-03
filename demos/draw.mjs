@@ -181,6 +181,20 @@ export const boxesOverlap = (a, b, gap = 0) => {
 };
 
 /** Does a box meet a segment? Corners in, or the segment crossing any of its four sides. */
+/**
+ * Does a label's box reach a dot's **ink** — its radius, and the clearance the drawing keeps?
+ *
+ * The test used to ask whether the dot's CENTRE fell inside the box, which let a name overlap a
+ * circle by nine pixels: a reader counted forty-five such overlaps across the pages. A dot is a
+ * disc, so it is treated as one.
+ */
+export function boxMeetsDot(box, dot) {
+  const [x, y, r = 0] = dot;
+  const nearestX = Math.max(box.x0, Math.min(x, box.x1));
+  const nearestY = Math.max(box.y0, Math.min(y, box.y1));
+  return Math.hypot(x - nearestX, y - nearestY) < r + LABEL_GAP;
+}
+
 export function boxMeetsSegment(box, from, to) {
   const inside = ([x, y]) => x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1;
   if (inside(from) || inside(to)) return true;
@@ -218,8 +232,7 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20, owner 
       const y = anchor[1] + Math.sin(theta) * out;
       const box = textBox(x, y, text, size);
       if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
-      if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
-        && dy >= box.y0 && dy <= box.y1)) continue;
+      if (obstacles.dots.some((dot) => boxMeetsDot(box, dot))) continue;
       if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
       // And it must be nearest the dot it belongs to. Clearing every stroke is not enough: two
       // readers found a name parked nearer a different dot than its own, which is the wrong-noun
@@ -248,8 +261,7 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20, owner 
       const y = anchor[1] + Math.sin(theta) * out;
       const box = textBox(x, y, text, size);
       if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
-      if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
-        && dy >= box.y0 && dy <= box.y1)) continue;
+      if (obstacles.dots.some((dot) => boxMeetsDot(box, dot))) continue;
       if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
       // And it must be nearest the dot it belongs to. Clearing every stroke is not enough: two
       // readers found a name parked nearer a different dot than its own, which is the wrong-noun
@@ -561,8 +573,11 @@ export function drawings(engine) {
     // are fixed obstacles and the numbers are searched around them.
     const netObstacles = {
       segments: segments.map((segment) => [netAt(segment.from), netAt(segment.to)]),
-      dots: midpoints ? segments.map((segment) => netAt(mid(segment.from, segment.to))) : [],
+      dots: midpoints
+        ? segments.map((segment) => [...netAt(mid(segment.from, segment.to)), 9])
+        : [],
     };
+    const netLeaders = [];
     const netTaken = labels.map((label) => {
       const [x, y] = netAt(label.at);
       const size = label.kind === "dot" ? 34 : (label.kind === "face" ? 28 : 24);
@@ -570,10 +585,15 @@ export function drawings(engine) {
     });
 
     body.push('  <g class="labels">');
+    // When the middles are marked, a line's name belongs to its **middle** rather than to the line:
+    // CANON puts a line's name a quarter of the way in from the midpoint, which is close enough
+    // that its box lies over the mark, and a reader counted all six overlapping. The middles are
+    // what those beats are about, so the name goes to the mark and is searched clear of it.
+    const nameTheMiddles = midpoints;
     labels.forEach((label, index) => {
       // A step that carries no number on the lines carries no line names either: six names with
       // nothing under them read as six numbers the drawing has lost.
-      if (!lines && label.kind === "line") return;
+      if ((!lines || nameTheMiddles) && label.kind === "line") return;
       const [x, y] = netAt(label.at);
       const [cx, cy] = netAt(label.panelCentre);
       const size = label.kind === "dot" ? 34 : (label.kind === "face" ? 28 : 24);
@@ -604,7 +624,19 @@ export function drawings(engine) {
         body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="${d2(size * 0.85)}" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     });
+    if (nameTheMiddles) {
+      for (const segment of segments) {
+        const dot = netAt(mid(segment.from, segment.to));
+        const centre = netAt(panelCentre.get(segment.panel));
+        const ray = [dot[0] - centre[0] || 0.001, dot[1] - centre[1] || 0.001];
+        const spot = placeLabelled(dot, ray, segment.line, 22, netObstacles, netTaken);
+        if (spot === null) continue;
+        if (spot.leader) netLeaders.push([segment.line, dot, spot.at]);
+        body.push(`    <text x="${d2(spot.at[0])}" y="${d2(spot.at[1])}" font-size="22" text-anchor="middle" dominant-baseline="central">${esc(segment.line)}</text>`);
+      }
+    }
     body.push("  </g>");
+    body.push(leaderGroup(netLeaders));
     body.push("</svg>");
     return refit(body.join("\n"));
   }
@@ -686,7 +718,7 @@ export function drawings(engine) {
     // so a difference sitting across the line it belongs to is the worst place to have one.
     const triObstacles = {
       segments: pairs.map((pair) => [at(used[pair[0]]), at(used[pair[1]])]),
-      dots: used.map((point) => at(point)),
+      dots: used.map((point) => [...at(point), 10]),
     };
     const triTaken = [];
     if (dots >= 3 && showFace) {
@@ -992,8 +1024,8 @@ export function drawings(engine) {
           .map((i) => [place(places[index].at), place(at[MID[i]])])),
       ],
       dots: [
-        ...MID.map((name) => place(at[name])),
-        ...shown.map((index) => place(places[index].at)),
+        ...MID.map((name) => [...place(at[name]), 13]),
+        ...shown.map((index) => [...place(places[index].at), 10]),
       ],
     };
     const taken = [];
@@ -1137,7 +1169,8 @@ export function drawings(engine) {
     const wireObstacles = {
       segments: edges.filter((_, index) => wanted.includes(family[index]))
         .map(([i, j]) => [at[i], at[j]]),
-      dots: [...drawnDots].map((index) => at[index]),
+      dots: [...drawnDots].map((index) =>
+        [...at[index], index < stella.middles ? 7 : 6]),
     };
     const wireTaken = [];
     const wireLeaders = [];
