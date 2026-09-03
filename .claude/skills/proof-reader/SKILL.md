@@ -92,12 +92,21 @@ the wrongness.
 
 ## 3 · Render the comments
 
-- **Verdict line first** (house style): READS CLEAN for <persona> / N findings (X blockers).
+- **Verdict line first** (house style): HOLD or CLEAR, then the persona and the count —
+  `HOLD for <persona> / N findings (X blockers)` while any blocker stands, `CLEAR for <persona> /
+  N findings (0 blockers)` otherwise. "READS CLEAN" is the CLEAR line's older wording; either
+  is fine, but the verdict word comes first, because that is what the lane reads.
 - One table: location (chapter/section/beat, with a quotable anchor phrase) → what the reader
   experiences → severity → suggested direction (one line, not a rewrite).
-- Severities: **blocker** (a reader is lost or misled) · **bump** (a stumble; re-read needed) ·
-  **nit** (polish). A pass with zero findings states what was read and as whom — silence is
-  not a verdict.
+- Severities for a §2a finding: **blocker** (a reader is lost or misled) · **bump** (a stumble;
+  re-read needed) · **nit** (polish).
+- Severities for a §2b finding are graded by **what the guard would let through**, not by today's
+  page — by construction no reader is lost yet, and grading by the page would make every one a
+  nit, which is the weight that gets it deferred: **blocker** if the guard would pass a wrong
+  value the reader is *invited to check*; **bump** if it would pass a wrong value she is not;
+  **nit** if the hole is documented at the guard and bounded (a denylist's stated limit stays a
+  nit). Say which section the finding is from.
+- A pass with zero findings states what was read and as whom — silence is not a verdict.
 - **Delivery:** on the edition's open PR as a review with inline comments where the diff
   allows, else one structured comment; no PR → a tracker issue titled
   "proofread: <edition> <date>". Never push commits.
