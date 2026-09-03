@@ -1,78 +1,78 @@
 {
   "chapters": {
     "make-it-move": {
-      "first": 27,
-      "last": 38,
+      "first": 31,
+      "last": 42,
       "sections": [
         {
           "anchor": "a-clock",
-          "beat": 27,
+          "beat": 31,
           "heading": "A clock",
           "question": "What is still missing before anything can happen?"
         },
         {
           "anchor": "ticks-all-the-same",
-          "beat": 28,
+          "beat": 32,
           "heading": "Ticks, all the same",
           "question": "What is the least a clock needs?"
         },
         {
           "anchor": "then-and-now",
-          "beat": 29,
+          "beat": 33,
           "heading": "Then, and now",
           "question": "One number sitting at a dot — does it say what happens to it next?"
         },
         {
           "anchor": "what-one-tick-does",
-          "beat": 30,
+          "beat": 34,
           "heading": "What one tick does",
           "question": "So what does one tick do with those two rows?"
         },
         {
           "anchor": "nothing-else-ever",
-          "beat": 31,
+          "beat": 35,
           "heading": "Nothing else, ever",
           "question": "Is that really the whole law — nothing else, ever?"
         },
         {
           "anchor": "three-numbers-first",
-          "beat": 32,
+          "beat": 36,
           "heading": "Three numbers first",
           "question": "Start smaller than the tetrahedron — three numbers on the triangle: what do they do?"
         },
         {
           "anchor": "the-tick-belongs-to-the-shape",
-          "beat": 33,
+          "beat": 37,
           "heading": "The tick belongs to the shape",
           "question": "Why does the triangle need two thirds, when the next section's tetrahedron takes a half?"
         },
         {
           "anchor": "now-the-tetrahedron",
-          "beat": 34,
+          "beat": 38,
           "heading": "Now the tetrahedron",
           "question": "Now the tetrahedron, at a half — four numbers, tick by tick: what do they do?"
         },
         {
           "anchor": "the-total-never-moves",
-          "beat": 35,
+          "beat": 39,
           "heading": "The total never moves",
           "question": "Add the four up at every tick — what happens to the total?"
         },
         {
           "anchor": "turn-the-dial",
-          "beat": 36,
+          "beat": 40,
           "heading": "Turn the dial",
           "question": "Turn the dial — count one line for more — what changes?"
         },
         {
           "anchor": "where-is-the-ring",
-          "beat": 37,
+          "beat": 41,
           "heading": "Where is the ring?",
           "question": "Now poke one dot hard and watch. Is there a ring?"
         },
         {
           "anchor": "the-question-this-world-cannot-answer",
-          "beat": 38,
+          "beat": 42,
           "heading": "The question this world cannot answer",
           "question": "So what question can I not ask in this world?"
         }
@@ -80,54 +80,54 @@
       "title": "Make it move"
     },
     "one-tetrahedron-is-a-whole-world": {
-      "first": 19,
-      "last": 26,
+      "first": 23,
+      "last": 30,
       "sections": [
         {
           "anchor": "four-dots-and-everything-you-can-draw-between-them",
-          "beat": 19,
+          "beat": 23,
           "heading": "Four dots, and everything you can draw between them",
           "question": "What is the triangle's shape one dimension up?"
         },
         {
           "anchor": "the-whole-inventory",
-          "beat": 20,
+          "beat": 24,
           "heading": "The whole inventory",
           "question": "Count everything on it — can I hold the whole thing in my head?"
         },
         {
           "anchor": "four-numbers-on-the-corners-four-faces-four-zeros",
-          "beat": 21,
+          "beat": 25,
           "heading": "Four numbers on the corners, four faces, four zeros",
           "question": "Four numbers on the corners, six differences on the lines: what does each face say?"
         },
         {
           "anchor": "what-if-the-lines-came-first",
-          "beat": 22,
+          "beat": 26,
           "heading": "What if the lines came first",
           "question": "What if the six line-numbers came first — six arrows, not six differences?"
         },
         {
           "anchor": "round-the-inside",
-          "beat": 23,
+          "beat": 27,
           "heading": "Round the inside",
           "question": "And the four face-numbers around the inside — add them up the same way?"
         },
         {
           "anchor": "four-kinds-and-that-is-all-there-will-ever-be",
-          "beat": 24,
+          "beat": 28,
           "heading": "Four kinds, and that is all there will ever be",
           "question": "So how many kinds of number does this world have?"
         },
         {
           "anchor": "the-one-choice-what-a-line-is-worth",
-          "beat": 25,
+          "beat": 29,
           "heading": "The one choice: what a line is worth",
           "question": "Still nothing has a length. Now give the six lines lengths — is a long line worth the same as a short one?"
         },
         {
           "anchor": "enough-for-a-world",
-          "beat": 26,
+          "beat": 30,
           "heading": "Enough for a world",
           "question": "Is this really a complete world?"
         }
@@ -135,36 +135,36 @@
       "title": "One tetrahedron is a whole world"
     },
     "the-shape-between": {
-      "first": 39,
-      "last": 43,
+      "first": 43,
+      "last": 47,
       "sections": [
         {
           "anchor": "divide-it-instead-of-adding-to-it",
-          "beat": 39,
+          "beat": 43,
           "heading": "Divide it instead of adding to it",
           "question": "Before I go and fetch more tetrahedra — is there any room inside the one I already have?"
         },
         {
           "anchor": "what-falls-out",
-          "beat": 40,
+          "beat": 44,
           "heading": "What falls out",
           "question": "Cut at those six middles — what falls out?"
         },
         {
           "anchor": "six-dots-and-the-first-two-that-are-not-neighbours",
-          "beat": 41,
+          "beat": 45,
           "heading": "Six dots, and the first two that are not neighbours",
           "question": "Count the new shape — and is there room in it?"
         },
         {
           "anchor": "it-takes-two-ticks-to-cross",
-          "beat": 42,
+          "beat": 46,
           "heading": "It takes two ticks to cross",
           "question": "Same rule, same tick, one dot poked: what happens?"
         },
         {
           "anchor": "coming-home-on-eight-faces",
-          "beat": 43,
+          "beat": 47,
           "heading": "Coming home, on eight faces",
           "question": "Put an arrow on each of its twelve lines and walk its eight outside faces: what do they add to?"
         }
@@ -172,66 +172,66 @@
       "title": "The shape between"
     },
     "two-dots-and-a-line": {
-      "first": 9,
-      "last": 18,
+      "first": 13,
+      "last": 22,
       "sections": [
         {
           "anchor": "somewhere-to-put-a-number",
-          "beat": 9,
+          "beat": 13,
           "heading": "Somewhere to put a number",
           "question": "Where could you put a number?"
         },
         {
           "anchor": "change-lives-between",
-          "beat": 10,
+          "beat": 14,
           "heading": "Change lives between",
           "question": "Where does change live — is it at a place?"
         },
         {
           "anchor": "nothing-closes-yet",
-          "beat": 11,
+          "beat": 15,
           "heading": "Nothing closes yet",
           "question": "Two dots and a line — can anything come back to where it started?"
         },
         {
           "anchor": "the-triangle",
-          "beat": 12,
+          "beat": 16,
           "heading": "The triangle",
           "question": "Add a third dot. What is the smallest thing that closes?"
         },
         {
           "anchor": "three-corners-three-differences",
-          "beat": 13,
+          "beat": 17,
           "heading": "Three corners, three differences",
           "question": "Put a number on each corner — how many differences do I have?"
         },
         {
           "anchor": "walk-it-and-add",
-          "beat": 14,
+          "beat": 18,
           "heading": "Walk it and add",
           "question": "Walk around the triangle adding the differences — what do I get?"
         },
         {
           "anchor": "any-three-numbers-at-all",
-          "beat": 15,
+          "beat": 19,
           "heading": "Any three numbers at all",
           "question": "Would any three numbers do that?"
         },
         {
           "anchor": "why-it-is-exact-and-not-approximate",
-          "beat": 16,
+          "beat": 20,
           "heading": "Why it is exact and not approximate",
           "question": "Why exactly zero and not nearly?"
         },
         {
           "anchor": "what-you-never-used",
-          "beat": 17,
+          "beat": 21,
           "heading": "What you never used",
           "question": "What did I never use?"
         },
         {
           "anchor": "nothing-at-all",
-          "beat": 18,
+          "beat": 22,
           "heading": "Nothing at all",
           "question": "What have I assumed so far?"
         }
@@ -239,42 +239,42 @@
       "title": "Two dots, a line, and the first thing that closes"
     },
     "two-worlds-threaded": {
-      "first": 44,
-      "last": 49,
+      "first": 48,
+      "last": 53,
       "sections": [
         {
           "anchor": "four-faces-spare",
-          "beat": 44,
+          "beat": 48,
           "heading": "Four faces spare",
           "question": "Four of the eight faces look at a tip; the other four lie flat in the faces of the tetrahedron I cut. What fits on those?"
         },
         {
           "anchor": "two-tetrahedra-threaded",
-          "beat": 45,
+          "beat": 49,
           "heading": "Two tetrahedra, threaded",
           "question": "So what have I got now?"
         },
         {
           "anchor": "the-tick-that-stops-working",
-          "beat": 46,
+          "beat": 50,
           "heading": "The tick that stops working",
           "question": "Make it move, at the tick that has worked all along."
         },
         {
           "anchor": "the-smaller-tick-does-not-save-it",
-          "beat": 47,
+          "beat": 51,
           "heading": "The smaller tick does not save it",
           "question": "Then pick a smaller tick?"
         },
         {
           "anchor": "the-surprise",
-          "beat": 48,
+          "beat": 52,
           "heading": "The surprise",
           "question": "So what is the surprise?"
         },
         {
           "anchor": "what-the-machine-is-handed-and-what-comes-back",
-          "beat": 49,
+          "beat": 53,
           "heading": "What the machine is handed, and what comes back",
           "question": "What do I hand the machine, and what comes back?"
         }
