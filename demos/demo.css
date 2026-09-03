@@ -15,7 +15,7 @@
   --rule: #d8d0bf;
   --accent: #20314a;
   --panel: #f0e6d2;
-  --measure: 34rem;
+  --measure: 100%;
 }
 
 :root[data-theme="dark"],
@@ -61,7 +61,9 @@ body {
   padding: 1.5rem 1rem 4rem;
 }
 
-.wrap { max-width: 62rem; margin: 0 auto; }
+/* One column, one right edge. A proof-reader counted three of them on every page: the scope box
+   stopped at one measure, the drawing panel at another, and the rules ran to a third. */
+.wrap { max-width: 42rem; margin: 0 auto; }
 
 header.masthead { border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
 
@@ -98,7 +100,7 @@ blockquote.scope p { margin: 0; }
 
 /* ── the layout: the beats across the top, one step below ─────────────────────────────────────── */
 
-#demo { margin-top: 1.75rem; max-width: 46rem; }
+#demo { margin-top: 1.75rem; }
 
 /* The beats, as a row of numbers. They used to be a column of step titles, which meant a reader
    met every question twice on one page — once in the list and once as the heading. The number is
@@ -143,7 +145,7 @@ nav.steps button[aria-current="step"] {
   display: flex; justify-content: center;
 }
 
-.drawing svg { width: 100%; height: auto; max-width: 34rem; display: block; }
+.drawing svg { width: 100%; height: auto; display: block; }
 
 /* The drawings. One panel fill, one stroke, one heavier stroke for the piece a step is about. */
 .net .panel polygon, .ring .panel polygon { fill: var(--panel); stroke: none; }
@@ -168,6 +170,18 @@ nav.steps button[aria-current="step"] {
   stroke: var(--ink); stroke-width: 3; paint-order: stroke;
 }
 .ring .labels text.strong, .wire .labels text.strong, .net .labels text.strong { font-weight: 700; }
+/* Every label is drawn over the strokes with a halo of the paper behind it. A proof-reader counted
+   a dozen names crossed by the line they belong to — in the net, in the ring, and worst in the
+   wireframe, where a label near the middle of the projection has nowhere to move to. Nudging each
+   one by hand is how a drawing stops being derived; a halo fixes all of them at once, and it is what
+   a draughtsman does. It carries no meaning: it is the paper, put back on top. */
+.net .labels text, .ring .labels text, .wire .labels text {
+  paint-order: stroke fill;
+  stroke: var(--card);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
 .net .labels, .ring .labels {
   fill: var(--ink);
   font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
@@ -215,6 +229,9 @@ nav.steps button[aria-current="step"] {
   border: 1px solid var(--rule); padding: 0.25rem 0.4rem; width: 4.5rem;
 }
 .controls input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* A number the engine cannot parse is refused visibly, not swallowed. */
+.controls input.refused { border-style: dashed; border-width: 2px; }
+.controls input.refused + label, .controls input[aria-invalid="true"] { font-style: italic; }
 .controls button[aria-pressed="true"] { border-color: var(--accent); font-weight: 600; }
 
 button, select {

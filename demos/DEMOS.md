@@ -79,16 +79,23 @@ each one by how much of what the flat page says is not true — a crossing betwe
 not share an end costs one, a dot sitting on a line it does not end costs four, and an edge that has
 projected to a point costs twelve. It opens at
 
-> **yaw 5.585, pitch −0.654 radians** (320° and −37.5°), with **20 crossings, no dot on a line it
-> does not end, and no edge lost.**
+> **yaw 5.585, pitch −0.654 radians** (320° and −37.5°), with **20 crossings, no dot sitting on a
+> line it does not end, and no edge lost.**
 
-Twenty is the **minimum**, not merely the best of a coarse sweep: 180 directions in each angle finds
-nothing under twenty, and finds twenty in 1 344 of its 32 400 directions. That an object of
-thirty-six lines and fourteen dots cannot be drawn flat with fewer than twenty crossings is the
-honest reason this drawing had to leave the plane at all.
+Twenty is the floor of the **score**, and it is worth being exact about what that does and does not
+say, because the first version of this paragraph overstated it and a proof-reader caught it.
 
-An earlier version of the sweep ranked on crossings alone and picked a view straight down an axis:
-no crossings whatsoever, and dots stacked on lines everywhere. That is why the score has three terms.
+A sweep of 180 directions in each angle — thirty-two thousand four hundred of them — finds **no view
+scoring under twenty**, and 1 344 that score exactly twenty. Every one of those cheapest views has
+the same shape: **20 crossings, no dot on a line, no edge lost.** The coarse 72×72 sweep the code
+actually runs finds that same floor.
+
+It does **not** say that twenty crossings is the fewest possible. There are views with fewer — one
+straight down an axis has **none at all** — and every one of them buys that by lying worse somewhere
+else: that axis view stacks nineteen dots on lines they do not end and collapses six edges to points.
+That is why the score has three terms, and it is the honest form of the argument for leaving the
+plane: *every flat drawing of this object is either full of crossings or full of joins that are not
+there.*
 
 **The step before the wireframe shows the octahedron and four tips only** — the four faces that look
 at a tip of the tetrahedron we cut — and not the whole threaded pair, which is the second half of the
@@ -159,25 +166,37 @@ said?** Six gates:
    same rule is held over the pages' HTML: no digit in any text a reader sees, which is why the beat
    ranges on the pages are written by JavaScript at run time.
 4. **The drawing is the census.** Every segment the wireframe draws is an edge the engine exported
-   and every dot one of its vertices, by name, both directions checked — thirty-six and fourteen. The
-   ring is held to drawing its twelve lines with none crossing another. And a drawing's `<title>` and
-   `<desc>` carry **no digit at all**: they are prose, and prose about this object counts in words.
+   and every dot one of its vertices — thirty-six and fourteen, both directions checked, and checked
+   **by where the ends of each stroke actually are** rather than by what the stroke says about
+   itself, because a drawing that names its lines correctly and points them all at the wrong dot is
+   the failure a reader is invited to catch by counting. The ring is held to drawing its twelve lines
+   with none crossing another. And a drawing's `<title>` and `<desc>` carry **no digit at all**: they
+   are prose, and prose about this object counts in words.
 5. **The steps are the outline's**, as above.
 6. **The words are under budget**, printed either way.
 
 ### What no check here can catch
 
-**A number computed correctly and then put in the wrong place.** `cut.oct_dots` printed in the
-"lines" column reads as *six lines, twelve dots*, and every value in it is one the engine computed,
-so no scan over the numbers can see it. Gate 3 is what shrinks the hole — a wrong number cannot be
-*typed* anywhere, so it has to be a real value read out of the wrong field — but only reading the
-page catches what is left, which is what the proof-reader pass is for.
+**Any value the engine produced, anywhere, put where it does not belong.** `cut.oct_dots` printed in
+the "lines" column reads as *six lines, twelve dots*; a tip named `A′` in a table beside a drawing
+that has just placed `D′` is right in every number and wrong in every noun; a bare `36` in a drawing,
+attached to nothing, is a number the engine did produce. None of the three can be seen by a scan over
+numbers. Gate 3 is what shrinks the hole — a wrong number cannot be *typed* anywhere, so it has to be
+a real value used wrongly — but only reading the page catches what is left, which is what the
+proof-reader pass is for. That is not hypothetical: the first round of this pass shipped three of
+them, including two walks whose printed terms did not add to their printed total, and a fresh reader
+found all three.
 
 The first version of this file claimed more than it checked, and a fresh reviewer walked twelve wrong
-numbers past it. This pass was attacked the same way, six ways, before it was offered: a digit in a
-caption, a computed number in a table cell, a number in an SVG label, a wrong count in an SVG
-`<desc>`, a number written into a page's own HTML, and a wireframe segment that is not an edge. All
-six turn the check red. The paragraph above is what remains.
+numbers past it. This pass was attacked the same way — six times by its author, then fourteen times
+by a fresh reader, before it was offered. A digit in a caption or a column heading, a number computed
+in JavaScript into a cell, a number in an SVG label, a wrong count in an SVG `<title>` or `<desc>`, a
+number written into a page's own HTML, a beat number typed into a step, a step that drops a chapter
+section or claims one twice, a tampered `engine/napkin.json`: all red. **Two got through, and are now
+closed** — a wrong count hidden in an SVG description, closed by the no-digit rule on `<title>` and
+`<desc>`; and a wireframe whose every line pointed at the wrong dot while its `data-edge` attribute
+stayed honest, closed by resolving each stroke's ends to the nearest drawn dot and holding *that*
+pair to the census. The paragraph above is what remains.
 
 Run it by hand:
 
@@ -189,10 +208,10 @@ make check                            # tier 0, which runs both
 
 ## Gaps in the engine
 
-Three things a step wanted and the engine's browser surface does not expose. **None of them is
-computed in JavaScript**; each is either taken from the vendored payload — where the engine did
-compute it, for one fixed set of inputs — or the interaction is narrowed to what the engine can
-answer. They are the register rows to ask UniForge for.
+**Four** things a step wanted and the engine's browser surface does not expose, and a fifth noted
+rather than wanted. **None of them is computed in JavaScript**; each is either taken from the
+vendored payload — where the engine did compute it, for one fixed set of inputs — or the interaction
+is narrowed to what the engine can answer. They are the register rows to ask UniForge for.
 
 | what a step wanted | what it does instead |
 |---|---|
@@ -200,9 +219,16 @@ answer. They are the register rows to ask UniForge for.
 | **the outward-oriented eight-face sum** — `loops_json` walks the octahedron's faces in the complex's own orientation, which does not sum to zero; the vendored `face_sum` is the outward walk, and it does | beat 43 walks the eight faces of the vendored arrow set; the reader steps through the faces rather than changing an arrow |
 | **the two-dot complex** — `loops_json` answers for the book's four objects, and two dots and a line is not one of them | beat 10 asks the triangle for the difference on `AB` and reads `AB` alone. It is the same line and the same coboundary either way |
 
-A fourth, smaller: `certificate_json` panics on `"triangle"` rather than answering, so beat 33 shows
-the triangle's two ticks through their runs — how far a napkin gets, and whether it comes home —
+The fourth: `certificate_json` panics on `"triangle"` rather than answering, so beat 33 shows the
+triangle's two ticks through their runs — which rows a napkin can write, and whether it comes home —
 rather than through a ceiling.
+
+The fifth, noted rather than wanted: `loops_json` gives no **running partial sums** along a walk, so
+beat 14 shows each step's own contribution and the engine's total rather than a running tally. What
+it *does* give is each line's contribution on its own — ask it about one line with every other set to
+nothing, and what comes back is that line's term in the walk, with the orientation the object gives
+it. That is how the walk's terms are got (`Engine.contribution`), and it is why **the page never
+flips a sign**.
 
 ## The drawings: three conventions, and no fourth
 

@@ -68,6 +68,9 @@ export class Engine {
     this.payload = payload;
     this.rows = rows;
     this.emitted = new Set();
+    // Nothing, in the engine's own words, taken off a row it computed. It is what every other slot
+    // is set to when one slot is asked about — see `contribution` below.
+    this.nothing = payload.poke.history[0][1];
     this.calls = [];
     this.cache = new Map();
     absorb(payload, this.emitted);
@@ -106,6 +109,23 @@ export class Engine {
     return this.ask("slosh_json", object, initial, k, ticks);
   }
 
+  /**
+   * What one number contributes to one walk — the engine's answer, not a sign flipped here.
+   *
+   * A walk round a face uses each of its lines in a direction, and a line walked against the way it
+   * points contributes the opposite of what it holds. The page must not work that out: a proof-reader
+   * caught the first version printing a line's own difference in a walk column, so that three terms
+   * were shown adding to a total they visibly did not make.
+   *
+   * So it is asked. Everything but one slot is set to nothing and the walk is run: what comes back
+   * is exactly that line's contribution to it, with the orientation the object gives it, computed
+   * where every other number on these pages is computed.
+   */
+  contribution(object, values, degree, index) {
+    const alone = values.map((value, at) => (at === index ? value : this.nothing));
+    return this.loops(object, alone, degree).loops;
+  }
+
   /** Whether a tick is inside an object's ceiling, and the bound it is being held to. */
   certificate(object, k) { return this.ask("certificate_json", object, k); }
 
@@ -120,8 +140,12 @@ export class Engine {
    */
   print(value) {
     const answer = this.number(value);
+    // The engine writes a minus as U+2212 when it prints a number and as a hyphen inside a fraction
+    // it refused. Two shapes of minus in one column is a typographic tell that the column is coming
+    // from two places; it is coming from one, so the sign is normalised on the way out. The digits
+    // are untouched.
     return answer.refused
-      ? { text: answer.fraction, refused: true }
+      ? { text: answer.fraction.replace(/^-/, "−"), refused: true }
       : { text: answer.printed, refused: false };
   }
 

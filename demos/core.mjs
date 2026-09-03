@@ -115,6 +115,8 @@ const SVG_STILL_STYLE = `
   .wire .dots circle.tip { fill: none; stroke: #20314a; stroke-width: 1.6; }
   .net .labels, .ring .labels, .wire .labels { fill: #20314a;
     font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif; }
+  .net .labels text, .ring .labels text, .wire .labels text {
+    paint-order: stroke fill; stroke: #fffdf8; stroke-width: 4px; stroke-linejoin: round; }
   .ring .labels .tip { font-style: italic; }
 `;
 
@@ -169,6 +171,9 @@ function renderTable(spec) {
   figure.append(table);
   return figure;
 }
+
+/** What a pressed toggle's button says: the thing the next press does. */
+export const UNDO = "undo";
 
 const TURN_STEP = 0.12;
 const DRAG_SPEED = 0.0055;   // the record's own drag sensitivity, radians per pixel
@@ -245,9 +250,13 @@ export async function mount(slug) {
 
   const stop = () => { if (playing !== null) { clearInterval(playing); playing = null; } };
 
+  let turning = false;
   function draw3dHandlers() {
     const svg = drawing.querySelector("svg.wire");
     if (!svg) return;
+    // Every render replaces the SVG, so a reader who has focused it to turn it loses the focus on
+    // her first arrow key and the second one walks her off the beat. The focus is carried over.
+    if (turning) { svg.focus(); turning = false; }
     let dragging = null;
     const turn = (dx, dy) => {
       state.yaw += dx;
@@ -276,6 +285,7 @@ export async function mount(slug) {
       if (!move) return;
       event.preventDefault();
       event.stopPropagation();
+      turning = true;
       turn(move[0], move[1]);
     });
   }
@@ -297,10 +307,13 @@ export async function mount(slug) {
             // it worked out from it. What the page will not accept is something that is not an
             // exact rational, because the engine has nothing to say about one.
             const typed = input.value.trim().replace(/[−–]/g, "-");
-            if (/^-?\d+(\/\d+)?$/.test(typed) && !/\/0+$/.test(typed)) {
-              state.numbers[index] = typed;
-            }
+            const exact = /^-?\d+(\/\d+)?$/.test(typed) && !/\/0+$/.test(typed);
+            if (exact) state.numbers[index] = typed;
             input.value = state.numbers[index];
+            // A refusal is shown rather than swallowed — the same manners the object has. Silently
+            // putting the old value back left a reader who typed 0.5 with no idea what happened.
+            input.setAttribute("aria-invalid", String(!exact));
+            input.classList.toggle("refused", !exact);
             render();
           });
           group.append(label, input);
@@ -332,8 +345,11 @@ export async function mount(slug) {
         controls.append(backward, label, forward, play, reset);
       }
       if (control.kind === "press") {
+        // A toggle whose label never changes tells her what the first press does and lies about the
+        // second. One shared word says it, and the same word on every page costs one word once.
         const button = element("button", {
-          type: "button", text: control.label, "aria-pressed": String(state.pressed),
+          type: "button", text: state.pressed ? UNDO : control.label,
+          "aria-pressed": String(state.pressed),
         });
         button.addEventListener("click", () => { state.pressed = !state.pressed; render(); });
         controls.append(button);
@@ -420,11 +436,19 @@ export async function mount(slug) {
     if (event.key === "ArrowLeft" || event.key === "k") { show(current - 1); event.preventDefault(); }
   });
 
-  const requested = /^#beat-(\d+)$/.exec(window.location.hash || "");
-  const start = requested
-    ? steps.findIndex((step) => step.beats.includes(Number(requested[1])))
-    : 0;
-  show(start < 0 ? 0 : start);
+  const indexForHash = () => {
+    const requested = /^#beat-(\d+)$/.exec(window.location.hash || "");
+    if (!requested) return 0;
+    const found = steps.findIndex((step) => step.beats.includes(Number(requested[1])));
+    return found < 0 ? 0 : found;
+  };
+  // The hash is the beat in both directions: the back button and a hand-typed #beat-31 move the
+  // page, not only the first load.
+  window.addEventListener("hashchange", () => {
+    const wanted = indexForHash();
+    if (wanted !== current) show(wanted);
+  });
+  show(indexForHash());
   return { steps, show };
 }
 
@@ -433,7 +457,8 @@ export async function mountIndex() {
   const scaffold = await fetch("steps.json").then((answer) => answer.json());
   const list = document.querySelector("#demo-index");
   if (!list) return;
-  for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
+  const inOrder = Object.entries(scaffold.chapters).sort((a, b) => a[1].first - b[1].first);
+  for (const [slug, chapter] of inOrder) {
     const item = element("li");
     const link = element("a", { href: `${slug}.html`, text: chapter.title });
     const beats = element("span", { class: "beats", text: `beats ${chapter.first}–${chapter.last}` });

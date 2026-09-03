@@ -109,30 +109,67 @@ const view = draw.wireDefaultView();
 {
   const wire = draw.wireframe();
   const drawn = draw.drawWire({ yaw: view.yaw, pitch: view.pitch });
-  const segments = [...drawn.matchAll(/data-edge="([^"]+)"/g)].map((found) => found[1]);
-  const dots = [...drawn.matchAll(/data-dot="([^"]+)"/g)].map((found) => found[1]);
 
-  if (segments.length !== payload.stella.lines) {
-    fail(`the wireframe drew ${segments.length} segments; the engine has ${payload.stella.lines}`);
-  }
+  // The dots first, with where each one actually is on the paper.
+  const dots = [...drawn.matchAll(
+    /<circle[^>]*data-dot="([^"]+)"[^>]*cx="([-\d.]+)"[^>]*cy="([-\d.]+)"/g)]
+    .map((found) => ({ name: found[1], x: Number(found[2]), y: Number(found[3]) }));
+  const names = new Set(wire.names);
   if (dots.length !== payload.stella.dots) {
     fail(`the wireframe drew ${dots.length} dots; the engine has ${payload.stella.dots}`);
   }
+  for (const dot of dots) {
+    if (!names.has(dot.name)) {
+      fail(`the wireframe drew a dot called ${dot.name}, which the engine has not got`);
+    }
+  }
+  if (new Set(dots.map((dot) => dot.name)).size !== dots.length) {
+    fail("the wireframe drew a dot twice");
+  }
+
+  // And now the lines, **by where their ends are**, not by what they say about themselves. A
+  // proof-reader pointed every line at the wrong dot while leaving its `data-edge` attribute honest
+  // and this gate stayed green — while the step's own table invites a reader to count the lines off
+  // the picture. So each end is resolved to the nearest drawn dot, and the pair that comes back is
+  // what is held to the census. The attribute is then checked against the geometry as well, so the
+  // two can no longer disagree in either direction.
+  const nearestDot = (x, y) => dots.reduce((best, dot) => {
+    const distance = Math.hypot(dot.x - x, dot.y - y);
+    return best === null || distance < best.distance ? { dot, distance } : best;
+  }, null);
+  const lines = [...drawn.matchAll(
+    /<line[^>]*data-edge="([^"]+)"[^>]*x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/g)];
+  if (lines.length !== payload.stella.lines) {
+    fail(`the wireframe drew ${lines.length} segments; the engine has ${payload.stella.lines}`);
+  }
   const census = new Set(wire.edges.map(([a, b]) =>
     [wire.names[a], wire.names[b]].sort().join("|")));
-  for (const segment of segments) {
-    const key = segment.split("|").sort().join("|");
-    if (!census.has(key)) fail(`the wireframe drew ${segment}, which is not an edge of the census`);
+  const drawnKeys = new Set();
+  for (const line of lines) {
+    const claimed = line[1].split("|").sort().join("|");
+    const from = nearestDot(Number(line[2]), Number(line[3]));
+    const to = nearestDot(Number(line[4]), Number(line[5]));
+    // A stroke must actually start and end on a dot, not merely near one: half a dot's radius is
+    // the whole tolerance, so a line stopping short of where it claims to go fails here.
+    if (from.distance > 4 || to.distance > 4) {
+      fail(`the wireframe's segment ${line[1]} does not end on a dot `
+        + `(${from.distance.toFixed(1)}, ${to.distance.toFixed(1)} away)`);
+      continue;
+    }
+    const geometric = [from.dot.name, to.dot.name].sort().join("|");
+    if (geometric !== claimed) {
+      fail(`the wireframe says it drew ${line[1]} and drew ${geometric}`);
+    }
+    if (!census.has(geometric)) {
+      fail(`the wireframe drew ${geometric}, which is not an edge of the census`);
+    }
+    drawnKeys.add(geometric);
   }
-  const drawnKeys = new Set(segments.map((s) => s.split("|").sort().join("|")));
   for (const key of census) {
-    if (!drawnKeys.has(key)) fail(`the census has the edge ${key}, and the wireframe did not draw it`);
+    if (!drawnKeys.has(key)) {
+      fail(`the census has the edge ${key}, and the wireframe did not draw it`);
+    }
   }
-  const names = new Set(wire.names);
-  for (const dot of dots) {
-    if (!names.has(dot)) fail(`the wireframe drew a dot called ${dot}, which the engine has not got`);
-  }
-  if (new Set(dots).size !== dots.length) fail("the wireframe drew a dot twice");
 }
 
 // ── 3 · no number was typed ───────────────────────────────────────────────────────────────────────
@@ -324,7 +361,7 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
 
   // The controls the page always draws, counted once per page rather than per step.
   for (const word of ["back", "on", "play", "stop", "again", "still", "download", "read it",
-    "theme", "light", "dark", "straighten it"]) {
+    "theme", "light", "dark", "straighten it", "undo"]) {
     words.add(word);
   }
   const count = [...words].reduce((total, text) => total + wordsOf(text), 0);

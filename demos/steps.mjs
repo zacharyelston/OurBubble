@@ -83,6 +83,15 @@ export function chapterSteps(engine, draw) {
 
     const triangleLines = LINES.filter((name) => !name.includes(NAMES[3]));
 
+    // What each line contributes to the walk round the face — the engine's answer, one line at a
+    // time, not a sign flipped here. A proof-reader caught the first version printing each line's
+    // own difference in this column, so that three terms were shown adding to a total they visibly
+    // did not make: +3, −1, −4 under the heading "added up: 0". The walk uses AC the other way, and
+    // its contribution is +1. The engine is asked for that rather than the page working it out.
+    const walkTerms = (edges) =>
+      triangleLines.map((name, index) =>
+        engine.contribution("triangle", edges, 1, index)[0]);
+
     const cornerTable = (values) => table("the corners", ["dot", "number"],
       corners.map((name, index) => [name, show(values[index])]));
 
@@ -158,10 +167,11 @@ export function chapterSteps(engine, draw) {
             }),
             tables: [
               table("this world", ["what", "how many"], censusRows(2)),
-              table("the walk", ["step", "standing at", "somewhere new to go"], [
-                [String(state.tick), stuck ? corners[1] : walked[walked.length - 1],
-                  stuck ? "no" : "yes"],
-              ]),
+              // One row per step taken, so "standing at B" is not asked and answered twice with
+              // two different answers, which is what the first version did.
+              table("the walk", ["step", "standing at", "a line out of it you have not used"],
+                [[String(state.tick), stuck ? corners[1] : walked[walked.length - 1],
+                  state.tick === 0 ? "yes" : "no"]]),
               table("its one line", ["line"],
                 rung(2, KINDS[1]).map((_, index) => [triangleLines[index]])),
             ],
@@ -173,16 +183,23 @@ export function chapterSteps(engine, draw) {
         act: "Draw the lines, one at a time.",
         controls: [{ kind: "tick", count: 3, noun: "line" }],
         render: (state) => {
-          const closed = state.tick >= 3;
+          // One line per press, and the count is a count of what is on the paper. The first version
+          // drew the third dot and two lines on one press and told her the world had a line in it
+          // before it had drawn one.
+          const drawn = triangleLines.slice(0, state.tick);
+          const closed = drawn.length === triangleLines.length;
           return {
             drawing: draw.drawTriangle({
-              dots: state.tick >= 2 ? 3 : 2, showLine: state.tick >= 1, showFace: closed,
+              dots: state.tick >= 2 ? 3 : 2, lines: drawn, showFace: closed,
               title: closed ? "The first thing that closes" : "Not closed yet",
             }),
             tables: [
-              table("this world", ["what", "how many"], censusRows(state.tick >= 2 ? 3 : 2)),
-              table("its lines, in the one order", ["line"],
-                rung(3, KINDS[1]).map((_, index) => [triangleLines[index]])),
+              table("what is on the paper", ["dots", "lines", "faces"],
+                [[count(rung(state.tick >= 2 ? 3 : 2, KINDS[0])), count(drawn),
+                  closed ? count(rung(3, KINDS[2])) : show(ZERO)]]),
+              table("its lines, in the one order", ["line", "drawn"],
+                triangleLines.map((name, index) =>
+                  [name, index < state.tick ? "yes" : "not yet"])),
             ],
           };
         },
@@ -229,17 +246,21 @@ export function chapterSteps(engine, draw) {
               // on this page changes the sign of anything: the walk's own total is asked of the
               // engine one rung up, and it is the zero the beat is about.
               table("the walk, step by step",
-                ["step", "line", "its difference", "walked"],
+                ["step", "line", "walked", "what it costs you"],
                 taken.map(([from, to]) => {
                   const name = [corners[from], corners[to]].sort().join("");
+                  const index = triangleLines.indexOf(name);
                   return [
                     `${corners[from]} → ${corners[to]}`, name,
-                    signed(edges[triangleLines.indexOf(name)]),
                     name[0] === corners[from] ? "the way it points" : "the other way",
+                    signed(walkTerms(edges)[index]),
                   ];
                 })),
-              table("what the whole walk comes to", ["the three differences", "added up"],
-                [[triangleLines.map((name, index) => signed(edges[index])).join("  "), show(loop)]]),
+              table("what the whole walk comes to",
+                ["what the steps so far cost you", "the whole way round"],
+                [[taken.map(([from, to]) => signed(walkTerms(edges)[
+                  triangleLines.indexOf([corners[from], corners[to]].sort().join(""))]))
+                  .join("  ") || "nothing yet", home ? show(loop) : "not home yet"]]),
             ],
           };
         },
@@ -265,8 +286,9 @@ export function chapterSteps(engine, draw) {
             tables: [
               cornerTable(values),
               differenceTable(values, edges),
-              table("what the whole walk comes to", ["the three differences", "added up"],
-                [[triangleLines.map((name, index) => signed(edges[index])).join("  "), show(loop)]]),
+              table("what the whole walk comes to", ["the three terms, as the walk uses them",
+                "added up"],
+                [[walkTerms(edges).map(signed).join("  "), show(loop)]]),
             ],
           };
         },
@@ -427,8 +449,14 @@ export function chapterSteps(engine, draw) {
             tables: [
               table("each face's number", ["face", "how much goes round it"],
                 FACES.map((name, index) => [name, show(loops.loops[index])])),
-              table("the inside, walked round", ["the four face-numbers", "added up"],
-                [[FACES.map((name, index) => show(loops.loops[index])).join("  "),
+              // The same fix as chapter 1's walk, one rung up: the walk round the inside uses each
+              // face in a direction, and two of the four the other way. The terms it actually adds
+              // are asked of the engine, so that four numbers and their total are one arithmetic a
+              // reader can do herself.
+              table("the inside, walked round",
+                ["the four terms, as the walk uses them", "added up"],
+                [[FACES.map((name, index) =>
+                  signed(engine.contribution("tetrahedron", loops.loops, 2, index)[0])).join("  "),
                   show(inside.loops[0])]]),
             ],
           };
@@ -468,15 +496,19 @@ export function chapterSteps(engine, draw) {
           return {
             drawing: draw.drawNet({
               emphasis: state.pressed ? [dialed] : [],
-              values: Object.fromEntries(LINES.map((name, index) => [name, signed(edges[index])])),
+              values: Object.fromEntries(LINES.map((name, index) =>
+                [name, `${signed(edges[index])} · ${show(state.pressed && name === dialed
+                  ? weight : plainWeight)}`])),
               title: state.pressed ? `${dialed}, counted double` : "Every line, counted the same",
             }),
             tables: [
-              table("what each line is worth", ["line", "worth"],
-                LINES.map((name) => [name,
+              // Every line carries two numbers now, and the dial moves one of them. The first
+              // version turned the dial and changed a single cell in a table, which is a beat asking
+              // its question and not answering it.
+              table("what each line holds, and what it is worth",
+                ["line", "difference", "worth"],
+                LINES.map((name, index) => [name, signed(edges[index]),
                   show(state.pressed && name === dialed ? weight : plainWeight)])),
-              table("what the dial did not touch", ["line", "difference"],
-                LINES.map((name, index) => [name, signed(edges[index])])),
               table("the whole world, on a napkin",
                 ["dots", "lines", "faces", "inside", "every face's loop", "round the inside"],
                 [[
@@ -536,10 +568,14 @@ export function chapterSteps(engine, draw) {
       {
         anchors: ["then-and-now"],
         act: "Give it a second row.",
-        controls: [{ kind: "press", label: "add the row" }],
+        controls: [{ kind: "press", label: "add a row" }],
         render: (state) => {
           const run = engine.slosh("triangle", triangleCorners, atShape.k, ticks);
-          const rows = state.pressed ? run.history.slice(0, 2) : run.history.slice(0, 1);
+          // Both rows are the row it starts on. At rest, *then* and *now* are the same numbers, and
+          // that is the point: the second row is not a tick already taken — running one is the next
+          // beat's button — it is the second half of a state the rule cannot read without.
+          const start = run.history[0];
+          const rows = state.pressed ? [start, start] : [start];
           return {
             drawing: draw.drawTriangle({
               dots: 3, showFace: true,
@@ -576,7 +612,7 @@ export function chapterSteps(engine, draw) {
               title: "One rule, one tick",
             }),
             tables: [
-              table("the two rows the rule read, and the one it wrote",
+              table("what the rule read, and what it wrote",
                 ["which row", ...triangleNames],
                 [
                   ["then", ...run.history[from].map(show)],
@@ -623,6 +659,10 @@ export function chapterSteps(engine, draw) {
           const chosen = state.choice.value;
           const run = engine.slosh("triangle", triangleCorners, chosen.k, ticks);
           const printable = run.printable_rows;
+          // Marked row by row, rather than announced in a summary above a table that then writes
+          // every row anyway. A reader who is told "rows it can write: 3" over eleven written rows
+          // has been told two things.
+          const writable = (tick) => (tick < printable ? "yes" : "no");
           return {
             drawing: draw.drawTriangle({
               dots: 3, showFace: true,
@@ -633,7 +673,10 @@ export function chapterSteps(engine, draw) {
               title: "The tick belongs to the shape",
             }),
             tables: [
-              runTable("every tick", run.history, run.totals, triangleNames),
+              table("every tick", ["tick", ...triangleNames, "added up",
+                "can a napkin write this row"],
+                run.history.map((row, tick) => [String(tick), ...row.map(show),
+                  show(run.totals[tick]), writable(tick)])),
               printableRow(run.history, printable),
               table("does it come home", ["tick", "back where it started every"],
                 [[show(run.k), run.period === 0 ? "never" : String(run.period)]]),
@@ -794,12 +837,17 @@ export function chapterSteps(engine, draw) {
           drawing: state.pressed
             ? draw.drawRing({ title: "The shape left between the tips" })
             : draw.drawNet({ midpoints: true, medials: true, title: "Where the blade goes" }),
-          tables: [
+          tables: state.pressed ? [
             table("what fell out", ["pieces at the tips", "shapes between them", "dots in all"],
               [[String(cut.corners), String(cut.octahedra), String(cut.dots)]]),
             table("and how much of the original each one is",
               ["each of the tips", "how many tips", "the shape between"],
               [[show(cut.tip_share), String(cut.corners), show(cut.core_share)]]),
+          ] : [
+            // Nothing has fallen out yet, so nothing is counted yet. The first version printed the
+            // answer above the button that produces it.
+            table("where the blade goes", ["lines", "middles it passes through"],
+              [[count(LINES), String(cut.middles)]]),
           ],
         }),
       },
@@ -809,6 +857,7 @@ export function chapterSteps(engine, draw) {
         controls: [{ kind: "press", label: "look" }],
         render: (state) => ({
           drawing: draw.drawRing({
+            absences: state.pressed,
             emphasis: state.pressed ? cut.opposite_pairs.flat() : [],
             title: state.pressed ? "Three pairs, joined by nothing" : "The shape between",
           }),
@@ -818,8 +867,9 @@ export function chapterSteps(engine, draw) {
             table("every dot's neighbours", ["dot", "lines out of it", "dots it is not joined to"],
               MID.map((name) => [name, String(cut.oct_degree),
                 count(cut.opposite_pairs.filter((pair) => pair.includes(name)))])),
-            table("the pairs joined by nothing", ["one", "the other", "lines between them"],
-              cut.opposite_pairs.map(([a, b]) => [a, b, show(ZERO)])),
+            ...(state.pressed ? [table("the pairs joined by nothing",
+              ["one", "the other", "lines between them"],
+              cut.opposite_pairs.map(([a, b]) => [a, b, show(ZERO)]))] : []),
           ],
         }),
       },
@@ -841,11 +891,13 @@ export function chapterSteps(engine, draw) {
               table("every tick so far", ["tick", ...MID, "added up"],
                 run.history.slice(0, state.tick + 1).map((row, tick) =>
                   [String(tick), ...row.map(show), show(run.totals[tick])])),
-              table("where the poke got to",
-                ["poked", "its opposite", "ticks to cross", "ticks to be home",
-                  "back where it started every"],
-                [[poke.poked, poke.opposite, String(poke.crossing_ticks),
-                  String(poke.home_ticks), String(run.period)]]),
+              // What has happened, not what is going to. Printing "ticks to cross 2" beside a
+              // drawing at tick 0 hands her the answer before she has walked to it.
+              table("where the poke has got to",
+                ["poked", "its opposite", "arrived at the opposite", "home again"],
+                [[poke.poked, poke.opposite,
+                  state.tick >= poke.crossing_ticks ? String(poke.crossing_ticks) : "not yet",
+                  state.tick >= poke.home_ticks ? String(poke.home_ticks) : "not yet"]]),
               table("is this tick inside the shape's ceiling",
                 ["tick", "the shape's stiffest", "the ceiling", "inside it"],
                 [[show(certificate.k), show(String(certificate.eigenvalue)),
@@ -857,7 +909,8 @@ export function chapterSteps(engine, draw) {
       {
         anchors: ["coming-home-on-eight-faces"],
         act: "Walk each face.",
-        controls: [{ kind: "tick", count: cut.oct_faces, noun: "face" }],
+        // "face 0 of 8" reads as a face that does not exist. The counter counts what she has done.
+        controls: [{ kind: "tick", count: cut.oct_faces, noun: "faces walked" }],
         render: (state) => {
           const last = state.tick >= cut.oct_faces;
           const face = last ? null : state.tick;
@@ -878,8 +931,11 @@ export function chapterSteps(engine, draw) {
                   cut.mid_faces[index].map((i) => MID[i]).join(" · "), signed(value),
                 ])),
               table("all of them added up",
-                ["faces walked", "added up", "lines walked, each way once"],
-                [[count(walked), show(faceSum.sum), String(faceSum.lines_walked_each_way)]]),
+                ["faces walked", "faces there are", "added up",
+                  "lines walked, each way once"],
+                [[count(walked), String(cut.oct_faces),
+                  last ? show(faceSum.sum) : "not all walked yet",
+                  last ? String(faceSum.lines_walked_each_way) : "not all walked yet"]]),
               table("what is on each face now", ["faces looking at a tip", "faces still bare"],
                 [[count(atATip), count(stillBare)]]),
             ],
@@ -925,8 +981,12 @@ export function chapterSteps(engine, draw) {
                   : (flat.slice(0, state.tick).some((entry) => entry.index === index)
                     ? tipNames[index] : "bare"),
               ])),
+            // Named in the order the drawing adds them, not in the engine's own listing order. A
+            // proof-reader watched D′ land on the paper while this table said A′: every value was
+            // right and the nouns were wrong, which is the one defect no scan over numbers can see.
             table("the corners the second one brought", ["corner", "how much of the original"],
-              stella.apex_names.slice(0, state.tick).map((name) => [name, show(stella.apex_share)])),
+              flat.slice(0, state.tick).map((entry) =>
+                [entry.name, show(stella.apex_share)])),
             table("how many are on now", ["tips added", "faces that were bare"],
               [[String(state.tick), String(flat.length)]]),
           ],
@@ -1038,12 +1098,15 @@ export function chapterSteps(engine, draw) {
                   tried.period === 0 ? "never" : String(tried.period),
                 ])
                 : []),
+            // The tick is in this table, and the product of tick and stiffness is not. It used to
+            // be the other way round, and a proof-reader read the two adjacent columns as the
+            // comparison the verdict was making — which they are not, and under which two of the
+            // three rows come out the other way. The comparison is the tick against the ceiling.
             table("the three objects, and the ceiling each one has",
-              ["dots", "the shape's stiffest", "the ceiling",
-                "the book's tick times the stiffest", "inside it"],
+              ["dots", "the shape's stiffest", "the tick", "the ceiling", "inside it"],
               refusal.ceilings.map((ceiling) => [
-                String(ceiling.dots), show(ceiling.stiffest), show(ceiling.bound),
-                show(ceiling.book_tick_product), ceiling.holds ? "yes" : "no",
+                String(ceiling.dots), show(ceiling.stiffest), show(refusal.tick),
+                show(ceiling.bound), ceiling.holds ? "yes" : "no",
               ])),
             table("how long the search for a repeat ran",
               ["ticks searched", "ticks that came home"],

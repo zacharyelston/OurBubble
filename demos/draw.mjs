@@ -362,15 +362,18 @@ export function drawings(engine) {
    * rather than sitting in the corner of a frame shaped for four panels. When the fourth dot
    * arrives in the next chapter this triangle is already where the net puts `ABC`.
    */
-  function drawTriangle({ dots = 3, values = {}, showLine = true, showFace = false,
+  function drawTriangle({ dots = 3, values = {}, showLine = true, showFace = false, lines = null,
     arrows = [], emphasis = [], title = "", desc = "" } = {}) {
     const central = panels[0];
     const used = central.positions.slice(0, dots);
     const strong = new Set(emphasis);
     const frame = frameOf(dots === 1 ? [[-1, -0.5], [1, 0.5]] : used, 0.7);
     const at = (point) => project(frame, point);
-    const pairs = dots === 2 ? [[0, 1]] : (dots >= 3 ? [[0, 1], [1, 2], [0, 2]] : []);
     const lineName = ([a, b]) => [NAMES[a], NAMES[b]].sort().join("");
+    const all = dots === 2 ? [[0, 1]] : (dots >= 3 ? [[0, 1], [1, 2], [0, 2]] : []);
+    // `lines` names the lines this step has actually drawn, when a step is adding them one at a
+    // time. Without it every line the dots allow is drawn, which is what every other step wants.
+    const pairs = lines === null ? all : all.filter((pair) => lines.includes(lineName(pair)));
     const middle = centroid(used.length >= 3 ? used : central.positions);
 
     const body = [];
@@ -578,7 +581,7 @@ export function drawings(engine) {
    * are back: the octahedron plus the four tips, and **not** the whole threaded pair, which is the
    * owner's note on #44. Eight is the full set of tips, drawn once before the wireframe takes over.
    */
-  function drawRing({ values = {}, emphasis = [], face = null, tips = [],
+  function drawRing({ values = {}, emphasis = [], face = null, tips = [], absences = true,
     title = "", desc = "" } = {}) {
     const { at } = ringLayout();
     const strong = new Set(emphasis);
@@ -662,7 +665,7 @@ export function drawings(engine) {
     // the centre says where a line would have been, and it is the only mark in either drawing that
     // stands for an absence.
     body.push('  <g class="absent">');
-    for (const [a, b] of OPPOSITE_PAIRS) {
+    for (const [a, b] of (absences ? OPPOSITE_PAIRS : [])) {
       const [x1, y1] = place(at[a]);
       const [x2, y2] = place(at[b]);
       body.push(`    <line x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
@@ -801,8 +804,11 @@ export function drawings(engine) {
       if (!drawnDots.has(index)) return;
       const [x, y] = at[index];
       const away = Math.hypot(flat[index][0], flat[index][1]) || 1;
-      const lx = x + (flat[index][0] / away) * 21;
-      const ly = y + (flat[index][1] / away) * 21;
+      // Pushed a little further out than the dot's own radius, so a name is beside its dot rather
+      // than on it. A dot near the middle of the projection has almost no outward direction to be
+      // pushed along, which is why every label also carries a halo of the paper (see demo.css).
+      const lx = x + (flat[index][0] / away) * 24;
+      const ly = y + (flat[index][1] / away) * 24;
       const value = values[name];
       body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} x="${d2(lx)}" y="${d2(ly)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`);
       if (value !== undefined) {
