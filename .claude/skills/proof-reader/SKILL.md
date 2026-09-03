@@ -67,6 +67,12 @@ kind, so §2b is a separate sweep with its own method, not a harder read.
 
 ### 2b · What only an attack catches
 
+**Attack only in a worktree of your own.** Never mutate files in the drafting agent's tree, and never
+revert with `git checkout -- <dir>` in a tree you share: on 2026-09-02 a reviewer's attack loop did
+both, clobbered the author's uncommitted work, and left one attack edit behind that was committed and
+published — three stray strokes across a wireframe while the check stayed green. Make your own
+worktree from the branch head, attack there, and throw the worktree away.
+
 Both were found in one pass by mutating the guards rather than by re-reading the prose, and both are
 findings **even when the page is currently correct** — the finding is the licence to be wrong, not
 the wrongness.
@@ -89,6 +95,15 @@ the wrongness.
    rule 4 — checking asks whether the computed number is present, refusing asks whether the wrong
    thing is absent, and only refusing survives a builder that gets rewritten along with its own
    check. (Caught 2026-09-02, Our Bubble tranche D.)
+13. **Counts that describe the artefact itself.** "Five chapters after this one", "seven names",
+   "two borrowed words", "the four steps" — prose that counts the book's own parts. Nothing guards
+   an unemphasised number in prose (three wrong counts at once build green), the count drifts every
+   time a chapter is inserted or a list is trimmed, and a wrong count is the one falsehood every
+   reader can catch by turning pages. It produced a blocker in two consecutive rounds of one
+   preface, and the second was the first *moved*, not fixed. Method: for every count on the page,
+   walk the table of contents or the list it describes and tally; then mutate the count and confirm
+   tier 0 stays green, so the finding names the hole and not just the instance. Preferred fix: take
+   the count off the page unless it is a token. (Caught 2026-09-02, Our Bubble preface.)
 
 ## 3 · Render the comments
 

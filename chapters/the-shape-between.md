@@ -15,7 +15,7 @@ tetrahedron. Inside it.
 
 ## Divide it instead of adding to it
 
-<!-- beat 39 -->
+<!-- beat 43 -->
 
 Adding is not the only way to get something bigger. You can also cut.
 
@@ -34,7 +34,7 @@ Four corners come away. What is left?
 
 ## What falls out
 
-<!-- beat 40 -->
+<!-- beat 44 -->
 
 Four small tetrahedra, and one shape that is not a tetrahedron at all.
 
@@ -53,7 +53,7 @@ So count it, the way you counted the tetrahedron.
 
 ## Six dots, and the first two that are not neighbours
 
-<!-- beat 41 -->
+<!-- beat 45 -->
 
 {{napkin:octa_counts}}
 
@@ -73,7 +73,7 @@ Same rule, same tick size. Poke one dot.
 
 ## It takes two ticks to cross
 
-<!-- beat 42 -->
+<!-- beat 46 -->
 
 {{napkin:octa_poke_table}}
 
@@ -94,7 +94,7 @@ Now put numbers on its lines instead, the way you did on the tetrahedron.
 
 ## Coming home, on eight faces
 
-<!-- beat 43 -->
+<!-- beat 47 -->
 
 Eight faces this time, and the same walk. What do they add to?
 

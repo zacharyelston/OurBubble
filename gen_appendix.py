@@ -72,9 +72,10 @@ against that file. That column is the boundary. The history section below carrie
 outside it deliberately, because they are not ours to check — they are checkable against the historical
 record instead, which is a different and in some ways better guarantee.
 
-Two sections cite no experiment of ours at all — the opening on method, and the history chapter — and
-they say so rather than being left out, because a reader should be able to tell *no evidence was
-cited* from *no evidence exists*. A third, the closing chapter, rests on commands you run yourself.
+Three sections cite no experiment of ours at all — the front door, the opening on method, and the
+history chapter — and they say so rather than being left out, because a reader should be able to
+tell *no evidence was cited* from *no evidence exists*. A fourth, the closing chapter, rests on
+commands you run yourself.
 
 One section per chapter, in reading order, **numbered from `00`** to match the order in
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what

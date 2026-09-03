@@ -13,7 +13,7 @@ What is missing?
 
 ## A clock
 
-<!-- beat 27 -->
+<!-- beat 31 -->
 
 Time. And it is worth being suspicious of that word, because time is what people smuggle into a
 small model without noticing.
@@ -29,7 +29,7 @@ What is the least a clock needs to be?
 
 ## Ticks, all the same
 
-<!-- beat 28 -->
+<!-- beat 32 -->
 
 A tick. One indivisible step from now to next, another after it, and every one the same size as
 every other.
@@ -43,7 +43,7 @@ and ask whether that is enough to say what happens next.
 
 ## Then, and now
 
-<!-- beat 29 -->
+<!-- beat 33 -->
 
 It is not, and this is the paragraph to slow down on.
 
@@ -63,7 +63,7 @@ So: two rows. What does one tick do with them?
 
 ## What one tick does
 
-<!-- beat 30 -->
+<!-- beat 34 -->
 
 Here is the rule, and it is the only one in the book.
 
@@ -83,7 +83,7 @@ Is that really the whole law?
 
 ## Nothing else, ever
 
-<!-- beat 31 -->
+<!-- beat 35 -->
 
 Yes. Everything the rest of this book measures is that sentence, run.
 
@@ -99,7 +99,7 @@ So run it. Not on the tetrahedron, though — on something smaller.
 
 ## Three numbers first
 
-<!-- beat 32 -->
+<!-- beat 36 -->
 
 The triangle is still there, from before the tetrahedron existed: three dots, three lines, and
 nothing in the rule that cares how many dots there are. Put a number on each corner — the third is a
@@ -117,7 +117,7 @@ table, too, which is what the third corner bought.
 
 ## The tick belongs to the shape
 
-<!-- beat 33 -->
+<!-- beat 37 -->
 
 One number in that run was neither the rule's nor the triangle's. The tick.
 
@@ -137,7 +137,7 @@ This is that kind of setting, arriving in time before it arrives in length.
 
 ## Now the tetrahedron
 
-<!-- beat 34 -->
+<!-- beat 38 -->
 
 Four different numbers on the four corners, started at rest, at the tick this shape takes: a half.
 Then the rule, ten times.
@@ -153,7 +153,7 @@ leaks away, so nothing runs down. That it comes back onto those exact numbers is
 
 ## The total never moves
 
-<!-- beat 35 -->
+<!-- beat 39 -->
 
 Now add the four up at each tick and look down that last column. It does not change: not on any
 tick, not by a little — the same number, eleven times.
@@ -173,7 +173,7 @@ Nothing here leaks, and that is why the sloshing keeps coming back rather than d
 
 ## Turn the dial
 
-<!-- beat 36 -->
+<!-- beat 40 -->
 
 Take one of the six lines and say it counts double: a difference along it pulls twice as hard as
 along the others. Then run the same ten ticks again.
@@ -195,7 +195,7 @@ always in the motion.
 
 ## Where is the ring?
 
-<!-- beat 37 -->
+<!-- beat 41 -->
 
 Now stop being gentle. Poke one dot hard — put a big number on it, leave the others alone, and
 watch.
@@ -218,7 +218,7 @@ Which means there is a question you cannot ask here.
 
 ## The question this world cannot answer
 
-<!-- beat 38 -->
+<!-- beat 42 -->
 
 You cannot ask how fast.
 

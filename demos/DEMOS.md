@@ -9,11 +9,11 @@ the reader **does something** and watches the object answer.
 
 | page | chapter | beats | steps |
 |---|---|---|---|
-| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 9–18 | 9 |
-| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 19–26 | 6 |
-| [`make-it-move.html`](make-it-move.html) | Make it move | 27–38 | 9 |
-| [`the-shape-between.html`](the-shape-between.html) | The shape between | 39–43 | 5 |
-| [`two-worlds-threaded.html`](two-worlds-threaded.html) | Two worlds threaded | 44–49 | 5 |
+| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 13–22 | 9 |
+| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 23–30 | 6 |
+| [`make-it-move.html`](make-it-move.html) | Make it move | 31–42 | 9 |
+| [`the-shape-between.html`](the-shape-between.html) | The shape between | 43–47 | 5 |
+| [`two-worlds-threaded.html`](two-worlds-threaded.html) | Two worlds threaded | 48–53 | 5 |
 
 **Those beat numbers are not written anywhere in `demos/`,** and neither is that table's arithmetic —
 see *Nothing here knows a beat number* below.
