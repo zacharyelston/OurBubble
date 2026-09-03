@@ -404,12 +404,15 @@ export function chapterSteps(engine, draw) {
           const loops = faceLoopsOf(edges);
           return {
             drawing: draw.drawNet({
+              // The corners she typed and the zero each face comes to — which is the question. The
+              // six differences are in the table immediately under the drawing; putting them here
+              // as well made thirty-eight labels on one small frame, and a drawing nobody can read
+              // is not more honest for carrying more.
               values: Object.fromEntries([
                 ...NAMES.map((name, index) => [name, show(state.numbers[index])]),
-                ...LINES.map((name, index) => [name, signed(edges[index])]),
                 ...FACES.map((name, index) => [name, show(loops.loops[index])]),
               ]),
-              title: "Four corner numbers, six differences, four zeros",
+              title: "Four corner numbers, and what each face comes to",
             }),
             tables: [
               table("the corners", ["dot", "number"],
@@ -454,10 +457,8 @@ export function chapterSteps(engine, draw) {
           const inside = engine.loops("tetrahedron", loops.loops, 2);
           return {
             drawing: draw.drawNet({
-              values: Object.fromEntries([
-                ...LINES.map((name, index) => [name, signed(state.numbers[index])]),
-                ...FACES.map((name, index) => [name, show(loops.loops[index])]),
-              ]),
+              values: Object.fromEntries(
+                FACES.map((name, index) => [name, show(loops.loops[index])])),
               title: "The four face-numbers, walked round the inside",
             }),
             tables: [

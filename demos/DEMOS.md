@@ -417,6 +417,18 @@ move and the number must follow it. Only where the number sits beside the fixed 
 which was never CANON's to say. That the two conventions differ is the point: CANON governs the
 tetrahedron and nothing else.
 
+### A drawing carries what its beat is about
+
+The last thing the label search taught, which no gate says: **a drawing that carries every number is
+not more honest, it is just unreadable.** Chapter 2's net at beat 21 was made to carry four corner
+numbers, six differences and four face totals at once — thirty-eight labels on one small frame — and
+once nothing overlapped any more it was still the worst drawing of the three. The beat asks *what
+does each face say?*, so the drawing now carries the corners she typed and the zero each face comes
+to, and the six differences are in the table immediately below it, where they were all along.
+
+Nothing is lost by that: **every number is in a table, on every step**, which is a rule a gate does
+hold. What the drawing chooses is which of them are worth ink.
+
 ### No colour means anything
 
 One panel fill, one stroke, and one heavier stroke marking *the piece this step is about* — never a
