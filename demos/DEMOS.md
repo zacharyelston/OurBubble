@@ -296,9 +296,34 @@ a sum check keyed to a word, a paragraph rule whose window excluded the figures 
 a dot test that measured centres instead of ink, a step enumerator that never typed anything.
 
 So: **`demos/attacks.mjs` holds the mutation for every guard, the suite runs in tier 0, and a new
-guard lands in the same commit as the mutation that proves it.** The suite applies each mutation to
-a scratch copy of the module, runs the check, and requires it to go red — and requires the tree to
-be clean afterwards. A guard with no mutation is listed by name and fails.
+guard lands in the same commit as the mutation that proves it.** Per mutation, `demos/` and
+`engine/` are **copied** into a fresh directory under the system temp directory, the mutation is
+applied to the copy, the check is run from the copy, its output is required to carry that guard's
+own phrase, and the copy is deleted. A needle that is no longer in the file fails, and so does a
+needle that occurs twice: an ambiguous needle mutates whichever copy comes first, which tests
+something nobody chose.
+
+**The suite does not write to the working tree, and says so by checking.** The version this
+paragraph used to describe did write to it — the real `demos/` and `engine/`, hash-pinned
+`engine/napkin.json` included — and restored the files from an in-memory copy hung on
+`process.on("exit")`. The loop is synchronous, so a killed run never reaches that handler and exits
+with the tree mutated; and a stray edit to a vendored artifact does not look like damage, it looks
+like a re-export. Two readers made the same finding in the same round. It now **refuses to start**
+on a dirty `demos/` or `engine/` — which is also what makes the claim checkable — and asks git
+afterwards whether it kept its word.
+
+**Every mutation red is not the same as every guard tested.** There are 92 places in
+`core.test.mjs` that can complain; the first census of which ones any mutation actually reached
+found about a third, and among the rest were a label drawn across a stroke and a label sitting on a
+dot's ink — two of the three most important guards on the two most visual pages. Guards with no
+mutation are exactly the guards that were found holed on the next read, five rounds running. So the
+check reports the sites a run reached, the suite unions that over every mutation and prints it
+beside the pass count, and `demos/attacks.baseline.json` records the split by the guard's own text.
+A run that reaches fewer of them **fails**; a site that appears with no mutation and no entry in the
+baseline's uncovered list **fails**; and a baseline that has fallen behind its own run fails too,
+because a coverage file that is out of date is one more status that lies. Rewrite it with
+`node demos/attacks.mjs --baseline`, in the commit that changed the coverage — the suite refuses to
+write one from a run that is not green.
 
 The second half of the rule is about commit messages, and it cost a round: **a message states only
 what its diff does.** One here narrated three fixes the diff did not contain, because a script
@@ -318,8 +343,10 @@ step, all named by a number that had moved. A file whose whole argument is *no b
 typed into a demo* had typed nine.
 
 Both halves are now guarded rather than remembered. The page table's ranges are checked against
-`steps.json`, so a renumber that skips them fails. And **everywhere else a beat is named by what it
-is** — the poke step, the walk step, chapter one's opening step — because a name needs no
+`steps.json`, so a renumber that skips them fails. The prose scan skips **only the page-table rows
+it just checked**: it used to skip any line containing `.html`, which let a sentence naming a page
+and a beat in the same breath — the likeliest such sentence anyone would write — straight through.
+And **everywhere else a beat is named by what it is** — the poke step, the walk step, chapter one's opening step — because a name needs no
 renumbering. The same went for the source: the fold comments in `steps.mjs` named their beats by
 number and now name them by what they fold.
 
@@ -485,6 +512,24 @@ else*. On a net, "the opposite dot" is two or three marks on the paper.
 
 Above. The charter's condition for leaving the plane was that 2-D genuinely could not show the step,
 and the crossings count is the evidence: twenty is the floor.
+
+**A mirrored wireframe is another view; a flipped one is not — and the reason is about the
+projection, not about the object.** The position census exempts the first and refuses the second,
+and it used to give a reason that sounded better than it was: that the threaded pair is centrally
+symmetric, so every point has its negative in the set. True of this object, and beside the point.
+Mirroring the horizontal of this projection is
+
+> M ∘ P(yaw, pitch) ≡ P(yaw + π, −pitch)
+
+which is an identity of the projection for **any** set of points whatever — half a turn of yaw
+negates the horizontal, and negating the pitch puts the vertical back. Central symmetry never
+enters, so the guard that watched for it was a tripwire on a property the verdict does not use. And
+the flip is refused for a reason of the same shape: negating the vertical is P(yaw, pitch + π),
+which is a perfectly good view of the object and is caught for one reason only — the search that
+recovers a drawing's view sweeps pitch over **[−π/2, π/2)**, and pitch + π is not in that range.
+That is a fact about the sweep, so widening the sweep would quietly admit every flipped drawing.
+Both the identity and the range are now asserted in `core.test.mjs`, each with the mutation that
+makes it fire.
 
 ### The leader, and why there is a fourth kind of mark
 
