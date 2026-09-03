@@ -29,7 +29,7 @@ reader every time instead of explained to her once.
 
 ## 0 · What you will have
 
-1. What is this book actually about — and should I go and look it up?  *(a thing called **discrete exterior calculus**: a way of doing calculus on a shape made of dots, lines and faces. No — she will meet all five of the forbidding names as things she can count, and almost none of them as words. The two borrowed names the book does use arrive after the thing they name)*
+1. What is this book actually about — and should I go and look it up?  *(a thing called **discrete exterior calculus**: a way of doing calculus on a shape made of dots, lines and faces. No — she will meet all five of the forbidding names as things she can count, and almost none of them as words. The borrowed names the book does use arrive after the thing they name)*
 2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, a machine's honest no she can read, and a path from any number to the file it came out of. Nothing to believe: the first half checks with a pencil, the second is quoted from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
 3. What is the road?  *(five chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
 4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. It starts where measurement started: one shadow, and the smallest possible next thing)*
@@ -219,8 +219,17 @@ by the firewall in the same breath: what she will not have is a claim about the 
 figure, no number and no quotation, by design, so there is nothing in it a reader has to take on
 trust before the book has earned any: the census it once retyped from memory was cut when a mutation
 showed no guard would have caught it being wrong. Every promise it makes is a later chapter's to
-keep, and the appendix section says so rather than vouching for them. Its four beats were inserted
-at the front, and every later beat and chapter moved by one pass of `tools/renumber_beats.py`.*
+keep, and the appendix section says so rather than vouching for them.
+
+**Every count on this page wants a human's eye on every edit** (a proofreader, round 2). Nothing
+guards an unemphasised number in prose — the mutation "five chapters" → "nine chapters" leaves tier
+0 green — and the page's one surviving blocker was exactly that: "the five chapters after this one"
+counted the history chapter in and *Two worlds threaded* out, so a reader who counted arrived at the
+wrong chapter expecting the napkin to run out. It reads "after the shadow, five chapters" now, and
+the other out-checkable counts were removed rather than corrected: the seven names became five that
+are really there, the census went, and "two borrowed names" became "the names that do turn up",
+because *critical point* is one too. Its four beats were inserted at the front, and every later beat
+and chapter moved by one pass of `tools/renumber_beats.py`.*
 
 *Drafter's note on chapters 2–6: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the
