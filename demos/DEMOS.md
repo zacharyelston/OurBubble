@@ -177,14 +177,30 @@ said?** Ten gates:
    string literal is refused**, in any quote style, with `${…}` cut out because that is code. The
    same rule is held over the pages' HTML: no digit in any text a reader sees, which is why the beat
    ranges on the pages are written by JavaScript at run time.
-4. **Every drawing is its own census.** Each convention declares its kind, may emit **only** a
-   whitelisted set of element names, and every stroke and every dot in it **says what it is** —
-   `data-line`, `data-dot`, `data-absent`, `data-tip-line`, `data-edge` — with what it says held to
-   the engine's own data: the tetrahedron's four dots and six lines, the six middles and the twelve
+4. **Every drawing is its own census — what its marks claim, and where they are.** Each convention
+   declares its kind, may emit **only** a whitelisted set of element names, and every mark in it
+   **says what it is** — `data-line`, `data-dot`, `data-middle`, `data-absent`, `data-tip-line`,
+   `data-edge`, `data-region`, `data-walk` — with what it says held to the engine's own data: the tetrahedron's four dots and six lines, the six middles and the twelve
    lines between them, the threaded pair's fourteen and thirty-six. A mark that names nothing fails;
    a mark naming something the census has not got fails; an element the drawing may not emit fails.
-   The wireframe's strokes are additionally checked **by where their ends actually are** rather than
-   by what they say about themselves. Every one of those clauses is a hole that was walked through rather than foreseen.
+   **And identity alone is not a census.** Three geometric things are checked besides: marks that
+   name a dot in common, in the same panel, must **meet at a point** — which is what makes a halved
+   stroke fail, since its far end no longer coincides with the others at that dot, and it needs no
+   truth outside the drawing; a dot may occupy only as **many places** as the engine gives it, one
+   everywhere except the flat net where `D` occupies exactly three, from the engine's own label list;
+   and a **region's corners** must be points where the object's own strokes end or bisect, so a
+   polygon cannot be a stroke or a shape of its own. The wireframe's strokes are additionally
+   resolved to the nearest drawn dot by coordinate.
+
+   The geometric half arrived last and by the worst route. A reader walked **six** mutations through
+   the identity-only version, all green: every stroke on the ring halved with its `data-line` left
+   honest — a visibly broken drawing, twelve strokes reaching none of the dots they name — and the
+   same on the net; a stray stroke placed nowhere near the line it claimed, on each; a stroke drawn
+   as a `<polygon>`, which the whitelist allowed for the panels and the identity loop never looked
+   at; and a second dot called `D` at an arbitrary point, which passed because `D` legitimately
+   appears three times. The author's own six attacks had all been in the identity dimension: none of
+   them moved a mark. Beats 12 and 41 print counts a reader is invited to check against the picture,
+   which is why that was a blocker and not a nit. Every one of those clauses is a hole that was walked through rather than foreseen.
    A drawing that names its lines correctly and points them all at the wrong dot is the failure a
    reader is invited to catch by counting. An unlabelled stroke joining nothing to nothing rode into
    a commit while the labelled count stayed at thirty-six. And when that was fixed by counting every
@@ -448,6 +464,25 @@ And the frame follows the content. Every drawing is emitted first, then every ma
 and its `viewBox` fitted to the result plus one fixed margin. Sizing a frame beforehand meant sizing
 it for the widest the label search *could* reach rather than where it went, which left the figures
 floating in a box a third bigger than themselves.
+
+### Where a number sits beside a name
+
+Under it, at the same fixed distance, on every piece — except where the paper does not allow it, and
+then above it at the same distance. The one place that happens is the **central panel's face
+number**: a face's name sits at its panel's own middle, so there is no "further into the panel" for
+its number to take, and below it is the `AB` stroke. Three of the four face numbers sit below their
+names and `ABC`'s sits above, and that is the convention rather than a lapse — the distance is the
+same either way, so the pair still reads as a pair. Gate 8 guarantees neither touches anything.
+
+### Nothing draws without a title
+
+The four drawing functions used to carry a default title each, and no step ever reached one: every
+step passes its own. An attack that put a wrong number into one of those defaults therefore came out
+green, and looked for a while like a hole in the check. It was dead code — which is worse than it
+sounds, because a string nothing renders is a place a wrong number can sit unexamined while looking
+like a safety net. The defaults are gone and the drawings now **refuse to draw without a title**;
+the throw immediately caught the one caller that had been leaning on a default, which was the check
+itself.
 
 ### No colour means anything
 

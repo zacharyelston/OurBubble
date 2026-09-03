@@ -460,10 +460,11 @@ export function drawings(engine) {
    * none spare.
    */
   function drawNet({ values = {}, emphasis = [], showPanels = true, midpoints = false,
-    medials = false, lines = true, title = "The tetrahedron, unfolded flat", desc = "" } = {}) {
+    medials = false, lines = true, title = "", desc = "" } = {}) {
     const strong = new Set(emphasis);
     const body = [];
-    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${d2(NET_FRAME.width * NET_SCALE)} ${d2(NET_FRAME.height * NET_SCALE)}" role="img" class="net">`);
+    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${d2(NET_FRAME.width * NET_SCALE)} ${d2(NET_FRAME.height * NET_SCALE)}" role="img" class="net" data-drawing="net">`);
+    if (!title) throw new Error("a net drawing was asked for without a title");
     body.push(`  <title>${esc(title)}</title>`);
     body.push(`  <desc>${esc(desc || "The four faces of one tetrahedron laid out flat: the triangle ABC in the middle, with the three others folded out from its sides. Every dot, line and face carries its name. The dot D appears three times, because flat paper puts one corner of the solid in three places. All four triangles are drawn identically: nothing in the drawing means anything beyond the shape.")}</desc>`);
 
@@ -471,7 +472,7 @@ export function drawings(engine) {
       body.push('  <g class="panel">');
       for (const panel of panels) {
         const points = panel.positions.map((p) => netAt(p).map(d2).join(",")).join(" ");
-        body.push(`    <polygon points="${points}"/>`);
+        body.push(`    <polygon data-region="${esc(panel.face)}" points="${points}"/>`);
       }
       body.push("  </g>");
     }
@@ -490,7 +491,7 @@ export function drawings(engine) {
       for (const panel of panels) {
         const middles = [[0, 1], [1, 2], [2, 0]]
           .map(([a, b]) => mid(panel.positions[a], panel.positions[b]));
-        body.push(`      <polygon points="${middles.map((p) => netAt(p).map(d2).join(",")).join(" ")}"/>`);
+        body.push(`      <polygon data-region="${esc(panel.face)}" data-cut="yes" points="${middles.map((p) => netAt(p).map(d2).join(",")).join(" ")}"/>`);
       }
       body.push("    </g>");
     }
@@ -534,8 +535,10 @@ export function drawings(engine) {
       body.push(`    <text${heavy}${weight} x="${d2(x)}" y="${d2(y)}" font-size="${size}" text-anchor="middle" dominant-baseline="central">${esc(label.text)}</text>`);
       if (value !== undefined) {
         // Searched from the name, biased toward the middle of the panel the name belongs to, which
-        // is where the paper is emptiest.
-        const ray = [cx - x || 0.001, cy - y || 0.001];
+        // is where the paper is emptiest — except for a FACE's number, which goes straight down.
+        // A face's name sits at the panel's own middle, so "toward the middle" points nowhere, and
+        // on the central panel that put one zero of four above its name while the others sat below.
+        const ray = label.kind === "face" ? [0, 1] : [cx - x || 0.001, cy - y || 0.001];
         // `netTaken` is passed as itself, not as a filtered copy. It used to be
         // `netTaken.filter(…)`, which built a new array on every call — so `placeClear`'s record of
         // what it had already placed went into a throwaway and every number was positioned as
@@ -580,12 +583,13 @@ export function drawings(engine) {
     const middle = centroid(used.length >= 3 ? used : central.positions);
 
     const body = [];
-    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${d2(frame.width * NET_SCALE)} ${d2(frame.height * NET_SCALE)}" role="img" class="net">`);
-    body.push(`  <title>${esc(title || "The first things you can draw")}</title>`);
+    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${d2(frame.width * NET_SCALE)} ${d2(frame.height * NET_SCALE)}" role="img" class="net" data-drawing="triangle">`);
+    if (!title) throw new Error("a triangle drawing was asked for without a title");
+    body.push(`  <title>${esc(title)}</title>`);
     body.push(`  <desc>${esc(desc || `${dots === 1 ? "One dot" : dots === 2 ? "Two dots joined by one line" : "Three dots joined by three lines, with an inside"}, drawn where the tetrahedron's flat net will later put them: AB horizontal, A on the left, C above. Nothing in the drawing means anything beyond the shape.`)}</desc>`);
 
     if (dots >= 3 && showFace) {
-      body.push(`  <g class="panel"><polygon points="${used.map((p) => at(p).map(d2).join(",")).join(" ")}"/></g>`);
+      body.push(`  <g class="panel"><polygon data-region="${esc(payload.tetrahedron.face_names[0])}" points="${used.map((p) => at(p).map(d2).join(",")).join(" ")}"/></g>`);
     }
 
     body.push('  <g class="stroke">');
@@ -622,7 +626,9 @@ export function drawings(engine) {
         const tipY = y1 + uy * length * 0.74;
         const baseX = tipX - ux * 26;
         const baseY = tipY - uy * 26;
-        body.push(`    <polygon class="head" points="${d2(tipX)},${d2(tipY)} ${d2(baseX - uy * 9)},${d2(baseY + ux * 9)} ${d2(baseX + uy * 9)},${d2(baseY - ux * 9)}"/>`);
+        // The head says which step of the walk it marks, so the check can hold it to the line it
+        // sits on rather than trusting that it is somewhere sensible.
+        body.push(`    <polygon class="head" data-walk="${esc(lineName([a, b]))}" points="${d2(tipX)},${d2(tipY)} ${d2(baseX - uy * 9)},${d2(baseY + ux * 9)} ${d2(baseX + uy * 9)},${d2(baseY - ux * 9)}"/>`);
       }
       body.push("  </g>");
     }
@@ -874,15 +880,16 @@ export function drawings(engine) {
     const place = (point) => [point[0] - frame.minX, point[1] - frame.minY];
 
     const body = [];
-    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${d2(frame.width)} ${d2(frame.height)}" role="img" class="ring">`);
-    body.push(`  <title>${esc(title || "The shape between the tips")}</title>`);
+    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${d2(frame.width)} ${d2(frame.height)}" role="img" class="ring" data-drawing="ring">`);
+    if (!title) throw new Error("a ring drawing was asked for without a title");
+    body.push(`  <title>${esc(title)}</title>`);
     body.push(`  <desc>${esc(desc || (wantTips
       ? "The six middles on two concentric circles, with a tip drawn over each of the faces that looks at one, joined to that face's three middles. No two tips are joined to each other."
       : "The six middles on two concentric circles: each sits on the same line through the centre as the one middle no line joins it to, so opposite means straight through the middle. All twelve lines are drawn once and none crosses another."))}</desc>`);
 
     if (face !== null && face !== outerFace) {
       const points = MID_FACES[face].map((i) => place(at[MID[i]]).map(d2).join(",")).join(" ");
-      body.push(`  <g class="panel"><polygon points="${points}"/></g>`);
+      body.push(`  <g class="panel"><polygon data-region="${MID_FACES[face].map((i) => esc(MID[i])).join("|")}" points="${points}"/></g>`);
     }
 
     body.push('  <g class="stroke">');
@@ -1048,8 +1055,9 @@ export function drawings(engine) {
     }
 
     const body = [];
-    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${WIRE_BOX} ${WIRE_BOX}" role="img" class="wire" tabindex="0">`);
-    body.push(`  <title>${esc(title || "The two tetrahedra, threaded")}</title>`);
+    body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${WIRE_BOX} ${WIRE_BOX}" role="img" class="wire" data-drawing="wire" tabindex="0">`);
+    if (!title) throw new Error("a wireframe was asked for without a title");
+    body.push(`  <title>${esc(title)}</title>`);
     body.push(`  <desc>${esc(desc || "An orthographic wireframe of two tetrahedra threaded through one another, sharing the shape between them. The first tetrahedron's lines are the full stroke, the second's lighter, and the octahedron's lie between them. Every dot carries its name. No shading and no perspective. Drag it, or use the arrow keys, to turn it; the numbers are all in the table below.")}</desc>`);
 
     for (const kind of ["octahedron", "second", "first"]) {

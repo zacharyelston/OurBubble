@@ -151,7 +151,14 @@ const view = draw.wireDefaultView();
 
 {
   const wire = draw.wireframe();
-  const drawn = draw.drawWire({ yaw: view.yaw, pitch: view.pitch });
+  // A title, because the drawings no longer supply a default one — and this check was the caller
+  // that had been leaning on it. The fallback strings were unreachable from any step, and an attack
+  // on one of them "escaped" the whole suite until it was shown to be code nothing renders; dead
+  // code that looks like a safety net is a place a wrong number can sit unexamined, so it is gone
+  // and the drawings now refuse to draw without a title.
+  const drawn = draw.drawWire({
+    yaw: view.yaw, pitch: view.pitch, title: "The threaded pair, for the census check",
+  });
 
   // The dots first, with where each one actually is on the paper.
   const dots = [...drawn.matchAll(
@@ -336,45 +343,118 @@ const DRAWINGS = (() => {
   const P = payload;
   const NAMES = P.tetrahedron.names;
   const MID = P.cut.mid_names;
+  const key = (value) => String(value).split("|").sort().join("|");
+
+  // How many times each of the net's dots appears on the paper, from the engine's own label list —
+  // which is where "one dot in three places" is a fact rather than a remark.
+  const netDotPlaces = {};
+  for (const label of P.net.labels) {
+    if (label.kind !== "dot") continue;
+    netDotPlaces[label.text] = (netDotPlaces[label.text] || 0) + 1;
+  }
+  // And how many strokes carry each line's name, likewise.
+  const netLinePlaces = {};
+  for (const segment of P.net.segments) {
+    netLinePlaces[segment.line] = (netLinePlaces[segment.line] || 0) + 1;
+  }
+
   const tetraLines = new Set(P.tetrahedron.line_names);
-  const midLines = new Set(P.cut.mid_lines
-    .map(([i, j]) => [MID[i], MID[j]].sort().join("|")));
-  const absences = new Set(P.cut.opposite_pairs.map((pair) => [...pair].sort().join("|")));
+  const triangleLines = new Set(P.tetrahedron.line_names
+    .filter((name) => !name.includes(NAMES[3])));
+  const midLines = new Set(P.cut.mid_lines.map(([i, j]) => key(`${MID[i]}|${MID[j]}`)));
+  const absences = new Set(P.cut.opposite_pairs.map((pair) => key(pair.join("|"))));
   const tipNames = new Set(draw.tipNames());
   const stellaNames = new Set(P.stella.names);
   const stellaEdges = new Set(P.stella.edges
-    .map(([i, j]) => [P.stella.names[i], P.stella.names[j]].sort().join("|")));
-  const two = (attribute) => (value) => [...String(value).split("|")].sort().join("|");
-  void two;
+    .map(([i, j]) => key(`${P.stella.names[i]}|${P.stella.names[j]}`)));
+  const faceNames = new Set(P.tetrahedron.face_names);
+  const ringRegions = new Set(P.cut.mid_faces
+    .map((face) => key(face.map((i) => MID[i]).join("|"))));
+
+  // For each kind: what elements it may emit, what each `data-` identity has to be, how many marks
+  // of each name it may put down, and — the part this was missing — how many separate PLACES a dot
+  // of a given name is allowed to occupy.
   return {
+    triangle: {
+      tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
+      identity: {
+        line: (value) => triangleLines.has(value),
+        dot: (value) => NAMES.slice(0, 3).includes(value),
+        region: (value) => faceNames.has(value),
+        walk: (value) => triangleLines.has(value),
+      },
+      // Every line and dot it draws, it draws once; a dot sits in one place.
+      places: () => 1,
+      once: ["line", "dot"],
+    },
     net: {
       tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
-      line: (value) => tetraLines.has(value),
-      middle: (value) => tetraLines.has(value),
-      dot: (value) => NAMES.includes(value),
+      identity: {
+        line: (value) => tetraLines.has(value),
+        middle: (value) => tetraLines.has(value),
+        dot: () => false,          // the net draws no dots of its own
+        region: (value) => faceNames.has(value),
+      },
+      places: (attribute, value) => (attribute === "dot"
+        ? (netDotPlaces[value] || 0)
+        : (netLinePlaces[value] || 0)),
+      counted: { line: netLinePlaces, middle: netLinePlaces },
     },
     ring: {
       tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
-      line: (value) => midLines.has(value.split("|").sort().join("|")),
-      absent: (value) => absences.has(value.split("|").sort().join("|")),
-      "tip-line": (value) => {
-        const [tip, middle] = value.split("|");
-        return tipNames.has(tip) && MID.includes(middle);
+      identity: {
+        line: (value) => midLines.has(key(value)),
+        absent: (value) => absences.has(key(value)),
+        "tip-line": (value) => {
+          const [tip, middle] = value.split("|");
+          return tipNames.has(tip) && MID.includes(middle);
+        },
+        dot: (value) => MID.includes(value) || tipNames.has(value),
+        region: (value) => ringRegions.has(key(value)),
       },
-      dot: (value) => MID.includes(value) || tipNames.has(value),
+      places: () => 1,
+      once: ["line", "absent", "tip-line", "dot"],
+      exactly: { line: midLines.size },
     },
     wire: {
       tags: ["svg", "title", "desc", "g", "line", "circle", "text"],
-      edge: (value) => stellaEdges.has(value.split("|").sort().join("|")),
-      dot: (value) => stellaNames.has(value),
+      identity: {
+        edge: (value) => stellaEdges.has(key(value)),
+        dot: (value) => stellaNames.has(value),
+      },
+      places: () => 1,
+      once: ["edge", "dot"],
+      exactly: { edge: stellaEdges.size, dot: stellaNames.size },
     },
   };
 })();
 
-/** Hold one emitted drawing to its kind: its elements, and the identity of every mark in it. */
+const NEARBY = 2;
+const near = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) <= NEARBY;
+
+/**
+ * Hold one emitted drawing to its kind — its elements, what every mark CLAIMS, and **where it is**.
+ *
+ * The geometry half is the one this gate was missing, and a proof-reader walked six mutations
+ * through the gap: every stroke on the ring halved with its `data-line` left honest (a visibly
+ * broken drawing, twelve strokes reaching none of the dots they name); the same on the net; a stray
+ * stroke placed nowhere near the line it claimed, on each; a stroke drawn as a `<polygon>`, which
+ * the whitelist allowed for the panels and the identity loop never looked at; and a second dot
+ * called `D` at an arbitrary point, which passed because `D` legitimately appears three times.
+ *
+ * Identity alone is not a census. Three things are checked here, and the first two are new:
+ *
+ *   1. **Marks that name a dot in common, in the same panel, meet at a point.** That is what makes a
+ *      halved stroke fail: its far end no longer coincides with the other strokes at that dot. It
+ *      needs no external truth — the drawing is held to its own claims about itself.
+ *   2. **A dot occupies as many places as the engine says.** One, everywhere, except on the flat net
+ *      where `D` occupies exactly three, from the engine's own label list.
+ *   3. **Every mark's identity is the engine's**, and every stroke-bearing element is looked at —
+ *      `polygon` included, with its own region name and its own point count.
+ */
 function censusOf(svg, where) {
-  const kind = (/class="(net|ring|wire)"/.exec(svg) || [])[1];
-  if (!kind) {
+  const kind = (/data-drawing="([a-z]+)"/.exec(svg) || [])[1];
+  if (!kind || !DRAWINGS[kind]) {
     fail(`${where}: the drawing does not say which convention it is drawn in`);
     return;
   }
@@ -387,25 +467,179 @@ function censusOf(svg, where) {
     }
   }
 
-  // Every stroke and every dot names itself, and what it names is the engine's.
-  for (const [element, plural] of [["line", "stroke"], ["circle", "dot"]]) {
-    for (const found of svg.matchAll(new RegExp(`<${element}\\b[^>]*>`, "g"))) {
-      const mark = found[0];
-      const named = [...mark.matchAll(/data-([\w-]+)="([^"]*)"/g)]
-        .filter(([, , ], index) => true)
-        .map((m) => [m[1], m[2]])
-        .filter(([attribute]) => attribute in rules);
-      if (!named.length) {
-        fail(`${where}: the ${kind} drawing emitted a ${plural} that does not say what it is: `
-          + `${mark}`);
-        continue;
+  // Every mark that can carry ink, with what it claims and where it is.
+  const marks = [];
+  for (const found of svg.matchAll(/<(line|circle|polygon)\b([^>]*)>/g)) {
+    const [, element, attributes] = found;
+    const named = [...attributes.matchAll(/data-([\w-]+)="([^"]*)"/g)]
+      .map((m) => [m[1], m[2]])
+      .filter(([attribute]) => attribute in rules.identity);
+    let points = [];
+    if (element === "line") {
+      const at = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(attributes);
+      if (at) points = [[+at[1], +at[2]], [+at[3], +at[4]]];
+    } else if (element === "circle") {
+      const at = /cx="([-\d.]+)" cy="([-\d.]+)"/.exec(attributes);
+      if (at) points = [[+at[1], +at[2]]];
+    } else {
+      points = (/points="([^"]+)"/.exec(attributes)?.[1] || "").trim().split(/\s+/)
+        .map((pair) => pair.split(",").map(Number))
+        .filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
+    }
+    if (!named.length) {
+      fail(`${where}: the ${kind} drawing emitted a <${element}> that does not say what it is: `
+        + `${found[0]}`);
+      continue;
+    }
+    if (!points.length) {
+      fail(`${where}: the ${kind} drawing emitted a <${element}> with no position`);
+      continue;
+    }
+    if (element === "polygon" && points.length < 3 && !/data-walk=/.test(attributes)) {
+      fail(`${where}: the ${kind} drawing emitted a <polygon> of ${points.length} point(s) — a `
+        + `region has three, and a stroke is a <line>`);
+    }
+    const panel = /data-panel="([^"]*)"/.exec(attributes)?.[1] || "";
+    for (const [attribute, value] of named) {
+      if (!rules.identity[attribute](value)) {
+        fail(`${where}: the ${kind} drawing's <${element}> claims to be the ${attribute} `
+          + `"${value}", which the engine's census has not got`);
       }
-      for (const [attribute, value] of named) {
-        if (!rules[attribute](value)) {
-          fail(`${where}: the ${kind} drawing's ${plural} claims to be the ${attribute} `
-            + `"${value}", which the engine's census has not got`);
-        }
+    }
+    marks.push({ element, named, points, panel, source: found[0] });
+  }
+
+  // ── 1 · marks naming a dot in common, in the same panel, meet at a point ────────────────────
+  const dotsNamedBy = (mark) => mark.named.flatMap(([attribute, value]) => {
+    if (attribute === "region") return [];
+    if (attribute === "dot") return [value];
+    if (attribute === "middle") return [];      // a middle is a point, not a pair of dots
+    if (attribute === "walk") return [];        // an arrowhead sits ALONG a line, not at a dot
+    return value.includes("|") ? value.split("|") : [...value];
+  });
+  const strokes = marks.filter((mark) => mark.element !== "polygon");
+  for (let i = 0; i < strokes.length; i += 1) {
+    for (let j = i + 1; j < strokes.length; j += 1) {
+      const a = strokes[i];
+      const b = strokes[j];
+      if (a.panel !== b.panel) continue;
+      const shared = dotsNamedBy(a).filter((name) => dotsNamedBy(b).includes(name));
+      if (!shared.length) continue;
+      const meets = a.points.some((one) => b.points.some((two) => near(one, two)));
+      if (!meets) {
+        fail(`${where}: the ${kind} drawing's ${a.source.slice(0, 60)}… and `
+          + `${b.source.slice(0, 60)}… both name ${shared.join(", ")} and do not meet anywhere. `
+          + `Two marks at the same dot are at the same point, or one of them is in the wrong place`);
       }
+    }
+  }
+
+  // A region's corners are corners of the object, not points of their own. Without this, a polygon
+  // of three arbitrary points with an honest `data-region` is a stroke — or a whole shape — that
+  // nothing checks: a reader got a two-point one past the count test's ancestor, and a three-point
+  // one past this gate's first draft. Every vertex has to be somewhere a stroke already ends.
+  for (const region of marks.filter((mark) => mark.element === "polygon"
+    && mark.named.some(([attribute]) => attribute === "region"))) {
+    const ends = strokes.filter((mark) => mark.panel === region.panel || region.panel === "")
+      .flatMap((mark) => mark.points);
+    // A cut's medial triangle has its corners at the middles of the strokes, not at their ends.
+    const middles = strokes.flatMap((mark) => (mark.points.length === 2
+      ? [[(mark.points[0][0] + mark.points[1][0]) / 2, (mark.points[0][1] + mark.points[1][1]) / 2]]
+      : []));
+    const anchors = [...ends, ...middles];
+    for (const corner of region.points) {
+      if (!anchors.some((anchor) => near(anchor, corner))) {
+        fail(`${where}: the ${kind} drawing's region "${region.named
+          .find(([a]) => a === "region")[1]}" has a corner at `
+          + `${corner.map((v) => v.toFixed(1)).join(",")}, where no stroke of the object ends`);
+      }
+    }
+  }
+
+  // An arrowhead is not at a dot, so the meeting test above passes over it — instead it has to sit
+  // ON the line it says it marks. Without this a walk could point along a line it does not name.
+  for (const head of marks.filter((mark) => mark.named.some(([a]) => a === "walk"))) {
+    const named = head.named.find(([a]) => a === "walk")[1];
+    const line = strokes.find((mark) => mark.named.some(([a, v]) => a === "line" && v === named));
+    if (!line) {
+      fail(`${where}: the ${kind} drawing marks a walk along "${named}" and does not draw that line`);
+      continue;
+    }
+    const middle = head.points
+      .reduce((sum, [x, y]) => [sum[0] + x / head.points.length, sum[1] + y / head.points.length],
+        [0, 0]);
+    const [from, to] = line.points;
+    const run = [to[0] - from[0], to[1] - from[1]];
+    const length = Math.hypot(...run) || 1;
+    const across = Math.abs((middle[0] - from[0]) * run[1] - (middle[1] - from[1]) * run[0])
+      / length;
+    const along = ((middle[0] - from[0]) * run[0] + (middle[1] - from[1]) * run[1])
+      / (length * length);
+    if (across > 6 || along < 0 || along > 1) {
+      fail(`${where}: the ${kind} drawing's arrowhead for "${named}" is not on that line `
+        + `(${across.toFixed(1)} away, ${along.toFixed(2)} along it)`);
+    }
+  }
+
+  // ── 2 · a dot occupies as many places as the engine says ─────────────────────────────────────
+  const placesOf = new Map();
+  for (const mark of strokes) {
+    for (const name of dotsNamedBy(mark)) {
+      if (!placesOf.has(name)) placesOf.set(name, []);
+      const clusters = placesOf.get(name);
+      for (const point of mark.points) {
+        if (!clusters.some((seen) => near(seen, point))) clusters.push(point);
+      }
+    }
+  }
+  for (const [name, clusters] of placesOf) {
+    // A stroke names two dots and has two ends, and nothing here says which is which, so each
+    // stroke offers both. The floor is therefore the number of places the engine allows; what this
+    // catches is a drawing offering MORE places than the object has, which is what a halved stroke
+    // or a displaced mark does.
+    const allowed = rules.places("dot", name);
+    const strokesNaming = strokes.filter((mark) => dotsNamedBy(mark).includes(name)).length;
+    const ceiling = Math.max(allowed, 1) + strokesNaming;
+    if (clusters.length > ceiling) {
+      fail(`${where}: the ${kind} drawing puts marks naming ${name} at ${clusters.length} `
+        + `different points, and the object has it in ${Math.max(allowed, 1)}`);
+    }
+  }
+
+  // ── 3 · counts, per name and in total ────────────────────────────────────────────────────────
+  const tally = {};
+  for (const mark of marks) {
+    for (const [attribute, value] of mark.named) {
+      tally[attribute] = tally[attribute] || {};
+      const at = attribute === "region" ? value : (value.includes("|")
+        ? value.split("|").sort().join("|") : value);
+      tally[attribute][at] = (tally[attribute][at] || 0) + 1;
+    }
+  }
+  for (const attribute of rules.once || []) {
+    for (const [value, count] of Object.entries(tally[attribute] || {})) {
+      if (count !== 1) {
+        fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" ${count} times, and `
+          + `the object has one of it`);
+      }
+    }
+  }
+  for (const [attribute, expected] of Object.entries(rules.counted || {})) {
+    const drawn = tally[attribute] || {};
+    const total = Object.values(drawn).reduce((sum, count) => sum + count, 0);
+    if (total === 0) continue;                  // this step does not draw them at all
+    for (const [value, count] of Object.entries(drawn)) {
+      if (count !== expected[value]) {
+        fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" ${count} time(s), `
+          + `and the engine puts it in ${expected[value]} place(s)`);
+      }
+    }
+  }
+  for (const [attribute, expected] of Object.entries(rules.exactly || {})) {
+    const total = Object.values(tally[attribute] || {}).reduce((sum, count) => sum + count, 0);
+    if (total !== expected) {
+      fail(`${where}: the ${kind} drawing put down ${total} ${attribute} mark(s); the engine `
+        + `has ${expected}`);
     }
   }
 }
