@@ -1173,14 +1173,23 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         // A heading that reads like a total must BE the declared total — checked over every column,
         // with packed cells counted as their numbers, and with a total in the first column refused
         // outright because it has no terms in front of it to be the total of.
+        // Word-stems, not whole words. "summed" slipped past `\bsum\b` — the boundary was doing the
+        // attacker's work for it.
         const totalish = (head) =>
-          /\b(added up|the whole way round|total|altogether|sum|comes to)\b/i.test(String(head));
+          /\b(add(ed|s|ing)? up|the whole way round|total\w*|altogether|sum\w*|comes? to)\b/i
+            .test(String(head));
         // The caption counts as a heading. A reader moved a total-shaped phrase from a column head
         // into the caption and the check stopped looking; a reader does not read them differently.
-        if (totalish(table.caption) && table.rows.some((row) => rowNumbers(row).length >= 2)
+        // Across a row **or** down a column: a caption saying "summed" over a column of three
+        // numbers claims a total as plainly as one saying it over a row, and the first version of
+        // this rule only looked across.
+        const anyRow = table.rows.some((row) => rowNumbers(row).length >= 2);
+        const anyColumn = table.head.some((_, index) =>
+          table.rows.filter((row) => numbersIn(row[index]).length >= 1).length >= 2);
+        if (totalish(table.caption) && (anyRow || anyColumn)
           && (!shape || shape.total === undefined)) {
-          fail(`${slug} ${step.label}: "${table.caption}" is captioned as a total over a row of `
-            + `numbers and the table does not declare which column that total is`);
+          fail(`${slug} ${step.label}: "${table.caption}" is captioned as a total over numbers `
+            + `and the table does not declare which column that total is`);
         }
         table.head.forEach((head, index) => {
           if (!totalish(head)) return;
