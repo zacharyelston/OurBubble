@@ -67,6 +67,12 @@ kind, so §2b is a separate sweep with its own method, not a harder read.
 
 ### 2b · What only an attack catches
 
+**Attack only in a worktree of your own.** Never mutate files in the drafting agent's tree, and never
+revert with `git checkout -- <dir>` in a tree you share: on 2026-09-02 a reviewer's attack loop did
+both, clobbered the author's uncommitted work, and left one attack edit behind that was committed and
+published — three stray strokes across a wireframe while the check stayed green. Make your own
+worktree from the branch head, attack there, and throw the worktree away.
+
 Both were found in one pass by mutating the guards rather than by re-reading the prose, and both are
 findings **even when the page is currently correct** — the finding is the licence to be wrong, not
 the wrongness.
