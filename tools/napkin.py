@@ -1068,8 +1068,8 @@ def stella_counts() -> str:
         f"({' · '.join(both['apex_names'])}). Every middle has {both['middle_degree']} lines and "
         f"every tip has {both['tip_degree']}, and **no two tips are joined at all**, so nothing "
         f"gets from one tip to another without going through the middle. Together they come to half "
-        f"again as much room as the tetrahedron you cut — {share}, which is that tetrahedron plus "
-        f"{added} — and they fill {cube}."
+        f"again as much room — {share}, which is that tetrahedron plus {added} — and they fill "
+        f"{cube}."
     )
     # Phrases, not bare digits: a "6" on its own is in the table too, so asserting the digit would
     # let a literal into the sentence beside it. The attack that found this typed "The 15 are…"
