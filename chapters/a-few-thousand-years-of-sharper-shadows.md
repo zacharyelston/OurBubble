@@ -9,7 +9,7 @@
   <figcaption><strong>Analogy — not data.</strong> The same geometry three times over, and the middle and right panels are the same measurement. What changes between them is not the reasoning but how finely the angle can be read — which is the whole of this chapter.</figcaption>
 </figure>
 
-<!-- beat 107 -->
+<!-- beat 111 -->
 
 You have just watched an instrument refuse a law its owners committed to. That is not a modern
 virtue; it is the oldest habit in measurement, and there is a two-thousand-year case study.
@@ -21,7 +21,7 @@ Why?
 
 ## Not for lack of the idea
 
-<!-- beat 107 -->
+<!-- beat 111 -->
 
 That is the useful part, so it is worth being precise: **it was not for lack of the idea.**
 
@@ -34,7 +34,7 @@ That is triangulation, and he had it. So how did it give the wrong answer?
 
 ## The right method, the wrong answer
 
-<!-- beat 108 -->
+<!-- beat 112 -->
 
 Aristarchus measured that angle at about 87 degrees, and concluded the Sun was around twenty times
 further away than the Moon.
@@ -54,7 +54,7 @@ Which is a distinction worth having a name for.
 
 ## Being wrong, and being unable to see yet
 
-<!-- beat 109 -->
+<!-- beat 113 -->
 
 They are not the same thing, and almost everything in this chapter turns on the gap between them.
 
@@ -70,7 +70,7 @@ Which brings us to the most expensive mistake in the chapter.
 
 ## The null that was read as an absence
 
-<!-- beat 110 -->
+<!-- beat 114 -->
 
 Three centuries later, the question was what to make of a measurement that kept coming back empty.
 
@@ -84,7 +84,7 @@ well over a thousand years.
 
 ## Two readings, and the one that held
 
-<!-- beat 110 -->
+<!-- beat 114 -->
 
 Aristarchus had proposed a moving Earth, and Archimedes records the enormous sphere of fixed stars
 that came with it. It was **Aristotle**, in *On the Heavens*, who argued the other way from the
@@ -102,7 +102,7 @@ So what finally moved?
 
 ## The instrument, not the idea
 
-<!-- beat 111 -->
+<!-- beat 115 -->
 
 Not the reasoning. Nobody improved on the triangle.
 
@@ -117,7 +117,7 @@ knowable amount.
 
 ## And then the Sun, and then the star
 
-<!-- beat 111 -->
+<!-- beat 115 -->
 
 **The distance to the Sun**, at last, in the 1760s — not by measuring that impossible angle but by
 sidestepping it, in a scheme Edmond Halley set out decades before anyone could use it: watch Venus
@@ -134,7 +134,7 @@ Which is exactly the shape of something in our own record.
 
 ## The first: a number already in the record
 
-<!-- beat 112 -->
+<!-- beat 116 -->
 
 Two measurements here had been recorded as misses — quantities outside their registered bands. They
 sat in the record as failures for a long time, and this book would have reported them so.
@@ -158,7 +158,7 @@ to.
 
 ## The one that needed a better instrument
 
-<!-- beat 112 -->
+<!-- beat 116 -->
 
 The second was not like that, and calling it the same would be flattering ourselves.
 
@@ -180,7 +180,7 @@ built.
 
 ## The star that was never fixed, twice over
 
-<!-- beat 113 -->
+<!-- beat 117 -->
 
 Now put them against Ptolemy, because there turn out to be three ways this can go and he is only one
 of them.
@@ -199,7 +199,7 @@ afterwards to data that had been waiting.
 
 ## Why the rows stay, and what it cost to find them
 
-<!-- beat 113 -->
+<!-- beat 117 -->
 
 Which is why the original rows are still there, not deleted and rewritten, carrying a note of what
 later work found — so the miss is still there to read. Both re-analyses are rungs of their own,

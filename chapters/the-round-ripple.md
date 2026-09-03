@@ -9,7 +9,7 @@
   <figcaption><strong>Analogy — not data.</strong> Solid is what was observed; dashed is what a badly chosen sense of size does to it. The measured difference is in the figure linked below.</figcaption>
 </figure>
 
-<!-- beat 58 -->
+<!-- beat 62 -->
 
 You have the object and you have the question: poke it, and see whether the front travels at the
 same speed in every direction.
@@ -21,7 +21,7 @@ Which half is missing?
 
 ## The half you do not have
 
-<!-- beat 58 -->
+<!-- beat 62 -->
 
 Time you have. Ticks, all the same size, and you can count them — that is what the clock was for.
 
@@ -36,7 +36,7 @@ Doesn't counting steps already do that?
 
 ## A step is not a distance
 
-<!-- beat 59 -->
+<!-- beat 63 -->
 
 It is worth sitting with why not, because "count the lines you crossed" sounds exactly like a ruler.
 
@@ -55,7 +55,7 @@ So choose the obvious one, and guess what happens.
 
 ## ✎ Before we look
 
-<!-- beat 60 -->
+<!-- beat 64 -->
 
 The obvious setting is to give every line the same weight. It feels like the neutral choice — the
 one that assumes nothing, that plays no favourites among the lines.
@@ -72,7 +72,7 @@ number it is very hard to remember not having known it.
 
 ## The obvious setting
 
-<!-- beat 61 -->
+<!-- beat 65 -->
 
 Set every line to the same weight and the ring comes out **lopsided**.
 
@@ -93,7 +93,7 @@ What if the dial is set from the shape instead?
 
 ## The same dial, set from the geometry
 
-<!-- beat 62 -->
+<!-- beat 66 -->
 
 Measure the pieces of the object and weight each line by what it actually is. Same dial, same
 settings, no new machinery — a reading taken from the thing rather than assumed.
@@ -111,7 +111,7 @@ But 2.2% is not zero. What is it?
 
 ## Coarse, or broken?
 
-<!-- beat 63 -->
+<!-- beat 67 -->
 
 A sceptic should push on the residual, and there are exactly two things it could be: the world
 really is slightly uneven, or the grid is too coarse to draw a smooth circle on.
@@ -128,7 +128,7 @@ a machine run that test without anyone's thumb on the scale?
 
 ## Hand it to something that cannot hope
 
-<!-- beat 64 -->
+<!-- beat 68 -->
 
 It can, and this is where the book acquires the instrument it uses for the rest of its length.
 
@@ -151,7 +151,7 @@ Have we ever got this wrong where anyone could see?
 
 ## The part where we were the problem
 
-<!-- beat 65 -->
+<!-- beat 69 -->
 
 Yes, and it belongs here rather than in a footnote.
 
@@ -168,7 +168,7 @@ grain, in a different place, which is why it took months to find.
 
 ## It was the grid, not the optics
 
-<!-- beat 65 -->
+<!-- beat 69 -->
 
 Cutting a square region into triangles means choosing which way the diagonals lean. Lean them all
 the same way and the mesh loses a symmetry the *experiment* has: flip the scene about the axis that
@@ -184,7 +184,7 @@ a two-dimensional drawing choice in one demo, and it broke a mirror the experime
 
 ## The fix, and the switch still on the page
 
-<!-- beat 65 -->
+<!-- beat 69 -->
 
 The fix is embarrassing in its simplicity: alternate the diagonals, so mirroring the mesh maps it
 onto itself. Same scene, same solver, same everything else. The asymmetry drops to about fifteen
@@ -200,7 +200,7 @@ So what did the chapter settle?
 
 ## What this chapter settled
 
-<!-- beat 66 -->
+<!-- beat 70 -->
 
 Not that the little world has light in it. It does not.
 

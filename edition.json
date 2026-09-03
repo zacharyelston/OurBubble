@@ -3,6 +3,12 @@
   "subtitle": "A Reader's Journey Through The Container",
   "_ordering": "Reading order lives in chapters/SUMMARY.md and nowhere else. This file is keyed by slug and carries no positions; the displayed section numbers in the appendix are derived from SUMMARY order when the appendix is generated.",
   "chapters": {
+    "what-you-will-have": {
+      "sources": [
+        "book/LESSON_STANDARD.md",
+        "FIREWALL.md"
+      ]
+    },
     "the-shadow": {
       "sources": [
         "book/LESSON_STANDARD.md",
@@ -92,6 +98,14 @@
   "appendix": {
     "file": "chapters/the-simulations.md",
     "sections": {
+      "what-you-will-have": {
+        "title": "What you will have — the front door, and no experiment",
+        "note": "**What this section carries.** No experiment, and no number. The front door says what the book is about, what a reader will be able to do by the end, and how to read it — and every promise it makes is redeemed in a later chapter, which is where the provenance for it sits. The standards below are what its one scope claim rests on.\n",
+        "standards": [
+          "book/LESSON_STANDARD.md",
+          "FIREWALL.md"
+        ]
+      },
       "the-shadow": {
         "title": "The shadow — the method, before any experiment",
         "standards": [
