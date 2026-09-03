@@ -29,10 +29,10 @@ reader every time instead of explained to her once.
 
 ## 0 · What you will have
 
-1. What is this book actually about — and should I go and look it up?  *(a thing called **discrete exterior calculus**: a way of doing calculus on a shape made of dots, lines and faces. No — she will meet all five of the forbidding names as things she can count, and almost none of them as words. The borrowed names the book does use arrive after the thing they name)*
-2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, a machine's honest no she can read, and a path from any number we produced to where it came from. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they are quoted from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
-3. What is the road?  *(five chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
-4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. It starts where measurement started: one shadow, and the smallest possible next thing)*
+1. What is this book actually about — and should I go and look anything up?  *(the art of collecting data, which is smaller than its reputation: make a mark, take the difference, add the differences up, see whether they come home. A telescope is a better stick; between a child in a yard and a laboratory the instruments change and the bookkeeping gets more careful, and the moves do not change at all. The syntax those moves are written in has a name — **discrete exterior calculus** — said once and put straight back down)*
+2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, why the tick a world runs on belongs to its shape, a machine's honest no told apart from a mistake, and a path from any number we produced to where it came from. Then the part worth more: the sciences whose papers look like a wall are doing those same moves in their own notation, so she will recognise what they are doing without knowing their subjects. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they come from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
+3. What is the road?  *(a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
+4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. Sticks and light, dots and lines: all anyone has had since the first shadows on a cave wall, all this book uses, and enough for everything in it. It starts where measurement started: one shadow, and the smallest possible next thing)*
 
 ## 1 · The shadow
 
@@ -203,32 +203,45 @@ reader every time instead of explained to her once.
 *Appendix · The Simulations — unchanged: every number in the chapters above, its source file, its
 test, its regenerate command. The chapters stay free of it; it stays complete.*
 
-*Drafter's note on chapter 0 (owner, 2026-09-02). The front door exists because the book teaches a
-subject people spend years learning under forbidding names, and a reader deserves to be told what
-she is walking into and what she will have at the end of it. So it names the subject **once** —
-discrete exterior calculus — asks her not to look it up, and lists five forbidding names precisely
-so they stop being frightening, then hands her each of the five things they name in plain words.
-**It does not say the names arrive later, because five of them never do** (a proofreader, 2026-09-02:
-*Hodge*, *Laplacian*, *exactness*, *forms* and *stability* appear nowhere in the chapters, and the
-first draft promised all seven would). What it says instead is what is true and better: she will
-meet the things and almost none of the words.
+*Drafter's note on chapter 0 (owner, 2026-09-02; the promise revised on the owner's brief of
+2026-09-03). The front door exists because a reader deserves to be told what she is walking into and
+what she will have at the end of it. **What she is walking into is not a piece of mathematics.** It
+is human scientific achievement and the art of collecting data, and the brief gives the reason: "the
+only difference between the child looking at her shadow is that we are all a bit older and have a
+variety of tools at our disposal. And yet, sticks and light, dots and lines are all that we have used
+from the beginning of the shadows on the cave wall. And it turns out that's all we needed too."
 
-The tease is the owner's — she will know what the people who work on this know — and it is bounded
-by the firewall in the same breath: what she will not have is a claim about the world. It carries no
-figure, no number and no quotation, by design, so there is nothing in it a reader has to take on
-trust before the book has earned any: the census it once retyped from memory was cut when a mutation
-showed no guard would have caught it being wrong. Every promise it makes is a later chapter's to
-keep, and the appendix section says so rather than vouching for them.
+So beat 1 is the moves themselves — make a mark, take the difference, add the differences up, see
+whether they come home — with the instruments as better sticks, and the child differing from the
+laboratory only in age and equipment. Beat 2 hands her the things, and then the part worth more than
+the things: the sciences whose papers look like a wall are doing those same moves in their own
+notation, so she will recognise what they are doing without knowing their subjects. Beat 4 closes on
+sticks and light, before the shadow chapter opens. *Discrete exterior calculus* is said **once**, as
+the name of the syntax those moves are written in, and put straight back down. The earlier draft's
+five forbidding names are gone along with the promise that carried them — a list of names is a count,
+and this page carries no count now.
 
-**Every count on this page wants a human's eye on every edit** (a proofreader, round 2). Nothing
-guards an unemphasised number in prose — the mutation "five chapters" → "nine chapters" leaves tier
-0 green — and the page's one surviving blocker was exactly that: "the five chapters after this one"
-counted the history chapter in and *Two worlds threaded* out, so a reader who counted arrived at the
-wrong chapter expecting the napkin to run out. It reads "after the shadow, five chapters" now, and
-the other out-checkable counts were removed rather than corrected: the seven names became five that
-are really there, the census went, and "two borrowed names" became "the names that do turn up",
-because *critical point* is one too. Its four beats were inserted at the front, and every later beat
-and chapter moved by one pass of `tools/renumber_beats.py`.*
+**The two sentences the brief is built on are the two that need the firewall**, and both are claims
+about method and about this book's toy. That the moves are what every science does is a claim about
+method. That dots and lines were enough is a claim about *everything in this book* — never that the
+world is made of them, never that anything here is unified — and the page says in the same breath
+what she will not have: a claim about the world. It carries no figure, no number and no quotation, by
+design, so there is nothing in it a reader has to take on trust before the book has earned any: the
+census it once retyped from memory was cut when a mutation showed no guard would have caught it being
+wrong. Every promise it makes is a later chapter's to keep, and the appendix section says so rather
+than vouching for them.
+
+**Every count on this page wants a human's eye on every edit** (a proofreader, round 2) — which is
+why the revision took the last of them off it. Nothing guards an unemphasised number in prose: the
+mutation "five chapters" → "nine chapters" leaves tier 0 green, and a wrong count was this one page's
+blocker in two consecutive rounds, the second being the first *moved* rather than fixed. The whole
+history, so it is not relearned: the seven forbidding names became five that were really there and
+are now none; the retyped census went; "two borrowed names" became "the names that do turn up",
+because *critical point* is one too; "after the shadow, five chapters" is now "a run of chapters";
+and "the four steps this whole book is made of" in the hand-off to *The shadow* is now "the order of
+work". Its four beats were inserted at the front on 2026-09-02, and every later beat and chapter
+moved by one pass of `tools/renumber_beats.py`; the 2026-09-03 revision kept the beat count at four
+and needed no renumbering.*
 
 *Drafter's note on chapters 2–6: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the
