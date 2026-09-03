@@ -88,7 +88,7 @@ denominator multiplies every tick, and a smaller tick multiplies it faster rathe
 
 The tables in this book print a number only while it fits in a couple of decimal places, which is
 the test you have been applying with a pencil all along. Every tick size that keeps this world from
-running away gives you two rows at most before it fails that test, and some of them give one. Two rows is exactly what the rule needs
+running away gives you two rows at most before it fails that test, and some give one. Two rows is exactly what the rule needs
 in order to take one step. You get the pair, and never a table of them.
 
 And at no tick size that can be written as a fraction at all does this world come back to where it
