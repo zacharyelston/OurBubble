@@ -208,13 +208,13 @@ export function boxMeetsSegment(box, from, to) {
 /**
  * Is one candidate place clear? Its box, or nothing.
  *
- * Five tests, and they were written twice — once in the ladder below and once in its last-resort
+ * Four tests, and they were written twice — once in the ladder below and once in its last-resort
  * sweep, as two copies of the same five lines. Duplicated tests are how a rule comes to hold in one
  * half of a search and not the other, and they are also untestable: a mutation aimed at one copy
  * cannot be named unambiguously in `attacks.mjs`, which is how the three most important label rules
  * came to have no mutation at all. One function, called from both.
  *
- * The last of the five is the association rule: a candidate that some **stranger's** dot is nearer
+ * The last of the four is the association rule: a candidate that some **stranger's** dot is nearer
  * to than the dot this label belongs to is not a place for it, however much clear paper is there.
  * Two readers found a name parked nearer another dot than its own, which is the wrong-noun defect
  * drawn instead of printed.

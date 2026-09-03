@@ -80,7 +80,7 @@ const ROOT = path.join(HERE, "..");
 const ENGINE_DIR = path.join(ROOT, "engine");
 
 const { Engine } = await import(pathToFileURL(path.join(HERE, "engine.mjs")).href);
-const { drawings, viewCost, VIEW_GRID, project3d, textBox, boxMeetsSegment, boxesOverlap,
+const { drawings, viewCost, VIEW_GRID, textBox, boxMeetsSegment, boxesOverlap,
   boxMeetsDot, LABEL_GAP, DOT_CLEARANCE } = await import(
   pathToFileURL(path.join(HERE, "draw.mjs")).href);
 const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")).href);
@@ -90,7 +90,8 @@ const { joinSteps, statesOf, stillFrom, SVG_STILL_STYLE_TEXT } = await import(
 // ── which of this file's own fail sites a run reached ─────────────────────────────────────────────
 //
 // A guard nothing has ever made fire is a guard nobody has tested, and counting the mutations in
-// `attacks.mjs` does not say how many guards they cover: 91 places in this file can complain, and
+// `attacks.mjs` does not say how many guards they cover: every place in this file that can
+// complain is one of them, the census below counts them rather than this comment, and
 // the first census of what the suite actually reached found about a third of them. Two of the three
 // most important — a label drawn across a stroke, a label on a dot's ink — were among the rest.
 //
@@ -296,6 +297,10 @@ const view = draw.wireDefaultView();
     const claimed = line[1].split("|").sort().join("|");
     const from = nearestDot(Number(line[2]), Number(line[3]));
     const to = nearestDot(Number(line[4]), Number(line[5]));
+    // A drawing with no dots at all has nothing to resolve an end to, and that is reported by the
+    // dot census above and by the drawing's own census — not by this loop crashing, which is what
+    // it did when a mutation stopped the wireframe drawing dots.
+    if (!from || !to) continue;
     // A stroke must actually start and end on a dot, not merely near one: half a dot's radius is
     // the whole tolerance, so a line stopping short of where it claims to go fails here.
     if (from.distance > 4 || to.distance > 4) {
@@ -1239,6 +1244,16 @@ function censusOf(svg, where) {
       if (count !== expected[value]) {
         fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" ${count} time(s), `
           + `and the engine puts it in ${expected[value]} place(s)`);
+      }
+    }
+    // And the other direction, which the loop above cannot reach: a value drawn **nowhere** is not
+    // a key of `drawn`, so it was invisible. One of the net's twelve strokes simply left out — a
+    // whole line of the object missing from the picture — passed every gate; a mutation written for
+    // the count rule found it. Iterating the engine's list instead of the drawing's is the fix.
+    for (const [value, wanted] of Object.entries(expected)) {
+      if (!drawn[value]) {
+        fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" nowhere, and the `
+          + `engine puts it in ${wanted} place(s)`);
       }
     }
   }

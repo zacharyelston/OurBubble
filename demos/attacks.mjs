@@ -33,12 +33,17 @@
 // `engine/`, mutates only copies, and asks git afterwards whether it kept its word. The worst a
 // killed run can now leave behind is a directory under the system temp directory.
 //
-// And the coverage: 92 places in `core.test.mjs` can complain, and counting mutations says nothing
-// about how many of them any mutation reaches. The first census found about a third — with a label
-// drawn across a stroke and a label on a dot's ink, two of the three most important guards on the
-// most visual pages, in the unreached majority. So every run reports the sites it reached,
-// `attacks.baseline.json` records the split, and a run that reaches fewer of them than the baseline
-// fails.
+// And the coverage, which is the number that says how much of this is real: every place in
+// `core.test.mjs` that can complain is enumerated from its own source, and counting mutations says
+// nothing about how many of them any mutation reaches. The first census found about a third — with
+// a label drawn across a stroke and a label on a dot's ink, two of the three most important guards
+// on the most visual pages, in the unreached majority. Every run now reports the sites it reached,
+// `attacks.baseline.json` records the split, and a run that reaches fewer than the baseline's floor
+// fails. As it stands every site has a mutation, which is the standing rule arriving at its own
+// conclusion: a guard nothing has made fire is a guard nobody has tested. Two of them earned their
+// place by finding holes rather than demonstrating guards — a wireframe drawing no dots crashed the
+// check instead of failing it, and a net stroke left out entirely passed everything, because the
+// count rule iterated the drawing's marks and a name drawn nowhere is not among them.
 
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -49,6 +54,21 @@ import path from "node:path";
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const ROOT = path.join(HERE, "..");
 const BASELINE_AT = path.join(HERE, "attacks.baseline.json");
+
+// The net's own middle mark, quoted once.
+const MID_CIRCLE = '        body.push(`    <circle data-middle="${esc(segment.line)}" cx="${d2(x)}" '
+  + 'cy="${d2(y)}" r="9"/>`);';
+
+// The net's own arrowhead, quoted once: two attacks below aim at this line.
+const ARROW = '        body.push(`    <polygon class="head" data-walk="${esc(lineName([a, b]))}" '
+  + 'points="${d2(tipX)},${d2(tipY)} ${d2(baseX - uy * 9)},${d2(baseY + ux * 9)} '
+  + '${d2(baseX + uy * 9)},${d2(baseY - ux * 9)}"/>`);';
+
+// The wireframe's own dot, quoted once: four attacks below aim at this one line, and a needle
+// repeated four times by hand is a needle that goes stale in three places.
+const WIRE_CIRCLE = '      body.push(`    <circle class="${middle ? "middle" : "tip"}${strong.has(name) '
+  + '? " strong" : ""}" data-dot="${esc(name)}" cx="${d2(at[index][0])}" cy="${d2(at[index][1])}" '
+  + 'r="${middle ? 7 : 6}"/>`);';
 
 /** Every guard, and the smallest change that should make it complain. */
 export const ATTACKS = [
@@ -367,6 +387,97 @@ export const ATTACKS = [
     to: '<desc-x>${esc(desc || "An orthographic wireframe',
     expect: "the still has no a description" },
 
+
+  // ── the guards a coverage census found nothing had ever made fire ─────────────────────────────
+  //
+  // A reviewer gutted eight of these to `if (false)` with every mutation still red and the coverage
+  // number unmoved, which is the standing rule's own argument arriving from outside: a guard with no
+  // mutation is a guard nobody has tested. These are the ones a reader relies on most — the ring's
+  // twelve lines and its no-crossings claim, the wireframe's dot identity, and the wiring between
+  // the steps and `steps.json` that catches a renumber the demos have not followed.
+  { guard: "gate 4a · the ring drawing eleven of the engine's twelve lines", file: "draw.mjs",
+    from: "  const MID_LINES = cut.mid_lines;", to: "  const MID_LINES = cut.mid_lines.slice(1);",
+    expect: "and the shape between has" },
+  { guard: "gate 4a · the ring's inner circle pushed out until the lines cross", file: "draw.mjs",
+    from: "const RING_INNER = 63;", to: "const RING_INNER = 150;",
+    expect: "the ring is degenerate" },
+  { guard: "gate 4a · the outside face's tip put below the ring instead of above it",
+    file: "draw.mjs",
+    from: "      if (index === outside) return { at: [0, -TIP_ABOVE], inside: false };",
+    to: "      if (index === outside) return { at: [0, TIP_ABOVE], inside: false };",
+    expect: "the convention says seven" },
+  { guard: "gate 4a · the tips that sit in their own face no longer saying so", file: "draw.mjs",
+    from: "      if (radius >= TIP_CLEARANCE) return { at: centre, inside: true };",
+    to: "      if (radius >= TIP_CLEARANCE) return { at: centre, inside: false };",
+    expect: "the convention says four" },
+  { guard: "gate 4b · a wireframe dot under a name the engine has not got", file: "draw.mjs",
+    from: WIRE_CIRCLE,
+    to: WIRE_CIRCLE.replace('data-dot="${esc(name)}"', 'data-dot="Q${esc(name)}"'),
+    expect: "which the engine has not got" },
+  { guard: "gate 4b · every wireframe dot drawn twice", file: "draw.mjs",
+    from: WIRE_CIRCLE, to: `${WIRE_CIRCLE}
+${WIRE_CIRCLE}`,
+    expect: "the wireframe drew a dot twice" },
+  { guard: "gate 4b · no dot drawn at all under thirty-six strokes", file: "draw.mjs",
+    from: WIRE_CIRCLE, to: "      void middle;",
+    expect: "and no dots at all" },
+  { guard: "gate 4b · a wireframe stroke that does not say which edge it is", file: "draw.mjs",
+    from: '<line class="edge${heavy ? " strong" : ""}" data-edge="',
+    to: '<line class="edge${heavy ? " strong" : ""}" data-of="',
+    expect: "does not say which edge it is" },
+  { guard: "gate 8 · a leader pointing at a dot with no label of that name", file: "draw.mjs",
+    from: '<line class="leader" data-leader="${esc(name)}"',
+    to: '<line class="leader" data-leader="Q${esc(name)}"',
+    expect: "and there is no label of that name" },
+  { guard: "gate 9 · the crossings paragraph renamed out from under its own gate",
+    file: "DEMOS.md",
+    from: "**The default view is chosen by counting.**",
+    to: "**The default view is chosen by counting:**",
+    expect: "no longer has the crossings paragraph" },
+  { guard: "gate 5 · a chapter with no demo behind its slug", file: "steps.mjs",
+    from: '    "the-shape-between": chapterFour,', to: '    "the-shape-betwen": chapterFour,',
+    expect: "there is no demo for the chapter" },
+  { guard: "gate 5 · the steps handed back in the wrong order", file: "core.mjs",
+    from: "  const joined = steps.map((step) => {",
+    to: "  const joined = [...steps].reverse().map((step) => {",
+    expect: "the steps claim beats" },
+  { guard: "gate 5 · a step's own section text drifting from steps.json", file: "core.mjs",
+    from: "      return section;",
+    to: "      return { ...section, question: `${section.question} ` };",
+    expect: "does not agree with steps.json" },
+
+  { guard: "gate 4 · a mark with an identity and no position", file: "draw.mjs",
+    from: "    body.push('  <g class=\"dots\">');\n    names.forEach((name, index) => {",
+    to: "    body.push('  <g class=\"dots\">');\n    body.push('    <circle data-dot=\"A\"/>');\n"
+      + "    names.forEach((name, index) => {",
+    expect: "with no position" },
+  { guard: "gate 4 · an arrow marking a walk along a line the drawing has not drawn",
+    file: "draw.mjs",
+    from: ARROW, to: ARROW.replace('data-walk="${esc(lineName([a, b]))}"', 'data-walk="AZ"'),
+    expect: "and does not draw that line" },
+  { guard: "gate 4 · an arrowhead off the line it belongs to", file: "draw.mjs",
+    from: ARROW, to: ARROW.replace('points="${d2(tipX)},${d2(tipY)}', 'points="${d2(tipX + 40)},${d2(tipY + 40)}'),
+    expect: "is not on that line" },
+  { guard: "ring · the two lower middles swapped left for right", file: "draw.mjs",
+    from: "const RING_ANGLES = { AB: 90, AC: 210, AD: 330 };",
+    to: "const RING_ANGLES = { AB: 90, AC: 330, AD: 210 };",
+    expect: "to the right of" },
+
+  // This one found a hole rather than demonstrating a guard: a whole stroke of the net left out
+  // passed everything, because the count rule iterated the drawing's own marks and a name drawn
+  // nowhere is not among them. The check now iterates the engine's list as well.
+  { guard: "gate 4 · one of the net's strokes not drawn at all", file: "draw.mjs",
+    from: "    for (const segment of segments) {\n      const [x1, y1] = netAt(segment.from);",
+    to: "    for (const segment of segments.slice(1)) {\n      const [x1, y1] = netAt(segment.from);",
+    expect: "nowhere, and the engine puts it in" },
+  { guard: "position · the convention's own coordinates collapsed to a point", file: "draw.mjs",
+    from: "        const at = [x, u * SQRT3];", to: "        const at = [0, 0];",
+    expect: "gives neither axis any spread" },
+
+  { guard: "gate 4 · a net middle drawn twice over", file: "draw.mjs",
+    from: MID_CIRCLE, to: `${MID_CIRCLE}\n${MID_CIRCLE}`,
+    expect: "time(s), and the engine puts it in" },
+
   // ── the engine itself ────────────────────────────────────────────────────────────────────────
   // The engine's hashes are `check_edition.py`'s business, not this file's. What THIS check owns is
   // that the two vendored artifacts are one engine, so the mutation is aimed at that. It is also
@@ -436,7 +547,11 @@ function main() {
       + "verifies afterwards that it left the tree exactly as it found it — which it cannot do from "
       + "a dirty start. Commit or stash first:\n");
     process.stderr.write(`${before}\n`);
-    process.exit(1);
+    // 3, not 1: a dirty tree means this suite could not run, which is not the same as a guard
+    // having a hole. `check_edition.py` reads that code and reports the line as unverified, so an
+    // uncommitted demo edit does not make the rest of tier 0 unrunnable — which is exactly when a
+    // reader would be running it.
+    process.exit(3);
   }
 
   // The needle audit, before anything is copied. An attack whose needle is missing tests nothing;
@@ -465,6 +580,20 @@ function main() {
       && attack.from.split("\n").length !== attack.to.split("\n").length) {
       stale.push(`${attack.guard}: it mutates core.test.mjs and changes its line count, which `
         + `moves every fail site below it`);
+    }
+  }
+
+  // A guard whose condition is a literal cannot complain, and a coverage census cannot see the
+  // difference: a reviewer turned eight uncovered guards into `if (false) {` with every mutation
+  // still red and the coverage number unmoved. The site is still there, still enumerated, still
+  // listed as uncovered — and dead. So the shape is refused outright, in the check and in the three
+  // modules the check is written against.
+  for (const file of ["core.test.mjs", "draw.mjs", "steps.mjs", "core.mjs"]) {
+    const text = readFileSync(path.join(HERE, file), "utf8");
+    for (const found of text.matchAll(/if \(\s*(?:false|true)\s*[)&|]|&&\s*false\b|\|\|\s*true\b/g)) {
+      stale.push(`${file} contains "${found[0]}", which is how a guard is turned off without `
+        + `removing it: the site stays in the census and stops being able to complain. Delete the `
+        + `guard if it is going, and let the diff say so`);
     }
   }
 
@@ -518,6 +647,30 @@ function main() {
       + `a mutation of core.test.mjs has moved its own lines`);
   }
 
+  // What the baseline says, and what this run says. Computed BEFORE the --baseline branch, so
+  // rewriting the file has to name what it is dropping rather than dropping it silently.
+  let baseline = null;
+  try {
+    baseline = JSON.parse(readFileSync(BASELINE_AT, "utf8"));
+  } catch (failure) {
+    if (!writeBaseline) {
+      problems.push(`attacks.baseline.json cannot be read (${failure.message}), and it is what `
+        + `says whether this run covers as much as the last one did`);
+    }
+  }
+  const lost = baseline
+    ? (baseline.reached || []).filter((key) => known.includes(key) && !reached.has(key))
+    : [];
+  const grown = baseline
+    ? uncovered.filter((key) => !(baseline.uncovered || []).includes(key))
+    : [];
+  // The ratchet. Every other comparison here is against a file in the same commit, so a mutation
+  // deleted **and** its site moved into the baseline's uncovered list passes — a reviewer did
+  // exactly that. This is the one number `--baseline` may not lower on its own: it keeps the
+  // highest coverage the suite has ever had, and lowering it is a deliberate one-line diff with a
+  // reviewer looking at it.
+  const floor = baseline && Number.isFinite(baseline.floor) ? baseline.floor : 0;
+
   if (writeBaseline) {
     if (problems.length) {
       for (const problem of problems) process.stderr.write(`${problem}\n`);
@@ -525,11 +678,24 @@ function main() {
         + "green — the coverage it recorded would not be the coverage the suite has\n");
       process.exit(1);
     }
+    for (const key of lost) {
+      process.stdout.write(`attacks.mjs: dropping a covered fail site from the baseline — ${key}\n`);
+    }
+    for (const key of grown) {
+      process.stdout.write(`attacks.mjs: recording a fail site with no mutation — ${key}\n`);
+    }
+    if (covered.length < floor) {
+      process.stderr.write(`attacks.mjs: this run covers ${covered.length} fail site(s) and the `
+        + `baseline's floor is ${floor}. --baseline does not lower the floor: cover the sites `
+        + `again, or lower "floor" by hand in a commit a reviewer can see\n`);
+      process.exit(1);
+    }
     writeFileSync(BASELINE_AT, `${JSON.stringify({
       note: "Which of core.test.mjs's fail sites the mutations in attacks.mjs reach. Regenerate "
         + "with `node demos/attacks.mjs --baseline`, in the same commit as the guard or the "
         + "mutation that changed it. A run that reaches fewer of them than this fails.",
       sites: known.length,
+      floor: Math.max(floor, covered.length),
       reached: covered,
       uncovered,
     }, null, 2)}\n`);
@@ -538,23 +704,27 @@ function main() {
     return;
   }
 
-  // The baseline, and what it is for: a guard can be added, a mutation deleted, and the mutation
-  // count stay at "all of them red". Coverage is the number that notices.
-  let baseline = null;
-  try {
-    baseline = JSON.parse(readFileSync(BASELINE_AT, "utf8"));
-  } catch (failure) {
-    problems.push(`attacks.baseline.json cannot be read (${failure.message}), and it is what says `
-      + `whether this run covers as much as the last one did`);
-  }
+  // A guard can be added, a mutation deleted, and the mutation count stay at "all of them red".
+  // Coverage is the number that notices, and the floor is what stops the baseline from being
+  // edited down to meet a worse run.
   if (baseline) {
-    const lost = (baseline.reached || []).filter((key) => known.includes(key)
-      && !reached.has(key));
+    if (covered.length < floor) {
+      problems.push(`this run covers ${covered.length} fail site(s) and the baseline's floor is `
+        + `${floor}. The floor is the highest coverage this suite has had; it is lowered by hand, `
+        + `in a commit, or not at all`);
+    }
+    if (Number.isFinite(baseline.sites) && baseline.sites !== known.length) {
+      problems.push(`the baseline says core.test.mjs has ${baseline.sites} fail sites and it has `
+        + `${known.length}`);
+    }
+    if (!Number.isFinite(baseline.floor)) {
+      problems.push("the baseline has no coverage floor, and the floor is the one number in it "
+        + "that a rewrite cannot lower on its own");
+    }
     if (lost.length) {
       problems.push(`${lost.length} fail site(s) the baseline says are covered were not reached by `
         + `any mutation:\n  ${lost.join("\n  ")}`);
     }
-    const grown = uncovered.filter((key) => !(baseline.uncovered || []).includes(key));
     if (grown.length) {
       problems.push(`${grown.length} fail site(s) have no mutation and are not in the baseline's `
         + `uncovered list. The standing rule is that a guard lands with the mutation that proves `

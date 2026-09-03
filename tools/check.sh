@@ -28,9 +28,14 @@
 #          bites. Standing rule (2026-09-03): no new guard lands without its mutation, in the same
 #          commit. Five rounds running, a guard written to close a hole was found on the next read
 #          to have a hole of its own, and every one of those had been "tested" by an attack run once
-#          in a shell and thrown away. Each mutation is applied, the cross-check is required to
-#          complain BY NAME, and the file is restored; a mutation whose needle has gone stale fails
-#          too, which is how a refactor says an attack has stopped testing anything. See
+#          in a shell and thrown away. Each mutation is applied to a PRIVATE COPY of demos/ and
+#          engine/ under the system temp directory, the cross-check is run from the copy and
+#          required to complain BY NAME, and the copy is deleted: the working tree is never
+#          written, and git is asked afterwards whether that held. It also reports how many of the
+#          cross-check's own fail sites the mutations reached, against a committed baseline, so
+#          coverage that shrinks is red. A mutation whose needle has gone stale fails too, which is
+#          how a refactor says an attack has stopped testing anything. The suite refuses to run on
+#          a dirty demos/ or engine/ and that line then reads "unverified" rather than failing. See
 #          demos/DEMOS.md and demos/attacks.mjs.
 #   3. the three guards the edition check does not reach — `tools/engine_check.py` (the Python
 #      oracle recomputes the whole payload and must reproduce the vendored engine's bytes exactly),
