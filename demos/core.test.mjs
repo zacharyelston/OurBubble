@@ -77,8 +77,8 @@ const ROOT = path.join(HERE, "..");
 const ENGINE_DIR = path.join(ROOT, "engine");
 
 const { Engine } = await import(pathToFileURL(path.join(HERE, "engine.mjs")).href);
-const { drawings, viewCost, VIEW_GRID, project3d, textBox, boxMeetsSegment } = await import(
-  pathToFileURL(path.join(HERE, "draw.mjs")).href);
+const { drawings, viewCost, VIEW_GRID, project3d, textBox, boxMeetsSegment, boxesOverlap,
+  LABEL_GAP } = await import(pathToFileURL(path.join(HERE, "draw.mjs")).href);
 const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")).href);
 const { joinSteps, statesOf, stillFrom } = await import(
   pathToFileURL(path.join(HERE, "core.mjs")).href);
@@ -632,9 +632,14 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
           for (let j = i + 1; j < boxes.length; j += 1) {
             const a = boxes[i];
             const b = boxes[j];
-            if (a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1) {
-              fail(`${slug} ${step.label}: the labels "${a.text}" and "${b.text}" overlap — on the `
-                + `page they read as one token, and a reader cannot tell which is which`);
+            // The same gap the placement keeps, imported rather than chosen here, so the two cannot
+            // drift apart. Merely not intersecting is not enough: a drawing whose closest pair had
+            // four tenths of a pixel between them passed the first version of this test, and four
+            // tenths of a pixel on a screen is two numbers touching.
+            if (boxesOverlap(a, b, LABEL_GAP)) {
+              fail(`${slug} ${step.label}: the labels "${a.text}" and "${b.text}" are within `
+                + `${LABEL_GAP}px of each other — on the page they read as one token, and a reader `
+                + `cannot tell which is which`);
             }
           }
         }

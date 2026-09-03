@@ -100,7 +100,25 @@ export function textBox(x, y, text, size) {
   return { x0: x - width / 2, x1: x + width / 2, y0: y - size * 0.6, y1: y + size * 0.6 };
 }
 
-const boxesOverlap = (a, b) => a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+/**
+ * How much clear paper two labels must have between them.
+ *
+ * Not overlapping is not enough. The first version of this test asked only whether two boxes
+ * intersected, and passed a drawing whose closest pair of labels had four tenths of a pixel between
+ * them — which on a screen is two numbers touching, and reads as one token, which was the whole
+ * complaint. So the boxes are inflated by this much before they are compared, on both sides: here,
+ * and in `core.test.mjs`, which imports it rather than choosing its own.
+ */
+export const LABEL_GAP = 3;
+
+const inflate = (box, by) => ({
+  x0: box.x0 - by, x1: box.x1 + by, y0: box.y0 - by, y1: box.y1 + by,
+});
+
+export const boxesOverlap = (a, b, gap = 0) => {
+  const one = inflate(a, gap);
+  return one.x0 < b.x1 && b.x0 < one.x1 && one.y0 < b.y1 && b.y0 < one.y1;
+};
 
 /** Does a box meet a segment? Corners in, or the segment crossing any of its four sides. */
 export function boxMeetsSegment(box, from, to) {
@@ -139,7 +157,7 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
       if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
       if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
         && dy >= box.y0 && dy <= box.y1)) continue;
-      if (taken.some((other) => boxesOverlap(box, other))) continue;
+      if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
       taken.push(box);
       return [x, y];
     }
@@ -161,7 +179,7 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
       if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
       if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
         && dy >= box.y0 && dy <= box.y1)) continue;
-      if (taken.some((other) => boxesOverlap(box, other))) continue;
+      if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
       taken.push(box);
       return [x, y];
     }

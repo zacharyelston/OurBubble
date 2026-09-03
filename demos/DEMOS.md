@@ -219,7 +219,12 @@ said?** Ten gates:
    what it had already placed, so every number was positioned as though it were the first. A reader
    found `0` and `−1` rendering as the single token `0−1` on chapter 2's net, twice. Two labels
    touching is the wrong-noun defect in visual form, so none may — a name and its own number
-   included, since those must read as two things. Three successive label *rules* were called fixed and were not, so the
+   included, since those must read as two things. And **not overlapping is not the test**: the boxes
+   are inflated by a fixed gap first, because the version that asked only whether two boxes
+   intersected passed a drawing whose closest pair had four tenths of a pixel between them, and four
+   tenths of a pixel on a screen is two numbers touching. The gap is one constant, exported from
+   `draw.mjs` and imported by the check, so the placement and the check cannot drift apart. The
+   tightest pair in all 162 drawings is exactly at it. Three successive label *rules* were called fixed and were not, so the
    placement no longer asserts: it **searches** a fixed ladder of positions out along the ray from
    each dot and takes the first that touches nothing, and this gate is what says it found one. 162
    drawings: no label on a stroke, none on a dot, no two labels overlapping. The net's *names* are
