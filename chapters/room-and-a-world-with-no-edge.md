@@ -24,7 +24,7 @@ Do they stack?
 
 ## They do not stack
 
-<!-- beat 47 -->
+<!-- beat 50 -->
 
 No, and the way they fail is one of the better stories in mathematics.
 
@@ -41,7 +41,7 @@ Which raises a fair question: why insist on tetrahedra at all?
 
 ## What a square can do that a triangle cannot
 
-<!-- beat 48 -->
+<!-- beat 51 -->
 
 Because triangles are rigid and squares are not, and rigidity is the property you cannot do without.
 
@@ -57,7 +57,7 @@ If there is no perfect answer, what did we choose?
 
 ## The compromise we chose
 
-<!-- beat 49 -->
+<!-- beat 52 -->
 
 Every tetrahedral world is a compromise, and a compromise is a choice with measurable consequences.
 
@@ -77,7 +77,7 @@ Now you have room. So poke a dot in the middle of a great many, and watch.
 
 ## The pond
 
-<!-- beat 50 -->
+<!-- beat 53 -->
 
 There is a ring.
 
@@ -98,7 +98,7 @@ Watch it a little longer, though, and it does something a pond in a field does n
 
 ## It hits the edge
 
-<!-- beat 51 -->
+<!-- beat 54 -->
 
 It reaches the outermost dots and comes back.
 
@@ -114,7 +114,7 @@ world with no edge at all — and there is a cheap trick for that.
 
 ## Wrap it
 
-<!-- beat 52 -->
+<!-- beat 55 -->
 
 Glue the far side to the near side.
 
@@ -136,7 +136,7 @@ Which leaves one thing to check before the question you have been unable to ask 
 
 ## Now that the world has no edge — is any dot special?
 
-<!-- beat 53 -->
+<!-- beat 56 -->
 
 The object is finished, so the question can finally be asked honestly: standing on one dot of this
 wrapped world, does it look like standing on any other?
@@ -160,7 +160,7 @@ So the world has a grain, and no dot is privileged.
 
 ## The object, and the only question left
 
-<!-- beat 54 -->
+<!-- beat 57 -->
 
 You can now ask the stopwatch question: poke a dot, count the ticks, see how far the front has gone,
 then do it again in another direction and compare.

@@ -81,6 +81,12 @@
         "book/chapters/00-the-object/chapter.md",
         "book/LESSON_STANDARD.md"
       ]
+    },
+    "two-worlds-threaded": {
+      "sources": [
+        "book/chapters/00-the-object/chapter.md",
+        "book/LESSON_STANDARD.md"
+      ]
     }
   },
   "appendix": {
@@ -481,7 +487,15 @@
           "book/chapters/00-the-object/chapter.md",
           "book/LESSON_STANDARD.md"
         ],
-        "note": "**What this chapter deliberately does not say.** Three readings of the shape between the tips were put to the same arithmetic and refused. They are recorded here rather than in the prose, because a chapter is a poor place to argue with a claim nobody made to the reader.\n\n**A tick is not a trip round the octahedron.** Crossing it takes two ticks; going round its equator takes four. The twelve-tick repeat belongs to the tick size and not to the shape — turn the tick to a quarter or a fifth and it never repeats at all.\n\n**Gathering the work at the octahedron saves nothing.** On the fourteen-dot motif it is the same thirty-seven line-visits, differently grouped. On the record's tiling it is thirteen sevenths of the plain per-line loop, because each of an octahedron's edges belongs to a second octahedron too.\n\n**And nothing finishes first.** One tick reads only the tick before it, so there is no order inside a tick for that to be a statement about.\n\nWhat the octahedron does uniquely supply, on the record's tiling, is one line in seven — two of every dot's fourteen — that no tetrahedron provides. On the faces the pairing with tetrahedra is exactly one to one; on the lines, two tetrahedra touch each other directly. The chapter says the face fact and the line fact and stops there.\n\nAll of it is computed and asserted by [`tools/octahedron.py`](../tools/octahedron.py), whose report is reproduced in [`notes/octahedron-crossing.md`](../notes/octahedron-crossing.md).",
+        "computed": true
+      },
+      "two-worlds-threaded": {
+        "title": "Two worlds threaded — the last object that fits on a napkin, and the first that does not",
+        "standards": [
+          "book/chapters/00-the-object/chapter.md",
+          "book/LESSON_STANDARD.md"
+        ],
+        "note": "**What this chapter deliberately does not say.** Two readings of the threaded pair were put to the same arithmetic and refused. Both are on the page above, rather than argued with in the prose.\n\n**No tick both holds and comes home.** The book's tick is over the size this shape's own numbers allow, so the run grows instead of sloshing. A smaller tick stops the growth and buys nothing else. At no tick that can be written as a fraction does the pair of rows return to the pair it started from.\n\n**And no such tick gives a table.** Every tick under the bound prints two rows at most. After that the numbers stop fitting in a couple of decimal places, which is the test every table in these chapters is held to.\n\nBoth come from the vendored engine, rendered by `stella_refusal` — register rows R16, R17, R18 and R20 of `lab/napkin/0001`. The bound is certified by an integer eigenvector: whole numbers throughout, no decimals, no square roots. That is why a refusal about an object of fourteen dots is still something a reader can check.",
         "computed": true
       }
     }

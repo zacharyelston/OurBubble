@@ -263,6 +263,33 @@ def shows_exactly(name: str, fragment: str, expected: Sequence[Fraction]) -> Non
     )
 
 
+#: What a token's own caption may not say, whatever else it says. `REFUSED_IN_PROSE` holds a
+#: chapter to its tokens' arithmetic; this holds a caption to its own, and it exists because a pin
+#: on the caption's *verdict words* is not enough on its own: leave the pinned words in place and
+#: append a contradicting clause — "the pair never returns … though it comes home every four after
+#: that" — and every check stays green (a proofreader, tranche D round 2). A pin says the right
+#: words are present. This says the wrong ones are not.
+#:
+#: **Two things about its strength, both found by attacking it** (the same proofreader, round 3).
+#: The test normalises whitespace before it looks, because it did not, and a newline inside a
+#: refused phrase walked straight through while the browser rendered the phrase intact — Markdown
+#: collapses the break and the substring test did not. And it is a denylist, so a phrasing nobody
+#: listed still passes: "returns to its start every four after that" published beside "never
+#: returns". It raises the cost of a contradicting caption; it cannot be complete, and a token whose
+#: verdict matters should build that verdict from the data as well as refusing its opposite.
+REFUSED_IN_CAPTION: Dict[str, List[str]] = {}
+
+
+def refuse_in_caption(name: str, *phrases: str) -> None:
+    """Register phrasings this token's caption may not contain, for `checked_block` to enforce.
+
+    Registered from inside the token, because what is refused depends on what the engine returned:
+    a run with no period may not say it comes home, and one with a period may not say it never
+    does. The refusal is therefore a function of the data rather than a constant.
+    """
+    REFUSED_IN_CAPTION[name] = list(phrases)
+
+
 def checked_block(name: str, body: str, what: str,
                   in_caption: Dict[str, str] | None = None, **values: str) -> str:
     """Render a token, and check the block AND the caption each carry the numbers they claim.
@@ -278,11 +305,24 @@ def checked_block(name: str, body: str, what: str,
     carries(name, text, **values)
     if in_caption:
         carries(f"{name}'s caption", what, **in_caption)
+    # Normalised, not merely lowered: a line break inside a refused phrase is invisible to a reader
+    # (Markdown collapses it) and was invisible to this test until it was attacked.
+    lowered = " ".join(what.casefold().split())
+    for phrase in REFUSED_IN_CAPTION.get(name, []):
+        assert " ".join(phrase.casefold().split()) not in lowered, (
+            f"{name}'s caption says {phrase!r}, which this token's own arithmetic refuses — see "
+            f"napkin.REFUSED_IN_CAPTION"
+        )
     return text
 
 
 def carries(name: str, body: str, **values: str) -> str:
     """Assert the rendered text actually contains the values that were computed. Returns `body`.
+
+    **Registration is opt-in, so an unregistered number is an unchecked number** — pass every value
+    the sentence leans on, and pass it inside the phrase that says what it is a value OF: a bare
+    fraction is found wherever it appears in the block, so two of them can be swapped between their
+    nouns with every check still green (a proofreader, tranche D round 3).
 
     Why this exists, in the words of the attack that found it (a proofreader, 2026-09-02): the
     tokens "assert their *inputs* and render their *outputs*, and nothing checks that the rendered
@@ -491,6 +531,229 @@ def slosh_table_dialed() -> str:
                  f"every other line counting one — the dial, on one line. The total is still "
                  f"conserved exactly and the four numbers still average to {number(average)}; what "
                  f"changed is the motion, now faster along {dialed} than the rest")
+
+
+# ── the triangle, moving: the smallest thing the rule can be run on at all ────────────────────────
+#
+# Register row R07, added for the owner's pace change of 2026-09-02: the rule runs on THREE numbers
+# before four. The row's own finding is why there are two tokens here rather than one. The
+# tetrahedron's table comes out in whole numbers because at the book's tick the coefficient the rule
+# multiplies by is exactly zero for that shape; the triangle's is not, and at the same tick its
+# denominators double every tick until `number()` refuses the third row. The tick that does the same
+# thing for the triangle is two thirds. So the tick is a property of the SHAPE, and that is a beat.
+#
+# Both tokens read `engine/rows.json`'s `triangle_motion` group and compute nothing. The corner
+# values 2, 5, 2 are the engine's choice and arrive with its data.
+
+TRIANGLE_NAMES = NAMES[:3]
+
+
+def _triangle_rows(history: Sequence[Sequence[Fraction]], upto: int | None = None) -> str:
+    """The run as a table: one row per tick, with the total that never moves in the last column."""
+    rows = []
+    for tick, row in enumerate(history if upto is None else history[:upto]):
+        cells = " | ".join(number(value) for value in row)
+        rows.append(f"| {tick} | {cells} | **{number(sum(row))}** |")
+    return (
+        f"| tick | {' | '.join(TRIANGLE_NAMES)} | total |\n"
+        f"|---|{'---|' * len(TRIANGLE_NAMES)}---|\n" + "\n".join(rows)
+    )
+
+
+def _triangle_conserved(name: str, run: Dict[str, object]) -> Fraction:
+    """The total is the same on every tick, and it is the total the engine reported. Returns it."""
+    history = run["history"]
+    total = sum(history[0])
+    for tick, row in enumerate(history):
+        assert sum(row) == total, (
+            f"{name}: the total changed at tick {tick} ({sum(row)} ≠ {total}) — this rule conserves it"
+        )
+    assert list(run["totals"]) == [total] * len(history), (
+        f"{name}: the engine's own totals column does not match the rows it sits beside"
+    )
+    return total
+
+
+def triangle_slosh_table() -> str:
+    run = engine.triangle_motion()
+    corners = run["corners"]
+    good = run["at_two_thirds"]
+    history = good["history"]
+    total = _triangle_conserved("triangle_slosh_table", good)
+
+    assert good["k"] == Fraction(2, 3), f"the triangle was run at {good['k']}, not two thirds"
+    assert good["period"] == 4, f"the run repeats every {good['period']} ticks, not four"
+    assert good["printable_rows"] == len(history), (
+        f"only {good['printable_rows']} of {len(history)} rows can be written down, so this table "
+        f"is not the whole-numbered one the chapter claims"
+    )
+    assert all(value.denominator == 1 for row in history for value in row), (
+        "a value in the triangle's run is not a whole number"
+    )
+    # The pair, not the row, is what the rule reads — so "back where it started" is a claim about
+    # two rows, and it is checked as one: the pair at tick `period` is the pair at tick 0.
+    assert history[good["period"]] == history[0] and history[good["period"] - 1] == history[0], (
+        "the pair (then, now) at the repeat is not the pair the run started from"
+    )
+    assert list(corners) == list(history[0]), "the run does not start from the corners it names"
+
+    start = ", ".join(f"{name} = **{number(corners[index])}**"
+                      for index, name in enumerate(TRIANGLE_NAMES))
+    shows_each("triangle_slosh_table's corners", start,
+               [(f"{name} =", corners[index]) for index, name in enumerate(TRIANGLE_NAMES)])
+    body = (
+        f"Three corners: {start}. Started **at rest**, which means the pair the rule reads is one "
+        f"row twice over — *then* and *now* both {' · '.join(number(v) for v in history[0])}.\n\n"
+        + _triangle_rows(history)
+    )
+    return checked_block(
+        "triangle_slosh_table", body,
+        f"the one rule on a triangle at the triangle's own tick of "
+        f"{fraction_text(good['k'])}, from the corners "
+        f"{', '.join(number(value) for value in corners)}: {word(len(history))} rows, every value a "
+        f"whole number, the total {number(total)} on every tick, and back to the pair it started "
+        f"from every {word(good['period'])} ticks",
+        corners=start, first=_triangle_rows(history, 1),
+        home=f"| {good['period']} | " + " | ".join(number(v) for v in history[good["period"]]),
+        in_caption={"tick": f"tick of {fraction_text(good['k'])}",
+                    "rows": f"{word(len(history))} rows",
+                    "total": f"the total {number(total)}",
+                    "period": f"every {word(good['period'])} ticks"})
+
+
+def no_room() -> str:
+    """Register row R10 — every dot of the tetrahedron is one line from every other.
+
+    Added after a proofread (tranche D) found the one beat of chapter 3 with no arithmetic under it,
+    in the chapter that had spent eleven beats teaching the reader to expect some. The claim the
+    section makes is *there is nowhere further away than anywhere else*, and that is a table.
+    """
+    room = engine.no_room()
+    hops = room["hops"]
+    assert room["dots"] == len(NAMES), f"the hop table is on {room['dots']} dots, not four"
+    assert room["diameter"] == 1, f"the tetrahedron's diameter came out {room['diameter']}"
+    for here, row in enumerate(hops):
+        for there, count in enumerate(row):
+            assert count == (0 if here == there else 1), (
+                f"{NAMES[here]} is {count} hops from {NAMES[there]} — on this object every pair is "
+                f"one, which is the whole of what the section claims"
+            )
+    rows = "\n".join(
+        f"| from {NAMES[here]} | " + " | ".join("—" if here == there else str(count)
+                                                for there, count in enumerate(row)) + " |"
+        for here, row in enumerate(hops)
+    )
+    body = (
+        f"| lines to cross | {' | '.join(NAMES)} |\n"
+        f"|---|{'---|' * len(NAMES)}\n{rows}"
+    )
+    return checked_block(
+        "no_room", body,
+        f"how many lines you must cross to get from each dot of the tetrahedron to each other dot: "
+        f"{word(room['diameter'])}, in every case. The furthest anything is from anything is a "
+        f"single line, so there is no further away for a ring to spread into",
+        table=rows, diameter=f"{word(room['diameter'])}, in every case",
+        in_caption={"diameter": f"{word(room['diameter'])}, in every case",
+                    "what": "each other dot"})
+
+
+def tick_belongs_to_shape() -> str:
+    run = engine.triangle_motion()
+    wrong = run["at_the_book_tick"]
+    history = wrong["history"]
+    printable = wrong["printable_rows"]
+    total = _triangle_conserved("tick_belongs_to_shape", wrong)
+    tetra_tick = engine.motion()["k"]
+    ceiling = engine.refusal()["ceilings"][0]
+    bound = ceiling["bound"]
+
+    assert wrong["k"] == tetra_tick, (
+        f"this run is at {wrong['k']}, not the tick the tetrahedron uses ({tetra_tick})"
+    )
+    assert wrong["period"] == 0, (
+        f"the run comes home every {wrong['period']} ticks after all, so the tick is not wrong for "
+        f"this shape in the way the section says"
+    )
+    # K7 (proofread, tranche D): the verdict was written out by hand in both the block and the
+    # caption, so a caption claiming the opposite of the period the token had just asserted passed
+    # every check. It is built from the period now — and, because building a caption from a variable
+    # is not enough on its own (rewrite the builder and the caption and the check move together),
+    # the WORDS are pinned to the number, the way FRACTION_WORDS' entries are.
+    homing = ("the pair never returns to the pair it started from" if wrong["period"] == 0
+              else f"the pair returns every {word(wrong['period'])} ticks")
+    assert ("never returns" in homing) == (wrong["period"] == 0), (
+        f"this block's verdict is {homing!r} while the engine's period is {wrong['period']} — a run "
+        f"that never comes home says 'never returns', and one that does says how often"
+    )
+    # The refusal is the result, so it is exercised rather than assumed: the row after the last
+    # printable one must be a row `number()` will not write.
+    refused = False
+    try:
+        number(history[printable][0])
+    except AssertionError:
+        refused = True
+    assert refused, (
+        f"row {printable} writes down after all — the engine says {printable} rows print, and this "
+        f"table's whole point is the one that does not"
+    )
+    assert ceiling["dots"] == 4 and ceiling["holds"], (
+        "the first ceiling is no longer the four-dot shape's, or it no longer holds"
+    )
+    assert bound == Fraction(engine.refusal()["leapfrog_bound"], 1) / ceiling["stiffest"], (
+        "the four-dot ceiling is not four over its stiffest mode"
+    )
+    assert tetra_tick < bound, "the tick the next section uses is not under the ceiling after all"
+    # K1 (proofread, tranche D): the block said the next row "cannot be put on a napkin at all", and
+    # the reader worked it out — 3.125, 2.75, 3.125 — in the paragraph asking her to stop. The true
+    # statement is the one the engine actually enforces (a couple of decimal places) plus the reason
+    # it never recovers, and the reason is asserted here rather than asserted in prose.
+    for tick, row in enumerate(history):
+        widest = max(value.denominator for value in row)
+        assert widest == 2 ** tick, (
+            f"at tick {tick} the widest denominator is {widest}, not {2 ** tick} — the doubling the "
+            f"block tells the reader to expect is not what this run does"
+        )
+    # "the numbers stay small" is a claim about the whole run and not only the rows shown, so it is
+    # measured over every tick the engine computed rather than left to the reader's eye.
+    biggest = max(abs(value) for row in history for value in row)
+    assert biggest <= total, (
+        f"a value reached {biggest}, past the conserved total {total} — this run is not the bounded "
+        f"one the section contrasts with the runaway"
+    )
+
+    # Whatever else this caption says, it may not say the run comes home: the engine's period is 0.
+    refuse_in_caption("tick_belongs_to_shape",
+                      *(("comes home", "returns every", "repeats every")
+                        if wrong["period"] == 0 else ("never returns", "never comes home")))
+
+    body = (
+        f"The same three numbers and the same rule, at {fraction_text(tetra_tick)} — the tick the "
+        f"tetrahedron uses in the next section:\n\n"
+        + _triangle_rows(history, printable)
+        + f"\n\nNothing is running away: the total is still {number(total)} on every tick, and over "
+          f"all {word(wrong['ticks'])} ticks the rule was run no number anywhere in it grew bigger "
+          f"than that total. What stops is the writing down. These tables only ever print a value "
+          f"that fits in a couple of decimal places, and the row after the last one above does not "
+          f"— nor does any row after it, because the halves become quarters, the quarters eighths, "
+          f"and the denominator doubles every tick from here on. And {homing}.\n\n"
+        + f"The shape decides one more thing about the tick: a size it has to stay under. For the "
+          f"{word(ceiling['dots'])}-dot tetrahedron that is {fraction_text(bound)}, and the number "
+          f"it is worked out from is certified in whole numbers, with no decimal anywhere in it."
+    )
+    return checked_block(
+        "tick_belongs_to_shape", body,
+        f"the triangle's three numbers at the tetrahedron's tick of "
+        f"{fraction_text(tetra_tick)}: the total {number(total)} still never moves and no number "
+        f"grows past it, but only {word(printable)} rows fit in a couple of decimal places, and "
+        f"{homing} — and the tick the {word(ceiling['dots'])}-dot shape must stay under is "
+        f"{fraction_text(bound)}",
+        tick=fraction_text(tetra_tick), rows=_triangle_rows(history, printable),
+        bound=fraction_text(bound), verdict=homing,
+        in_caption={"tick": f"tick of {fraction_text(tetra_tick)}",
+                    "rows": f"only {word(printable)} rows",
+                    "total": f"the total {number(total)}",
+                    "verdict": homing,
+                    "bound": f"must stay under is {fraction_text(bound)}"})
 
 
 # ── the object one dimension out: how many kinds of place are there? ──────────────────────────────
@@ -765,6 +1028,35 @@ def stella_counts() -> str:
     assert both["in_tetrahedra"] == Fraction(3, 2), (
         f"the pair came out {both['in_tetrahedra']} of the tetrahedron we cut"
     )
+    # The sum she is invited to do in her head, checked before she is invited to do it: the one
+    # tetrahedron she cut, plus the four she added at an eighth of it each.
+    assert both["in_tetrahedra"] == 1 + both["added"] * both["apex_share"], (
+        f"{both['in_tetrahedra']} is not one tetrahedron plus {both['added']} at "
+        f"{both['apex_share']} each — the arithmetic the block asks the reader to do does not close"
+    )
+    # R3-5 (proofread, tranche D round 3): a bare fraction is checked wherever it appears in the
+    # block, so swapping two of them between their nouns published "1/2 of the tetrahedron you cut"
+    # beside "3/2 of the cube" — a pair filling three halves of the box it fits in — and every check
+    # passed. Each share is built and asserted inside the phrase that says what it is a share OF.
+    share = f"{fraction_text(both['in_tetrahedra'])} of the tetrahedron you cut"
+    cube = f"{fraction_text(both['in_its_cube'])} of the cube whose eight corners the tips are"
+    added = f"the {word(both['added'])} you added at {fraction_words(both['apex_share'])} of it each"
+    # And the phrases are read back and held to what their own nouns mean, which is the only part of
+    # this that a rewritten builder cannot walk through: swapping the two values between the two
+    # nouns passed every other check (a proofreader, tranche D round 3), and a pair that is SMALLER
+    # than the tetrahedron it was cut from and added to, or BIGGER than the cube it sits inside, is
+    # refused here by arithmetic on the rendered characters rather than by the code that wrote them.
+    written_share = Fraction(share.split(" of ", 1)[0])
+    written_cube = Fraction(cube.split(" of ", 1)[0])
+    assert written_share > 1, (
+        f"the block says the pair is {written_share} of the tetrahedron it was cut from and added "
+        f"to — it cannot be smaller than that tetrahedron, so this share is against the wrong noun"
+    )
+    assert written_cube < 1, (
+        f"the block says the pair fills {written_cube} of the cube whose corners its tips are — it "
+        f"sits inside that cube, so this share is against the wrong noun"
+    )
+
     body = (
         "| | dots | lines |\n"
         "|---|---|---|\n"
@@ -775,9 +1067,9 @@ def stella_counts() -> str:
         f"you started with and the four the second tetrahedron brought "
         f"({' · '.join(both['apex_names'])}). Every middle has {both['middle_degree']} lines and "
         f"every tip has {both['tip_degree']}, and **no two tips are joined at all**, so nothing "
-        f"gets from one tip to another without going through the middle. Together they fill "
-        f"{fraction_text(both['in_its_cube'])} of the cube whose eight corners the tips "
-        f"are — half again as much room as the tetrahedron you cut."
+        f"gets from one tip to another without going through the middle. Together they come to half "
+        f"again as much room — {share}, which is that tetrahedron plus {added} — and they fill "
+        f"{cube}."
     )
     # Phrases, not bare digits: a "6" on its own is in the table too, so asserting the digit would
     # let a literal into the sentence beside it. The attack that found this typed "The 15 are…"
@@ -793,7 +1085,7 @@ def stella_counts() -> str:
         middle_degree=f"Every middle has {both['middle_degree']} lines",
         tip_degree=f"every tip has {both['tip_degree']}",
         apexes=" · ".join(both["apex_names"]),
-        in_its_cube=fraction_text(both["in_its_cube"]),
+        in_its_cube=cube, in_tetrahedra=share, added=added,
         in_caption={"middles": f"its own {word(both['middles'])} middles",
                     "tips": f"the {word(both['tips'])} tips"})
 
@@ -884,11 +1176,26 @@ def stella_refusal() -> str:
 # token names the phrasings its own numbers disprove, `check_edition.py` refuses them in the
 # chapter's source, and the contradiction cannot be reintroduced by an edit two paragraphs away.
 #
-# The last group is the three readings `notes/octahedron-crossing.md` computed and refuted. They are
-# the appendix's business (they are that chapter's `note` in `edition.json`) and they are refused in
-# every chapter's prose, whether or not it carries a token, because a refuted claim is not a
-# chapter's to make.
+# The last group is the readings of the octahedron and time. What has been computed is narrow: a tick is not a trip round the bare octahedron under a time-symmetric rule on 0-forms; the family's claim (screw, 1-forms, chiral mesh) is under review: UniForge lab/napkin/0002.
+# They are refused in every chapter's prose, whether or not it carries a token, because neither the
+# narrow finding nor the wider claim is a chapter's to make while the wider one is open — and this
+# list is a guard rather than a verdict: it keeps a phrasing out and states nothing itself.
 REFUSED_IN_PROSE: Dict[str, List[str]] = {
+    "triangle_slosh_table": [
+        "the triangle settles",
+        "the triangle never comes home",
+        "the total drifts",
+    ],
+    "no_room": [
+        "further away than",
+        "a ring spreads",
+    ],
+    "tick_belongs_to_shape": [
+        "one tick fits every shape",
+        "the same tick works on every shape",
+        "the tick belongs to the rule",
+        "the tick is the rule's",
+    ],
     "stella_refusal": [
         "tick it will hold",
         "tick it holds",
@@ -922,6 +1229,9 @@ TOKENS = {
     "tetra_inside_sum": tetra_inside_sum,
     "slosh_table": slosh_table,
     "slosh_table_dialed": slosh_table_dialed,
+    "triangle_slosh_table": triangle_slosh_table,
+    "tick_belongs_to_shape": tick_belongs_to_shape,
+    "no_room": no_room,
     "vertex_classes": vertex_classes,
     "octa_cut": octa_cut,
     "octa_counts": octa_counts,

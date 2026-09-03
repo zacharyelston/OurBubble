@@ -7,12 +7,21 @@ as you read**, in exact arithmetic.
 > **Scope.** These pages compute a **toy**. Nothing they draw or print is a claim about nature.
 > [`FIREWALL.md`](../FIREWALL.md) is the long version.
 
-| page | chapter | beats |
-|---|---|---|
-| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 9–18 |
-| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 19–26 |
-| [`make-it-move.html`](make-it-move.html) | Make it move | 27–35 |
-| [`the-shape-between.html`](the-shape-between.html) | The shape between | 36–46 |
+| page | chapter | beats (the outline's, since tranche D) | the page today |
+|---|---|---|---|
+| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 9–18 | in step |
+| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 19–26 | in step |
+| [`make-it-move.html`](make-it-move.html) | Make it move | 27–38 | built to the old 27–35 |
+| [`the-shape-between.html`](the-shape-between.html) | The shape between | 39–43 | built to the old 36–46 |
+| *(none yet)* | Two worlds threaded | 44–49 | not built |
+
+**These pages have not caught up with the outline, and are not meant to have yet.** Tranche D slowed
+the clock beats down, ran the rule on the triangle before the tetrahedron, and split the old chapter
+four in two, so every beat from the old 36 onwards moved by three and a new chapter appeared. The
+rebuild belongs to step three-B — the pass that replaces `core.mjs`'s arithmetic with calls into
+`engine/napkin.js` — and it renumbers these pages' steps and adds the fifth page in the same work.
+Nothing under `demos/` was touched by the chapter rewrite, so no page shows a number the engine did
+not compute; what they show is an older set of beats.
 
 ## 2026-09-02 — the engine is vendored, and this JavaScript is on notice
 

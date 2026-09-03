@@ -10,7 +10,7 @@
   <figcaption><strong>Analogy — not data.</strong> The interesting question about a shaped change is not how large the cost is but where it sits. The measured answer is in the figure linked below.</figcaption>
 </figure>
 
-<!-- beat 64 -->
+<!-- beat 67 -->
 
 The world now behaves the same way in every direction, which means a measurement made in it means
 what it appears to mean. So here is the next thing you can ask of such a world.
@@ -25,7 +25,7 @@ Before spending anything on a shaped one, though, there is a cheaper question wo
 
 ## ✎ Before we look
 
-<!-- beat 65 -->
+<!-- beat 68 -->
 
 Forget shaping for a moment. Push the *whole* world: take every dot in it and shift it by the same
 amount, in the same direction, all together.
@@ -38,7 +38,7 @@ cost nothing at all. Decide which, and write down why in half a sentence.
 
 ## The bill for moving everything
 
-<!-- beat 66 -->
+<!-- beat 69 -->
 
 Nothing. And you can see why once you have said it out loud: shifting every dot by the same amount
 is not an event. Nothing in the world has changed relative to anything else in the world. All you
@@ -59,7 +59,7 @@ Now shape it.
 
 ## Shape the push
 
-<!-- beat 67 -->
+<!-- beat 70 -->
 
 Make the push non-uniform: strong inside a region, fading to nothing outside it, with a transition
 between the two. That transition is the wall of the bubble.
@@ -81,7 +81,7 @@ So where does the cost sit?
 
 ## At the wall
 
-<!-- beat 68 -->
+<!-- beat 71 -->
 
 At the wall, and it is not a close-run thing.
 
@@ -97,7 +97,7 @@ Two of the three, then. Is the wall a shell, or something less even than that?
 
 ## A ring, not a shell
 
-<!-- beat 69 -->
+<!-- beat 72 -->
 
 A ring.
 
@@ -114,7 +114,7 @@ Which leaves one word to be honest about, and it is the word that does the most 
 
 ## What "negative" is and is not
 
-<!-- beat 70 -->
+<!-- beat 73 -->
 
 The number the formula returns splits cleanly into two competing parts. One cares whether the region
 is being stretched or compressed. The other cares whether it is being *sheared* — pulled unevenly,
@@ -134,7 +134,7 @@ that?
 
 ## The barrier
 
-<!-- beat 71 -->
+<!-- beat 74 -->
 
 No, and this project felt the temptation before it hit the wall.
 

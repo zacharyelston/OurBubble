@@ -6,7 +6,11 @@ crossing where neighbouring tetrahedra exchange, that it "holds the sum of the n
 gathering at the octahedron is cheaper than working tetrahedron by tetrahedron — by computing the
 answer instead of asserting it from the picture. Three symmetry claims in this arc were already
 asserted from a picture and were wrong; that is why nothing here is written for a reader until it
-has a verdict.
+has been computed.
+
+**What it settles, exactly, and what it does not.** A tick is not a trip round the bare octahedron under a time-symmetric rule on 0-forms; the family's claim (screw, 1-forms, chiral mesh) is under review: UniForge lab/napkin/0002. Everything
+below is that one reading, computed; read `notes/octahedron-crossing.md`'s provenance note before
+quoting any of it as a verdict on anything wider.
 
 **Everything is exact.** Integers and `fractions.Fraction` throughout, no floating point anywhere,
 and every claim below is an `assert` next to the number it makes. Where a bound is irrational

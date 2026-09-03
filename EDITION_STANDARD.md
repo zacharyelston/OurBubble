@@ -40,7 +40,7 @@ must preserve the concept, alt-text intent, caption distinction, and firewall.
 
 ## Numbers computed while the page is built
 
-Chapters 1–4 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+Chapters 1–5 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
 and every number in them is finger-countable — or, in the one case where it stops being, visibly
 stops being, which is that chapter's point. Quoting such a number from the record would be theatre:
 the reader can check it on a napkin, so the book does the arithmetic in front of her instead of
@@ -62,15 +62,18 @@ is never shown a brace-literal where a number belongs.
 | `triangle_loop_example` | corner values 2, 5, 1 on a triangle; the three oriented differences and their sum |
 | `tetra_face_loops` | corner values 2, 5, 1, 4; the six differences; each of the four faces' loop sums |
 | `tetra_inside_sum` | six freely chosen line-numbers, the four non-zero face-numbers they give, and their oriented sum around the inside |
+| `triangle_slosh_table` | ten ticks of the engine's rule on a triangle at the triangle's own tick, from the corners 2, 5, 2 — whole numbers throughout, and back to the pair it started from every four ticks |
+| `tick_belongs_to_shape` | the same three numbers at the tetrahedron's tick: the total still conserved, three rows printable, no return — and the tick size the four-dot shape must stay under |
 | `slosh_table` | ten ticks of the engine's rule on one tetrahedron, every line counting the same, with a conserved total |
 | `slosh_table_dialed` | the same ten ticks with one line counted double — the dial, in miniature |
+| `no_room` | the hops from each dot of the tetrahedron to each other dot: one line, every time, so its diameter is 1 |
 | `vertex_classes` | the tiling built on a wrapped world, and how many kinds of place its cut rule leaves — with the control that cuts every hole alike |
 | `octa_cut` | one tetrahedron cut at the middles of its six lines: four tips at an eighth each, and one eight-faced shape that is exactly half |
 | `octa_counts` | that shape's census against the tetrahedron's, its dots' names, and the three pairs of dots no line joins |
 | `octa_poke_table` | the same rule and tick on it: the whole poke crosses to the opposite dot in two ticks and is home in three |
 | `octa_face_sum` | twelve freely chosen arrows on it, the eight face-numbers they give, and their sum walked from outside |
 | `stella_counts` | the two tetrahedra threaded through one another, counted — and that the second's own middles are the same middles |
-| `stella_refusal` | the largest tick each of the three objects will hold, and the run that runs away when one is too big |
+| `stella_refusal` | the tick size each of the three objects must stay under, and the run that runs away when one is exceeded |
 
 Three properties are guaranteed, and each is enforced rather than intended:
 
@@ -85,7 +88,7 @@ Three properties are guaranteed, and each is enforced rather than intended:
 
 Every rendered block ends with one line: *computed while this page was built — <what>.*
 
-**Three rules the captions and the prose around them answer to**, each of them a defect that shipped
+**Four rules the captions and the prose around them answer to**, each of them a defect that shipped
 once and was caught by a reader rather than a check (2026-09-02):
 
 1. **A caption is a caption.** `tools/napkin.py` refuses one over 70 words as it renders, and the
@@ -102,6 +105,27 @@ once and was caught by a reader rather than a check (2026-09-02):
    refuted — those belong to the appendix. This is the only check in the repository that reads what
    the *author* wrote rather than what the tool wrote, and it exists because a corrected table sat
    two paragraphs above prose still making the disproved claim.
+
+4. **Checking is not refusing, and only refusing survives a rewritten builder** (2026-09-02,
+   tranche D, found by attacking the guards rather than by reading). *Checking* asks whether the
+   number the token computed is present on the page; *refusing* asks whether the wrong thing is
+   absent. A check that compares the page against strings the same code just built moves when that
+   code moves — so a caption can carry every word a token pinned and still say the opposite two
+   clauses later, and two fractions can be swapped between their nouns with both strings still
+   present somewhere in the block. Three consequences, each now enforced in `tools/napkin.py`:
+   a token whose verdict matters **builds that verdict from the data and refuses its opposite**
+   (`REFUSED_IN_CAPTION`, registered from what the engine returned, matched on normalised
+   whitespace because a newline inside a refused phrase is invisible to a reader and was invisible
+   to the test); a rendered value is **asserted inside the phrase that says what it is a value of**,
+   never as a bare number the check can find anywhere; and where it is worth it, the phrase is
+   **read back and held to what its own noun means** — a pair smaller than the tetrahedron it was
+   cut from and added to is refused by arithmetic on the rendered characters rather than by the code
+   that wrote them. That last is the only kind of check here that does not trust its own builder.
+
+   A corollary for anyone raising a wording nit against a rendered phrase: **it is not a free
+   edit.** Shortening "3/2 of the tetrahedron you cut" to "3/2 of it" reads better and leaves the
+   read-back with no noun to hold the number to. Say what the phrase is load-bearing for, or drop
+   the leading repetition instead.
 
 ### The exemption, and exactly how far it reaches
 
