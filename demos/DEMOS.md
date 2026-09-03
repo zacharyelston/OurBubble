@@ -384,9 +384,19 @@ taken. The ladder and the order are fixed, so the drawing is identical every tim
 the *emitted SVG* rather than taking the placement code's word, so a ladder too short to find a clear
 spot fails the build instead of shipping a struck-through number.
 
+**On the ring and the wireframe, a dot's name and its number are one label.** Searching for them
+separately did stop anything being struck through, and made a worse drawing: the six numbers went
+wherever there was room — one far left, one far right, one below the rim — and which number belonged
+to which dot stopped being obvious. On a drawing whose whole point is *which number is on which dot*,
+that is the wrong thing to trade a collision for. Written as one string, `AB 1`, they cannot come
+apart, and the search has one box to place rather than two that must both be clear and adjacent.
+
 **The net's names are exempt from the search and not from the gate.** `CANON.md`'s rule 4 forbids
-moving a label to wherever it fits, and the net's nineteen positions are the engine's, so they stay;
-what is searched there is only where a *number* sits beside a name, which was never CANON's to say.
+moving a label to wherever it fits, and the net's nineteen positions are the engine's, so they stay
+— and the name/number pairing above is *not* applied there, because on the net the name must not
+move and the number must follow it. Only where the number sits beside the fixed name is searched,
+which was never CANON's to say. That the two conventions differ is the point: CANON governs the
+tetrahedron and nothing else.
 
 ### No colour means anything
 
