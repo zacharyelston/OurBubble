@@ -15,7 +15,7 @@
   --rule: #d8d0bf;
   --accent: #20314a;
   --panel: #f0e6d2;
-  --measure: 34rem;
+  --measure: 100%;
 }
 
 :root[data-theme="dark"],
@@ -61,7 +61,9 @@ body {
   padding: 1.5rem 1rem 4rem;
 }
 
-.wrap { max-width: 62rem; margin: 0 auto; }
+/* One column, one right edge. A proof-reader counted three of them on every page: the scope box
+   stopped at one measure, the drawing panel at another, and the rules ran to a third. */
+.wrap { max-width: 42rem; margin: 0 auto; }
 
 header.masthead { border-bottom: 1px solid var(--rule); padding-bottom: 1rem; }
 
@@ -96,44 +98,45 @@ blockquote.scope {
 
 blockquote.scope p { margin: 0; }
 
-/* ── the layout: the beats down the side, one step in the middle ─────────────────────────────── */
+/* ── the layout: the beats across the top, one step below ─────────────────────────────────────── */
 
-#demo {
-  display: grid;
-  grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
-  gap: 2rem;
-  align-items: start;
-  margin-top: 1.75rem;
-}
+#demo { margin-top: 1.75rem; }
 
-nav.steps { position: sticky; top: 1rem; }
-
+/* The beats, as a row of numbers. They used to be a column of step titles, which meant a reader
+   met every question twice on one page — once in the list and once as the heading. The number is
+   the handle; the question is the heading. */
 nav.steps ol {
   list-style: none;
-  margin: 0; padding: 0;
-  counter-reset: none;
-  border-top: 1px solid var(--rule);
+  margin: 0 0 1.5rem; padding: 0 0 0.75rem;
+  display: flex; flex-wrap: wrap; gap: 0.3rem;
+  border-bottom: 1px solid var(--rule);
 }
 
-nav.steps li { border-bottom: 1px solid var(--rule); }
+nav.steps li { margin: 0; }
 
 nav.steps button {
-  display: block; width: 100%;
-  background: none; border: 0; padding: 0.55rem 0.4rem;
-  text-align: left; cursor: pointer;
+  background: none; border: 1px solid transparent; padding: 0.25rem 0.55rem;
+  cursor: pointer;
   color: var(--ink-soft);
   font: 0.85rem/1.35 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 
 nav.steps button:hover { color: var(--ink); background: var(--card); }
 nav.steps button[aria-current="step"] {
   color: var(--ink); font-weight: 600;
-  box-shadow: inset 3px 0 0 var(--accent);
+  border-color: var(--rule);
   background: var(--card);
 }
 
-.stage h2 { font-size: 1.3rem; line-height: 1.3; font-weight: 600; margin: 0 0 0.6rem; }
-.stage p.body { margin: 0 0 1.25rem; max-width: var(--measure); }
+.stage h2 { font-size: 1.3rem; line-height: 1.3; font-weight: 600; margin: 0 0 0.5rem; }
+
+/* The one line telling her what to do. It is not prose and must not read as prose: it is an
+   instruction, and it sits directly above the thing she presses. */
+.stage p.act {
+  margin: 0 0 1rem; max-width: var(--measure);
+  font-weight: 600;
+}
 
 .drawing {
   background: var(--card);
@@ -142,7 +145,7 @@ nav.steps button[aria-current="step"] {
   display: flex; justify-content: center;
 }
 
-.drawing svg { width: 100%; height: auto; max-width: 34rem; display: block; }
+.drawing svg { width: 100%; height: auto; display: block; }
 
 /* The drawings. One panel fill, one stroke, one heavier stroke for the piece a step is about. */
 .net .panel polygon, .ring .panel polygon { fill: var(--panel); stroke: none; }
@@ -161,6 +164,24 @@ nav.steps button[aria-current="step"] {
 .ring .absent line { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.45; }
 .ring .dots circle { fill: var(--ink); stroke: none; }
 .ring .dots circle.tip { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+/* The one highlight either drawing has: the piece this step is about, drawn with a ring around it.
+   Not a colour — there is none spare, by CANON.md's rule 5 — and never a kind of piece. */
+.ring .dots circle.strong, .wire .dots circle.strong {
+  stroke: var(--ink); stroke-width: 3; paint-order: stroke;
+}
+.ring .labels text.strong, .wire .labels text.strong, .net .labels text.strong { font-weight: 700; }
+/* Every label is drawn over the strokes with a halo of the paper behind it. A proof-reader counted
+   a dozen names crossed by the line they belong to — in the net, in the ring, and worst in the
+   wireframe, where a label near the middle of the projection has nowhere to move to. Nudging each
+   one by hand is how a drawing stops being derived; a halo fixes all of them at once, and it is what
+   a draughtsman does. It carries no meaning: it is the paper, put back on top. */
+.net .labels text, .ring .labels text, .wire .labels text {
+  paint-order: stroke fill;
+  stroke: var(--card);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
 .net .labels, .ring .labels {
   fill: var(--ink);
   font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
@@ -168,6 +189,33 @@ nav.steps button[aria-current="step"] {
 .net .labels .value, .ring .labels .value { font-weight: 600; }
 .ring .labels .tip { font-style: italic; }
 .ring .labels .note { fill: var(--ink-soft); font-style: italic; }
+
+/* A leader: the one mark in these drawings whose job is to say which label belongs to what. Thin,
+   because it is not part of the object — it is a pointer at it. */
+.net .leaders line, .ring .leaders line, .wire .leaders line {
+  stroke: var(--ink-soft); stroke-width: 1; fill: none;
+}
+
+/* ── the wireframe ─────────────────────────────────────────────────────────────────────────────── */
+/* No shading, no perspective, no fill. Weight is the only thing that varies, and it says which of
+   the three families a line belongs to — the first tetrahedron full, the second lighter, the
+   octahedron's twelve between them. It is not a colour and it does not mean anything else. */
+
+.wire { touch-action: none; cursor: grab; }
+.wire.dragging { cursor: grabbing; }
+.wire .stroke { stroke: var(--ink); fill: none; stroke-linecap: round; }
+.wire .stroke line { stroke-width: 1.6; }
+.wire .stroke.second line { stroke-width: 1; opacity: 0.55; }
+.wire .stroke.octahedron line { stroke-width: 1.1; opacity: 0.75; }
+.wire .stroke line.strong { stroke-width: 3.2; opacity: 1; }
+.wire .dots circle { fill: var(--ink); stroke: none; }
+.wire .dots circle.tip { fill: var(--card); stroke: var(--ink); stroke-width: 1.6; }
+.wire .labels {
+  fill: var(--ink);
+  font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+.wire .labels .value { font-weight: 600; }
+.wire:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ── the controls ──────────────────────────────────────────────────────────────────────────────── */
 
@@ -177,7 +225,20 @@ nav.steps button[aria-current="step"] {
 }
 
 .controls { margin-top: 0.75rem; }
-.controls .tick-label { min-width: 8rem; color: var(--ink-soft); }
+.controls .tick-label { min-width: 8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+.controls .typed, .controls .choose { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+.controls .typed label { color: var(--ink-soft); font-weight: 600; }
+.controls input {
+  font: inherit; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--ink); background: var(--card);
+  border: 1px solid var(--rule); padding: 0.25rem 0.4rem; width: 4.5rem;
+}
+.controls input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* A number the engine cannot parse is refused visibly, not swallowed. */
+.controls input.refused { border-style: dashed; border-width: 2px; }
+.controls input.refused + label, .controls input[aria-invalid="true"] { font-style: italic; }
+.controls button[aria-pressed="true"] { border-color: var(--accent); font-weight: 600; }
 
 button, select {
   font: inherit;
@@ -234,12 +295,6 @@ figure.numbers th, figure.numbers td {
 figure.numbers thead th { color: var(--ink-soft); font-weight: 600; }
 figure.numbers tbody th { font-weight: 400; }
 
-.notes {
-  margin-top: 1.25rem; max-width: var(--measure);
-  font-size: 0.88rem; color: var(--ink-soft);
-}
-.notes p { margin: 0 0 0.6rem; }
-
 footer.foot {
   margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
   font: 0.82rem/1.6 ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
@@ -251,11 +306,13 @@ footer.foot {
 .index li { border-top: 1px solid var(--rule); padding-top: 0.75rem; }
 .index a { font-size: 1.05rem; font-weight: 600; text-decoration: none; }
 .index a:hover { text-decoration: underline; }
-.index p { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 0.9rem; }
+.index .beats {
+  display: block; margin-top: 0.2rem; color: var(--ink-soft); font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
 
 @media (max-width: 52rem) {
-  #demo { grid-template-columns: minmax(0, 1fr); }
-  nav.steps { position: static; }
+  .controls .tick-label { min-width: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

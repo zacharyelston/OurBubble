@@ -1,557 +1,1672 @@
-// The cross-check: the browser's arithmetic against the napkin's, value by value.
+// The cross-check: what the pages render is what the engine emitted, and nothing else.
+//
+// FIREWALL: this checks pages that run a toy DEC lattice. Nothing here is a claim about nature. See
+// ../FIREWALL.md.
 //
 //   node demos/core.test.mjs
 //
-// The demos recompute chapters 1–4 in the reader's browser rather than displaying numbers Python
-// worked out. That is the whole point of them and it is also the whole risk: two implementations of
-// the same arithmetic are two places the book can disagree with itself. So this runs the demos'
-// core under node and holds it to `demos/data/napkin.json`, which `tools/napkin_export.py` derives
-// from `tools/napkin.py` and `tools/octahedron.py` on every build.
+// **This check has changed its meaning, and the change is the point of step three-B.** It used to
+// compare two implementations of the same arithmetic — `core.mjs`'s exact rationals in JavaScript
+// against the napkin's in Python — because there were two. There is one now: the vendored engine.
+// So what is checked is no longer *do the two agree* but **does the page show what the engine said**.
 //
-// **What is checked, exactly.** Three things, and then one that is deliberately not.
+// The gates, in the order of what they would catch — numbered for reference, not counted here,
+// because a count of them is one more figure to go stale, and this one already had:
+
 //
-//   1. **Every value the core computes equals the napkin's** — compared as exact rational strings,
-//      never as floats with a tolerance. This is the check that carries the weight.
-//   2. **No number appears on any surface that the export does not contain.** Every numeric token in
-//      every table cell, table heading, table caption, step title, step prose, step note and piece
-//      of text inside every drawing — at every tick of every step of every chapter.
-//   3. **No digit is typed into a step at all.** The source of the step definitions is read, and any
-//      string literal containing a digit fails, in any quote style, with a template's `${…}` cut out
-//      first because that is code. A count arrives as `String(cut.dots)` or it does not arrive.
-//      Exactly three numbers on these pages are not values of the object; they are named constants
-//      above the step region, and this file holds the same three.
+//   1. **the engine is the engine.** The vendored wasm answers the census question with the
+//      vendored JSON's own bytes, so the two artifacts under `engine/` are one engine.
+//   2. **every rendered number is the engine's.** Every step of every chapter is rendered in every
+//      state a reader can drive it into, and every numeric token on every surface she meets — a
+//      table's cells, its caption, its column headings, the step's title, its one instruction, every
+//      control's label, and every piece of text inside every drawing including the SVG `<desc>` — is
+//      a value the engine returned in this run, that value negated, the length of one of its lists,
+//      or an index into one. Nothing else.
+//   3. **no number was typed.** `steps.mjs`'s own source is read and **any digit inside any string
+//      literal is refused**, in any quote style, with `${…}` cut out because that is code. A count
+//      arrives as an engine value or it does not arrive. The same rule is held over the pages' HTML:
+//      no digit in any text a reader sees.
+//   4. **the drawing is the census.** The wireframe may emit only seven element names — a
+//      whitelist, not a search — every one of its strokes is an edge the engine exported and every
+//      dot one of its vertices, thirty-six and fourteen, both ways round, and the pair each stroke
+//      is held to is taken from **where its ends actually are** rather than from what it says about
+//      itself. The ring is held separately to drawing its twelve lines with none crossing another.
+//      And a drawing's own sentences — its `<title>` and `<desc>` — carry no digit at all.
+//   5. **the steps are the outline's.** Every step maps onto exactly one marked chapter section,
+//      every marked section is covered, and the beat numbers and questions are `steps.json`'s.
+//   6. **the words are under budget.** Every reader-facing word on each page is counted and held
+//      under the owner's limit, and the count is printed whether or not it passes.
+//   7. **a table says what its numbers mean, and a total is a total.** Every table whose rows carry
+//      three or more numbers declares itself — `{ total: i }` or `{ notASum: true }` — and a
+//      declared total is added up here, on the digits a reader sees, on every row of every state.
+//      The declaration is by **column index** rather than by heading, because the first version of
+//      this gate read the column headed "added up" and was switched off twice: once by renaming
+//      that column in the same edit that broke the arithmetic under it, once by moving the terms
+//      into a second table. This is the one part of the "right value, wrong place" hole a machine
+//      *can* close, and the hole was not hypothetical: this pass shipped two walks whose printed
+//      terms did not add to their printed total, and a fresh reader found both by doing the
+//      arithmetic the page invites her to do.
+//   8. **no label is struck through.** Every piece of text in every drawing, at every state, has
+//      its box tested against every stroke and every dot in that drawing — from the emitted SVG,
+//      not from the placement code's own opinion of where it put things. This one exists because
+//      three rounds of "fixed" label rules were not: a rule that has to be right everywhere on a
+//      drawing with twelve or thirty-six lines through it will be wrong somewhere, so the placement
+//      searches for a clear spot and this is what says it found one.
+//   9. **the numbers DEMOS.md quotes about the sweep are the sweep's.** The crossings paragraph is
+//      the only quantitative prose in this lane that no gate held, and it carried a wrong measured
+//      figure in three consecutive rounds. Every number it now quotes is asserted here, so the
+//      paragraph cannot drift from the code again — and the rule that came with it is that the
+//      paragraph quotes *only* numbers this gate asserts — and a figure of its own found wrong is
+//      deleted rather than corrected, which is how two of them left it.
+//  10. **every still stands on its own.** The still button is the reason the drawing code exists —
+//      those files are the intended replacement for the chapters' illustration studies — and it is
+//      the one surface a reader reaches by downloading rather than by looking, so a proof-reader
+//      could not exercise it at all. Every step, in every state, is rendered to its still, and the
+//      still is held to carrying its own stylesheet, its own title and description, and the
+//      firewall.
 //
-//   4. **What this cannot catch, and does not claim to:** a number computed correctly from the
-//      object and then *put in the wrong place* — `cut.octDots` printed in the "lines" column, or
-//      `cut.dots + 1` where `cut.dots` belongs. Every such value is one the export contains, so no
-//      scan over the numbers can see it; only reading the page can. That is what the proof-reader
-//      pass is for, and `demos/DEMOS.md` says so in the same words.
-//
-// A failure prints the chapter, the beat, the tick, the surface and the text.
+// What no check here can catch is unchanged, and `DEMOS.md` says so in the same words: **a number
+// computed correctly and then put in the wrong place.** Gate 3 is what shrinks that hole — a wrong
+// number cannot be typed anywhere — but a value read out of the wrong field of the right answer is
+// still invisible to a machine. Only reading the page catches that, which is what the proof-reader
+// pass is for.
 
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { pathToFileURL } from "node:url";
+import path from "node:path";
 
-import {
-  CHAPTERS, Frac, MID_ARROWS, MID_NAMES, MID_POINTS, NAMES, TETRA_LINES, TICKS, TICK_K,
-  ceiling, census, cellName, fracText, midFaces, midLines, midpointCut, numberText,
-  octahedronFaceSum, octahedronPoke, secondTetrahedron, signedText, simplices, stellaCensus,
-  stellaLines, stellaPoints, stellaRunaway, stellaSmallerTicks, sum, tetraRuns, tetrahedron,
-  netSegments, netLabels, thousands, ringPlanarity, drawRing, REPEAT_SEARCH_TICKS,
-} from "./core.mjs";
+const HERE = path.dirname(new URL(import.meta.url).pathname);
+const ROOT = path.join(HERE, "..");
+const ENGINE_DIR = path.join(ROOT, "engine");
 
-const HERE = dirname(fileURLToPath(import.meta.url));
-const EXPORT = JSON.parse(readFileSync(join(HERE, "data", "napkin.json"), "utf8"));
+const { Engine } = await import(pathToFileURL(path.join(HERE, "engine.mjs")).href);
+const { drawings, viewCost, VIEW_GRID, project3d, textBox, boxMeetsSegment, boxesOverlap,
+  boxMeetsDot, LABEL_GAP, DOT_CLEARANCE } = await import(
+  pathToFileURL(path.join(HERE, "draw.mjs")).href);
+const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")).href);
+const { joinSteps, statesOf, stillFrom, SVG_STILL_STYLE_TEXT } = await import(
+  pathToFileURL(path.join(HERE, "core.mjs")).href);
 
-let failures = 0;
-let checks = 0;
+const failures = [];
+const fail = (message) => failures.push(message);
 
-function fail(message) {
-  failures += 1;
-  console.error(`  FAIL ${message}`);
+// `LABEL_GAP` is imported from `draw.mjs` rather than chosen here, so that the placement and the
+// check cannot drift apart — but importing it means one edit to that constant would relax the
+// placement AND the check that enforces it, in the same line. A reader spotted that. So the check
+// keeps a floor of its own: the shared constant may be raised, never lowered.
+const GAP_FLOOR = 3;
+if (LABEL_GAP < GAP_FLOOR) {
+  fail(`draw.mjs sets LABEL_GAP to ${LABEL_GAP}, and this check will not go below ${GAP_FLOOR}: `
+    + `two labels that close read as one token, which is the whole reason the gap exists`);
+}
+// And the same for the clearance a label keeps from the dot it names. A reader pointed out that a
+// constant only the placement consults is a standard nothing enforces: dropping it to nothing made
+// no visible overlap, because the ink test catches those — but it would have let a name sit against
+// its mark again the moment that test moved.
+const CLEARANCE_FLOOR = 12;
+if (DOT_CLEARANCE < CLEARANCE_FLOOR) {
+  fail(`draw.mjs sets DOT_CLEARANCE to ${DOT_CLEARANCE}, and this check will not go below `
+    + `${CLEARANCE_FLOOR}: the biggest dot these drawings put down has a radius of thirteen, and a `
+    + `name that starts inside it reads as attached to the mark rather than beside it`);
 }
 
-/** Assert two exact values agree, compared as the strings `napkin_export.py` writes. */
-function same(label, computed, expected) {
-  checks += 1;
-  const got = computed instanceof Frac ? computed.toString() : String(computed);
-  const want = String(expected);
-  if (got !== want) fail(`${label}: the browser computed ${got}, the napkin exported ${want}`);
-}
+// ── 1 · the engine is the engine ──────────────────────────────────────────────────────────────────
 
-function sameList(label, computed, expected) {
-  checks += 1;
-  if (computed.length !== expected.length) {
-    fail(`${label}: ${computed.length} values, the napkin exported ${expected.length}`);
-    return;
+const glue = await import(pathToFileURL(path.join(ENGINE_DIR, "napkin.js")).href);
+await glue.default({ module_or_path: readFileSync(path.join(ENGINE_DIR, "napkin_bg.wasm")) });
+
+const payloadText = readFileSync(path.join(ENGINE_DIR, "napkin.json"), "utf8");
+const payload = JSON.parse(payloadText);
+const rows = JSON.parse(readFileSync(path.join(ENGINE_DIR, "rows.json"), "utf8"));
+
+{
+  // The census of the complete complex on four dots is chapters 1 and 2's whole object, and the
+  // vendored JSON carries it. Byte for byte, not value for value: a tolerance here would be exactly
+  // the seam the one-engine decision closes.
+  const fromWasm = JSON.parse(glue.census_json(4));
+  const fromJson = payload.complexes["4"];
+  if (JSON.stringify(fromWasm) !== JSON.stringify(fromJson)) {
+    fail("the vendored wasm and the vendored JSON disagree about the census on four dots");
   }
-  computed.forEach((value, index) => same(`${label}[${index}]`, value, expected[index]));
 }
 
-function sameRows(label, computed, expected) {
-  checks += 1;
-  if (computed.length !== expected.length) {
-    fail(`${label}: ${computed.length} rows, the napkin exported ${expected.length}`);
-    return;
+const engine = new Engine(glue, payload, rows);
+const draw = drawings(engine);
+const scaffold = JSON.parse(readFileSync(path.join(HERE, "steps.json"), "utf8"));
+const definitions = chapterSteps(engine, draw);
+const view = draw.wireDefaultView();
+
+// ── 4a · the ring's own claim ─────────────────────────────────────────────────────────────────────
+
+{
+  const bare = draw.ringPlanarity({ tips: false });
+  if (bare.lines !== payload.cut.oct_lines) {
+    fail(`the ring drew ${bare.lines} lines, and the shape between has ${payload.cut.oct_lines}`);
   }
-  computed.forEach((row, index) => sameList(`${label}[${index}]`, row, expected[index]));
+  if (bare.crossings !== 0 || bare.dotsOnLines !== 0) {
+    fail(`the ring is degenerate: ${bare.crossings} crossing(s), ${bare.dotsOnLines} dot(s) on a line`);
+  }
+  const withTips = draw.ringPlanarity({ tips: true });
+  if (withTips.amongTheTwelve !== 0 || withTips.dotsOnTheTwelve !== 0) {
+    fail("adding the tips broke the twelve lines' own claim");
+  }
+  // The seven crossings are the outside tip's, and the number is pinned so that a change to the
+  // layout has to be looked at rather than shipped.
+  if (withTips.crossings !== 7) {
+    fail(`the tips' lines cross ${withTips.crossings} times; the convention says seven`);
+  }
+  if (withTips.tipsInsideTheirFace !== 4) {
+    fail(`${withTips.tipsInsideTheirFace} tips sit inside their own face; the convention says four`);
+  }
 }
 
-function section(name) {
-  console.log(name);
+// ── 4b · the wireframe is the census ──────────────────────────────────────────────────────────────
+
+{
+  const wire = draw.wireframe();
+  // A title, because the drawings no longer supply a default one — and this check was the caller
+  // that had been leaning on it. The fallback strings were unreachable from any step, and an attack
+  // on one of them "escaped" the whole suite until it was shown to be code nothing renders; dead
+  // code that looks like a safety net is a place a wrong number can sit unexamined, so it is gone
+  // and the drawings now refuse to draw without a title.
+  const drawn = draw.drawWire({
+    yaw: view.yaw, pitch: view.pitch, title: "The threaded pair, for the census check",
+  });
+
+  // The dots first, with where each one actually is on the paper.
+  const dots = [...drawn.matchAll(
+    /<circle[^>]*data-dot="([^"]+)"[^>]*cx="([-\d.]+)"[^>]*cy="([-\d.]+)"/g)]
+    .map((found) => ({ name: found[1], x: Number(found[2]), y: Number(found[3]) }));
+  const names = new Set(wire.names);
+  if (dots.length !== payload.stella.dots) {
+    fail(`the wireframe drew ${dots.length} dots; the engine has ${payload.stella.dots}`);
+  }
+  for (const dot of dots) {
+    if (!names.has(dot.name)) {
+      fail(`the wireframe drew a dot called ${dot.name}, which the engine has not got`);
+    }
+  }
+  if (new Set(dots.map((dot) => dot.name)).size !== dots.length) {
+    fail("the wireframe drew a dot twice");
+  }
+
+  // And now the lines, **by where their ends are**, not by what they say about themselves. A
+  // proof-reader pointed every line at the wrong dot while leaving its `data-edge` attribute honest
+  // and this gate stayed green — while the step's own table invites a reader to count the lines off
+  // the picture. So each end is resolved to the nearest drawn dot, and the pair that comes back is
+  // what is held to the census. The attribute is then checked against the geometry as well, so the
+  // two can no longer disagree in either direction.
+  const nearestDot = (x, y) => dots.reduce((best, dot) => {
+    const distance = Math.hypot(dot.x - x, dot.y - y);
+    return best === null || distance < best.distance ? { dot, distance } : best;
+  }, null);
+  // EVERY mark, of every kind. Two versions of this gate have now been walked past: the first
+  // matched only lines carrying a `data-edge`, so an unlabelled stroke joining nothing to nothing
+  // rode into a commit while the count stayed at thirty-six; the second matched only `<line>`, so
+  // the same stroke came back as a `<path>`. A drawing does not get to decide which of its own
+  // marks are up for checking, and it does not get to decide by choosing an element name either.
+  // So the wireframe is held to a **whitelist**: these tags and no others.
+  const WIRE_TAGS = ["svg", "title", "desc", "g", "line", "circle", "text"];
+  for (const found of drawn.matchAll(/<([a-zA-Z][\w-]*)/g)) {
+    if (!WIRE_TAGS.includes(found[1])) {
+      fail(`the wireframe drew a <${found[1]}>, and it may only draw `
+        + `${WIRE_TAGS.join(", ")} — every mark in it has to be a line of the census or a dot`);
+    }
+  }
+  // Every stroke, labelled or not — except a leader, which is a pointer at the object rather than a
+  // piece of it, and is counted and checked separately by the census gate.
+  const strokes = [...drawn.matchAll(/<line\b[^>]*>/g)].map((found) => found[0])
+    .filter((mark) => !/data-leader=/.test(mark));
+  if (strokes.length !== payload.stella.lines) {
+    fail(`the wireframe drew ${strokes.length} strokes; the engine has ${payload.stella.lines} `
+      + `lines — every stroke in this drawing has to be one of them`);
+  }
+  const lines = strokes.map((stroke) => {
+    const edge = /data-edge="([^"]+)"/.exec(stroke);
+    const at = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(stroke);
+    if (!edge || !at) {
+      fail(`the wireframe drew a stroke that does not say which edge it is: ${stroke}`);
+      return null;
+    }
+    return [stroke, edge[1], at[1], at[2], at[3], at[4]];
+  }).filter((line) => line !== null);
+  const census = new Set(wire.edges.map(([a, b]) =>
+    [wire.names[a], wire.names[b]].sort().join("|")));
+  const drawnKeys = new Set();
+  for (const line of lines) {
+    const claimed = line[1].split("|").sort().join("|");
+    const from = nearestDot(Number(line[2]), Number(line[3]));
+    const to = nearestDot(Number(line[4]), Number(line[5]));
+    // A stroke must actually start and end on a dot, not merely near one: half a dot's radius is
+    // the whole tolerance, so a line stopping short of where it claims to go fails here.
+    if (from.distance > 4 || to.distance > 4) {
+      fail(`the wireframe's segment ${line[1]} does not end on a dot `
+        + `(${from.distance.toFixed(1)}, ${to.distance.toFixed(1)} away)`);
+      continue;
+    }
+    const geometric = [from.dot.name, to.dot.name].sort().join("|");
+    if (geometric !== claimed) {
+      fail(`the wireframe says it drew ${line[1]} and drew ${geometric}`);
+    }
+    if (!census.has(geometric)) {
+      fail(`the wireframe drew ${geometric}, which is not an edge of the census`);
+    }
+    drawnKeys.add(geometric);
+  }
+  for (const key of census) {
+    if (!drawnKeys.has(key)) {
+      fail(`the census has the edge ${key}, and the wireframe did not draw it`);
+    }
+  }
 }
 
-// The three numbers these pages write that are not values of the object at all, each with its
-// reason. `core.mjs` declares the same three as named constants, the two sides are checked against
-// each other below, and no step may write any other bare number.
-const STRUCTURAL = new Map([
-  ["0", "how many exceptions, edges, clocks, lengths and assumptions there are"],
-  ["1", "how many rules the law has"],
-  ["2", "the two coming-home facts, and the two shapes chapter 4 ends with"],
-]);
+// ── 9 · the numbers DEMOS.md quotes about the sweep ───────────────────────────────────────────────
+//
+// This is the paragraph that has been wrong three rounds running: the crossings count of the
+// wireframe's opening view and what the sweep around it looks like. It is the only quantitative
+// prose in this lane that no gate held, and prose no gate holds is prose that drifts. So every
+// figure it is allowed to quote is asserted here, and the rule in DEMOS.md is the other half of the
+// arrangement: **the paragraph quotes only numbers this gate asserts, and any other figure is
+// deleted rather than corrected.**
+//
+// The sweep asserted is the 72×72 one the shipped code actually runs — the one that chooses the view
+// a reader opens on — not a finer one quoted for effect.
+
+const SWEEP = {
+  grid: 72,               // directions swept in each of the two angles
+  directions: 5184,       // VIEW_GRID squared
+  floor: 20,              // the lowest score any direction reaches
+  atFloor: 200,           // how many reach it
+  shape: "20/0/0",        // and every one of them has this shape: crossings / dots-on-lines / lost
+  noCrossings: 12,        // directions with no crossings at all
+  lostThere: 6,           // every one of which loses this many of the thirty-six edges
+  // And the opening view itself, which the paragraph quotes and nothing checked: a reader falsified
+  // the yaw, the pitch, the degree conversions and the view's own 20/0/0 and every gate stayed
+  // green, because the window started after the blockquote they sit in.
+  yaw: "5.585",
+  pitch: "−0.654",
+  yawDegrees: 320,
+  pitchDegrees: "−37.5",
+  openingCrossings: 20,
+  openingHidden: 0,
+  openingLost: 0,
+};
+
+{
+  // The central symmetry the mirror argument rests on, checked rather than asserted: every point of
+  // the threaded pair has its own negative in the set.
+  const q = (value) => {
+    const [top, bottom] = String(value).split("/");
+    return bottom === undefined ? Number(top) : Number(top) / Number(bottom);
+  };
+  const symmetric = payload.stella.points.every((point) =>
+    payload.stella.points.some((other) => point.every((value, axis) =>
+      Math.abs(q(value) + q(other[axis])) < 1e-9)));
+  if (!symmetric) {
+    fail("the threaded pair is no longer centrally symmetric, and the position census's reasoning "
+      + "about mirrored views depends on it — a mirror of a view is another view only because "
+      + "every point has its negative in the set");
+  }
+
+  const { points, edges } = draw.wireframe();
+  if (VIEW_GRID !== SWEEP.grid) {
+    fail(`the sweep is ${VIEW_GRID} directions per angle and DEMOS.md says ${SWEEP.grid}`);
+  }
+  if (VIEW_GRID * VIEW_GRID !== SWEEP.directions) {
+    fail(`the sweep is ${VIEW_GRID}×${VIEW_GRID} and DEMOS.md quotes ${SWEEP.directions} directions`);
+  }
+  let floor = Infinity;
+  let atFloor = 0;
+  const shapes = new Set();
+  let noCrossings = 0;
+  const lostThere = new Set();
+  for (let a = 0; a < VIEW_GRID; a += 1) {
+    for (let b = 0; b < VIEW_GRID; b += 1) {
+      const yaw = (a / VIEW_GRID) * Math.PI * 2;
+      const pitch = (b / VIEW_GRID) * Math.PI - Math.PI / 2;
+      const cost = viewCost(points, edges, yaw, pitch);
+      if (cost.lies < floor) { floor = cost.lies; atFloor = 0; shapes.clear(); }
+      if (cost.lies === floor) {
+        atFloor += 1;
+        shapes.add(`${cost.invented}/${cost.hidden}/${cost.flattened}`);
+      }
+      if (cost.invented === 0) { noCrossings += 1; lostThere.add(cost.flattened); }
+    }
+  }
+  // The opening view, from the same call the page makes.
+  const opening = draw.wireDefaultView();
+  const openingCost = viewCost(points, edges, opening.yaw, opening.pitch);
+  const round3 = (value) => value.toFixed(3).replace("-", "−");
+  const degrees = (value) => Math.round((value * 180) / Math.PI * 10) / 10;
+  if (round3(opening.yaw) !== SWEEP.yaw) {
+    fail(`the opening view's yaw is ${round3(opening.yaw)}, and DEMOS.md says ${SWEEP.yaw}`);
+  }
+  if (round3(opening.pitch) !== SWEEP.pitch) {
+    fail(`the opening view's pitch is ${round3(opening.pitch)}, and DEMOS.md says ${SWEEP.pitch}`);
+  }
+  if (Math.round(degrees(opening.yaw)) !== SWEEP.yawDegrees) {
+    fail(`the opening yaw is ${degrees(opening.yaw)}°, and DEMOS.md says ${SWEEP.yawDegrees}°`);
+  }
+  if (String(degrees(opening.pitch)).replace("-", "−") !== SWEEP.pitchDegrees) {
+    fail(`the opening pitch is ${degrees(opening.pitch)}°, and DEMOS.md says ${SWEEP.pitchDegrees}°`);
+  }
+  for (const [what, got, said] of [
+    ["crossings", openingCost.invented, SWEEP.openingCrossings],
+    ["dots on lines", openingCost.hidden, SWEEP.openingHidden],
+    ["lost edges", openingCost.flattened, SWEEP.openingLost],
+  ]) {
+    if (got !== said) {
+      fail(`the opening view has ${got} ${what}, and DEMOS.md says ${said}`);
+    }
+  }
+
+  if (floor !== SWEEP.floor) fail(`the sweep's score floor is ${floor}, and DEMOS.md says ${SWEEP.floor}`);
+  if (atFloor !== SWEEP.atFloor) {
+    fail(`${atFloor} directions reach the floor, and DEMOS.md says ${SWEEP.atFloor}`);
+  }
+  if (shapes.size !== 1 || !shapes.has(SWEEP.shape)) {
+    fail(`the cheapest views are ${[...shapes]}, and DEMOS.md says every one is ${SWEEP.shape}`);
+  }
+  if (noCrossings !== SWEEP.noCrossings) {
+    fail(`${noCrossings} directions have no crossings, and DEMOS.md says ${SWEEP.noCrossings}`);
+  }
+  if (lostThere.size !== 1 || !lostThere.has(SWEEP.lostThere)) {
+    fail(`the crossing-free views lose ${[...lostThere]} edges, and DEMOS.md says ${SWEEP.lostThere}`);
+  }
+
+}
+
+{
+  // The other half of the paragraph's rule, which until now was kept by hand: not only must every
+  // figure it quotes be one `SWEEP` asserts, but **nothing** in it may be a figure `SWEEP` does not
+  // assert. Checked by reading the paragraph out of DEMOS.md and pulling every emphasised number.
+  // This found a fifth wrong number the moment it was written — the sentence claiming how many
+  // figures the paragraph had.
+  const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
+  // From the paragraph's FIRST line — which is where the opening view's own figures sit, inside a
+  // blockquote. The window used to start below it, so a reader falsified the yaw, the pitch, both
+  // degree figures and the view's 20/0/0 and nothing noticed.
+  const from = doc.indexOf("**The default view is chosen by counting.**");
+  const to = doc.indexOf("That is the argument for leaving the plane");
+  if (from < 0 || to < 0) {
+    fail("DEMOS.md no longer has the crossings paragraph this gate is written against");
+  } else {
+    const asserted = new Set(Object.values(SWEEP).map((value) => String(value)));
+    for (const value of Object.values(SWEEP)) {
+      for (const part of String(value).split("/")) asserted.add(part);
+    }
+    // EVERY digit-run in the paragraph, not only the emphasised ones. A reader smuggled an
+    // unbolded figure through the bold-spans-only version, and the rule was never about typography.
+    // A few word-shapes are not figures about the sweep: a rule number, a heading's own count of
+    // terms. Those are listed rather than pattern-matched, so adding one is a decision.
+    // A handful of shapes in the window are not figures about the sweep: the three weights the
+    // score is built from, which the sentence explains in words, and nothing else. Listed rather
+    // than pattern-matched, so adding one is a decision somebody makes on purpose.
+    const NOT_A_SWEEP_FIGURE = new Set(["1", "4", "12"]);
+    const plain = (text) => text.replace(/[−–]/g, "-");
+    // Thousands written with a space are one figure, so they are joined before scanning; otherwise
+    // "5 184" reads as a 5 and a 184.
+    const window = doc.slice(from, to).replace(/(\d)[\u202f\u00a0 ](\d{3})\b/g, "$1$2");
+    const wanted = new Set([...asserted].map(plain));
+    for (const found of window.matchAll(/[−-]?\d[\d.]*\d|[−-]?\d/g)) {
+      const bare = plain(found[0]);
+      if (wanted.has(bare) || wanted.has(bare.replace(/^-/, ""))) continue;
+      if (NOT_A_SWEEP_FIGURE.has(bare)) continue;
+      fail(`DEMOS.md's crossings paragraph contains the figure ${found[0]}, which SWEEP does not `
+        + `assert. Its own rule: delete it, do not correct it`);
+    }
+  }
+}
+
+// ── 9b · DEMOS.md names no beat by a number it typed ──────────────────────────────────────────────
+//
+// The demos hold no beat numbers because a renumber would strand them — that is the whole reason
+// `steps.json` is generated. **This file did not extend that discipline to its own prose**, and the
+// preface's renumber proved it: every beat in the book moved by four, and nine hand-written "beat
+// N" references in DEMOS.md went silently wrong while the pages themselves were fine.
+//
+// Two rules, and between them the family cannot come back. The page table's ranges must be
+// `steps.json`'s, so they are checked rather than remembered. And everywhere else a beat is named by
+// **what it is** — the poke step, the walk step, the dial step — because a name does not need
+// renumbering.
+{
+  const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
+  for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
+    const row = doc.split("\n").find((line) => line.includes(`${slug}.html`));
+    if (!row) {
+      fail(`DEMOS.md has no page-table row for ${slug}`);
+      continue;
+    }
+    const found = /\|\s*(\d+)[–-](\d+)\s*\|/.exec(row);
+    if (!found) {
+      fail(`DEMOS.md's row for ${slug} states no beat range`);
+    } else if (Number(found[1]) !== chapter.first || Number(found[2]) !== chapter.last) {
+      fail(`DEMOS.md says ${slug} is beats ${found[1]}–${found[2]}, and steps.json derives `
+        + `${chapter.first}–${chapter.last} from OUTLINE.md and the chapter's markers`);
+    }
+  }
+  for (const line of doc.split("\n")) {
+    if (line.includes(".html")) continue;          // the page table, checked above
+    const found = /\bbeats?\s+\d+/.exec(line);
+    if (found) {
+      fail(`DEMOS.md writes "${found[0]}" outside its page table. A beat number in prose goes stale `
+        + `the next time the book is renumbered — the preface moved every beat by four and stranded `
+        + `nine of them. Name the beat by what it is instead: the poke step, the walk step`);
+    }
+  }
+}
+
+// ── 4 · every drawing is its own census ───────────────────────────────────────────────────────────
+
 
 /**
- * Every string literal in `source`, with a template's `${…}` cut out, and comments skipped.
+ * What each kind of drawing may emit, and what every mark in it must be.
  *
- * A regex over quotes is not enough for this and was not: `["dots", 0], ["lines", 1]` contains the
- * two-character span `", "` between two array literals, and a naive pattern reads that as a string
- * holding a digit. So the source is walked once, character by character, tracking what it is inside.
+ * Built from the engine's own data, once, and consulted for every drawing of every step. The names
+ * are the engine's: the tetrahedron's four dots and six lines, the six middles and the twelve lines
+ * between them, the threaded pair's fourteen and thirty-six.
  */
-function stringLiterals(source) {
-  const out = [];
-  let line = 1;
-  let i = 0;
-  while (i < source.length) {
-    const c = source[i];
-    if (c === "\n") { line += 1; i += 1; continue; }
-    if (c === "/" && source[i + 1] === "/") {
-      while (i < source.length && source[i] !== "\n") i += 1;
+const DRAWINGS = (() => {
+  const P = payload;
+  const NAMES = P.tetrahedron.names;
+  const MID = P.cut.mid_names;
+  const key = (value) => String(value).split("|").sort().join("|");
+
+  // How many times each of the net's dots appears on the paper, from the engine's own label list —
+  // which is where "one dot in three places" is a fact rather than a remark.
+  const netDotPlaces = {};
+  for (const label of P.net.labels) {
+    if (label.kind !== "dot") continue;
+    netDotPlaces[label.text] = (netDotPlaces[label.text] || 0) + 1;
+  }
+  // And how many strokes carry each line's name, likewise.
+  const netLinePlaces = {};
+  for (const segment of P.net.segments) {
+    netLinePlaces[segment.line] = (netLinePlaces[segment.line] || 0) + 1;
+  }
+
+  const tetraLines = new Set(P.tetrahedron.line_names);
+  const triangleLines = new Set(P.tetrahedron.line_names
+    .filter((name) => !name.includes(NAMES[3])));
+  const midLines = new Set(P.cut.mid_lines.map(([i, j]) => key(`${MID[i]}|${MID[j]}`)));
+  const absences = new Set(P.cut.opposite_pairs.map((pair) => key(pair.join("|"))));
+  const tipNames = new Set(draw.tipNames());
+  const stellaNames = new Set(P.stella.names);
+  const stellaEdges = new Set(P.stella.edges
+    .map(([i, j]) => key(`${P.stella.names[i]}|${P.stella.names[j]}`)));
+  const faceNames = new Set(P.tetrahedron.face_names);
+  const ringRegions = new Set(P.cut.mid_faces
+    .map((face) => key(face.map((i) => MID[i]).join("|"))));
+
+  // For each kind: what elements it may emit, what each `data-` identity has to be, how many marks
+  // of each name it may put down, and — the part this was missing — how many separate PLACES a dot
+  // of a given name is allowed to occupy.
+  return {
+    triangle: {
+      tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
+      identity: {
+        leader: (value) => NAMES.slice(0, 3).includes(value),
+        line: (value) => triangleLines.has(value),
+        dot: (value) => NAMES.slice(0, 3).includes(value),
+        region: (value) => faceNames.has(value),
+        walk: (value) => triangleLines.has(value),
+      },
+      // Every line and dot it draws, it draws once; a dot sits in one place.
+      places: () => 1,
+      once: ["line", "dot", "leader"],
+      // Whatever dots the step shows, each of its lines must end on two of them. A reader found the
+      // triangle drawing NO dots at all and passing, because only the wireframe had a count.
+      endsOnDots: true,
+    },
+    net: {
+      tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
+      identity: {
+        leader: (value) => Object.keys(netDotPlaces).includes(value),
+        line: (value) => tetraLines.has(value),
+        middle: (value) => tetraLines.has(value),
+        dot: () => false,          // the net draws no dots of its own
+        region: (value) => faceNames.has(value),
+      },
+      places: (attribute, value) => (attribute === "dot"
+        ? (netDotPlaces[value] || 0)
+        : (netLinePlaces[value] || 0)),
+      counted: { line: netLinePlaces, middle: netLinePlaces },
+    },
+    ring: {
+      tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
+      identity: {
+        leader: (value) => MID.includes(value) || tipNames.has(value),
+        line: (value) => midLines.has(key(value)),
+        absent: (value) => absences.has(key(value)),
+        "tip-line": (value) => {
+          const [tip, middle] = value.split("|");
+          return tipNames.has(tip) && MID.includes(middle);
+        },
+        dot: (value) => MID.includes(value) || tipNames.has(value),
+        region: (value) => ringRegions.has(key(value)),
+      },
+      places: () => 1,
+      once: ["line", "absent", "tip-line", "dot", "leader"],
+      exactly: { line: midLines.size, dot: null },
+      // The ring's six middles are always drawn, and a tip is drawn only with its own lines: a
+      // reader found it drawing four of six dots, and drawing tip lines to a tip with no dot.
+      dotsAtLeast: MID,
+      tipsHaveDots: true,
+    },
+    wire: {
+      tags: ["svg", "title", "desc", "g", "line", "circle", "text"],
+      identity: {
+        leader: (value) => stellaNames.has(value),
+        edge: (value) => stellaEdges.has(key(value)),
+        dot: (value) => stellaNames.has(value),
+      },
+      places: () => 1,
+      once: ["edge", "dot", "leader"],
+      exactly: { edge: stellaEdges.size, dot: stellaNames.size },
+      endsOnDots: true,
+    },
+  };
+})();
+
+const NEARBY = 2;
+const near = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) <= NEARBY;
+
+/**
+ * The orthographic projection, **written here** rather than imported from `draw.mjs`.
+ *
+ * This is the one place in the check that reimplements something the drawing does, and it has to.
+ * The first version asked `draw.mjs`'s own `project3d` where the dots belonged, so mirroring that
+ * function moved the drawing and the expectation together and both of a reader's mirrors passed —
+ * the same weakness the ring has, and the reason the ring is checked against its convention's
+ * *words* instead. The wireframe has an independent definition available: yaw about the upright
+ * axis, then pitch, the vertical up the page, which is the record's own render and what DEMOS.md
+ * describes. So the check does that arithmetic itself, and a change to the drawing's projection is
+ * a disagreement rather than a shared move.
+ */
+function ownProject3d(point, yaw, pitch) {
+  const [x, y, z] = point.map((value) => {
+    const [top, bottom] = String(value).split("/");
+    return bottom === undefined ? Number(top) : Number(top) / Number(bottom);
+  });
+  const cy = Math.cos(yaw);
+  const sy = Math.sin(yaw);
+  const cp = Math.cos(pitch);
+  const sp = Math.sin(pitch);
+  return [cy * x - sy * z, -(sy * sp * x + cp * y + cy * sp * z)];
+}
+
+/**
+ * Which view a wireframe was drawn at, recovered from the drawing itself.
+ *
+ * The wireframe turns, so its expected positions depend on where it is pointing — and the check may
+ * not simply ask the drawing "what yaw did you use?", because a mirrored drawing would answer
+ * honestly and still be mirrored. So the view is **searched for**: the yaw and pitch, over the same
+ * fixed grid `bestView` uses, whose projection of the engine's own points best matches the dots
+ * actually drawn. If the drawing is a mirror of some view, no view in the sweep matches it and the
+ * scale test below is what says so.
+ */
+function wireViewOf(svg) {
+  const drawn = [...svg.matchAll(
+    /<circle[^>]*data-dot="([^"]+)"[^>]*cx="([-\d.]+)" cy="([-\d.]+)"/g)]
+    .map((found) => ({ name: found[1], at: [+found[2], +found[3]] }));
+  if (drawn.length < 3) return null;
+  const names = payload.stella.names;
+  const points = payload.stella.points;
+  let best = null;
+  for (let a = 0; a < VIEW_GRID; a += 1) {
+    for (let b = 0; b < VIEW_GRID; b += 1) {
+      const yaw = (a / VIEW_GRID) * Math.PI * 2;
+      const pitch = (b / VIEW_GRID) * Math.PI - Math.PI / 2;
+      const flat = points.map((point) => ownProject3d(point, yaw, pitch));
+      // Compare shapes, not sizes: each set is centred and scaled to its own spread first, so a
+      // resizing of the drawing is not mistaken for a distortion of it.
+      const cost = shapeDistance(drawn, names, flat);
+      if (best === null || cost < best.cost) best = { yaw, pitch, cost };
+    }
+  }
+  return best;
+}
+
+/** Where the threaded pair's dots belong at one view, by this check's own arithmetic. */
+function ownWireDots(view) {
+  if (!view) return {};
+  const out = {};
+  payload.stella.names.forEach((name, index) => {
+    out[name] = [ownProject3d(payload.stella.points[index], view.yaw, view.pitch)];
+  });
+  return out;
+}
+
+/** How far two point sets are from being the same shape, once centred and scaled. */
+function shapeDistance(drawn, names, flat) {
+  const mine = drawn.map((dot) => flat[names.indexOf(dot.name)]).filter(Boolean);
+  if (mine.length !== drawn.length) return Infinity;
+  const centre = (points) => points.reduce((sum, one) =>
+    [sum[0] + one[0] / points.length, sum[1] + one[1] / points.length], [0, 0]);
+  const spread = (points, mid) => Math.max(...points
+    .map((one) => Math.hypot(one[0] - mid[0], one[1] - mid[1]))) || 1;
+  const aMid = centre(drawn.map((dot) => dot.at));
+  const bMid = centre(mine);
+  const aSize = spread(drawn.map((dot) => dot.at), aMid);
+  const bSize = spread(mine, bMid);
+  let worst = 0;
+  drawn.forEach((dot, index) => {
+    const one = [(dot.at[0] - aMid[0]) / aSize, (dot.at[1] - aMid[1]) / aSize];
+    const two = [(mine[index][0] - bMid[0]) / bSize, (mine[index][1] - bMid[1]) / bSize];
+    worst = Math.max(worst, Math.hypot(one[0] - two[0], one[1] - two[1]));
+  });
+  return worst;
+}
+
+/**
+ * Hold one emitted drawing to its kind — its elements, what every mark CLAIMS, and **where it is**.
+ *
+ * The geometry half is the one this gate was missing, and a proof-reader walked six mutations
+ * through the gap: every stroke on the ring halved with its `data-line` left honest (a visibly
+ * broken drawing, twelve strokes reaching none of the dots they name); the same on the net; a stray
+ * stroke placed nowhere near the line it claimed, on each; a stroke drawn as a `<polygon>`, which
+ * the whitelist allowed for the panels and the identity loop never looked at; and a second dot
+ * called `D` at an arbitrary point, which passed because `D` legitimately appears three times.
+ *
+ * Identity alone is not a census. Three things are checked here, and the first two are new:
+ *
+ *   1. **Marks that name a dot in common, in the same panel, meet at a point.** That is what makes a
+ *      halved stroke fail: its far end no longer coincides with the other strokes at that dot. It
+ *      needs no external truth — the drawing is held to its own claims about itself.
+ *   2. **A dot occupies as many places as the engine says.** One, everywhere, except on the flat net
+ *      where `D` occupies exactly three, from the engine's own label list.
+ *   3. **Every mark's identity is the engine's**, and every stroke-bearing element is looked at —
+ *      `polygon` included, with its own region name and its own point count.
+ */
+function censusOf(svg, where) {
+  const kind = (/data-drawing="([a-z]+)"/.exec(svg) || [])[1];
+  if (!kind || !DRAWINGS[kind]) {
+    fail(`${where}: the drawing does not say which convention it is drawn in`);
+    return;
+  }
+  const rules = DRAWINGS[kind];
+
+  for (const found of svg.matchAll(/<([a-zA-Z][\w-]*)/g)) {
+    if (!rules.tags.includes(found[1])) {
+      fail(`${where}: the ${kind} drawing emitted a <${found[1]}>, and it may only emit `
+        + `${rules.tags.join(", ")} — every mark in it has to be a piece of the object`);
+    }
+  }
+
+  // Every mark that can carry ink, with what it claims and where it is.
+  const marks = [];
+  for (const found of svg.matchAll(/<(line|circle|polygon)\b([^>]*)>/g)) {
+    const [, element, attributes] = found;
+    const named = [...attributes.matchAll(/data-([\w-]+)="([^"]*)"/g)]
+      .map((m) => [m[1], m[2]])
+      .filter(([attribute]) => attribute in rules.identity);
+    let points = [];
+    if (element === "line") {
+      const at = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(attributes);
+      if (at) points = [[+at[1], +at[2]], [+at[3], +at[4]]];
+    } else if (element === "circle") {
+      const at = /cx="([-\d.]+)" cy="([-\d.]+)"/.exec(attributes);
+      if (at) points = [[+at[1], +at[2]]];
+    } else {
+      points = (/points="([^"]+)"/.exec(attributes)?.[1] || "").trim().split(/\s+/)
+        .map((pair) => pair.split(",").map(Number))
+        .filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
+    }
+    if (!named.length) {
+      fail(`${where}: the ${kind} drawing emitted a <${element}> that does not say what it is: `
+        + `${found[0]}`);
       continue;
     }
-    if (c === "/" && source[i + 1] === "*") {
-      i += 2;
-      while (i < source.length && !(source[i] === "*" && source[i + 1] === "/")) {
-        if (source[i] === "\n") line += 1;
-        i += 1;
+    if (!points.length) {
+      fail(`${where}: the ${kind} drawing emitted a <${element}> with no position`);
+      continue;
+    }
+    if (element === "polygon" && points.length < 3 && !/data-walk=/.test(attributes)) {
+      fail(`${where}: the ${kind} drawing emitted a <polygon> of ${points.length} point(s) — a `
+        + `region has three, and a stroke is a <line>`);
+    }
+    const panel = /data-panel="([^"]*)"/.exec(attributes)?.[1] || "";
+    for (const [attribute, value] of named) {
+      if (!rules.identity[attribute](value)) {
+        fail(`${where}: the ${kind} drawing's <${element}> claims to be the ${attribute} `
+          + `"${value}", which the engine's census has not got`);
       }
-      i += 2;
+    }
+    marks.push({ element, named, points, panel, source: found[0] });
+  }
+
+  // ── 1 · marks naming a dot in common, in the same panel, meet at a point ────────────────────
+  const dotsNamedBy = (mark) => mark.named.flatMap(([attribute, value]) => {
+    if (attribute === "region") return [];
+    if (attribute === "dot") return [value];
+    if (attribute === "middle") return [];      // a middle is a point, not a pair of dots
+    if (attribute === "walk") return [];        // an arrowhead sits ALONG a line, not at a dot
+    if (attribute === "leader") return [value];  // a leader starts AT the dot it names
+    return value.includes("|") ? value.split("|") : [...value];
+  });
+  const strokes = marks.filter((mark) => mark.element !== "polygon");
+  for (let i = 0; i < strokes.length; i += 1) {
+    for (let j = i + 1; j < strokes.length; j += 1) {
+      const a = strokes[i];
+      const b = strokes[j];
+      if (a.panel !== b.panel) continue;
+      const shared = dotsNamedBy(a).filter((name) => dotsNamedBy(b).includes(name));
+      if (!shared.length) continue;
+      const meets = a.points.some((one) => b.points.some((two) => near(one, two)));
+      if (!meets) {
+        fail(`${where}: the ${kind} drawing's ${a.source.slice(0, 60)}… and `
+          + `${b.source.slice(0, 60)}… both name ${shared.join(", ")} and do not meet anywhere. `
+          + `Two marks at the same dot are at the same point, or one of them is in the wrong place`);
+      }
+    }
+  }
+
+  // A region's corners are corners of the object, not points of their own. Without this, a polygon
+  // of three arbitrary points with an honest `data-region` is a stroke — or a whole shape — that
+  // nothing checks: a reader got a two-point one past the count test's ancestor, and a three-point
+  // one past this gate's first draft. Every vertex has to be somewhere a stroke already ends.
+  for (const region of marks.filter((mark) => mark.element === "polygon"
+    && mark.named.some(([attribute]) => attribute === "region"))) {
+    const ends = strokes.filter((mark) => mark.panel === region.panel || region.panel === "")
+      .flatMap((mark) => mark.points);
+    // A cut's medial triangle has its corners at the middles of the strokes, not at their ends.
+    const middles = strokes.flatMap((mark) => (mark.points.length === 2
+      ? [[(mark.points[0][0] + mark.points[1][0]) / 2, (mark.points[0][1] + mark.points[1][1]) / 2]]
+      : []));
+    const anchors = [...ends, ...middles];
+    for (const corner of region.points) {
+      if (!anchors.some((anchor) => near(anchor, corner))) {
+        fail(`${where}: the ${kind} drawing's region "${region.named
+          .find(([a]) => a === "region")[1]}" has a corner at `
+          + `${corner.map((v) => v.toFixed(1)).join(",")}, where no stroke of the object ends`);
+      }
+    }
+  }
+
+  // An arrowhead is not at a dot, so the meeting test above passes over it — instead it has to sit
+  // ON the line it says it marks. Without this a walk could point along a line it does not name.
+  for (const head of marks.filter((mark) => mark.named.some(([a]) => a === "walk"))) {
+    const named = head.named.find(([a]) => a === "walk")[1];
+    const line = strokes.find((mark) => mark.named.some(([a, v]) => a === "line" && v === named));
+    if (!line) {
+      fail(`${where}: the ${kind} drawing marks a walk along "${named}" and does not draw that line`);
       continue;
     }
-    if (c !== '"' && c !== "'" && c !== "`") { i += 1; continue; }
-    const quote = c;
-    const startedAt = line;
-    let text = "";
-    let depth = 0;
-    i += 1;
-    while (i < source.length) {
-      const d = source[i];
-      if (d === "\\") { i += 2; continue; }
-      if (d === "\n") { line += 1; }
-      if (quote === "`" && d === "$" && source[i + 1] === "{") { depth += 1; i += 2; continue; }
-      if (depth > 0) {
-        if (d === "{") depth += 1;
-        else if (d === "}") depth -= 1;
-        else if (d === "\n") { /* counted above */ }
-        i += 1;
+    const middle = head.points
+      .reduce((sum, [x, y]) => [sum[0] + x / head.points.length, sum[1] + y / head.points.length],
+        [0, 0]);
+    const [from, to] = line.points;
+    const run = [to[0] - from[0], to[1] - from[1]];
+    const length = Math.hypot(...run) || 1;
+    const across = Math.abs((middle[0] - from[0]) * run[1] - (middle[1] - from[1]) * run[0])
+      / length;
+    const along = ((middle[0] - from[0]) * run[0] + (middle[1] - from[1]) * run[1])
+      / (length * length);
+    if (across > 6 || along < 0 || along > 1) {
+      fail(`${where}: the ${kind} drawing's arrowhead for "${named}" is not on that line `
+        + `(${across.toFixed(1)} away, ${along.toFixed(2)} along it)`);
+    }
+  }
+
+  // ── 2 · a dot occupies as many places as the engine says ─────────────────────────────────────
+  const placesOf = new Map();
+  for (const mark of strokes) {
+    for (const name of dotsNamedBy(mark)) {
+      if (!placesOf.has(name)) placesOf.set(name, []);
+      const clusters = placesOf.get(name);
+      for (const point of mark.points) {
+        if (!clusters.some((seen) => near(seen, point))) clusters.push(point);
+      }
+    }
+  }
+  for (const [name, clusters] of placesOf) {
+    // A stroke names two dots and has two ends, and nothing here says which is which, so each
+    // stroke offers both. The floor is therefore the number of places the engine allows; what this
+    // catches is a drawing offering MORE places than the object has, which is what a halved stroke
+    // or a displaced mark does.
+    const allowed = rules.places("dot", name);
+    const strokesNaming = strokes.filter((mark) => dotsNamedBy(mark).includes(name)).length;
+    const ceiling = Math.max(allowed, 1) + strokesNaming;
+    if (clusters.length > ceiling) {
+      fail(`${where}: the ${kind} drawing puts marks naming ${name} at ${clusters.length} `
+        + `different points, and the object has it in ${Math.max(allowed, 1)}`);
+    }
+  }
+
+  // ── 2b · and every mark is where the convention PUTS it ──────────────────────────────────────
+  //
+  // Identity is checked; internal consistency is checked. What both miss is a **consistent**
+  // distortion: move every mark together and the drawing still agrees with itself. A reader
+  // mirrored the net left-to-right — every identity honest, every stroke still meeting its
+  // neighbours — and `A` and `B` swapped sides, which CANON.md forbids outright and which breaks
+  // this repository's own continuity claim that chapter 1's triangle is already where the net puts
+  // `ABC`. A top-to-bottom flip passed too, and so did one dot displaced eighty-one pixels with its
+  // three strokes following it.
+  //
+  // So the drawn positions are held to the convention's own: the same scale on both axes, the
+  // orientation the convention fixes, and every dot where it belongs. A mirror makes the x-scale
+  // negative, a flip makes the y-scale the wrong sign, and a displacement fits nothing.
+  // The wireframe is in this list now; it was exempt, which a reader was right to call out. What it
+  // is held to is the same as the flat conventions: **one scale on both axes**, against the engine's
+  // own points projected — by this check's own arithmetic — at the view the drawing best matches.
+  //
+  // One correction to the finding, measured rather than argued. A **flip** of the projection's
+  // vertical is a distortion and is caught. A **mirror of its horizontal is not a defect at all**:
+  // the threaded pair is centrally symmetric — every point has its negative in the set, which this
+  // check verifies from the engine's own coordinates — so the mirror image of any view *is* another
+  // view of the same object. Mirroring the opening view's x gives, to a residual of 0.000000, the
+  // projection at yaw 2.443 / pitch 0.654. Every dot stays correctly named and the picture stays a
+  // true orthographic projection, so there is nothing there to fail. The guard discriminates
+  // between distorting the object and looking at it from somewhere else, which is the distinction
+  // worth having.
+  // `project3d` already returns a screen-oriented pair — it negates the vertical itself — and
+  // `drawWire` scales it without a further flip, so the wireframe's vertical scale is positive
+  // where the flat conventions' is negative. Measured, not assumed: it comes out at +106.60.
+  const ORIENTATION = { net: -1, triangle: -1, ring: 1, wire: 1 };
+  if (kind in ORIENTATION) {
+    // For the wireframe, the check projects the engine's own points itself — see `ownProject3d`.
+    const belong = kind === "wire"
+      ? ownWireDots(wireViewOf(svg))
+      : draw.whereDotsBelong(kind);
+    const dotMarks = marks.filter((mark) => mark.element === "circle"
+      && mark.named.some(([attribute]) => attribute === "dot"));
+    const drawnByName = {};
+    for (const mark of dotMarks) {
+      const name = mark.named.find(([attribute]) => attribute === "dot")[1];
+      (drawnByName[name] = drawnByName[name] || []).push(mark.points[0]);
+    }
+    // The net draws no dots of its own, so a corner has to be found: it is the point the strokes
+    // naming it, in one panel, have in common. Pooling both ends of every stroke instead — which an
+    // earlier draft did — hands back every dot's position for every name and fits nothing.
+    if (!dotMarks.length) {
+      const panels = [...new Set(strokes.map((mark) => mark.panel))];
+      for (const panel of panels) {
+        const here = strokes.filter((mark) => mark.panel === panel);
+        const named = new Set(here.flatMap((mark) => dotsNamedBy(mark)));
+        for (const name of named) {
+          const touching = here.filter((mark) => dotsNamedBy(mark).includes(name));
+          if (touching.length < 2) continue;
+          const shared = touching[0].points.find((point) =>
+            touching.every((mark) => mark.points.some((other) => near(other, point))));
+          if (!shared) continue;
+          const found = (drawnByName[name] = drawnByName[name] || []);
+          if (!found.some((point) => near(point, shared))) found.push(shared);
+        }
+      }
+    }
+
+    // Fit from the names the convention puts in exactly one place, which is every name but `D` on
+    // the flat net.
+    const anchors = Object.keys(belong)
+      .filter((name) => belong[name].length === 1 && (drawnByName[name] || []).length === 1)
+      .map((name) => ({ name, from: belong[name][0], to: drawnByName[name][0] }));
+    // A drawing with fewer than two locatable dots — chapter 1's opening beat has one — cannot be
+    // fitted and cannot meaningfully be mirrored either. The counts and the identity checks still
+    // hold it; there is simply no orientation to test.
+    if (anchors.length >= 2) {
+      const spread = (axis) => anchors.reduce((best, one) => anchors.reduce((inner, two) =>
+        (Math.abs(one.from[axis] - two.from[axis]) > Math.abs(inner.a.from[axis] - inner.b.from[axis])
+          ? { a: one, b: two } : inner), best), { a: anchors[0], b: anchors[1] });
+      const scales = [0, 1].map((axis) => {
+        const { a, b } = spread(axis);
+        const run = a.from[axis] - b.from[axis];
+        return Math.abs(run) < 1e-9 ? null : (a.to[axis] - b.to[axis]) / run;
+      });
+      const [sx, sy] = scales;
+      // A step that draws two dots on one horizontal line gives the vertical axis no spread to fit
+      // — chapter 1's first two beats are exactly that — and there is nothing to flip in a line, so
+      // that axis is simply not tested rather than treated as a failure. The axis that HAS spread
+      // is still tested, and a two-dot drawing can still be mirrored.
+      if (sx === null && sy === null) {
+        fail(`${where}: the ${kind} drawing gives neither axis any spread to check`);
+      } else if (sx !== null && sx <= 0) {
+        fail(`${where}: the ${kind} drawing is MIRRORED — its horizontal scale is ${sx.toFixed(2)}. `
+          + `CANON.md: the diagram is never rotated or mirrored`);
+      } else if (sy !== null && Math.sign(sy) !== ORIENTATION[kind]) {
+        fail(`${where}: the ${kind} drawing is FLIPPED top to bottom — its vertical scale is `
+          + `${sy.toFixed(2)}, and this convention's is ${ORIENTATION[kind] > 0 ? "positive" : "negative"}`);
+      } else if (sx !== null && sy !== null
+        && Math.abs(Math.abs(sx) - Math.abs(sy)) > 0.01 * Math.abs(sx)) {
+        fail(`${where}: the ${kind} drawing is stretched — ${Math.abs(sx).toFixed(2)} across and `
+          + `${Math.abs(sy).toFixed(2)} down. One scale, or the shape is not the object's`);
+      } else {
+        const anchor = anchors[0];
+        // Where an axis had no spread, the other axis's scale stands in — the two are equal by the
+        // test above wherever both are measurable.
+        const ax = sx === null ? Math.abs(sy) : sx;
+        const ay = sy === null ? Math.abs(sx) * ORIENTATION[kind] : sy;
+        const place = (point) => [
+          anchor.to[0] + (point[0] - anchor.from[0]) * ax,
+          anchor.to[1] + (point[1] - anchor.from[1]) * ay,
+        ];
+        for (const [name, wanted] of Object.entries(belong)) {
+          const drawn = drawnByName[name] || [];
+          if (!drawn.length) continue;             // this step does not draw that dot
+          for (const one of wanted) {
+            const to = place(one);
+            if (!drawn.some((point) => Math.hypot(point[0] - to[0], point[1] - to[1]) <= 1.5)) {
+              fail(`${where}: the ${kind} drawing puts ${name} where the convention does not — `
+                + `nothing of that name is at ${to.map((v) => v.toFixed(0)).join(",")}`);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ── 2b(ii) · the ring's stated orientation ────────────────────────────────────────────────────
+  //
+  // The ring has no coordinates in the engine — DEMOS.md's convention is its only definition — so
+  // the fit above compares it against `ringLayout`, which is the same function that draws it. A
+  // reader mirrored that function and both sides moved together. What CAN be held independently is
+  // what the convention says in words: the middle of `AB` on the outside at the top, `AC` to the
+  // lower left, `AD` to the lower right. Those three sentences are the check.
+  if (kind === "ring") {
+    // The ring's convention is four sentences, and this used to be three inequalities. A reader
+    // rotated the inner dots twenty degrees off their partners' rays and it passed — while the poke
+    // step's
+    // table still says *poked AB · its opposite CD* and DEMOS.md's stated reason for the whole
+    // convention is that "opposite is literally straight through the middle, which is what the poke
+    // beat needs a reader to see". She was being told to look at a thing the drawing had stopped
+    // showing. Unequal radii and a twelve-degree rotation passed too.
+    //
+    // So the sentences are the check: six dots on two circles about their common centre, three on
+    // each; every opposite pair straight through that centre; AB's middle on the vertical above it.
+    const at = {};
+    for (const mark of marks.filter((m) => m.element === "circle")) {
+      const named = mark.named.find(([attribute]) => attribute === "dot");
+      if (named && payload.cut.mid_names.includes(named[1])) at[named[1]] = mark.points[0];
+    }
+    const middles = payload.cut.mid_names.filter((name) => at[name]);
+    if (middles.length === payload.cut.mid_names.length) {
+      // The centre: three dots at a hundred and twenty degrees sum to it on each circle, so the
+      // middle of all six is the common centre whatever the two radii are.
+      const centre = middles.reduce((sum, name) =>
+        [sum[0] + at[name][0] / middles.length, sum[1] + at[name][1] / middles.length], [0, 0]);
+      const radius = (name) => Math.hypot(at[name][0] - centre[0], at[name][1] - centre[1]);
+      const radii = middles.map(radius);
+
+      // Two circles, three dots on each.
+      const rings = [];
+      for (const r of radii) {
+        const seen = rings.find((one) => Math.abs(one.r - r) <= 1);
+        if (seen) seen.count += 1;
+        else rings.push({ r, count: 1 });
+      }
+      if (rings.length !== 2 || rings.some((one) => one.count !== 3)) {
+        fail(`${where}: the ring's six dots do not sit three and three on two circles — the radii `
+          + `are ${radii.map((r) => r.toFixed(0)).join(", ")}. DEMOS.md: six dots on two `
+          + `concentric circles`);
+      }
+
+      // Every opposite pair straight through the centre.
+      for (const [one, other] of payload.cut.opposite_pairs) {
+        if (!at[one] || !at[other]) continue;
+        const a = [at[one][0] - centre[0], at[one][1] - centre[1]];
+        const b = [at[other][0] - centre[0], at[other][1] - centre[1]];
+        const lengthA = Math.hypot(...a) || 1;
+        const lengthB = Math.hypot(...b) || 1;
+        const off = Math.abs(a[0] * b[1] - a[1] * b[0]) / lengthB;   // centre's distance from the line
+        const cosine = (a[0] * b[0] + a[1] * b[1]) / (lengthA * lengthB);
+        if (off > 1.5 || cosine > -0.999) {
+          const degrees = (Math.acos(Math.max(-1, Math.min(1, cosine))) * 180) / Math.PI;
+          fail(`${where}: ${one} and ${other} are ${degrees.toFixed(1)}° apart through the centre, `
+            + `${off.toFixed(1)}px off a straight line through it. They are the pair joined by `
+            + `nothing, and the convention exists so that opposite is literally straight through `
+            + `the middle — which is what the poke beat asks her to see`);
+        }
+      }
+
+      // AB's middle on the vertical, above the centre.
+      const ab = at[payload.cut.mid_names[0]];
+      if (Math.abs(ab[0] - centre[0]) > 1.5 || ab[1] >= centre[1]) {
+        fail(`${where}: the ring does not put ${payload.cut.mid_names[0]}'s middle straight above `
+          + `the centre — it is ${(ab[0] - centre[0]).toFixed(1)}px to the side. The drawing is `
+          + `rotated, and the convention fixes it`);
+      }
+      // And which way round the other two go, which is what a mirror changes.
+      const [ac, ad] = [payload.cut.mid_names[1], payload.cut.mid_names[2]].map((name) => at[name]);
+      if (ac && ad && !(ac[0] < ad[0])) {
+        fail(`${where}: the ring puts ${payload.cut.mid_names[1]} to the right of `
+          + `${payload.cut.mid_names[2]}; the convention has one lower left and the other lower `
+          + `right — the drawing is mirrored`);
+      }
+    }
+  }
+
+  // ── 2c · a label is nearer the mark it names than any other ──────────────────────────────────
+  //
+  // The sharpest form of the same family: displace a dot and let its strokes follow, and the label
+  // stays at its old position while the mark it names has moved a hundred pixels away. Nothing said
+  // a name had to be near its own dot. Two readers found this independently, one by moving a mark
+  // and one by finding `A′` eighteen pixels from `B` and eighty from `A′`.
+  {
+    const positions = new Map();
+    for (const mark of marks.filter((m) => m.element === "circle")) {
+      const named = mark.named.find(([attribute]) => attribute === "dot"
+        || attribute === "middle");
+      if (named) positions.set(named[1], [...(positions.get(named[1]) || []), mark.points[0]]);
+    }
+    for (const [name, clusters] of placesOf) {
+      if (!positions.has(name)) positions.set(name, clusters);
+    }
+    const names = [...positions.keys()].sort((a, b) => b.length - a.length);
+    // A label a leader runs to has been told which dot it belongs to in ink, which is a stronger
+    // statement than being near it. Those are exempt from the proximity rule and not from anything
+    // else — the leader itself is a mark, held to a real dot and to starting at it.
+    const led = new Set([...svg.matchAll(/data-leader="([^"]*)"/g)].map((m) => m[1]));
+    // A leader is the exception, so it has to stay exceptional. One drawing needing a leader for
+    // half its names is a placement that has given up, and every one of those labels would then be
+    // exempt from the proximity rule — which is how a reader made the whole rule vanish by forcing
+    // the leader path. Two is the ceiling: the ring needs one and the wireframe needs one.
+    // A leader has to REACH the label it names. Reversing one leaves it starting exactly on its dot
+    // — so the meet test passes — with its far end seventy pixels from the label, pointing into
+    // empty space the opposite way, and the label keeps its proximity exemption. The exemption's
+    // whole justification is that the association is stated in ink; this is what checks the ink
+    // arrives.
+    const labelAt = new Map();
+    for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
+      const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
+      if (!at) continue;
+      const text = found[2].trim();
+      const owner = [...led].find((name) => text === name || text.startsWith(`${name} `));
+      if (owner) labelAt.set(owner, [+at[1], +at[2]]);
+    }
+    for (const found of svg.matchAll(/<line\b[^>]*data-leader="([^"]*)"[^>]*>/g)) {
+      const name = found[1];
+      const ends = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(found[0]);
+      const label = labelAt.get(name);
+      if (!ends) continue;
+      if (!label) {
+        fail(`${where}: a leader claims the dot ${name} and there is no label of that name for it `
+          + `to reach`);
         continue;
       }
-      if (d === quote) { i += 1; break; }
-      text += d;
-      i += 1;
+      const reach = Math.min(
+        Math.hypot(+ends[1] - label[0], +ends[2] - label[1]),
+        Math.hypot(+ends[3] - label[0], +ends[4] - label[1]),
+      );
+      if (reach > 20) {
+        fail(`${where}: the leader for ${name} stops ${reach.toFixed(1)}px from the label it names. `
+          + `A leader is what earns that label its exemption from being nearest its own dot, and a `
+          + `leader that does not arrive earns nothing`);
+      }
     }
-    out.push({ text, line: startedAt });
+    if (led.size > 2) {
+      fail(`${where}: ${led.size} labels needed a leader. A leader is for the dot proximity cannot `
+        + `reach; when most of them need one, the placement has failed and the proximity rule has `
+        + `quietly stopped applying to anything`);
+    }
+    for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
+      const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
+      if (!at) continue;
+      const text = found[2].trim();
+      const mine = names.find((name) => text === name || text.startsWith(`${name} `));
+      if (!mine || led.has(mine)) continue;
+      const here = [+at[1], +at[2]];
+      const away = (name) => Math.min(...positions.get(name)
+        .map((point) => Math.hypot(point[0] - here[0], point[1] - here[1])));
+      const nearer = names.filter((name) => name !== mine && away(name) < away(mine));
+      if (nearer.length) {
+        fail(`${where}: the label "${text}" is ${away(mine).toFixed(0)}px from ${mine} and `
+          + `${away(nearer[0]).toFixed(0)}px from ${nearer[0]} — a name has to be nearest the mark `
+          + `it names`);
+      }
+    }
+  }
+
+  // ── 3 · counts, per name and in total ────────────────────────────────────────────────────────
+  const tally = {};
+  for (const mark of marks) {
+    for (const [attribute, value] of mark.named) {
+      tally[attribute] = tally[attribute] || {};
+      const at = attribute === "region" ? value : (value.includes("|")
+        ? value.split("|").sort().join("|") : value);
+      tally[attribute][at] = (tally[attribute][at] || 0) + 1;
+    }
+  }
+  for (const attribute of rules.once || []) {
+    for (const [value, count] of Object.entries(tally[attribute] || {})) {
+      if (count !== 1) {
+        fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" ${count} times, and `
+          + `the object has one of it`);
+      }
+    }
+  }
+  for (const [attribute, expected] of Object.entries(rules.counted || {})) {
+    const drawn = tally[attribute] || {};
+    const total = Object.values(drawn).reduce((sum, count) => sum + count, 0);
+    if (total === 0) continue;                  // this step does not draw them at all
+    for (const [value, count] of Object.entries(drawn)) {
+      if (count !== expected[value]) {
+        fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" ${count} time(s), `
+          + `and the engine puts it in ${expected[value]} place(s)`);
+      }
+    }
+  }
+  for (const [attribute, expected] of Object.entries(rules.exactly || {})) {
+    if (expected === null) continue;
+    const total = Object.values(tally[attribute] || {}).reduce((sum, count) => sum + count, 0);
+    if (total !== expected) {
+      fail(`${where}: the ${kind} drawing put down ${total} ${attribute} mark(s); the engine `
+        + `has ${expected}`);
+    }
+  }
+
+  // Every dot the convention always shows is shown.
+  for (const name of rules.dotsAtLeast || []) {
+    if (!(tally.dot || {})[name]) {
+      fail(`${where}: the ${kind} drawing has no dot for ${name}, and this convention draws all `
+        + `of them`);
+    }
+  }
+
+  // A tip that has lines drawn to it has a dot at the end of them.
+  if (rules.tipsHaveDots) {
+    for (const value of Object.keys(tally["tip-line"] || {})) {
+      const tip = value.split("|")[0];
+      if (!(tally.dot || {})[tip]) {
+        fail(`${where}: the ${kind} drawing draws lines to the tip ${tip} and no dot there`);
+      }
+    }
+  }
+
+  // And every stroke ends on a dot the drawing actually put down.
+  if (rules.endsOnDots) {
+    const dotPoints = marks.filter((mark) => mark.element === "circle"
+      && mark.named.some(([attribute]) => attribute === "dot"))
+      .map((mark) => mark.points[0]);
+    if (!dotPoints.length && strokes.length) {
+      fail(`${where}: the ${kind} drawing drew ${strokes.length} stroke(s) and no dots at all`);
+    }
+    for (const stroke of strokes) {
+      if (stroke.named.some(([attribute]) => attribute === "leader")) continue;
+      for (const end of stroke.points) {
+        if (!dotPoints.some((point) => near(point, end))) {
+          fail(`${where}: the ${kind} drawing's ${stroke.source.slice(0, 50)}… ends at `
+            + `${end.map((v) => v.toFixed(0)).join(",")}, where it has drawn no dot`);
+        }
+      }
+    }
+  }
+}
+
+// ── 3 · no number was typed ───────────────────────────────────────────────────────────────────────
+
+{
+  const source = readFileSync(path.join(HERE, "steps.mjs"), "utf8");
+  // Every string literal in the file, in all three quote styles, with a template's `${…}` cut out
+  // because that is code and not text. Comments are stripped first: they are for a reader of the
+  // source, and this rule is about what reaches a reader of the page.
+  const stripped = source
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/(^|[^:])\/\/[^\n]*/g, "$1 ");
+  const literals = [
+    ...stripped.matchAll(/"((?:[^"\\\n]|\\.)*)"/g),
+    ...stripped.matchAll(/'((?:[^'\\\n]|\\.)*)'/g),
+    ...stripped.matchAll(/`((?:[^`\\]|\\.)*)`/g),
+  ].map((found) => found[1].replace(/\$\{[^}]*\}/g, ""));
+  for (const literal of literals) {
+    if (/\d/.test(literal)) {
+      fail(`steps.mjs types a digit into the string ${JSON.stringify(literal)} — every number on `
+        + `these pages has to come off the engine`);
+    }
+  }
+}
+
+// ── 6 (part) and 3 (part) · the pages' own HTML ───────────────────────────────────────────────────
+
+const PAGES = [
+  "index.html",
+  ...Object.keys(scaffold.chapters).map((slug) => `${slug}.html`),
+];
+
+/** The text a reader meets in a page's HTML: tags, scripts, styles and comments taken out. */
+function readerText(html) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<head[\s\S]*?<\/head>/i, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const pageText = new Map();
+for (const name of PAGES) {
+  const html = readFileSync(path.join(HERE, name), "utf8");
+  const text = readerText(html);
+  pageText.set(name, text);
+  if (/\d/.test(text)) {
+    fail(`${name} has a digit in its own text — the beat numbers and every count come from the `
+      + `engine and from steps.json at run time, so nothing numeric is written into a page`);
+  }
+}
+
+// ── 2 · every rendered number is the engine's ─────────────────────────────────────────────────────
+
+const NUMERIC_TOKEN = /[-−+]?\d+(?:[./]\d+)?/g;
+
+/** Is this token something the engine said, or a plain restatement of it? */
+function known(token) {
+  const bare = token.replace(/^[-−+]/, "");
+  const negated = `-${bare}`;
+  return engine.emitted.has(token)
+    || engine.emitted.has(bare)
+    || engine.emitted.has(negated)
+    || engine.emitted.has(token.replace(/^−/, "-").replace(/^\+/, ""));
+}
+
+/** Every piece of text a drawing puts on the paper, including what a screen reader is given. */
+function drawingText(svg) {
+  const out = [];
+  for (const found of svg.matchAll(/<(title|desc|text)[^>]*>([\s\S]*?)<\/\1>/g)) {
+    out.push(found[2]);
   }
   return out;
 }
 
-// ── 1 · the object, and the two coming-home facts ─────────────────────────────────────────────────
+/**
+ * A drawing's own sentences — its `<title>` and its `<desc>` — carry **no digit at all**.
+ *
+ * The `<desc>` is the whole of what a screen-reader user is given for a picture, so it is prose, and
+ * prose about this object counts in words: *thirty-six lines*, not *36 lines*. That makes the rule
+ * checkable, and it closes the one hole an attack found: "an orthographic wireframe of 3 tetrahedra"
+ * slipped through the numeric scan, because three is a number the engine does produce — somewhere
+ * else, about something else. Every actual value belongs in a `<text>` element or in a table, where
+ * the scan can hold it to the engine.
+ */
+function sentencesOf(svg) {
+  return [...svg.matchAll(/<(title|desc)[^>]*>([\s\S]*?)<\/\1>/g)].map((found) => found[2]);
+}
 
-section("the complex, from the same ascending-simplex rule");
-for (const size of [1, 2, 3, 4]) {
-  const c = census(size);
-  const expected = EXPORT.complexes[String(size)];
-  for (let k = 0; k < size; k += 1) {
-    same(`census(${size}).cells[${k}].length`, c.cells[k].length, expected.cells[String(k)].length);
-    c.cells[k].forEach((cell, index) => {
-      same(`census(${size}).cells[${k}][${index}]`, cell.join(","),
-        expected.cells[String(k)][index].join(","));
-    });
+const wordsOf = (text) => text.split(/\s+/).filter((word) => /[a-z]/i.test(word)).length;
+
+/**
+ * One printed cell as an exact fraction, or null when the cell is not a number at all.
+ *
+ * It reads what a **reader** sees — the engine's own printing, decimals and all — rather than the
+ * value behind it. That is the point of gate 7: this is the arithmetic she would do with a pencil,
+ * done the way she would have to do it, on the digits actually on the page.
+ */
+function exact(cell) {
+  const text = String(cell).trim().replace(/[−–]/g, "-").replace(/^\+/, "");
+  let found = /^(-?\d+)\/(\d+)$/.exec(text);
+  if (found) return [BigInt(found[1]), BigInt(found[2])];
+  found = /^(-?)(\d+)\.(\d+)$/.exec(text);
+  if (found) {
+    const bottom = 10n ** BigInt(found[3].length);
+    const top = BigInt(found[2]) * bottom + BigInt(found[3]);
+    return [found[1] ? -top : top, bottom];
   }
-  for (let k = 0; k + 1 < size; k += 1) {
-    const rows = c.boundaries[k].map((row) => row.map(String));
-    sameRows(`census(${size}).coboundary[${k}]`, rows, expected.coboundary[String(k)]);
+  return /^-?\d+$/.test(text) ? [BigInt(text), 1n] : null;
+}
+
+const report = [];
+// The narrowest gap between any two labels, anywhere. Not a rule — the rule is `LABEL_GAP`, and it
+// is enforced — but a **headroom** figure, printed on every run because a reader noticed it had
+// narrowed from 9.96px to 3.60px against a 3px rule between two rounds. Nothing was wrong: two
+// labels six pixels apart read as two labels. What had changed was that the placement was working
+// near its limit instead of comfortably inside it, and that is the kind of thing a project
+// remembers for one round and then forgets. Printed, it is observable instead.
+let tightest = Infinity;
+let tightestAt = "";
+let sums = 0;
+let stills = 0;
+for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
+  const build = definitions[slug];
+  if (!build) { fail(`there is no demo for the chapter ${slug}`); continue; }
+  let joined;
+  try {
+    joined = joinSteps(slug, build(), scaffold);
+  } catch (failure) {
+    fail(`${slug}: ${failure.message}`);
+    continue;
   }
-}
 
-section("the triangle's walk, and the same walk on other numbers");
-{
-  const walk = (values) => {
-    const v = values.map((text) => Frac.parse(text));
-    const steps = [[0, 1], [1, 2], [2, 0]].map(([a, b]) => v[b].sub(v[a]));
-    return { steps, total: sum(steps) };
-  };
-  for (const which of ["chapter", "another"]) {
-    const expected = EXPORT.triangle[which];
-    const got = walk(expected.values);
-    sameList(`triangle.${which}.differences`, got.steps,
-      expected.steps.map((step) => step.difference));
-    same(`triangle.${which}.sum`, got.total, expected.sum);
+  // ── 5 · the steps are the outline's ─────────────────────────────────────────────────────────
+  const claimed = joined.steps.flatMap((step) => step.beats);
+  const marked = chapter.sections.map((section) => section.beat);
+  if (JSON.stringify(claimed) !== JSON.stringify(marked)) {
+    fail(`${slug}: the steps claim beats ${claimed.join(", ")} and the chapter's markers say `
+      + `${marked.join(", ")}`);
   }
-}
-
-section("the tetrahedron: differences, face loops, arrows, the inside sum");
-{
-  const t = tetrahedron();
-  const e = EXPORT.tetrahedron;
-  same("tetrahedron.dots", t.dots.length, e.counts.dots);
-  same("tetrahedron.lines", t.lines.length, e.counts.lines);
-  same("tetrahedron.faces", t.faces.length, e.counts.faces);
-  same("tetrahedron.insides", t.insides.length, e.counts.insides);
-  sameList("tetrahedron.names", NAMES, e.names);
-  sameList("tetrahedron.line_names", t.lineNames, e.line_names);
-  sameList("tetrahedron.face_names", t.faceNames, e.face_names);
-  sameList("tetrahedron.corners", t.corners, e.corners);
-  sameList("tetrahedron.differences", t.differences, e.differences);
-  sameList("tetrahedron.face_loops", t.faceLoops, e.face_loops);
-  sameList("tetrahedron.arrows", t.arrows, e.arrows);
-  sameList("tetrahedron.face_numbers", t.faceNumbers, e.face_numbers);
-  sameList("tetrahedron.outward_face_numbers", t.outward, e.outward_face_numbers);
-  same("tetrahedron.inside_sum", t.insideSum, e.inside_sum);
-  sameList("tetrahedron.inside_incidence", t.insideIncidence.map(String),
-    e.inside_incidence.map(String));
-}
-
-section("the one rule: ten ticks, plain and dialled");
-{
-  const runs = tetraRuns();
-  const e = EXPORT.motion;
-  same("motion.k", TICK_K, e.k);
-  same("motion.ticks", TICKS, e.ticks);
-  same("motion.dialed_line", runs.dialedLine, e.dialed_line);
-  sameRows("motion.plain.history", runs.plain, e.plain.history);
-  sameList("motion.plain.totals", runs.plain.map(sum), e.plain.totals);
-  same("motion.plain.period", runs.period, e.plain.period);
-  sameRows("motion.dialed.history", runs.dialed, e.dialed.history);
-  sameList("motion.dialed.totals", runs.dialed.map(sum), e.dialed.totals);
-}
-
-// ── 2 · the shape between ─────────────────────────────────────────────────────────────────────────
-
-section("the midpoint cut");
-{
-  const cut = midpointCut();
-  const e = EXPORT.cut;
-  for (const field of ["dots", "corners", "middles", "tips", "octahedra"]) {
-    same(`cut.${field}`, cut[field], e[field]);
-  }
-  same("cut.tip_share", cut.tipShare, e.tip_share);
-  same("cut.tip_side", cut.tipSide, e.tip_side);
-  same("cut.core_share", cut.coreShare, e.core_share);
-  same("cut.oct_dots", cut.octDots, e.oct_dots);
-  same("cut.oct_lines", cut.octLines, e.oct_lines);
-  same("cut.oct_faces", cut.octFaces, e.oct_faces);
-  same("cut.oct_degree", cut.octDegree, e.oct_degree);
-  sameRows("cut.opposite_pairs", cut.oppositePairs, e.opposite_pairs);
-  sameList("cut.faces_at_a_tip", cut.facesAtATip, e.faces_at_a_tip);
-  sameList("cut.faces_in_a_face", cut.facesInAFace, e.faces_in_a_face);
-  sameList("cut.mid_names", MID_NAMES, e.mid_names);
-  sameRows("cut.mid_points", MID_POINTS, e.mid_points);
-  sameRows("cut.mid_lines", midLines().map((l) => l.map(String)),
-    e.mid_lines.map((l) => l.map(String)));
-  sameRows("cut.mid_faces", midFaces().map((f) => f.map(String)),
-    e.mid_faces.map((f) => f.map(String)));
-}
-
-section("the eight-face sum");
-{
-  const faceSum = octahedronFaceSum();
-  const e = EXPORT.face_sum;
-  sameList("face_sum.arrows", MID_ARROWS.map(String), e.arrows);
-  sameList("face_sum.face_numbers", faceSum.faceNumbers, e.face_numbers);
-  same("face_sum.sum", faceSum.total, e.sum);
-  same("face_sum.lines_walked_each_way", faceSum.linesWalkedEachWay, e.lines_walked_each_way);
-}
-
-section("the poke: crossing, home, and the repeat");
-{
-  const poke = octahedronPoke();
-  const e = EXPORT.poke;
-  same("poke.k", poke.k, e.k);
-  same("poke.poked", poke.poked, e.poked);
-  same("poke.opposite", poke.opposite, e.opposite);
-  same("poke.crossing_ticks", poke.crossingTicks, e.crossing_ticks);
-  same("poke.home_ticks", poke.homeTicks, e.home_ticks);
-  same("poke.period", poke.period, e.period);
-  sameRows("poke.history", poke.history, e.history);
-  sameList("poke.totals", poke.history.map(sum), e.totals);
-}
-
-section("the two, threaded");
-{
-  const stella = stellaCensus();
-  const twin = secondTetrahedron();
-  const e = EXPORT.stella;
-  same("stella.dots", stella.dots, e.dots);
-  same("stella.lines", stella.lines, e.lines);
-  same("stella.middles", stella.middles, e.middles);
-  same("stella.tips", stella.tips, e.tips);
-  same("stella.pieces", stella.pieces, e.pieces);
-  same("stella.middle_degree", stella.middleDegree, e.middle_degree);
-  same("stella.tip_degree", stella.tipDegree, e.tip_degree);
-  same("stella.in_tetrahedra", stella.inTetrahedra, e.in_tetrahedra);
-  same("stella.in_its_cube", stella.inItsCube, e.in_its_cube);
-  sameRows("stella.points", stellaPoints(), e.points);
-  sameRows("stella.edges", stellaLines().map((l) => l.map(String)),
-    e.edges.map((l) => l.map(String)));
-  sameList("stella.apex_names", twin.apexNames, e.apex_names);
-  same("stella.apex_share", twin.apexShare, e.apex_share);
-  same("stella.added", twin.added, e.added);
-  same("stella.hull", stella.hull, e.hull);
-}
-
-section("the ceilings, certified without an eigensolver, and the runaway");
-{
-  const e = EXPORT.refusal;
-  const objects = [
-    ceiling(4, TETRA_LINES),
-    ceiling(6, midLines()),
-    ceiling(14, stellaLines()),
-  ];
-  same("refusal.tick", TICK_K, e.tick);
-  objects.forEach((row, index) => {
-    const expected = e.ceilings[index];
-    same(`refusal.ceilings[${index}].dots`, row.size, expected.dots);
-    same(`refusal.ceilings[${index}].stiffest`, row.stiffest, expected.stiffest);
-    same(`refusal.ceilings[${index}].bound`, row.bound, expected.bound);
-    same(`refusal.ceilings[${index}].book_tick_product`, row.product, expected.book_tick_product);
-    same(`refusal.ceilings[${index}].holds`, row.holds, expected.holds);
-  });
-
-  const runaway = stellaRunaway();
-  same("refusal.runaway.k", runaway.k, e.runaway.k);
-  same("refusal.runaway.ticks", runaway.ticks, e.runaway.ticks);
-  same("refusal.runaway.printable_rows", runaway.printableRows, e.runaway.printable_rows);
-  same("refusal.runaway.push_at_a_middle", runaway.pushAtAMiddle, e.runaway.push_at_a_middle);
-  sameList("refusal.runaway.look", runaway.look.map((entry) => entry.biggest),
-    e.runaway.look.map((entry) => entry.biggest));
-  sameList("refusal.runaway.look.ticks", runaway.look.map((entry) => String(entry.tick)),
-    e.runaway.look.map((entry) => String(entry.tick)));
-
-  same("refusal.runaway.repeat_search_ticks", REPEAT_SEARCH_TICKS, e.runaway.repeat_search_ticks);
-  const smaller = stellaSmallerTicks();
-  sameList("refusal.runaway.stable_tried.k", smaller.map((row) => row.k),
-    e.runaway.stable_tried.map((row) => row.k));
-  sameList("refusal.runaway.stable_tried.printable",
-    smaller.map((row) => String(row.printable)),
-    e.runaway.stable_tried.map((row) => String(row.printable)));
-  sameList("refusal.runaway.stable_tried.period",
-    smaller.map((row) => String(row.period)),
-    e.runaway.stable_tried.map((row) => String(row.period)));
-}
-
-section("the canonical net: nine segments, nineteen labels, in canon.py's positions");
-{
-  const e = EXPORT.net;
-  const segments = netSegments();
-  same("net.segments.length", segments.length, e.segments.length);
-  segments.forEach((segment, index) => {
-    same(`net.segments[${index}].line`, cellName(segment.line), e.segments[index].line);
-  });
-  const labels = netLabels();
-  same("net.labels.length", labels.length, e.labels.length);
-  // The label positions are compared as the two-place decimals a drawing actually uses: the browser
-  // works in doubles here (SVG coordinates are the one place a float is allowed) and `canon.py` works
-  // in exact rationals, so agreement to the drawn precision is the honest claim to make.
-  const round2 = (value) => (Math.round(value * 100) / 100).toFixed(2);
-  const byName = new Map(e.labels.map((label) => [`${label.kind}:${label.text}:${label.panel}`, label]));
-  labels.forEach((label, index) => {
-    const candidates = e.labels.filter((other) => other.kind === label.kind && other.text === label.text);
-    checks += 1;
-    if (!candidates.length) {
-      fail(`net.labels[${index}]: the napkin exported no ${label.kind} label named ${label.text}`);
-      return;
-    }
-    const wanted = candidates.map((other) => other.at.map((text) => round2(Frac.parse(text).toApprox())).join(","));
-    const got = label.at.map(round2).join(",");
-    if (!wanted.includes(got)) {
-      fail(`net.labels[${index}] ${label.kind} ${label.text}: drawn at ${got}, canon.py puts it at ${wanted.join(" or ")}`);
-    }
-  });
-  void byName;
-}
-
-// ── 3 · the beats, and the rule that no step shows a number the napkin did not compute ────────────
-
-section("the ring convention draws every line once, and none of them crosses");
-{
-  // The ring's whole claim to a reader is that she can count the object's lines off the picture. So
-  // the two things that would break that are checked: an inner dot landing on an outer line (which
-  // is what happens at exactly half the outer radius, and did), and any crossing at all.
-  const bare = ringPlanarity({});
-  same("ring.lines", bare.lines, midLines().length);
-  same("ring.dots_sitting_on_a_line_they_do_not_end", bare.dotsOnLines, 0);
-  same("ring.crossings", bare.crossings, 0);
-  // With the tips shown, four of the eight cannot sit inside their own face — three of those faces
-  // are slivers and the eighth face is the outside of the paper — so they sit outside the ring and
-  // their lines in do cross each other. That is stated on the page and pinned here: what may never
-  // happen is a crossing among the twelve lines of the shape itself, or a dot on a line it does not
-  // end. The total is pinned too, so a change to the layout has to be looked at rather than shipped.
-  const threaded = ringPlanarity({ tips: true });
-  same("ring(tips).lines", threaded.lines, stellaLines().length);
-  same("ring(tips).dots_sitting_on_a_line_they_do_not_end", threaded.dotsOnLines, 0);
-  same("ring(tips).crossings_among_the_twelve", threaded.amongTheTwelve, 0);
-  same("ring(tips).tips_inside_their_own_face", threaded.tipsInsideTheirFace, 4);
-  same("ring(tips).crossings_among_the_tips_own_lines", threaded.crossings, 7);
-  // And the drawings themselves must emit: both assert the above before they draw a stroke.
-  checks += 1;
-  try { drawRing({}); drawRing({ tips: true }); } catch (failure) {
-    fail(`the ring refused to draw: ${failure.message}`);
-  }
-}
-
-section("the steps are the outline's beats, in order");
-{
-  const expected = {
-    "two-dots-and-a-line": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-    "one-tetrahedron-is-a-whole-world": [19, 20, 21, 22, 23, 24, 25, 26],
-    "make-it-move": [27, 28, 29, 30, 31, 32, 33, 34, 35],
-    "the-shape-between": [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46],
-  };
-  sameList("the chapters", Object.keys(CHAPTERS).sort(), Object.keys(expected).sort());
-  for (const [slug, beats] of Object.entries(expected)) {
-    const steps = CHAPTERS[slug].steps();
-    sameList(`${slug}: the beats`, steps.map((step) => String(step.beat)), beats.map(String));
-    checks += 1;
-    if (steps.some((step) => !step.title || !step.body || typeof step.render !== "function")) {
-      fail(`${slug}: a step has no title, no body, or nothing to render`);
-    }
-  }
-}
-
-section("no step shows a number the napkin did not compute — on any surface");
-{
-  // Every exact value the export carries, in every form a demo is allowed to write it in: the exact
-  // string, `numberText`'s short decimal (with the typeset minus), `signedText`'s explicit plus,
-  // `fracText`'s fraction, that value negated (a line walked the other way round), and a big whole
-  // number with its group separators.
-  const allowed = new Set();
-  const offer = (text) => {
-    const trimmed = String(text).trim();
-    if (!/^-?\d+(?:\/\d+)?$/.test(trimmed)) return;
-    const value = Frac.parse(trimmed);
-    for (const form of [value, value.neg()]) {
-      allowed.add(form.toString());
-      allowed.add(fracText(form));
-      try { allowed.add(numberText(form)); allowed.add(signedText(form)); } catch { /* refused */ }
-    }
-    allowed.add(String(value.n));
-    if (value.d !== 1n) allowed.add(String(value.d));
-    if (value.d === 1n) allowed.add(thousands(value.n));
-  };
-  const walkExport = (node) => {
-    if (typeof node === "string" || typeof node === "number") { offer(node); return; }
-    if (typeof node === "boolean" || node === null) return;
-    if (Array.isArray(node)) { node.forEach(walkExport); return; }
-    for (const [k, v] of Object.entries(node)) { offer(k); walkExport(v); }
-  };
-  walkExport(EXPORT);
-
-  // Every whole number the export's own structure makes countable, and no others: the length of a
-  // list it carries, and every index into one. A tick number in the first column of a run's table is
-  // an index into that run; a count of dots is a length. What this deliberately does NOT do is allow
-  // every small whole number — an earlier version allowed everything up to sixty, and a page could
-  // then have shown eleven dots over an export that said ten.
-  const offerIndices = (node) => {
-    if (Array.isArray(node)) {
-      offer(String(node.length));
-      for (let index = 0; index < node.length; index += 1) offer(String(index));
-      node.forEach(offerIndices);
-      return;
-    }
-    if (node && typeof node === "object") Object.values(node).forEach(offerIndices);
-  };
-  offerIndices(EXPORT);
-  for (const value of STRUCTURAL.keys()) allowed.add(value);
-
-  // A group-separated integer is one token, not three: `8,500` is one number.
-  const TOKEN = /[−-]?\d{1,3}(?:,\d{3})+|[−-]?\d+(?:\.\d+)?(?:\/\d+)?/g;
-  const TEXT_NODE = /<(?:text|title|desc)\b[^>]*>([^<]*)<\/(?:text|title|desc)>/g;
-
-  // EVERY surface a reader meets, not only the table cells. The first version of this scanned the
-  // cells alone, and a fresh reviewer walked a wrong number straight through a table's caption, a
-  // step's own title, its prose, its notes, the drawing, and the SVG description a screen reader
-  // reads out. A number is a number wherever the page prints it.
-  const surfaces = (slug, step, tick, rendered) => {
-    const out = [
-      ["the step's title", step.title],
-      ["the step's prose", step.body],
-    ];
-    rendered.notes.forEach((note, i) => out.push([`note ${i + 1}`, note]));
-    for (const spec of rendered.tables) {
-      out.push([`the caption of "${spec.caption}"`, spec.caption]);
-      for (const row of [spec.head, ...spec.rows]) {
-        for (const cell of row) out.push([`a cell of "${spec.caption}"`, String(cell)]);
+  for (const step of joined.steps) {
+    for (const section of step.sections) {
+      const found = chapter.sections.find((entry) => entry.anchor === section.anchor);
+      if (!found || found.beat !== section.beat || found.question !== step.sections
+        .find((s) => s.anchor === section.anchor).question) {
+        fail(`${slug}: the step for "${section.anchor}" does not agree with steps.json`);
       }
     }
-    for (const match of rendered.drawing.matchAll(TEXT_NODE)) {
-      out.push(["the drawing", match[1]]);
-    }
-    void slug; void tick;
-    return out;
-  };
+  }
 
-  for (const [slug, chapter] of Object.entries(CHAPTERS)) {
-    for (const step of chapter.steps()) {
-      const ticks = step.ticks ? step.ticks + 1 : 1;
-      for (let tick = 0; tick < ticks; tick += 1) {
-        const rendered = step.render(tick);
-        for (const [where, text] of surfaces(slug, step, tick, rendered)) {
-          for (const token of String(text).match(TOKEN) || []) {
-            checks += 1;
-            if (!allowed.has(token)) {
-              fail(`${slug} beat ${step.beat} tick ${tick}: ${where} shows ${token}, which the `
-                + `napkin did not compute — in ${JSON.stringify(String(text).slice(0, 90))}`);
+  // ── 2 and 6 · render everything, scan everything, count the words ───────────────────────────
+  const words = new Set();
+  words.add(pageText.get(`${slug}.html`));
+  words.add(chapter.title);
+  let surfaces = 0;
+  let tokens = 0;
+
+  for (const step of joined.steps) {
+    words.add(step.title);
+    words.add(step.act);
+    words.add(step.label);
+    for (const control of step.controls) {
+      if (control.noun) words.add(control.noun);
+      if (control.label) words.add(control.label);
+      if (control.names) for (const name of control.names) words.add(name);
+      if (control.options) for (const option of control.options) words.add(option.label);
+    }
+    for (const state of statesOf(step, view)) {
+      let rendered;
+      try {
+        rendered = step.render(state);
+      } catch (failure) {
+        fail(`${slug} ${step.label}: rendering threw — ${failure.message}`);
+        continue;
+      }
+      // The step's own label — a beat number, or a range where a pair is folded — is the one place
+      // a number on the page is
+
+      // not the engine's, and it is not typed either: it is `steps.json`'s, derived from the
+      // chapter's markers, and gate 5 above holds it to them. Everything else is scanned.
+      const surfacesHere = [
+        step.title, step.act,
+        ...step.controls.flatMap((control) => [
+          control.noun, control.label,
+          ...(control.names || []),
+          ...(control.options || []).map((option) => option.label),
+        ]).filter((text) => text !== undefined),
+        ...drawingText(rendered.drawing),
+        ...rendered.tables.flatMap((table) =>
+          [table.caption, ...table.head, ...table.rows.flat()]),
+      ];
+      surfaces += surfacesHere.length;
+      for (const surface of surfacesHere) {
+        for (const token of String(surface).match(NUMERIC_TOKEN) || []) {
+          tokens += 1;
+          if (!known(token)) {
+            fail(`${slug} ${step.label}: the number ${token} appears in "${surface}", and the `
+              + `engine did not produce it`);
+          }
+        }
+      }
+      for (const sentence of sentencesOf(rendered.drawing)) {
+        if (/\d/.test(sentence)) {
+          fail(`${slug} ${step.label}: the drawing's own words carry a digit — "${sentence}". A `
+            + `title and a description are prose, and prose about this object counts in words; `
+            + `every value goes in the drawing's text or in a table, where it is held to the engine`);
+        }
+      }
+      // Gate 7: a table says what its numbers mean, and a total is a total.
+      //
+      // Three versions of this gate have been walked past, each by a narrower trick than the last:
+      // reading the column *headed* "added up" (renaming it silenced it); counting numbers across a
+      // row (one term per row silenced it); counting numbers down the total's own column (which
+      // holds one number, the total). What defeats all three is to stop looking for a shape and
+      // insist the table **say** what it is — by column index, which no caption edit reaches.
+      //
+      // Two things this version adds, both from a reader's findings. A **packed** cell — several
+      // numbers in one string, "+3  +1  −4" — counts as its numbers, wherever it sits, so moving
+      // terms into one cell escapes nothing. And **every** column is considered, including the
+      // first, because a total was found sitting in column 0 where the old scan began at 1.
+      for (const table of rendered.tables) {
+        const shape = table.shape || null;
+        const numbersIn = (cell) => {
+          const packed = String(cell).trim().split(/\s+/).filter((part) => part !== "");
+          const parsed = packed.map(exact);
+          return parsed.every((value) => value !== null) && parsed.length > 0 ? parsed : [];
+        };
+        const rowNumbers = (row) => row.flatMap((cell) => numbersIn(cell));
+        const carriesNumbers = table.rows.some((row) => rowNumbers(row).length >= 3);
+        if (carriesNumbers && shape === null) {
+          fail(`${slug} ${step.label}: "${table.caption}" puts three or more numbers in a row and `
+            + `does not say whether the last is their total. Declare { total: i } or `
+            + `{ notASum: true }`);
+          continue;
+        }
+
+        // A heading that reads like a total must BE the declared total — checked over every column,
+        // with packed cells counted as their numbers, and with a total in the first column refused
+        // outright because it has no terms in front of it to be the total of.
+        // Word-stems, not whole words. "summed" slipped past `\bsum\b` — the boundary was doing the
+        // attacker's work for it.
+        const totalish = (head) =>
+          /\b(add(ed|s|ing)? up|the whole way round|total\w*|altogether|sum\w*|comes? to)\b/i
+            .test(String(head));
+        // The caption counts as a heading. A reader moved a total-shaped phrase from a column head
+        // into the caption and the check stopped looking; a reader does not read them differently.
+        // Across a row **or** down a column: a caption saying "summed" over a column of three
+        // numbers claims a total as plainly as one saying it over a row, and the first version of
+        // this rule only looked across.
+        const anyRow = table.rows.some((row) => rowNumbers(row).length >= 2);
+        const anyColumn = table.head.some((_, index) =>
+          table.rows.filter((row) => numbersIn(row[index]).length >= 1).length >= 2);
+        if (totalish(table.caption) && (anyRow || anyColumn)
+          && (!shape || shape.total === undefined)) {
+          fail(`${slug} ${step.label}: "${table.caption}" is captioned as a total over numbers `
+            + `and the table does not declare which column that total is`);
+        }
+        table.head.forEach((head, index) => {
+          if (!totalish(head)) return;
+          if (index === 0) {
+            fail(`${slug} ${step.label}: "${table.caption}" puts a column headed "${head}" first, `
+              + `where nothing precedes it. A total goes after the numbers it is the total of`);
+            return;
+          }
+          const before = table.rows.some((row) =>
+            row.slice(0, index).some((cell) => numbersIn(cell).length >= 2));
+          const down = table.rows
+            .filter((row) => row.slice(0, index).some((cell) => numbersIn(cell).length >= 1))
+            .length >= 2;
+          if (!(before || down)) return;
+          if (!shape || shape.total !== index) {
+            fail(`${slug} ${step.label}: "${table.caption}" has a column headed "${head}", which `
+              + `reads as a total of the numbers beside it, and the table does not declare it as one`);
+          }
+        });
+
+        if (!shape || shape.total === undefined) continue;
+        const at = shape.total;
+        if (at === 0) {
+          fail(`${slug} ${step.label}: "${table.caption}" declares column 0 as its total, and a `
+            + `total goes after the numbers it is the total of`);
+          continue;
+        }
+        for (const row of table.rows) {
+          const total = exact(row[at]);
+          if (total === null) continue;
+          // The terms. **Any** cell before the total that holds several numbers is a packed terms
+          // cell, wherever it sits — the nearest such cell to the total wins — and column 0 is
+          // included, because a reader put the terms there with a note in between and the first
+          // version of this scan, which looked only at the cell immediately before, saw nothing.
+          // Failing that, the cells between the row's own label and the total, which is where an
+          // ordinary run table keeps them; column 0 is excluded from *that* case because there it
+          // holds the row's label — a tick number, not a term.
+          const packedAt = row.slice(0, at)
+            .map((cell, index) => ({ index, numbers: numbersIn(cell) }))
+            .filter((cell) => cell.numbers.length > 1)
+            .pop();
+          const terms = packedAt
+            ? packedAt.numbers
+            : row.slice(1, at).flatMap((cell) => numbersIn(cell));
+          if (terms.length < 2) continue;
+          sums += 1;
+          let running = [0n, 1n];
+          for (const [top, bottom] of terms) {
+            running = [running[0] * bottom + top * running[1], running[1] * bottom];
+          }
+          if (running[0] * total[1] !== total[0] * running[1]) {
+            fail(`${slug} ${step.label}: "${table.caption}" prints ${terms.length} numbers and says `
+              + `they come to ${row[at]}, and they do not — the row is ${row.join(" · ")}`);
+          }
+        }
+      }
+
+      // Gate 4, for EVERY drawing. It used to hold the wireframe alone — the drawing a reader was
+      // invited to count off — and left the other three to be trusted, which is the same mistake in
+      // a different place: the triangle, the net and the ring all put strokes and dots on paper that
+      // are supposed to be the object's and nothing else.
+      //
+      // So every drawing declares its own kind, every mark in it says what it is, and both are held
+      // to the engine: an element the drawing may not emit, a stroke that names nothing, or a stroke
+      // naming something the engine's census has not got, all fail. What each kind is allowed is
+      // `DRAWINGS` below.
+      censusOf(rendered.drawing, `${slug} ${step.label}`);
+
+      // Gate 8: nothing in the drawing is struck through. Read off the emitted SVG.
+      {
+        const svg = rendered.drawing;
+        const strokes = [...svg.matchAll(/<line\b[^>]*>/g)].map((mark) => {
+          const at = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(mark);
+          return at
+            ? { ends: [[+at[1], +at[2]], [+at[3], +at[4]]],
+              leaderFor: (/data-leader="([^"]*)"/.exec(mark) || [])[1] }
+            : null;
+        }).filter(Boolean);
+        // With the radius, and with the clearance the placement claims to keep. The test used to
+        // ask whether a dot's CENTRE was inside the label's box, so a name overlapping a circle's
+        // ink by nine pixels passed — 45 of them across the pages.
+        const marks = [...svg.matchAll(/<circle[^>]*cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)"/g)]
+          .map((found) => ({ at: [+found[1], +found[2]], r: +found[3] }));
+        const boxes = [];
+        for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
+          const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
+          const size = /font-size="([\d.]+)"/.exec(found[1]);
+          if (!at || !size || !found[2].trim()) continue;
+          const box = textBox(+at[1], +at[2], found[2], +size[1]);
+          // A leader is drawn TO its own label, so that one stroke may reach it; every other must
+          // not.
+          const mine = found[2].trim().split(" ")[0];
+          if (strokes.some((stroke) => stroke.leaderFor !== mine
+            && boxMeetsSegment(box, stroke.ends[0], stroke.ends[1]))) {
+            fail(`${slug} ${step.label}: the label "${found[2]}" is drawn across a stroke`);
+          }
+          // `boxMeetsDot` is imported rather than reimplemented, so the standard the placement
+          // keeps and the standard the check enforces are one function.
+          const touching = marks.filter((dot) => boxMeetsDot(box, [...dot.at, dot.r]));
+          if (touching.length) {
+            fail(`${slug} ${step.label}: the label "${found[2]}" overlaps the ink of a dot`);
+          }
+          boxes.push({ ...box, text: found[2] });
+        }
+
+        // And against **each other**, which is the half this gate did not have. A proof-reader found
+        // "0" and "−1" rendering as the single token "0−1" on chapter 2's net, twice: the numbers
+        // were dodging every stroke and landing on the names, because the names were never in the
+        // placement's record of what it had already put down. Two numbers touching is the
+        // wrong-noun defect in visual form — a reader cannot tell which belongs to which name — so
+        // no two labels may overlap at all, a name and its own number included. They have to read
+        // as two things.
+        for (let i = 0; i < boxes.length; i += 1) {
+          for (let j = i + 1; j < boxes.length; j += 1) {
+            const a = boxes[i];
+            const b = boxes[j];
+            const gap = Math.max(Math.max(a.x0 - b.x1, b.x0 - a.x1),
+              Math.max(a.y0 - b.y1, b.y0 - a.y1));
+            if (gap < tightest) {
+              tightest = gap;
+              tightestAt = `${slug} ${step.label}: "${a.text}" and "${b.text}"`;
+            }
+            // The same gap the placement keeps, imported rather than chosen here, so the two cannot
+            // drift apart. Merely not intersecting is not enough: a drawing whose closest pair had
+            // four tenths of a pixel between them passed the first version of this test, and four
+            // tenths of a pixel on a screen is two numbers touching.
+            if (boxesOverlap(a, b, LABEL_GAP)) {
+              fail(`${slug} ${step.label}: the labels "${a.text}" and "${b.text}" are within `
+                + `${LABEL_GAP}px of each other — on the page they read as one token, and a reader `
+                + `cannot tell which is which`);
             }
           }
         }
-        // And a step must put its numbers in a table, not only in the drawing: a reader who ignores
-        // the picture entirely has to be able to read every value.
-        checks += 1;
-        if (!rendered.tables.length) {
-          fail(`${slug} beat ${step.beat}: nothing but a drawing — every number must also be text`);
+      }
+
+      // Gate 10: the still of this exact state.
+      const still = stillFrom(rendered.drawing, {
+        chapter: slug, beat: step.beats.join("–"), title: `${chapter.title} — ${step.label}`,
+      });
+      for (const [pattern, what] of [
+        [/^<!-- Our Bubble demo still/, "the comment naming the beat it came from"],
+        [/nothing in it is a claim about nature/, "the firewall line"],
+        [/<svg[^>]*>\n  <style>/, "its own stylesheet, inlined"],
+        [/<title>[^<]+<\/title>/, "a title"],
+        [/<desc>[^<]+<\/desc>/, "a description"],
+      ]) {
+        if (!pattern.test(still)) {
+          fail(`${slug} ${step.label}: the still has no ${what} — a still has to stand on its own, `
+            + `because it is meant to end up in a chapter`);
         }
+      }
+      // c1 · every class the drawing emits has a painting rule in the still's stylesheet.
+      //
+      // SVG's default is `stroke: none`, so a mark whose class the inlined stylesheet does not
+      // mention is **invisible in the downloaded file** while looking right on screen, where the
+      // page's own CSS paints it. That is exactly what happened to the leader: the one mark whose
+      // job is to say which label belongs to what did not render in a single still. And a still is
+      // the artefact meant to end up in a chapter, so it is the worst place for a mark to vanish.
+      for (const found of rendered.drawing.matchAll(/class="([^"]+)"/g)) {
+        for (const name of found[1].split(/\s+/)) {
+          if (!name || name === "strong") continue;
+          if (!SVG_STILL_STYLE_TEXT.includes(`.${name}`)) {
+            fail(`${slug} ${step.label}: the drawing emits class "${name}" and the still's `
+              + `stylesheet has no rule mentioning it — in the downloaded file that mark is `
+              + `painted by nothing`);
+          }
+        }
+      }
+      stills += 1;
+
+      if (!rendered.tables.length) {
+        fail(`${slug} ${step.label}: a step with no table — every number has to be readable as text`);
+      }
+      if (!/^<svg/.test(rendered.drawing)) {
+        fail(`${slug} ${step.label}: a step with no drawing`);
       }
     }
   }
+
+  // The controls the page always draws, counted once per page rather than per step.
+  for (const word of ["back", "on", "play", "stop", "again", "still", "download", "read it",
+    "theme", "light", "dark", "straighten it", "undo"]) {
+    words.add(word);
+  }
+  const count = [...words].reduce((total, text) => total + wordsOf(text), 0);
+  report.push({ slug, steps: joined.steps.length, beats: chapter.sections.length, words: count });
 }
 
-section("no digit is typed into a step, in any quote");
-{
-  // The scan above catches a number no arithmetic on this object produces. It cannot catch a small
-  // whole number swapped for another, because a page that legitimately shows a twelfth tick makes 11
-  // a number the export contains. So the typed number is closed from the other side, at the source:
-  // **inside the step definitions, no string literal may contain a digit at all** — double-quoted,
-  // single-quoted, or a template's text (a template's `${…}` is code, and is cut out before the
-  // check). A count therefore has to arrive as `String(cut.dots)`, and the difference between that
-  // and `"10"` is visible in a diff.
-  //
-  // A reviewer got past the first version of this with a backtick, with a single quote, and with a
-  // digit in a caption; all three now fail here. The three exceptions are declared above the step
-  // region as named constants, so the allowlist is three identifiers rather than three digits.
-  const source = readFileSync(join(HERE, "core.mjs"), "utf8");
-  const from = source.indexOf("// ── the steps ");
-  const to = source.indexOf("/** Every chapter's steps, keyed by");
-  checks += 1;
-  if (from < 0 || to < 0 || to < from) {
-    fail("no digit typed: could not find the step definitions in core.mjs");
-  } else {
-    for (const [name, digits] of [["NONE", "0"], ["ONLY", "1"], ["PAIR", "2"]]) {
-      checks += 1;
-      if (!new RegExp(`^const ${name} = "${digits}";`, "m").test(source.slice(0, from))) {
-        fail(`no digit typed: core.mjs does not declare ${name} as "${digits}" above the step `
-          + `definitions, so the two sides of the allowlist have come apart`);
-      }
-      if (!STRUCTURAL.has(digits)) {
-        fail(`no digit typed: core.mjs declares ${name} = "${digits}", which this test does not `
-          + `allow as a structural number`);
-      }
-    }
-    for (const found of stringLiterals(source.slice(from, to))) {
-      if (!/\d/.test(found.text)) continue;
-      checks += 1;
-      fail(`no digit typed: line ${found.line} of the step definitions writes a digit in `
-        + `${JSON.stringify(found.text.slice(0, 70))} — compute it, or name it the way NONE, ONLY `
-        + `and PAIR are named`);
-    }
+// ── 6 · the budget ────────────────────────────────────────────────────────────────────────────────
+
+const BUDGET = 250;
+for (const line of report) {
+  if (line.words > BUDGET) {
+    fail(`${line.slug}: ${line.words} reader-facing words, and the budget is ${BUDGET}`);
   }
 }
 
 // ── the verdict ───────────────────────────────────────────────────────────────────────────────────
 
-console.log("");
-if (failures) {
-  console.error(`core.test.mjs: FAILED — ${failures} of ${checks} checks`);
+for (const line of report) {
+  process.stdout.write(`core.test.mjs: ${line.slug} — ${line.steps} steps over ${line.beats} `
+    + `beats, ${line.words} words\n`);
+}
+
+if (failures.length) {
+  for (const failure of failures) process.stderr.write(`${failure}\n`);
   process.exit(1);
 }
-console.log(`core.test.mjs: ${checks} checks, every number equal to the napkin's export`);
+
+const totalWords = report.reduce((total, line) => Math.max(total, line.words), 0);
+const totalSteps = report.reduce((total, line) => total + line.steps, 0);
+process.stdout.write(
+  `core.test.mjs: the narrowest gap between two labels anywhere is `
+  + `${tightest.toFixed(2)}px against a ${LABEL_GAP}px rule — ${tightestAt}\n`,
+);
+process.stdout.write(
+  `core.test.mjs: ${report.length} chapters, ${totalSteps} steps, every rendered number the `
+  + `engine's, no digit typed, ${engine.calls.length} engine calls, the wireframe's `
+  + `${payload.stella.lines} strokes the census's, ${sums} printed sums that add up, `
+  + `${stills} stills standing on their own, at most ${totalWords} words on a page\n`,
+);

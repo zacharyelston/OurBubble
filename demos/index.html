@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The napkin world, in your browser · Our Bubble demos</title>
-<meta name="description" content="One demo page per chapter of Our Bubble's napkin world, computing the book's numbers in your browser.">
+<title>The napkin world, in your browser · Our Bubble</title>
+<meta name="description" content="One page per chapter of Our Bubble's napkin world, run in your browser by the vendored napkin engine.">
 <link rel="stylesheet" href="demo.css">
 </head>
 <body>
@@ -13,56 +13,36 @@
 <header class="masthead">
   <p class="kicker">Our Bubble · demos</p>
   <h1>The napkin world, in your browser</h1>
-  <p class="lede">Four pages, one per chapter of the book's first world — the one small enough that
-  every number in it is finger-countable. Each page follows its chapter's questions in order and
-  works out the answers as you read, in exact arithmetic, with no floating point anywhere in a
-  number you are asked to check.</p>
+  <p class="lede">One page per chapter of the book's first world. Each follows its chapter's
+  questions in order, and instead of telling you the answer it hands you the object: press
+  something, and watch what the drawing and the table do about it.</p>
   <div class="bar">
-    <a href="../index.html">← the book</a>
+    <a href="../index.html">the book</a>
     <span id="theme"></span>
   </div>
 </header>
 
 <blockquote class="scope">
-  <p><strong>Scope.</strong> These pages compute a <strong>toy</strong>: a small world built inside a
+  <p><strong>Scope.</strong> These pages run a <strong>toy</strong>: a small world built inside a
   computer on purpose. Nothing they draw or print is a claim about nature.</p>
 </blockquote>
 
-<ol class="index">
-  <li>
-    <a href="two-dots-and-a-line.html">Two dots, a line, and the first thing that closes</a>
-    <p>Beats 9–18. Somewhere to put a number, somewhere for a change to live, and the first walk
-    that comes home to exactly nothing.</p>
-  </li>
-  <li>
-    <a href="one-tetrahedron-is-a-whole-world.html">One tetrahedron is a whole world</a>
-    <p>Beats 19–26. Four, six, four, one — and both coming-home facts walked in front of you, on the
-    flat unfolded net.</p>
-  </li>
-  <li>
-    <a href="make-it-move.html">Make it move</a>
-    <p>Beats 27–35. One rule, ten ticks, a total that never moves, and one dial. Step it or play it.</p>
-  </li>
-  <li>
-    <a href="the-shape-between.html">The shape between</a>
-    <p>Beats 36–46. Cut the tetrahedron at its six middles, poke the shape left between the tips, and
-    watch the arithmetic leave the napkin.</p>
-  </li>
-</ol>
+<ol class="index" id="demo-index"></ol>
 
 <footer class="foot">
-  <p>Every number these pages show is checked, before the book is allowed to build, against the same
-  arithmetic the chapters print — <code>tools/napkin.py</code> and <code>tools/octahedron.py</code>,
-  exported to <code>demos/data/napkin.json</code> and compared value by value by
-  <code>demos/core.test.mjs</code>. A demo may not show a number the napkin did not compute.</p>
+  <p>Every number on these pages comes from one engine — UniForge's <code>napkin</code> crate,
+  compiled to WebAssembly, vendored in this repository and pinned by <code>engine.lock</code>. The
+  pages format what it says and compute nothing, and a check refuses any number on any surface that
+  the engine did not produce. See <code>demos/DEMOS.md</code>.</p>
   <p>No framework, no library, nothing loaded from another site, and nothing about your visit
   recorded.</p>
 </footer>
 
 </div>
 <script type="module">
-  import { themeSwitch } from "./core.mjs";
+  import { mountIndex, themeSwitch } from "./core.mjs";
   themeSwitch(document.querySelector("#theme"));
+  mountIndex();
 </script>
 </body>
 </html>
