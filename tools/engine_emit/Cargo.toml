@@ -1,0 +1,25 @@
+# The second emitter — the three register rows the crate's own `napkin-export` binary cannot carry.
+#
+# `napkin-export` emits `emit::payload()`, which is the demos' oracle: ten groups. Its shape is
+# pinned **byte for byte** to `tools/napkin_export.py`'s output, so nothing may be added to it — and
+# three of the register's 23 rows fall outside it: R07 (the rule on the triangle at a non-dyadic
+# tick), R10 (the tetrahedron has no room) and R19 (kinds of place on a wrapped world, and its
+# control). All three are computed by the same crate, through its own public API.
+#
+# So this is a consumer of the engine, not a second engine: `src/main.rs` calls public functions and
+# writes the crate's own canonical JSON, and contains no arithmetic. The alternative was leaving the
+# book's `vertex_classes` token on Python arithmetic, which is the thing this step exists to end.
+#
+# `napkin = { path = "uniforge/core/napkin" }` points at a symlink `tools/build_engine.sh` creates
+# from `UNIFORGE_SRC` and git ignores. A path dependency on a workspace member resolves that
+# member's `version.workspace` inheritance through its own workspace root, so no part of UniForge is
+# copied or modified here.
+
+[package]
+name = "engine-emit"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+napkin = { path = "uniforge/core/napkin" }
