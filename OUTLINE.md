@@ -30,7 +30,7 @@ reader every time instead of explained to her once.
 ## 0 · What you will have
 
 1. What is this book actually about — and should I go and look anything up?  *(the art of collecting data, which is smaller than its reputation: make a mark, take the difference, add the differences up, see whether they come home. A telescope is a better stick; between a child in a yard and a laboratory the instruments change and the bookkeeping gets more careful, and the moves do not change at all. The syntax those moves are written in has a name — **discrete exterior calculus** — said once and put straight back down)*
-2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, why the tick a world runs on belongs to its shape, a machine's honest no told apart from a mistake, and a path from any number we produced to where it came from. Then the part worth more: the sciences whose papers look like a wall are doing those same moves in their own notation, so she will recognise what they are doing without knowing their subjects. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they come from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
+2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, why the tick a world runs on belongs to its shape, a machine's honest no told apart from a mistake, and a path from any number we produced to where it came from. Then something we claim rather than something the book proves: the sciences whose papers look like a wall are making marks, taking differences and adding them up too, in their own notation — this book will not teach her one of them, and what it does is put the moves in her hands, on an object small enough to count. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they come from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
 3. What is the road?  *(a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
 4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. Sticks and light, dots and lines: all anyone has had since the first shadows on a cave wall, all this book uses, and enough for everything in it. It starts where measurement started: one shadow, and the smallest possible next thing)*
 
@@ -219,7 +219,10 @@ notation, so she will recognise what they are doing without knowing their subjec
 sticks and light, before the shadow chapter opens. *Discrete exterior calculus* is said **once**, as
 the name of the syntax those moves are written in, and put straight back down. The earlier draft's
 five forbidding names are gone along with the promise that carried them — a list of names is a count,
-and this page carries no count now.
+and the page now carries no count of the book's own parts that a reader could turn pages and falsify.
+Two counts of one thing remain and are true — "the one page that talks about the book" and "the one
+rule everything here is made of" — and nothing guards either (a proofreader, round 5, mutating "the
+one rule" to "the three rules": tier 0 green).
 
 **The two sentences the brief is built on are the two that need the firewall**, and both are claims
 about method and about this book's toy. That the moves are what every science does is a claim about
