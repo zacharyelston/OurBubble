@@ -4,9 +4,9 @@
 > when we pointed real tests at it. Nothing here is a claim about nature. Where a chapter uses a word
 > like *vacuum*, the word names a pattern in the model.
 
-This is the one page that talks about the book instead of doing it. A few minutes, and then we
-begin. If a section ever loses you, there is a link under its heading for telling us so; it needs a
-free GitHub account, which is the one thing here that asks you to go and get anything.
+This is the one page that talks about the book instead of doing it. If a section ever loses you,
+there is a link under its heading for telling us so; it needs a free GitHub account, the only thing
+anywhere in here that asks you to sign up for something. A few minutes, and then we begin.
 
 ## What this is about
 
@@ -19,8 +19,8 @@ to what you expected.
 
 That is the art of collecting data: the patient half of every science, and the half nobody films. A
 telescope is a better stick, and so is a sequencing machine. A photographic plate is a better mark.
-A computer adds differences up very fast. Between a child in a yard and a laboratory
-the instruments change and the bookkeeping gets more careful; the moves do not. The only difference
+A computer adds differences up very fast. Between a child in a yard and a laboratory the
+instruments change and the bookkeeping gets more careful; the moves do not. The only difference
 between you and the child watching her shadow is that you are older, and there are more tools on the
 table.
 
@@ -32,19 +32,19 @@ exterior calculus* — and you may put it straight back down. You will not need 
 
 <!-- beat 2 -->
 
-The ideas themselves by the last page, not a rumour of them: a whole world you can hold in your head
-and count; the one rule everything here is made of; why the tick a world runs on belongs to its
-shape; a machine's honest *no*, told apart from a mistake; and a path from any number we produced
-to where it came from — a file in the record, or arithmetic done in front of you.
+By the last page you will have the ideas themselves, not a rumour of them: a world you can hold in
+your head and count; the one rule everything here is made of; why the tick a world runs on belongs
+to its shape; a machine's honest *no*, told apart from a mistake; and a path from any number we
+produced to where it came from — a file in the record, or arithmetic done in front of you.
 
-Then something we claim, rather than something the book proves. The sciences whose papers look
-like a wall are making marks, taking differences and adding them up, in their own notation. This
-book will not teach you one of them. What it does is put the moves in your hands, on an
-object small enough to count.
+Then something we claim, not something the book proves. The sciences whose papers look like a wall
+are making marks, taking differences and adding them up, in their own notation. This book will not
+teach you one of them. What it does is put the moves in your hands, on an object small enough to
+count.
 
 You are not asked to believe anything: until the pencil runs out, every number you are asked to
-check is one you can do by hand, and after that from a record that travels with the book. And one
-thing you will not have matters most: a claim about the world. What we built is a toy, and a borrowed
+check is one you can do by hand, and after that from a record that travels with the book. One thing
+you will not have matters most: a claim about the world. What we built is a toy, and a borrowed
 physics word names a feature of it.
 
 ## The road
@@ -60,7 +60,7 @@ Then the napkin visibly runs out. The smallest world with any room in it needs a
 do, so the same rule, unchanged, goes to a machine — on a world with no edge at all.
 
 The rest is what came back. A ripple lopsided until one setting fixed it. What it costs to push on a
-piece of it. A gap emptier than empty. A wall that worked, and hopes that did not. A measurement with
+piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement with
 its answer key taken away, a law that came back refused, and a published miss that turned out to be
 our own bookkeeping. The noes are kept on purpose and given the same room as the yeses, because a
 machine that can only agree with you is not an instrument.
