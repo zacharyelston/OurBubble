@@ -593,7 +593,14 @@ def check_napkin_captions(errors: List[str]) -> str:
         return "unavailable"
 
     def caption(name: str) -> str:
-        rendered = napkin.render(name)
+        # A token whose own assertion fails is `check_napkin_determinism`'s report to make, by name;
+        # it runs first and has already said so. Re-raising here would replace that named error with
+        # a traceback, and a traceback is a status line nobody wrote — found by mutating a number in
+        # engine/napkin.json and re-hashing the lock, 2026-09-02.
+        try:
+            rendered = napkin.render(name)
+        except Exception:  # noqa: BLE001 - reported by the self-test above, by name
+            return ""
         marker = "*computed while this page was built — "
         if marker not in rendered:
             return ""
@@ -666,7 +673,10 @@ def check_napkin_contradictions(errors: List[str]) -> str:
     # proofreader, 2026-09-02). The caption is the sentence claiming the page computed its numbers;
     # it answers to the same refusal list as the prose it sits under.
     for name in sorted(napkin.TOKENS):
-        rendered = napkin.render(name)
+        try:
+            rendered = napkin.render(name)
+        except Exception:  # noqa: BLE001 - reported by the napkin self-test above, by name
+            continue
         phrases = everywhere + refused.get(name, [])
         for phrase in hits(rendered, phrases):
             errors.append(
