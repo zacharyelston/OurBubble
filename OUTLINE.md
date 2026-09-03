@@ -30,7 +30,7 @@ reader every time instead of explained to her once.
 ## 0 · What you will have
 
 1. What is this book actually about — and should I go and look it up?  *(a thing called **discrete exterior calculus**: a way of doing calculus on a shape made of dots, lines and faces. No — she will meet all five of the forbidding names as things she can count, and almost none of them as words. The borrowed names the book does use arrive after the thing they name)*
-2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, a machine's honest no she can read, and a path from any number to the file it came out of. Nothing to believe: the first half checks with a pencil, the second is quoted from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
+2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, a machine's honest no she can read, and a path from any number we produced to where it came from. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they are quoted from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
 3. What is the road?  *(five chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
 4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. It starts where measurement started: one shadow, and the smallest possible next thing)*
 
@@ -211,8 +211,7 @@ so they stop being frightening, then hands her each of the five things they name
 **It does not say the names arrive later, because five of them never do** (a proofreader, 2026-09-02:
 *Hodge*, *Laplacian*, *exactness*, *forms* and *stability* appear nowhere in the chapters, and the
 first draft promised all seven would). What it says instead is what is true and better: she will
-meet the things and almost none of the words. The two borrowed names the book really does use — *the
-vacuum* and *universality* — are named as the exceptions, and both arrive after the thing they name.
+meet the things and almost none of the words.
 
 The tease is the owner's — she will know what the people who work on this know — and it is bounded
 by the firewall in the same breath: what she will not have is a claim about the world. It carries no
