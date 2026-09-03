@@ -14,3 +14,10 @@ __pycache__/
 # Editor / OS
 .DS_Store
 *.swp
+
+# The vendored engine build: a symlink to the UniForge checkout, made by tools/build_engine.sh so
+# the emitter crate can path-depend on it. The artifact it produces (engine/) IS committed; the
+# route to the private source is not.
+/tools/engine_emit/uniforge
+/tools/engine_emit/target/
+/tools/engine_emit/Cargo.lock

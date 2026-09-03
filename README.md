@@ -89,15 +89,61 @@ Building can legitimately modify a tracked file: `chapters/the-simulations.md` i
 to the record and someone remembering to run a script. `git status` is therefore part of the check —
 a clean tree after a build means the appendix and the record agree.
 
-The build also **computes some of the book's numbers**. Chapters 1–4 live on one triangle, one
-tetrahedron and the two shapes it is made of, where every number is finger-countable, so rather than
-quote them the chapters carry `{{napkin:…}}` tokens that the preprocessor replaces with arithmetic it
-runs at build time — the census, the loop sums, the ten-tick table, the octahedron's crossing. Each rendered block says so on its last line. The
-arithmetic is exact (rational, no floating point), recomputed twice on every check to prove it is
-deterministic, and each token asserts its own invariant — loop sums zero, total conserved — before it
-renders anything. The tokens and the scope of their one exemption from the appendix-anchoring rule
-are specified in [`EDITION_STANDARD.md`](EDITION_STANDARD.md); the backend is
-[`tools/napkin.py`](tools/napkin.py).
+The build also **puts some of the book's numbers on the page from the engine**. Chapters 1–4 live on
+one triangle, one tetrahedron and the two shapes it is made of, where every number is
+finger-countable, so rather than quote them the chapters carry `{{napkin:…}}` tokens that the
+preprocessor replaces at build time — the census, the loop sums, the ten-tick table, the octahedron's
+crossing. Each rendered block says so on its last line. The arithmetic is exact (rational, no
+floating point), each block is recomputed twice on every check to prove it is deterministic, and each
+token asserts its own claim — loop sums zero, total conserved — before it renders anything. The
+tokens and the scope of their one exemption from the appendix-anchoring rule are specified in
+[`EDITION_STANDARD.md`](EDITION_STANDARD.md); the renderer is
+[`tools/napkin.py`](tools/napkin.py), and where the numbers come from is the next section.
+
+## The engine contract
+
+**There is one engine, and the book does not contain it.** Since 2026-09-02 every number the pages
+compute comes from UniForge's `napkin` crate — 23 registered computations, `lab/napkin/0001` — and
+Python and JavaScript are renderers of what it emits. Before that there were three implementations
+of one arithmetic, and three implementations are three places a book can disagree with itself.
+
+The engine is private and this book is public, so the artifact is **vendored**, pinned exactly the
+way the record is:
+
+- [`engine.lock`](engine.lock) names the UniForge commit, the crate version, the toolchain, the
+  exact build commands, and the sha256 of every vendored file.
+- [`engine/`](engine) is the artifact, committed: the canonical payload every token is rendered
+  from, the crate compiled to WebAssembly with its glue for the reader's own browser, and
+  [`engine/PROVENANCE.md`](engine/PROVENANCE.md). **Every clone builds the book and runs the demos
+  with no access to UniForge at all**, and the whole directory is published at `…/OurBubble/engine/`
+  through the `chapters/engine` symlink.
+- [`tools/build_engine.sh`](tools/build_engine.sh) is the only thing that may write it, and it
+  refuses to vendor anything whose canonical JSON is not byte-identical to the Python oracle's.
+
+**Three layers hold it**, and two of them run in any clone:
+
+1. **The hashes**, both ways: every file the lock names is present and hashes to what it says, and
+   every file under `engine/` is named by the lock.
+2. **The wasm is the same engine as the JSON**: the module is loaded under node and asked the census
+   question, and its answer must be the vendored payload's own bytes for it — 1 617 of them.
+3. **A fresh build reproduces the vendored bytes**, when `UNIFORGE_SRC` points at a UniForge
+   checkout at the pinned commit. When it does not, the checker prints `engine integrity:
+   unverified — engine source absent` and asserts nothing.
+
+And beside them, [`tools/engine_check.py`](tools/engine_check.py): the Python that used to *be* the
+engine — `tools/oracle.py` and `tools/octahedron.py` — is kept as an independent recomputation and
+must reproduce the vendored bytes exactly. Two implementations sharing no code, no arithmetic library
+and no language, agreeing on 22 969 bytes, is what makes a number on a page a fact about the object
+rather than a fact about one program.
+
+[`TOKENS.md`](TOKENS.md) lists all 23 rows, which thirteen the chapters render today, and how to add
+a token for one of the others.
+
+### Bumping the engine
+
+Five steps, one commit, and the shape is the record's: edit `sha` in `engine.lock`, check that commit
+out in your UniForge clone, run `tools/build_engine.sh`, run `make check`, and commit the pin, the
+artifact and the hashes together. `engine.lock`'s header is the long version.
 
 ## The demos
 
@@ -109,8 +155,7 @@ that mdBook copies.
 
 The rule they live under is the book's own, one layer out: **every number a demo shows is one it
 computed, it equals the napkin's to the last digit, and no number is typed into a demo by hand.**
-`tools/napkin_export.py` dumps the napkin's data (not its prose) to `demos/data/napkin.json` on every
-build; `node demos/core.test.mjs` runs the browser's arithmetic and compares it to that export value
+`demos/data/napkin.json` is a copy of the vendored engine's payload, written on every build; `node demos/core.test.mjs` runs the browser's arithmetic and compares it to that export value
 by value as exact rational strings, refuses any numeric token the export does not contain on any
 surface a reader meets — cell, caption, title, prose, note or drawing — and refuses any digit typed
 into the step definitions at all. Both run inside `make check`, and when node is not installed the
@@ -175,7 +220,9 @@ records the SHA it was taken at, and it must match the lock.
 | `check_edition.py` | the checker |
 | `gen_appendix.py` · `preprocessor.py` | the appendix generator, and the mdBook hook that runs it on every build |
 | `record.lock` · `record/` · `tools/fetch_record.sh` · `tools/snapshot_record.sh` | the record contract: the pin, the committed snapshot, and the two scripts that derive it |
-| `tools/napkin.py` · `tools/octahedron.py` · `preprocessor.py` | the numbers chapters 1–4 compute at build time, the object the later ones are computed on, and the mdBook hook that runs them |
+| `engine.lock` · `engine/` · `tools/build_engine.sh` · `tools/lock_engine.py` | the engine contract: the pin, the vendored artifact, and the two scripts that produce them |
+| `tools/engine.py` · `tools/napkin.py` · `preprocessor.py` · `TOKENS.md` | the only door to the vendored data, the renderer that turns it into the book's thirteen blocks, the mdBook hook that runs them, and what else is available |
+| `tools/oracle.py` · `tools/octahedron.py` · `tools/engine_check.py` · `tools/engine_wasm_check.mjs` | the Python that used to be the engine, kept as the independent recomputation that must reproduce it byte for byte, and the node probe that proves the vendored wasm is the same engine as the vendored JSON |
 | `tools/renumber_beats.py` | moves beat numbers through `OUTLINE.md` and every chapter's markers together, when a beat is inserted |
 | `demos/` · `tools/napkin_export.py` | the demos: one page per chapter of the napkin world, recomputing its numbers in the reader's browser, and the export they are checked against — `demos/DEMOS.md` |
 | `CANON.md` · `tools/canon.py` | the one labeling of the tetrahedron, derived from the napkin, and the only code that draws its net |

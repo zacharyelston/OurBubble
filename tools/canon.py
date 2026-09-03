@@ -38,6 +38,7 @@ from pathlib import Path
 from typing import Dict, List, Sequence, Tuple
 
 import napkin
+import oracle
 
 # ── the canon, as data ────────────────────────────────────────────────────────────────────────────
 
@@ -45,9 +46,9 @@ import napkin
 NAMES: Tuple[str, ...] = napkin.NAMES
 
 #: The vertices, the six lines and the four faces — in `simplices()` order and no other.
-DOTS: List[Tuple[int, ...]] = napkin.simplices(napkin.VERTICES, 0)
-LINES: List[Tuple[int, ...]] = napkin.simplices(napkin.VERTICES, 1)
-FACES: List[Tuple[int, ...]] = napkin.simplices(napkin.VERTICES, 2)
+DOTS: List[Tuple[int, ...]] = oracle.simplices(oracle.VERTICES, 0)
+LINES: List[Tuple[int, ...]] = oracle.simplices(oracle.VERTICES, 1)
+FACES: List[Tuple[int, ...]] = oracle.simplices(oracle.VERTICES, 2)
 
 #: A simplex's name: its vertices' letters, in ascending order. `napkin.edge_name`, reused so that
 #: there is exactly one function in the repository that turns a simplex into a label.
@@ -167,11 +168,11 @@ def segments() -> List[Tuple[Tuple[int, ...], Tuple[Point, Point], Tuple[int, ..
     drawn twice carries its name twice — the same name, because it is the same line, and seeing `CD`
     on two edges of the paper is how a reader sees where the fold is.
     """
-    central_lines = set(napkin.simplices(CENTRAL, 1))
+    central_lines = set(oracle.simplices(CENTRAL, 1))
     out: List[Tuple[Tuple[int, ...], Tuple[Point, Point], Tuple[int, ...]]] = []
     for face, positions in PANELS:
         place = dict(zip(face, positions))
-        for line in napkin.simplices(face, 1):
+        for line in oracle.simplices(face, 1):
             if face != CENTRAL and line in central_lines:
                 continue  # already drawn, as the central panel's own side
             out.append((line, (place[line[0]], place[line[1]]), face))
@@ -391,9 +392,9 @@ def self_test() -> str:
     two renders are the same bytes.
     """
     # 1. The object is the napkin's, name for name and in its order.
-    assert DOTS == napkin.simplices(napkin.VERTICES, 0), "the canon's dots are not the napkin's"
-    assert LINES == napkin.simplices(napkin.VERTICES, 1), "the canon's lines are not the napkin's"
-    assert FACES == napkin.simplices(napkin.VERTICES, 2), "the canon's faces are not the napkin's"
+    assert DOTS == oracle.simplices(oracle.VERTICES, 0), "the canon's dots are not the napkin's"
+    assert LINES == oracle.simplices(oracle.VERTICES, 1), "the canon's lines are not the napkin's"
+    assert FACES == oracle.simplices(oracle.VERTICES, 2), "the canon's faces are not the napkin's"
     assert (len(DOTS), len(LINES), len(FACES)) == (4, 6, 4), (
         f"the census came out {(len(DOTS), len(LINES), len(FACES))}, not 4 dots, 6 lines, 4 faces"
     )

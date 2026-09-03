@@ -11,6 +11,14 @@
 # reader can click from a number in the appendix through to the file it came from without any access
 # to the engine. mdBook copies it into the build via the `chapters/record` symlink.
 #
+# It carries `engine/` the same way, through `chapters/engine`: the vendored napkin engine, pinned by
+# `engine.lock` — the canonical payload the book's numbers are rendered from, and the crate compiled
+# to WebAssembly for the reader's own browser. `check_edition.py --rendered` compares every published
+# byte against the vendored file, because a symlink that stops being copied would break nothing the
+# build notices. GitHub Pages serves `.wasm` with `Content-Type: application/wasm`, which is what
+# `WebAssembly.instantiateStreaming` needs; no configuration is required here, and the wasm-bindgen
+# glue falls back to `arrayBuffer()` if a host ever gets it wrong.
+#
 # Pages is configured with `build_type: workflow`, so this workflow is the only thing that publishes.
 
 name: pages
