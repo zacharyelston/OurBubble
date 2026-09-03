@@ -42,14 +42,16 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from napkin import (  # noqa: E402  (needs the path above)
+# The arithmetic comes from `oracle.py` and the rendering from `napkin.py`, and that split is the
+# 2026-09-02 decision in one import: the engine is UniForge's `napkin` crate, this module and the
+# oracle are the Python that checks it, and the napkin is now a renderer. See `tools/oracle.py`.
+from napkin import number, signed  # noqa: E402  (needs the path above)
+from oracle import (  # noqa: E402
     apply,
     coboundary,
     laplacian as napkin_laplacian,
-    number,
     period,
     screw111,
-    signed,
     slosh,
     unit_weights,
 )
@@ -2038,6 +2040,8 @@ def self_test() -> None:
     napkin_ceilings()
     stella_runaway()
     # The napkin's own tokens must be untouched by the `slosh` generalisation this module needed.
+    # They no longer run this module's arithmetic — they render the vendored engine — so what this
+    # asserts now is that the renderer still works beside it, which is worth a second either way.
     import napkin
     for token in napkin.TOKENS:
         napkin.render(token)

@@ -1,116 +1,65 @@
 #!/usr/bin/env python3
-"""The napkin backend: the book's chapters 1–4 numbers, computed while the page is built.
+"""The napkin: the book's chapters 1–5 numbers, **rendered** from the engine while the page is built.
 
 Chapters 1–4 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
 and every number in them is finger-countable — four dots, six lines, three differences, ten ticks,
 and then a crossing that takes two of those ticks. Quoting such numbers from a record would be
 theatre: the reader can check them on a napkin, so the book should do the same thing in front of her
 rather than cite itself. Each `{{napkin:NAME}}` token in a chapter is replaced at build time by the
-result of running the arithmetic here, and every rendered block says so.
+block this file renders, and every rendered block says so.
 
-Chapter 4 is where the napkin runs out, on purpose, and that is its finding: the arithmetic for the
-shapes bigger than one tetrahedron lives in `tools/octahedron.py`, and the last of those shapes
-cannot be run at the chapters' own tick size at all. `number()` refusing to print it is not a
-formatting problem — it is the chapter's point, arriving in the one place it cannot be argued with.
+**This file computes nothing.** That changed on 2026-09-02, and it is the whole point of the change.
+The arithmetic is UniForge's `napkin` crate — registered as `lab/napkin/0001`, 23 computations —
+vendored under [`engine/`](../engine/PROVENANCE.md) and pinned by [`engine.lock`](../engine.lock)
+the way `record/` is pinned. `tools/engine.py` reads it; this file turns it into tables. Before that
+there were three implementations of one arithmetic — here, in `demos/core.mjs`, and in the crate —
+and three implementations are three places a book can disagree with itself.
 
-**Everything is exact.** `fractions.Fraction` throughout, and each value is rendered by
-`number()`, which refuses anything it cannot write down exactly and briefly. There is no floating
-point anywhere in this file, so two builds of the same commit cannot differ.
+The Python that used to do the work is still in the repository, in `tools/oracle.py` and
+`tools/octahedron.py`, and it has exactly one job left: `tools/engine_check.py` runs it on every
+`make check` and requires its output to be **byte-identical** to what is vendored. The oracle became
+the guard. The reader sees one engine.
 
-**Every token asserts its own invariant before it renders.** The loop sums are zero, the inside sum
-is zero, the total is conserved — those are the *claims* the chapters make, so a token that cannot
-demonstrate its claim raises and takes the build down with it. A napkin that quietly printed a
-non-zero loop sum would be worse than no napkin.
+**Everything is exact.** `fractions.Fraction` throughout, and each value is rendered by `number()`,
+which refuses anything it cannot write down exactly and briefly. There is no floating point anywhere
+in this file.
 
-The object and the rule are the engine's, replicated faithfully in Python:
+Chapter 4 is where the napkin runs out, on purpose, and that is its finding: the last of the shapes
+bigger than one tetrahedron cannot be run at the chapters' own tick size at all. `number()` refusing
+to print it is not a formatting problem — it is the chapter's point, arriving in the one place it
+cannot be argued with.
 
-* the tetrahedron is the complete simplicial 3-simplex — vertices, and every subset of them —
-  with the standard alternating boundary, and `d∘d = 0` is asserted on both rungs rather than
-  assumed;
-* one tick is `step_scalar_wave` from `core/solve/src/wave_solver.rs`:
-  `φ' = 2φ − φ_old − c²dt² Δ₀φ`, with `Δ₀ = ⋆₀⁻¹ d₀ᵀ ⋆₁ d₀` from `core/dec/src/operators.rs`
-  (`apply_laplacian_0_metric`). With `⋆₀ = 1` and `⋆₁ = w_e` that is exactly
-  `(Δφ)_i = Σ_j w_ij (φ_i − φ_j)`, so **the dial the book turns in chapter 2 is `⋆₁`** — the same
-  object that decides isotropy in chapter 5, on six lines you can see.
+**Every token asserts its own claim before it renders.** The loop sums are zero, the inside sum is
+zero, the total is conserved — those are the *claims* the chapters make, so a token that cannot
+demonstrate its claim raises and takes the build down with it. Those assertions read the vendored
+data rather than a fresh computation, which makes them the last line of the engine's integrity
+layer: an edited `engine/napkin.json` fails the hashes in `check_edition.py`, and if it somehow
+reached a page it would fail here too, by name.
+
+FIREWALL: the engine computes a toy DEC lattice. *Dot, line, face, inside, tick, slosh, poke,
+crossing, stella, world* name features of that lattice, never claims about nature. See
+`../FIREWALL.md`.
 """
 
 from __future__ import annotations
 
+import os
 import re
+import sys
 from fractions import Fraction
-from itertools import combinations
 from typing import Dict, List, Sequence, Tuple
 
-# ── the object ────────────────────────────────────────────────────────────────────────────────────
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import engine  # noqa: E402  (needs the path above)
+
+# ── the book's names ──────────────────────────────────────────────────────────────────────────────
+#
+# The one thing this file owns outright. Names are presentation: the engine calls the dots 0, 1, 2, 3
+# and the book calls them A, B, C, D, and which is which is the book's decision, made once, here.
 
 NAMES = ("A", "B", "C", "D")
 VERTICES: Tuple[int, ...] = (0, 1, 2, 3)
-
-
-def simplices(vertices: Sequence[int], k: int) -> List[Tuple[int, ...]]:
-    """The k-simplices of the complete complex on `vertices`, each ascending, all in ascending order.
-
-    Ascending vertex order *is* the orientation, which is what makes the alternating signs below the
-    only convention in play — the same one the engine's incidence tables are built from.
-    """
-    return sorted(combinations(sorted(vertices), k + 1))
-
-
-def coboundary(cells_lo: Sequence[Tuple[int, ...]], cells_hi: Sequence[Tuple[int, ...]]):
-    """The matrix of `d` from k-forms on `cells_lo` to (k+1)-forms on `cells_hi`.
-
-    `(d f)(σ) = Σ_i (−1)^i f(σ with its i-th vertex dropped)` — the standard simplicial coboundary.
-    """
-    index = {cell: i for i, cell in enumerate(cells_lo)}
-    rows = []
-    for hi in cells_hi:
-        row = [0] * len(cells_lo)
-        for i in range(len(hi)):
-            face = hi[:i] + hi[i + 1:]
-            row[index[face]] += (-1) ** i
-        rows.append(row)
-    return rows
-
-
-def apply(matrix, values: Sequence[Fraction]) -> List[Fraction]:
-    return [sum(coefficient * value for coefficient, value in zip(row, values)) for row in matrix]
-
-
-def census(vertices: Sequence[int] = VERTICES) -> Dict[str, object]:
-    """The counts, and the proof that the object they describe is a complex.
-
-    `d∘d = 0` is checked on both rungs — dots→lines→faces and lines→faces→inside — because it is the
-    one fact chapters 1 and 2 are entirely about, and it is combinatorial: it holds because the
-    signs cancel, not because a number came out small.
-    """
-    dots = simplices(vertices, 0)
-    lines = simplices(vertices, 1)
-    faces = simplices(vertices, 2)
-    insides = simplices(vertices, 3)
-
-    d0 = coboundary(dots, lines)
-    d1 = coboundary(lines, faces)
-    d2 = coboundary(faces, insides)
-
-    for lower, upper, label in ((d0, d1, "d₁∘d₀"), (d1, d2, "d₂∘d₁")):
-        for row in [apply(upper, column) for column in _columns(lower)]:
-            assert all(entry == 0 for entry in row), f"{label} ≠ 0 — the object is not a complex"
-
-    return {
-        "dots": dots, "lines": lines, "faces": faces, "insides": insides,
-        "d0": d0, "d1": d1, "d2": d2,
-    }
-
-
-def _columns(matrix) -> List[List[Fraction]]:
-    """The columns of `matrix` as vectors, for composing two operators one basis element at a time."""
-    if not matrix:
-        return []
-    return [
-        [Fraction(matrix[row][col]) for row in range(len(matrix))]
-        for col in range(len(matrix[0]))
-    ]
-
 
 # ── rendering ─────────────────────────────────────────────────────────────────────────────────────
 
@@ -194,468 +143,6 @@ def block(name: str, body: str, what: str) -> str:
     return (
         f"<!-- napkin:{name} -->\n\n{body.strip()}\n{footnote(what)}\n<!-- /napkin:{name} -->"
     )
-
-
-# ── the tokens ────────────────────────────────────────────────────────────────────────────────────
-
-# Four corner values, used by every tetrahedron token so the chapters can carry one example
-# through. Mean 3, chosen so the deviations (−1, +2, −2, +1) are distinct and small.
-CORNERS: Tuple[int, int, int, int] = (2, 5, 1, 4)
-
-# Six freely chosen line-numbers for `tetra_inside_sum` — arrows in their own right rather than
-# differences of corner values. This is beat 22's move, and it is the whole reason that token is
-# worth printing: differences would give four zero faces, and 0+0+0+0 = 0 demonstrates nothing.
-ARROWS: Tuple[int, ...] = (3, 1, 1, 2, 1, 1)
-
-# One tick. `k = c²dt²` in the engine's `step_scalar_wave`.
-#
-# k = 1/2 is the choice that keeps this table on a napkin. The tetrahedron's Laplacian has
-# eigenvalues 0 and 4 (three times) with unit weights, and 0, 4, 4, 6 with one line doubled; a mode
-# of eigenvalue λ obeys x' = (2 − kλ)x − x_prev, so k = 1/2 makes every coefficient an integer in
-# both runs and the tables come out in whole numbers and halves. It is also stable in both: the
-# leapfrog needs kλ < 4, and 1/2 · 6 = 3.
-TICK_K = Fraction(1, 2)
-TICKS = 10
-
-
-def laplacian(values: Sequence[Fraction], weights: Dict[Tuple[int, ...], Fraction],
-              lines: Sequence[Tuple[int, ...]]) -> List[Fraction]:
-    """`Δ₀ = ⋆₀⁻¹ d₀ᵀ ⋆₁ d₀` with `⋆₀ = 1`, i.e. `(Δφ)_i = Σ_j w_ij (φ_i − φ_j)`.
-
-    Written as the engine writes it — gradient, apply `⋆₁`, take the codifferential — rather than as
-    the graph-Laplacian shortcut, so that the `⋆₁` in the middle is visibly the same dial.
-    """
-    out = [Fraction(0)] * len(values)
-    for line in lines:
-        i, j = line
-        flux = weights[line] * (values[j] - values[i])   # ⋆₁ d₀ φ on this line
-        out[i] -= flux                                    # d₀ᵀ, sign −1 at the low vertex
-        out[j] += flux                                    # sign +1 at the high vertex
-    return out
-
-
-def slosh(weights: Dict[Tuple[int, ...], Fraction], lines: Sequence[Tuple[int, ...]],
-          ticks: int = TICKS, initial: Sequence[Fraction] | None = None,
-          k: Fraction = TICK_K) -> List[List[Fraction]]:
-    """The engine's leapfrog scalar wave, started from rest, `ticks` times.
-
-    Started from rest (`φ_old = φ_0`) for a reason that matters to the chapter: the rows of `Δ₀` sum
-    to zero, so `Σφ` obeys `S' = 2S − S_prev`, and beginning with `S_prev = S_0` makes the total
-    *exactly* constant for ever. The conserved total is not a property of the wave in general — it
-    is a property of this rule started this way, and the assertion below is what holds us to it.
-
-    `initial` and `k` default to the chapter's own four corners and tick size, so the tokens above
-    are unchanged. They exist so that a *larger* object can be run through this same rule rather
-    than through a second copy of it: `tools/octahedron.py` runs the octahedron and the stella
-    octangula here, and a second leapfrog written next door would be the one place the book could
-    disagree with itself about what one step is.
-    """
-    current = [Fraction(v) for v in (CORNERS if initial is None else initial)]
-    previous = list(current)
-    history = [list(current)]
-    for _ in range(ticks):
-        lap = laplacian(current, weights, lines)
-        nxt = [2 * c - p - k * l for c, p, l in zip(current, previous, lap)]
-        previous, current = current, nxt
-        history.append(list(current))
-    total = sum(history[0])
-    for tick, row in enumerate(history):
-        assert sum(row) == total, (
-            f"the total changed at tick {tick}: {sum(row)} ≠ {total} — this rule conserves it, so "
-            f"either the step or the Laplacian is wrong"
-        )
-    return history
-
-
-def unit_weights(lines: Sequence[Tuple[int, ...]]) -> Dict[Tuple[int, ...], Fraction]:
-    return {line: Fraction(1) for line in lines}
-
-
-def tetra_counts() -> str:
-    c = census()
-    counts = (len(c["dots"]), len(c["lines"]), len(c["faces"]), len(c["insides"]))
-    assert counts == (4, 6, 4, 1), f"the tetrahedron's census came out {counts}"
-    body = (
-        "| dots | lines | faces | solid inside |\n"
-        "|---|---|---|---|\n"
-        f"| {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |"
-    )
-    return block("tetra_counts", body,
-                 "the tetrahedron's census, and that walking the boundary comes home to zero twice "
-                 "over — round each face, and round the solid inside")
-
-
-def triangle_loop_example() -> str:
-    values = [Fraction(v) for v in (2, 5, 1)]
-    walk = [(0, 1), (1, 2), (2, 0)]
-    steps = [(a, b, values[b] - values[a]) for a, b in walk]
-    total = sum(step[2] for step in steps)
-    assert total == 0, f"the triangle's loop sum came out {total}"
-
-    rows = "\n".join(
-        f"| {NAMES[a]} → {NAMES[b]} | {number(values[b])} − {number(values[a])} | {signed(d)} |"
-        for a, b, d in steps
-    )
-    body = (
-        f"Corners: **{NAMES[0]} = {number(values[0])}**, **{NAMES[1]} = {number(values[1])}**, "
-        f"**{NAMES[2]} = {number(values[2])}**.\n\n"
-        "| step | arithmetic | difference |\n|---|---|---|\n"
-        f"{rows}\n"
-        f"| **all the way round** | {signed(steps[0][2])} {signed(steps[1][2])} "
-        f"{signed(steps[2][2])} | **0** |"
-    )
-    return block("triangle_loop_example", body,
-                 "the three differences on one triangle and their sum, from the corner values 2, 5, 1")
-
-
-def tetra_face_loops() -> str:
-    c = census()
-    lines, faces = c["lines"], c["faces"]
-    values = [Fraction(v) for v in CORNERS]
-    differences = apply(c["d0"], values)
-    loops = apply(c["d1"], differences)
-    assert all(loop == 0 for loop in loops), f"a face loop came out non-zero: {loops}"
-
-    corner_text = ", ".join(f"**{NAMES[i]} = {number(values[i])}**" for i in VERTICES)
-    line_rows = " | ".join(edge_name(line) for line in lines)
-    diff_rows = " | ".join(signed(d) for d in differences)
-    face_rows = "\n".join(
-        f"| {edge_name(face)} | {walk_terms(c['d1'][fi], differences)} | **{number(loops[fi])}** |"
-        for fi, face in enumerate(faces)
-    )
-    body = (
-        f"Corners: {corner_text}.\n\n"
-        f"| line | {line_rows} |\n"
-        f"|---|{'---|' * len(lines)}\n"
-        f"| difference | {diff_rows} |\n\n"
-        "| face | its three line-numbers | loop, walked round |\n|---|---|---|\n"
-        f"{face_rows}"
-    )
-    return block("tetra_face_loops", body,
-                 "the six differences on one tetrahedron and each face's loop sum, from the corner "
-                 "values 2, 5, 1, 4")
-
-
-def tetra_inside_sum() -> str:
-    c = census()
-    lines, faces = c["lines"], c["faces"]
-    arrows = [Fraction(a) for a in ARROWS]
-    face_numbers = apply(c["d1"], arrows)
-    inside = apply(c["d2"], face_numbers)
-
-    assert all(f != 0 for f in face_numbers), (
-        f"a face came out zero ({face_numbers}), so the inside sum would demonstrate less than it "
-        f"claims — choose line-numbers that are not differences of corner values"
-    )
-    assert inside == [Fraction(0)], f"the inside sum came out {inside}"
-
-    line_rows = " | ".join(edge_name(line) for line in lines)
-    arrow_rows = " | ".join(number(a) for a in arrows)
-    inside_terms = walk_terms(c["d2"][0], face_numbers)
-
-    # K36 (proofread, tranche A round 2): the chapter tells the reader she can do this check with a
-    # pencil, and the appendix now promises the arithmetic is shown. So show it. Each face is walked
-    # the same way round as seen from OUTSIDE the tetrahedron, which is the orientation that makes
-    # every line get walked once in each direction — the reason the grand total is zero. Printing
-    # the walk makes both the direction and the sum checkable instead of inferred.
-    # Each face is shown walked the way the boundary operator actually takes it — outward. Where the
-    # incidence carries a minus, the face is displayed walked the other way round and its number
-    # negated, which is the same arithmetic and removes the alternating-sign convention from the
-    # reader's side of it: all four displayed numbers then simply add.
-    walk_rows = []
-    outward = []
-    for index, (face, total) in enumerate(zip(faces, face_numbers)):
-        sign = c["d2"][0][index]
-        row = [sign * value for value in c["d1"][index]]
-        letters = list(edge_name(face))
-        cycle = letters if sign > 0 else [letters[0], letters[2], letters[1]]
-        outward.append(sign * total)
-        walk_rows.append(
-            f"| {' → '.join(cycle + [cycle[0]])} | {walk_terms(row, arrows)} | "
-            f"**{number(sign * total)}** |"
-        )
-    walk_table = "\n".join(walk_rows)
-    assert sum(outward) == 0, f"the four outward face-numbers came to {sum(outward)}"
-    outward_terms = " ".join(
-        (f"+{number(v)}" if v > 0 else f"−{number(-v)}") for v in outward
-    ).lstrip("+")
-
-    body = (
-        "This time the six line-numbers are given, not worked out from the corners — six arrows in "
-        "their own right. So a face's loop need not be zero, and it is not:\n\n"
-        f"| line | {line_rows} |\n"
-        f"|---|{'---|' * len(lines)}\n"
-        f"| arrow | {arrow_rows} |\n\n"
-        "Each face below is walked the same way round as seen from outside, which is what makes the "
-        "two faces meeting along any line walk that line in opposite directions:\n\n"
-        "| walked | its three arrows, signed | how much goes round it |\n"
-        "|---|---|---|\n"
-        f"{walk_table}\n\n"
-        f"Now just add the four up: {outward_terms} = **0**."
-    )
-    return block("tetra_inside_sum",
-                 body,
-                 "four non-zero face-numbers from six freely chosen line-numbers, each face's walk "
-                 "shown, and their oriented sum around the inside")
-
-
-def _slosh_body(history: Sequence[Sequence[Fraction]]) -> str:
-    head = " | ".join(NAMES)
-    rows = []
-    for tick, row in enumerate(history):
-        cells = " | ".join(number(v) for v in row)
-        rows.append(f"| {tick} | {cells} | **{number(sum(row))}** |")
-    return (
-        f"| tick | {head} | total |\n"
-        f"|---|{'---|' * len(NAMES)}---|\n" + "\n".join(rows)
-    )
-
-
-def period(history: Sequence[Sequence[Fraction]]) -> int:
-    """The repeat length of a run, or 0 if it has not repeated within the ticks computed.
-
-    Stated in the footnote rather than left for the reader to notice. Undamped, on four corners that
-    are all each other's neighbours, this rule cannot settle — it returns to where it started — and a
-    table with visibly repeating rows invites "is this broken?". Naming the period answers that, and
-    computing it means the answer cannot be stale.
-    """
-    for candidate in range(1, len(history)):
-        if all(history[i] == history[i % candidate] for i in range(len(history))):
-            return candidate
-    return 0
-
-
-def slosh_table() -> str:
-    c = census()
-    lines = c["lines"]
-    history = slosh(unit_weights(lines), lines)
-    repeat = period(history)
-    assert repeat, "the run did not repeat within the ticks computed"
-    body = _slosh_body(history)
-    return block("slosh_table", body,
-                 f"the one rule, run {TICKS} ticks from rest on one tetrahedron with every line "
-                 f"counting the same; the total is conserved exactly, and with nothing to damp it and "
-                 f"no room to spread into the world never settles — at this step size it comes back "
-                 f"to its start every {repeat} ticks")
-
-
-DIALED_LINE: Tuple[int, ...] = (0, 1)
-
-
-def slosh_table_dialed() -> str:
-    c = census()
-    lines = c["lines"]
-    weights = unit_weights(lines)
-    weights[DIALED_LINE] = Fraction(2)
-    history = slosh(weights, lines)
-
-    plain = slosh(unit_weights(lines), lines)
-    assert history != plain, "doubling a line changed nothing — the dial is not wired up"
-    assert sum(history[0]) == sum(plain[0]), "the two runs must start from the same total"
-
-    # The level the four numbers average to is the one thing the dial must NOT move: it is fixed by
-    # the conserved total, not by the weights. Asserted rather than asserted-in-prose.
-    average = Fraction(sum(history[0]), len(NAMES))
-    for tick, row in enumerate(history):
-        assert Fraction(sum(row), len(row)) == average, f"the average moved at tick {tick}"
-
-    body = _slosh_body(history)
-    return block("slosh_table_dialed", body,
-                 f"the same {TICKS} ticks with line {edge_name(DIALED_LINE)} counted double and "
-                 f"every other line counting one — the dial, on one line. The total is still "
-                 f"conserved exactly and the four numbers still average to {number(average)}; what "
-                 f"changed is the motion, now faster along {edge_name(DIALED_LINE)} than the rest")
-
-
-# ── the object one dimension out: how many kinds of place are there? ──────────────────────────────
-#
-# Chapters 1–3 never leave one tetrahedron. Chapter 4 has to, because she asks for room, and the
-# answer to "do tetrahedra fill space?" is no — so the book has to say what was built instead. This
-# token replicates that construction and counts what it produced.
-#
-# Faithful to `mesh_3d_chiral_tetoct_periodic` in the engine's `core/geom/src/mesh.rs`:
-#
-#   * dots are the integer points with x+y+z EVEN; the odd points are hole centres and carry
-#     nothing at all (asserted below — they must come out with no lines on them);
-#   * every unit cube contributes ONE tetrahedron, on its four even corners;
-#   * every odd point carries the octahedron of its six axis neighbours, cut into four tetrahedra
-#     about ONE long diagonal, and which of the three the cut uses is `(x+y+z) mod 3` —
-#     `chiral_oct_screw111`, the rule the engine's own audit picked.
-#
-# The whole point of the token is the CONTROL. "Three kinds of place" means nothing on its own; it
-# means something next to "cut every hole the same way and there is one kind of place". Same
-# builder, same lattice, one line different.
-
-TORUS_MIN = 6      # the builder's own minimum: parity (mod 2) and the cut rule (mod 3) must both
-TORUS_CHECK = 12   # close under a wrap, and ±2 hops must stay distinct. 12 confirms 6 is enough.
-
-
-def screw111(x: int, y: int, z: int) -> int:
-    """The engine's cut rule: which of the three long diagonals this hole is split about."""
-    return (x + y + z) % 3
-
-
-def uniform_cut(x: int, y: int, z: int) -> int:
-    """The control: every hole cut the same way, whatever its position."""
-    return 0
-
-
-def tetoct_stars(n: int, cut) -> Dict[Tuple[int, int, int], frozenset]:
-    """Build the complex on an n³ torus and return each dot's set of line-directions.
-
-    A dot's "star" here is the set of directions the lines leaving it point in — the arrangement a
-    reader would see standing on that dot and looking around. Directions are taken by shortest way
-    round the torus, so a line that wraps is still the short line it geometrically is.
-    """
-    def wrap(p):
-        return (p[0] % n, p[1] % n, p[2] % n)
-
-    def direction(a, b):
-        out = []
-        for u, v in zip(a, b):
-            d = (v - u) % n
-            out.append(d - n if d > n // 2 else d)
-        return tuple(out)
-
-    tets = []
-    # one tetrahedron per cube, on its four even corners
-    for i in range(n):
-        for j in range(n):
-            for k in range(n):
-                corners = [
-                    (i + a, j + b, k + c)
-                    for a in (0, 1) for b in (0, 1) for c in (0, 1)
-                    if (i + a + j + b + k + c) % 2 == 0
-                ]
-                assert len(corners) == 4, "a cube must have four even corners"
-                tets.append([wrap(p) for p in corners])
-
-    # one cut-up octahedron per odd point
-    for x in range(n):
-        for y in range(n):
-            for z in range(n):
-                if (x + y + z) % 2 == 0:
-                    continue
-                xp, xm = (x + 1, y, z), (x - 1, y, z)
-                yp, ym = (x, y + 1, z), (x, y - 1, z)
-                zp, zm = (x, y, z + 1), (x, y, z - 1)
-                axis = cut(x, y, z)
-                if axis == 0:
-                    d0, d1, eq = xm, xp, [yp, zp, ym, zm]
-                elif axis == 1:
-                    d0, d1, eq = ym, yp, [zp, xp, zm, xm]
-                else:
-                    d0, d1, eq = zm, zp, [xp, yp, xm, ym]
-                for w in range(4):
-                    tets.append([wrap(p) for p in (d0, d1, eq[w], eq[(w + 1) % 4])])
-
-    stars: Dict[Tuple[int, int, int], set] = {}
-    for x in range(n):
-        for y in range(n):
-            for z in range(n):
-                stars[(x, y, z)] = set()
-    for tet in tets:
-        for a in tet:
-            for b in tet:
-                if a != b:
-                    stars[a].add(direction(a, b))
-    return {point: frozenset(star) for point, star in stars.items()}
-
-
-def kinds_of_place(n: int, cut) -> Tuple[int, List[int], Dict[Tuple[int, int, int], int]]:
-    """The number of distinct arrangements, their sizes, and which arrangement each dot has.
-
-    Only the dots that carry lines are counted. The odd points are not places a number can live —
-    they are the holes the octahedra are centred on — and that they come out with no lines at all is
-    asserted here rather than assumed, because it is the load-bearing half of "dots are the even
-    points".
-    """
-    stars = tetoct_stars(n, cut)
-    arrangements: Dict[frozenset, int] = {}
-    labels: Dict[Tuple[int, int, int], int] = {}
-    sizes: List[int] = []
-    for point in sorted(stars):
-        star = stars[point]
-        if sum(point) % 2:
-            assert not star, f"the hole at {point} carries {len(star)} line(s); it should carry none"
-            continue
-        assert len(star) == 14, f"the dot at {point} has {len(star)} lines, not 14"
-        if star not in arrangements:
-            arrangements[star] = len(arrangements)
-            sizes.append(0)
-        labels[point] = arrangements[star]
-        sizes[arrangements[star]] += 1
-    return len(arrangements), sizes, labels
-
-
-def vertex_classes() -> str:
-    dots = TORUS_MIN ** 3 // 2
-
-    count, sizes, labels = kinds_of_place(TORUS_MIN, screw111)
-    assert count == 3, f"the twisting rule gave {count} kinds of place, not 3"
-    assert sizes == [dots // 3] * 3, f"the three kinds are not equal thirds: {sizes}"
-    assert sum(sizes) == dots, f"{sum(sizes)} dots classified, expected {dots}"
-
-    # Each kind is exactly one value of (x+y+z) mod 3 — the arrangement a dot has is fixed by where
-    # it sits, and by nothing else. This is the claim the chapter will make, so it is the assertion.
-    by_kind: Dict[int, set] = {}
-    for point, kind in labels.items():
-        by_kind.setdefault(kind, set()).add(sum(point) % 3)
-    assert all(len(values) == 1 for values in by_kind.values()), (
-        f"a kind of place spans more than one position rule: {by_kind}"
-    )
-    assert {next(iter(v)) for v in by_kind.values()} == {0, 1, 2}, (
-        f"the three kinds do not use all three positions: {by_kind}"
-    )
-
-    control, control_sizes, _ = kinds_of_place(TORUS_MIN, uniform_cut)
-    assert control == 1, f"cutting every hole the same way gave {control} kinds, not 1"
-    assert control_sizes == [dots], f"the control's single kind does not hold every dot: {control_sizes}"
-
-    # A bigger world must agree, or 6 was too small to see the truth rather than the wrap.
-    bigger, bigger_sizes, _ = kinds_of_place(TORUS_CHECK, screw111)
-    big_dots = TORUS_CHECK ** 3 // 2
-    assert bigger == 3, f"the {TORUS_CHECK}³ world gave {bigger} kinds, not 3"
-    assert bigger_sizes == [big_dots // 3] * 3, f"the bigger world is not in thirds: {bigger_sizes}"
-
-    body = (
-        "| how the holes are cut | kinds of place | how the dots divide |\n"
-        "|---|---|---|\n"
-        f"| all the same way | **{control}** | all {dots} alike |\n"
-        f"| turning by a third each step | **{count}** | "
-        f"{' · '.join(str(size) for size in sizes)} — exact thirds |"
-    )
-    return block("vertex_classes", body,
-                 f"the object built on a {TORUS_MIN}×{TORUS_MIN}×{TORUS_MIN} wrapped world — every "
-                 f"dot has {14} lines either way, and the only difference is the cut: cut every hole "
-                 f"alike and every dot stands in the same arrangement, turn the cut by a third each "
-                 f"step and there are exactly three, in equal thirds "
-                 f"(confirmed unchanged on a {TORUS_CHECK}³ world)")
-
-
-# ── the shape between: cut the one tetrahedron and look at what is left ──────────────────────────
-#
-# Chapters 1–3 never leave one tetrahedron, and the chapter after them needs room. The cheapest room
-# is not more tetrahedra: it is *inside* the one she has. Mark the middle of each of its six lines,
-# cut, and four half-size tetrahedra come off the tips leaving one octahedron between them — the
-# owner's finding, and the object the record's tiling turns out to be full of.
-#
-# **The arithmetic for these six tokens lives in `tools/octahedron.py`, not here**, and the import
-# below is deliberately inside each function rather than at the top of the file. `octahedron.py`
-# imports *this* module — it runs the chapters' own leapfrog rather than a second copy of it — so a
-# top-level import here would be a cycle. The direction of dependence is the honest one: the napkin
-# owns the rule and the rendering, the other module owns the object and every assertion about it.
-#
-# Nothing below computes anything itself. Each token renders numbers another module has already
-# asserted, and re-asserts the handful of them the chapter's sentences actually lean on, so a claim
-# cannot survive here after stopping being true over there.
-
-
-def _octahedron():
-    import octahedron                        # noqa: PLC0415 — see the note above: a cycle otherwise
-    return octahedron
-
-
 def fraction_text(value: Fraction) -> str:
     """An exact fraction as a fraction — `2/3`, `2/5` — for the values `number()` rightly refuses.
 
@@ -812,13 +299,277 @@ def carries(name: str, body: str, **values: str) -> str:
     return body
 
 
+# ── the tokens ────────────────────────────────────────────────────────────────────────────────────
+#
+# Every value below is read from the vendored engine. The constants the chapters carry — the corner
+# values 2, 5, 1, 4; the six freely chosen arrows; the tick size 1/2; ten ticks — are the engine's
+# choices and arrive with its data, so they are named by where they came from rather than restated
+# here. A token that wanted a different tick size would be asking for a different register row.
+
+
+def tetra_counts() -> str:
+    counts = engine.tetrahedron()["counts"]
+    census = (counts["dots"], counts["lines"], counts["faces"], counts["insides"])
+    assert census == (4, 6, 4, 1), f"the tetrahedron's census came out {census}"
+    body = (
+        "| dots | lines | faces | solid inside |\n"
+        "|---|---|---|---|\n"
+        f"| {census[0]} | {census[1]} | {census[2]} | {census[3]} |"
+    )
+    return block("tetra_counts", body,
+                 "the tetrahedron's census, and that walking the boundary comes home to zero twice "
+                 "over — round each face, and round the solid inside")
+
+
+def triangle_loop_example() -> str:
+    triangle = engine.triangle()
+    values = triangle["values"]
+    steps = triangle["steps"]
+    assert triangle["sum"] == 0, f"the triangle's loop sum came out {triangle['sum']}"
+    assert sum(difference for _, _, difference in steps) == 0, (
+        "the three differences do not add to the sum the engine reported"
+    )
+
+    rows = "\n".join(
+        f"| {a} → {b} | {number(values[NAMES.index(b)])} − {number(values[NAMES.index(a)])} | "
+        f"{signed(difference)} |"
+        for a, b, difference in steps
+    )
+    body = (
+        f"Corners: **{NAMES[0]} = {number(values[0])}**, **{NAMES[1]} = {number(values[1])}**, "
+        f"**{NAMES[2]} = {number(values[2])}**.\n\n"
+        "| step | arithmetic | difference |\n|---|---|---|\n"
+        f"{rows}\n"
+        f"| **all the way round** | {signed(steps[0][2])} {signed(steps[1][2])} "
+        f"{signed(steps[2][2])} | **0** |"
+    )
+    return block("triangle_loop_example", body,
+                 "the three differences on one triangle and their sum, from the corner values 2, 5, 1")
+
+
+def tetra_face_loops() -> str:
+    complex4 = engine.complex_on(4)
+    tetra = engine.tetrahedron()
+    values = tetra["corners"]
+    differences = tetra["differences"]
+    loops = tetra["face_loops"]
+    assert all(loop == 0 for loop in loops), f"a face loop came out non-zero: {loops}"
+
+    corner_text = ", ".join(f"**{name} = {number(values[i])}**" for i, name in enumerate(NAMES))
+    line_rows = " | ".join(tetra["line_names"])
+    diff_rows = " | ".join(signed(d) for d in differences)
+    face_rows = "\n".join(
+        f"| {face} | {walk_terms(complex4['d1'][index], differences)} | "
+        f"**{number(loops[index])}** |"
+        for index, face in enumerate(tetra["face_names"])
+    )
+    body = (
+        f"Corners: {corner_text}.\n\n"
+        f"| line | {line_rows} |\n"
+        f"|---|{'---|' * len(tetra['line_names'])}\n"
+        f"| difference | {diff_rows} |\n\n"
+        "| face | its three line-numbers | loop, walked round |\n|---|---|---|\n"
+        f"{face_rows}"
+    )
+    return block("tetra_face_loops", body,
+                 "the six differences on one tetrahedron and each face's loop sum, from the corner "
+                 "values 2, 5, 1, 4")
+
+
+def tetra_inside_sum() -> str:
+    complex4 = engine.complex_on(4)
+    tetra = engine.tetrahedron()
+    arrows = tetra["arrows"]
+    face_numbers = tetra["face_numbers"]
+    outward = tetra["outward_face_numbers"]
+
+    assert all(value != 0 for value in face_numbers), (
+        f"a face came out zero ({face_numbers}), so the inside sum would demonstrate less than it "
+        f"claims — the six line-numbers must not be differences of corner values"
+    )
+    assert tetra["inside_sum"] == 0, f"the inside sum came out {tetra['inside_sum']}"
+
+    line_rows = " | ".join(tetra["line_names"])
+    arrow_rows = " | ".join(number(a) for a in arrows)
+
+    # K36 (proofread, tranche A round 2): the chapter tells the reader she can do this check with a
+    # pencil, and the appendix now promises the arithmetic is shown. So show it. Each face is walked
+    # the same way round as seen from OUTSIDE the tetrahedron, which is the orientation that makes
+    # every line get walked once in each direction — the reason the grand total is zero. Printing
+    # the walk makes both the direction and the sum checkable instead of inferred.
+    # Each face is shown walked the way the boundary operator actually takes it — outward. Where the
+    # incidence carries a minus, the face is displayed walked the other way round and its number
+    # negated, which is the same arithmetic and removes the alternating-sign convention from the
+    # reader's side of it: all four displayed numbers then simply add.
+    walk_rows = []
+    for index, face in enumerate(tetra["face_names"]):
+        sign = tetra["inside_incidence"][index]
+        row = [sign * value for value in complex4["d1"][index]]
+        letters = list(face)
+        cycle = letters if sign > 0 else [letters[0], letters[2], letters[1]]
+        assert outward[index] == sign * face_numbers[index], (
+            f"the engine's outward face-number for {face} is not its face-number walked the way "
+            f"the boundary takes it"
+        )
+        walk_rows.append(
+            f"| {' → '.join(cycle + [cycle[0]])} | {walk_terms(row, arrows)} | "
+            f"**{number(outward[index])}** |"
+        )
+    walk_table = "\n".join(walk_rows)
+    assert sum(outward) == 0, f"the four outward face-numbers came to {sum(outward)}"
+    outward_terms = " ".join(
+        (f"+{number(v)}" if v > 0 else f"−{number(-v)}") for v in outward
+    ).lstrip("+")
+
+    body = (
+        "This time the six line-numbers are given, not worked out from the corners — six arrows in "
+        "their own right. So a face's loop need not be zero, and it is not:\n\n"
+        f"| line | {line_rows} |\n"
+        f"|---|{'---|' * len(tetra['line_names'])}\n"
+        f"| arrow | {arrow_rows} |\n\n"
+        "Each face below is walked the same way round as seen from outside, which is what makes the "
+        "two faces meeting along any line walk that line in opposite directions:\n\n"
+        "| walked | its three arrows, signed | how much goes round it |\n"
+        "|---|---|---|\n"
+        f"{walk_table}\n\n"
+        f"Now just add the four up: {outward_terms} = **0**."
+    )
+    return block("tetra_inside_sum",
+                 body,
+                 "four non-zero face-numbers from six freely chosen line-numbers, each face's walk "
+                 "shown, and their oriented sum around the inside")
+
+
+def _slosh_body(history: Sequence[Sequence[Fraction]]) -> str:
+    head = " | ".join(NAMES)
+    rows = []
+    for tick, row in enumerate(history):
+        cells = " | ".join(number(v) for v in row)
+        rows.append(f"| {tick} | {cells} | **{number(sum(row))}** |")
+    return (
+        f"| tick | {head} | total |\n"
+        f"|---|{'---|' * len(NAMES)}---|\n" + "\n".join(rows)
+    )
+
+
+def slosh_table() -> str:
+    motion = engine.motion()
+    history = motion["plain"]["history"]
+    repeat = motion["plain"]["period"]
+    assert repeat, "the run did not repeat within the ticks computed"
+    total = sum(history[0])
+    for tick, row in enumerate(history):
+        assert sum(row) == total, (
+            f"the total changed at tick {tick}: {sum(row)} ≠ {total} — this rule conserves it"
+        )
+    body = _slosh_body(history)
+    return block("slosh_table", body,
+                 f"the one rule, run {motion['ticks']} ticks from rest on one tetrahedron with "
+                 f"every line counting the same; the total is conserved exactly, and with nothing to "
+                 f"damp it and no room to spread into the world never settles — at this step size it "
+                 f"comes back to its start every {repeat} ticks")
+
+
+def slosh_table_dialed() -> str:
+    motion = engine.motion()
+    history = motion["dialed"]["history"]
+    plain = motion["plain"]["history"]
+    dialed = motion["dialed_line"]
+
+    assert history != plain, "doubling a line changed nothing — the dial is not wired up"
+    assert sum(history[0]) == sum(plain[0]), "the two runs must start from the same total"
+
+    # The level the four numbers average to is the one thing the dial must NOT move: it is fixed by
+    # the conserved total, not by the weights. Asserted rather than asserted-in-prose.
+    average = Fraction(sum(history[0]), len(NAMES))
+    for tick, row in enumerate(history):
+        assert Fraction(sum(row), len(row)) == average, f"the average moved at tick {tick}"
+
+    body = _slosh_body(history)
+    return block("slosh_table_dialed", body,
+                 f"the same {motion['ticks']} ticks with line {dialed} counted double and "
+                 f"every other line counting one — the dial, on one line. The total is still "
+                 f"conserved exactly and the four numbers still average to {number(average)}; what "
+                 f"changed is the motion, now faster along {dialed} than the rest")
+
+
+# ── the object one dimension out: how many kinds of place are there? ──────────────────────────────
+#
+# Chapters 1–3 never leave one tetrahedron. Chapter 4 has to, because she asks for room, and the
+# answer to "do tetrahedra fill space?" is no — so the book has to say what was built instead. The
+# engine builds it: `mesh_3d_chiral_tetoct_periodic` with `chiral_oct_screw111`, in `core/geom`, and
+# `napkin::kinds_of_place` counts the arrangements of line-directions around each dot.
+#
+# The whole point of the token is the CONTROL. "Three kinds of place" means nothing on its own; it
+# means something next to "cut every hole the same way and there is one kind of place". Same
+# builder, same lattice, one line different — and both runs are vendored.
+
+
+def vertex_classes() -> str:
+    kinds = engine.kinds_of_place()
+    dots = kinds["dots"]
+    screw = kinds["screw"]
+    control = kinds["control"]
+    bigger = kinds["bigger"]
+
+    assert screw["kinds"] == 3, f"the twisting rule gave {screw['kinds']} kinds of place, not 3"
+    assert screw["sizes"] == [dots // 3] * 3, f"the three kinds are not equal thirds: {screw['sizes']}"
+    assert sum(screw["sizes"]) == dots, f"{sum(screw['sizes'])} dots classified, expected {dots}"
+    assert control["kinds"] == 1, (
+        f"cutting every hole the same way gave {control['kinds']} kinds, not 1"
+    )
+    assert control["sizes"] == [dots], (
+        f"the control's single kind does not hold every dot: {control['sizes']}"
+    )
+    assert control["degree"] == screw["degree"] == 14, (
+        "the two cuts do not give every dot the same number of lines, so the comparison is not one"
+    )
+
+    # A bigger world must agree, or 6 was too small to see the truth rather than the wrap.
+    assert bigger["kinds"] == 3, f"the {bigger['side']}³ world gave {bigger['kinds']} kinds, not 3"
+    assert bigger["sizes"] == [kinds["bigger_dots"] // 3] * 3, (
+        f"the bigger world is not in thirds: {bigger['sizes']}"
+    )
+
+    body = (
+        "| how the holes are cut | kinds of place | how the dots divide |\n"
+        "|---|---|---|\n"
+        f"| all the same way | **{control['kinds']}** | all {dots} alike |\n"
+        f"| turning by a third each step | **{screw['kinds']}** | "
+        f"{' · '.join(str(size) for size in screw['sizes'])} — exact thirds |"
+    )
+    return block("vertex_classes", body,
+                 f"the object built on a {screw['side']}×{screw['side']}×{screw['side']} wrapped "
+                 f"world — every dot has {screw['degree']} lines either way, and the only difference "
+                 f"is the cut: cut every hole alike and every dot stands in the same arrangement, "
+                 f"turn the cut by a third each step and there are exactly three, in equal thirds "
+                 f"(confirmed unchanged on a {bigger['side']}³ world)")
+
+
+
+# ── the shape between: cut the one tetrahedron and look at what is left ──────────────────────────
+#
+# Chapters 1–3 never leave one tetrahedron, and the chapter after them needs room. The cheapest room
+# is not more tetrahedra: it is *inside* the one she has. Mark the middle of each of its six lines,
+# cut, and four half-size tetrahedra come off the tips leaving one octahedron between them — the
+# owner's finding, and the object the record's tiling turns out to be full of.
+#
+# The `cut`, `poke`, `face_sum`, `stella` and `refusal` groups of `engine/napkin.json` are register
+# rows R11–R18. Nothing below computes any of it; each token renders numbers the engine already
+# asserted, and re-asserts the handful of them the chapter's sentences actually lean on, so a claim
+# cannot survive here after stopping being true over there.
+
+
 def octa_cut() -> str:
-    cut = _octahedron().midpoint_cut()
+    cut = engine.cut()
     assert (cut["dots"], cut["tips"], cut["octahedra"]) == (10, 4, 1), (
         f"the cut gave {cut['dots']} dots, {cut['tips']} tips and {cut['octahedra']} octahedra"
     )
     assert cut["tip_share"] == Fraction(1, 8) and cut["core_share"] == Fraction(1, 2), (
         "the tips are not eighths, or the shape between them is not half"
+    )
+    assert cut["tips"] * cut["tip_share"] + cut["core_share"] == 1, (
+        "the pieces do not account for the whole tetrahedron"
     )
     body = (
         "| what falls out | how many | how big |\n"
@@ -848,10 +599,9 @@ def octa_cut() -> str:
 
 
 def octa_counts() -> str:
-    octahedron = _octahedron()
-    cut = octahedron.midpoint_cut()
-    tetra = census()
-    counts = (len(tetra["dots"]), len(tetra["lines"]), len(tetra["faces"]), len(tetra["insides"]))
+    cut = engine.cut()
+    tetra = engine.tetrahedron()["counts"]
+    counts = (tetra["dots"], tetra["lines"], tetra["faces"], tetra["insides"])
     assert counts == (4, 6, 4, 1), f"the tetrahedron's census came out {counts}"
     assert (cut["oct_dots"], cut["oct_lines"], cut["oct_faces"]) == (6, 12, 8), (
         f"the octahedron came out {(cut['oct_dots'], cut['oct_lines'], cut['oct_faces'])}"
@@ -867,7 +617,7 @@ def octa_counts() -> str:
         f"| the shape between the tips | **{cut['oct_dots']}** | **{cut['oct_lines']}** | "
         f"**{cut['oct_faces']}** | 1 |\n\n"
         f"Its six dots are the middles of the tetrahedron's six lines, so they keep those lines' "
-        f"names: {' · '.join(octahedron.MID_NAMES)}. Two of them are joined exactly when their "
+        f"names: {' · '.join(cut['mid_names'])}. Two of them are joined exactly when their "
         f"lines share a corner — which leaves **{len(cut['opposite_pairs'])}** pairs joined by "
         f"nothing at all: {pairs}."
     )
@@ -880,20 +630,22 @@ def octa_counts() -> str:
         oct_lines=f"**{cut['oct_lines']}**", oct_faces=f"**{cut['oct_faces']}**",
         pairs=pairs, tetra_census=f"| {counts[0]} | {counts[1]} | {counts[2]} | {counts[3]} |",
         pair_count=f"**{len(cut['opposite_pairs'])}** pairs",
-        names=" · ".join(octahedron.MID_NAMES),
+        names=" · ".join(cut["mid_names"]),
         in_caption={"degree": f"{cut['oct_degree']} lines at every dot",
                     "pairs": f"the {word(len(cut['opposite_pairs']))} pairs"})
 
 
 def octa_poke_table() -> str:
-    octahedron = _octahedron()
-    poke = octahedron.octahedron_poke_table()
+    poke = engine.poke()
+    names = engine.cut()["mid_names"]
     history = poke["history"]
     assert poke["crossing_ticks"] == 2 and poke["home_ticks"] == 3 and poke["period"] == 12, (
         f"the crossing came out {poke['crossing_ticks']}, home {poke['home_ticks']}, repeat "
         f"{poke['period']}"
     )
-    names = octahedron.MID_NAMES
+    total = sum(history[0])
+    for tick, row in enumerate(history):
+        assert sum(row) == total, f"the total changed at tick {tick} — this rule conserves it"
     rows = []
     for tick, row in enumerate(history):
         cells = " | ".join(number(value) for value in row)
@@ -920,14 +672,17 @@ def octa_poke_table() -> str:
 
 
 def octa_face_sum() -> str:
-    octahedron = _octahedron()
-    surface = octahedron.octahedron_boundary_sum()
-    names = octahedron.MID_NAMES
-    lines = octahedron.mid_lines()
-    faces = octahedron.mid_faces()
-    arrows = {line: Fraction(value) for line, value in zip(lines, surface["arrows"])}
+    surface = engine.face_sum()
+    cut = engine.cut()
+    names = cut["mid_names"]
+    lines = cut["mid_lines"]
+    faces = cut["mid_faces"]
+    arrows = dict(zip(lines, surface["arrows"]))
     assert surface["sum"] == 0, f"the eight faces summed to {surface['sum']}"
     assert surface["lines_walked_each_way"] == 12, "not every line was walked once each way"
+    assert sum(surface["face_numbers"]) == 0, (
+        "the eight face-numbers do not add to the sum the engine reported"
+    )
 
     # Group the twelve lines by the face of the original tetrahedron they lie in: a line joins two
     # middles, and the letters of those two middles name a face. Four faces, three lines each.
@@ -992,32 +747,36 @@ def octa_face_sum() -> str:
 
 
 def stella_counts() -> str:
-    octahedron = _octahedron()
-    twin = octahedron.second_tetrahedron()
-    both = octahedron.stella_reader_census()
-    tetra = census()
-    cut = octahedron.midpoint_cut()
+    both = engine.stella()
+    cut = engine.cut()
+    tetra = engine.tetrahedron()["counts"]
     assert (both["dots"], both["lines"]) == (14, 36), (
         f"the two together came out {both['dots']} dots and {both['lines']} lines"
     )
-    assert both["tips_independent"] and twin["twin_middles_the_same"], (
-        "the two tetrahedra are not threaded through one another"
+    # "No two tips are joined at all" is the sentence below, so it is checked against the engine's
+    # own line list rather than inferred from a degree. The first six names are the middles the two
+    # tetrahedra share; everything after them is a tip.
+    tips = set(range(both["middles"], both["dots"]))
+    joined = [edge for edge in both["edges"] if edge[0] in tips and edge[1] in tips]
+    assert not joined, f"{len(joined)} line(s) join two tips: {joined[:3]}"
+    assert both["middles"] == cut["oct_dots"], (
+        "the two tetrahedra do not share the octahedron's six dots, so they are not threaded"
     )
-    assert both["stella_in_tetrahedra"] == Fraction(3, 2), (
-        f"the pair came out {both['stella_in_tetrahedra']} of the tetrahedron we cut"
+    assert both["in_tetrahedra"] == Fraction(3, 2), (
+        f"the pair came out {both['in_tetrahedra']} of the tetrahedron we cut"
     )
     body = (
         "| | dots | lines |\n"
         "|---|---|---|\n"
-        f"| the tetrahedron, from before | {len(tetra['dots'])} | {len(tetra['lines'])} |\n"
+        f"| the tetrahedron, from before | {tetra['dots']} | {tetra['lines']} |\n"
         f"| the shape between the tips | {cut['oct_dots']} | {cut['oct_lines']} |\n"
         f"| the two tetrahedra, threaded | **{both['dots']}** | **{both['lines']}** |\n\n"
         f"Those are the {both['middles']} middles and {both['tips']} tips — the four "
         f"you started with and the four the second tetrahedron brought "
-        f"({' · '.join(twin['apex_names'])}). Every middle has {both['middle_degree']} lines and "
+        f"({' · '.join(both['apex_names'])}). Every middle has {both['middle_degree']} lines and "
         f"every tip has {both['tip_degree']}, and **no two tips are joined at all**, so nothing "
         f"gets from one tip to another without going through the middle. Together they fill "
-        f"{fraction_text(both['stella_in_its_cube'])} of the cube whose eight corners the tips "
+        f"{fraction_text(both['in_its_cube'])} of the cube whose eight corners the tips "
         f"are — half again as much room as the tetrahedron you cut."
     )
     # Phrases, not bare digits: a "6" on its own is in the table too, so asserting the digit would
@@ -1033,56 +792,63 @@ def stella_counts() -> str:
         middles=f"the {both['middles']} middles", tips=f"{both['tips']} tips",
         middle_degree=f"Every middle has {both['middle_degree']} lines",
         tip_degree=f"every tip has {both['tip_degree']}",
-        apexes=" · ".join(twin["apex_names"]),
-        in_its_cube=fraction_text(both["stella_in_its_cube"]),
+        apexes=" · ".join(both["apex_names"]),
+        in_its_cube=fraction_text(both["in_its_cube"]),
         in_caption={"middles": f"its own {word(both['middles'])} middles",
                     "tips": f"the {word(both['tips'])} tips"})
 
 
 def stella_refusal() -> str:
-    octahedron = _octahedron()
-    ceilings = octahedron.napkin_ceilings()
-    runaway = octahedron.stella_runaway()
-    assert ceilings["tick"] == TICK_K, (
-        f"the ceilings were worked out at tick {ceilings['tick']}, not the chapters' {TICK_K}"
+    refusal = engine.refusal()
+    ceilings = refusal["ceilings"]
+    runaway = refusal["runaway"]
+    tick = refusal["tick"]
+    assert runaway["k"] == tick, (
+        f"the runaway was run at {runaway['k']}, not the chapters' {tick}"
     )
-    assert [row["holds"] for row in ceilings["rows"]] == [True, True, False], (
+    assert [row["holds"] for row in ceilings] == [True, True, False], (
         "the verdicts are not hold, hold, fail"
     )
+    for row in ceilings:
+        assert row["bound"] == Fraction(refusal["leapfrog_bound"], 1) / row["stiffest"], (
+            f"the ceiling for {row['dots']} dots is not 4 over its stiffest mode"
+        )
+        assert row["holds"] == (tick < row["bound"]), (
+            f"the verdict for {row['dots']} dots does not follow from its own ceiling"
+        )
     assert runaway["printable_rows"] == 3 and runaway["never_returns"], (
         f"{runaway['printable_rows']} rows print, or the run comes home after all"
     )
 
     # The chapter's own names for the three objects, keyed by how many dots each has, so a row
-    # cannot be labelled as the wrong object: the count is what the module computed.
+    # cannot be labelled as the wrong object: the count is what the engine computed.
     called = {4: "the tetrahedron", 6: "the shape between the tips", 14: "the two, threaded"}
-    assert sorted(row["dots"] for row in ceilings["rows"]) == sorted(called), (
+    assert sorted(row["dots"] for row in ceilings) == sorted(called), (
         "the three objects are no longer the 4-, 6- and 14-dot ones the chapter met"
     )
-    # The column says "must stay under", and it means it: `napkin_ceilings` runs each object AT its
-    # own bound and asserts the numbers grow there. The first version of this table was headed "the
+    # The column says "must stay under", and it means it: the engine runs each object AT its own
+    # bound and asserts the numbers grow there. The first version of this table was headed "the
     # biggest tick it will hold", which a reader disproved on the tetrahedron with a pencil.
     ceiling_rows = "\n".join(
         f"| {called[row['dots']]} | {row['dots']} | {fraction_text(row['bound'])} | "
         f"{'holds' if row['holds'] else '**too big**'} |"
-        for row in ceilings["rows"]
+        for row in ceilings
     )
-    look = dict(runaway["look"])
-    bounds = dict(runaway["bounds"])
+    bounds = runaway["floors"]
     growth = []
-    for tick, value in runaway["look"]:
+    for at, value in runaway["look"]:
         try:
-            growth.append((tick, number(value)))
+            growth.append((at, number(value)))
         except AssertionError:
-            growth.append((tick, f"past {_thousands(bounds[tick])}"))
+            growth.append((at, f"past {_thousands(bounds[at])}"))
     assert any(text.startswith("past") for _, text in growth), (
         "every row wrote down exactly, so the runaway has nothing to show"
     )
-    growth_rows = "\n".join(f"| {tick} | {text} |" for tick, text in growth)
+    growth_rows = "\n".join(f"| {at} | {text} |" for at, text in growth)
 
     body = (
         f"| | dots | the tick it must stay under | the book's tick, "
-        f"{fraction_text(TICK_K)} |\n|---|---|---|---|\n{ceiling_rows}\n\n"
+        f"{fraction_text(tick)} |\n|---|---|---|---|\n{ceiling_rows}\n\n"
         "So run it anyway, and watch the biggest number anywhere in the world:\n\n"
         f"| tick | the biggest number in it |\n|---|---|\n{growth_rows}"
     )
@@ -1101,14 +867,13 @@ def stella_refusal() -> str:
         f"and no tick that does stay under the bound prints more than {word(most_rows)} rows",
         column="the tick it must stay under",
         **{f"bound for {row['dots']} dots": fraction_text(row["bound"])
-           for row in ceilings["rows"]},
-        book_tick=fraction_text(TICK_K),
+           for row in ceilings},
+        book_tick=fraction_text(tick),
         last_bound=_thousands(bounds[max(bounds)]),
         in_caption={"runaway": _thousands(bounds[max(bounds)]),
                     "tick": f"by tick {max(bounds)}",
                     "rows": f"Only {runaway['printable_rows']} rows",
                     "most": f"more than {word(most_rows)} rows"})
-
 
 # What a token's arithmetic REFUSES, in the prose of any chapter that carries the token.
 #

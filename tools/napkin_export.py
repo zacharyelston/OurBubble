@@ -40,7 +40,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 
 import canon      # noqa: E402
-import napkin     # noqa: E402
+import napkin     # noqa: E402  (the book's names, and number())
+import oracle     # noqa: E402  (the arithmetic this file is the export of)
 import octahedron  # noqa: E402
 
 TARGET = ROOT / "demos" / "data" / "napkin.json"
@@ -87,13 +88,13 @@ def complexes() -> Dict[str, Any]:
     out = {}
     for count in (1, 2, 3, 4):
         vertices = tuple(range(count))
-        kinds = {str(k): [list(cell) for cell in napkin.simplices(vertices, k)]
+        kinds = {str(k): [list(cell) for cell in oracle.simplices(vertices, k)]
                  for k in range(count)}
         boundaries = {}
         for k in range(count - 1):
-            lo = napkin.simplices(vertices, k)
-            hi = napkin.simplices(vertices, k + 1)
-            boundaries[str(k)] = rows(napkin.coboundary(lo, hi))
+            lo = oracle.simplices(vertices, k)
+            hi = oracle.simplices(vertices, k + 1)
+            boundaries[str(k)] = rows(oracle.coboundary(lo, hi))
         out[str(count)] = {"cells": kinds, "coboundary": boundaries}
     return out
 
@@ -121,15 +122,15 @@ def triangle() -> Dict[str, Any]:
 
 
 def tetrahedron() -> Dict[str, Any]:
-    census = napkin.census()
-    values = [Fraction(v) for v in napkin.CORNERS]
-    differences = napkin.apply(census["d0"], values)
-    face_loops = napkin.apply(census["d1"], differences)
+    census = oracle.census()
+    values = [Fraction(v) for v in oracle.CORNERS]
+    differences = oracle.apply(census["d0"], values)
+    face_loops = oracle.apply(census["d1"], differences)
     assert all(loop == 0 for loop in face_loops), f"a face loop came out non-zero: {face_loops}"
 
-    arrows = [Fraction(a) for a in napkin.ARROWS]
-    face_numbers = napkin.apply(census["d1"], arrows)
-    inside = napkin.apply(census["d2"], face_numbers)
+    arrows = [Fraction(a) for a in oracle.ARROWS]
+    face_numbers = oracle.apply(census["d1"], arrows)
+    inside = oracle.apply(census["d2"], face_numbers)
     assert all(value != 0 for value in face_numbers), "a face came out zero"
     assert inside == [Fraction(0)], f"the inside sum came out {inside}"
 
@@ -156,13 +157,13 @@ def tetrahedron() -> Dict[str, Any]:
 
 def motion() -> Dict[str, Any]:
     """Chapter 3's two runs: the one rule at `k = 1/2`, plain and with `AB` counted double."""
-    census = napkin.census()
+    census = oracle.census()
     lines = census["lines"]
 
-    plain = napkin.slosh(napkin.unit_weights(lines), lines)
-    weights = napkin.unit_weights(lines)
-    weights[napkin.DIALED_LINE] = Fraction(2)
-    dialed = napkin.slosh(weights, lines)
+    plain = oracle.slosh(oracle.unit_weights(lines), lines)
+    weights = oracle.unit_weights(lines)
+    weights[oracle.DIALED_LINE] = Fraction(2)
+    dialed = oracle.slosh(weights, lines)
     assert plain != dialed, "doubling a line changed nothing — the dial is not wired up"
 
     def run(history) -> Dict[str, Any]:
@@ -171,13 +172,13 @@ def motion() -> Dict[str, Any]:
         return {
             "history": [fracs(row) for row in history],
             "totals": fracs([sum(row) for row in history]),
-            "period": napkin.period(history),
+            "period": oracle.period(history),
         }
 
     return {
-        "k": frac(napkin.TICK_K),
-        "ticks": napkin.TICKS,
-        "dialed_line": napkin.edge_name(napkin.DIALED_LINE),
+        "k": frac(oracle.TICK_K),
+        "ticks": oracle.TICKS,
+        "dialed_line": napkin.edge_name(oracle.DIALED_LINE),
         "dialed_weight": frac(Fraction(2)),
         "plain": run(plain),
         "dialed": run(dialed),

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from html import unescape
@@ -696,7 +697,7 @@ def check_canon(errors: List[str]) -> str:
 
     `CANON.md` says the book draws the tetrahedron one way, and `tools/canon.py` is that standard as
     data: the names, the six lines, the four faces, the net's coordinates, and the drawing itself,
-    all computed from `napkin.simplices`. Derived is only worth something if the derivation is
+    all computed from `oracle.simplices`. Derived is only worth something if the derivation is
     checked, so it is checked here rather than in a suite someone remembers to run — a change to the
     napkin's object that the canon has not followed fails this build, and so does a drawing whose
     labels have stopped being the napkin's simplices.
@@ -735,6 +736,218 @@ DEMO_PAGES = (
     "the-shape-between.html",
 )
 DEMO_ASSETS = ("core.mjs", "core.test.mjs", "demo.css", "data/napkin.json")
+
+
+
+ENGINE_DIR = EDITION_DIR / "engine"
+ENGINE_LOCK = EDITION_DIR / "engine.lock"
+ENGINE_WASM_PROBE = EDITION_DIR / "tools" / "engine_wasm_check.mjs"
+
+
+def load_engine_lock(errors: List[str]) -> Dict[str, List[str]]:
+    """`engine.lock`, in `record.lock`'s format: `key = value`, `#` comments, keys accumulating."""
+    if not ENGINE_LOCK.exists():
+        errors.append("engine: engine.lock is missing — the vendored engine has no pin")
+        return {}
+    out: Dict[str, List[str]] = {}
+    for line in ENGINE_LOCK.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        out.setdefault(key.strip(), []).append(value.strip())
+    return out
+
+
+def check_engine(errors: List[str]) -> str:
+    """Layer 1 and 2 of the engine contract — **the vendored bytes, and that they are one engine.**
+
+    `record.lock`'s two layers, read from the other side. The record is what the book *quotes*; the
+    engine is what it *runs*, and since 2026-09-02 there is one of it: UniForge's `napkin` crate,
+    vendored under `engine/` because Our Bubble is public and UniForge is not. A vendored artifact
+    with nothing over it is just a file someone put there, so:
+
+    1. **the hashes**, in both directions. Every file `engine.lock` names is present and hashes to
+       what it says, and every file under `engine/` is named by the lock. One direction alone is
+       satisfied by adding a file; the other, by deleting one.
+    2. **the wasm is the same engine as the JSON.** The hashes prove both artifacts are the bytes
+       that were built; they say nothing about whether the module *computes* what the payload
+       carries. So the module is loaded under node and asked one question the payload already
+       answers — the census of the complete complex on four dots, chapters 1 and 2's whole object —
+       and the two are compared **byte for byte**. A tolerance here would be the exact seam the
+       one-engine decision closes.
+
+    Both run in any clone, with no access to UniForge. Proving the vendored bytes are still what
+    that commit produces is `check_engine_integrity`'s job, and it is separate for the record's
+    reason: a check that needs a private repository must not be the one holding the gate.
+    """
+    import hashlib
+
+    lock = load_engine_lock(errors)
+    if not lock:
+        return "unavailable"
+
+    declared: Dict[str, str] = {}
+    for entry in lock.get("sha256", []):
+        parts = entry.split()
+        if len(parts) != 2:
+            errors.append(f"engine: malformed sha256 line in engine.lock: {entry!r}")
+            continue
+        declared[parts[1]] = parts[0]
+    if not declared:
+        errors.append("engine: engine.lock declares no files — it pins nothing")
+        return "unavailable"
+
+    # `PROVENANCE.md` is the one hand-written file under `engine/` and is deliberately not hashed —
+    # see `tools/lock_engine.py`. It is held to the thing that matters instead, below.
+    present = {
+        str(path.relative_to(EDITION_DIR)): path
+        for path in sorted(ENGINE_DIR.rglob("*"))
+        if path.is_file() and not path.name.startswith(".") and path.suffix != ".md"
+    }
+    for rel in sorted(set(declared) | set(present)):
+        if rel not in present:
+            errors.append(f"engine: {rel} is named by engine.lock but is not in this checkout")
+        elif rel not in declared:
+            errors.append(
+                f"engine: {rel} is vendored but engine.lock does not name it — re-run "
+                f"tools/build_engine.sh, or delete the file"
+            )
+        else:
+            actual = hashlib.sha256(present[rel].read_bytes()).hexdigest()
+            if actual != declared[rel]:
+                errors.append(
+                    f"engine: {rel} does not hash to what engine.lock says "
+                    f"({actual[:12]}… against {declared[rel][:12]}…). Nothing under engine/ is "
+                    f"edited by hand; restore it with `git checkout -- engine/` or rebuild it with "
+                    f"tools/build_engine.sh"
+                )
+    if errors:
+        return "unavailable"
+
+    sha_pinned = (lock.get("sha") or [""])[0]
+    note = ENGINE_DIR / "PROVENANCE.md"
+    if not note.exists():
+        errors.append("engine: engine/PROVENANCE.md is missing — the vendored artifact has no note")
+        return "unavailable"
+    if sha_pinned not in note.read_text(encoding="utf-8"):
+        errors.append(
+            f"engine: engine/PROVENANCE.md does not name the commit engine.lock pins "
+            f"({sha_pinned[:7]}) — the note and the lock disagree about where these bytes came from"
+        )
+        return "unavailable"
+
+    census = engine_wasm_census(errors)
+    if census is None:
+        return "unavailable"
+
+    vendored = json.dumps(
+        json.loads((ENGINE_DIR / "napkin.json").read_text(encoding="utf-8"))["complexes"]["4"],
+        sort_keys=True, indent=2, separators=(",", ": "), ensure_ascii=True,
+    ) + "\n"
+    if census != vendored:
+        errors.append(
+            f"engine: the wasm module's census of four dots is not the vendored payload's "
+            f"({len(census)} bytes from the module, {len(vendored)} in engine/napkin.json) — the "
+            f"two artifacts under engine/ are not the same engine"
+        )
+        return "unavailable"
+
+    return (f"{len(declared)} vendored file(s) hashed against engine.lock at {sha_pinned[:7]}, "
+            f"named by engine/PROVENANCE.md; the wasm's census of 4 dots is the payload's own "
+            f"{len(census)} bytes")
+
+
+def engine_wasm_census(errors: List[str]) -> "str | None":
+    """Load `engine/napkin_bg.wasm` under node and return its answer to `census_json(4)`.
+
+    Node is present in tier 0 and in CI, so this is not the record's optional layer — a missing node
+    here is a broken environment and is reported as a failure rather than waved through. That is the
+    difference between "the engine could not be reached" and "the tool that runs the check is not
+    installed": only the first is a fact about the world.
+    """
+    import shutil
+    import subprocess
+
+    if not ENGINE_WASM_PROBE.exists():
+        errors.append(f"engine: {ENGINE_WASM_PROBE.relative_to(EDITION_DIR)} is missing")
+        return None
+    node = shutil.which("node")
+    if node is None:
+        errors.append(
+            "engine: node is not installed, so the vendored wasm could not be loaded and proved to "
+            "be the same engine as the vendored JSON. Install node, or run tier 0 in CI"
+        )
+        return None
+    finished = subprocess.run(  # noqa: S603 - a fixed argv, no shell
+        [node, str(ENGINE_WASM_PROBE)],
+        capture_output=True, text=True, cwd=EDITION_DIR, timeout=300, check=False,
+    )
+    if finished.returncode != 0:
+        detail = (finished.stderr or "").strip().splitlines()
+        errors.append(
+            f"engine: loading the vendored wasm failed — "
+            f"{detail[-1] if detail else f'node exited {finished.returncode}'}"
+        )
+        return None
+    return finished.stdout
+
+
+def check_engine_integrity(errors: List[str]) -> str:
+    """Layer 3 — **a fresh build from the pinned commit reproduces the vendored bytes.**
+
+    The hashes prove `engine/` is what was committed. They cannot prove it is what UniForge's
+    `napkin` crate emits at the commit `engine.lock` names, and that is the claim the whole
+    arrangement rests on: an artifact built from some other tree, or edited before it was hashed,
+    would satisfy every other check here.
+
+    So when `UNIFORGE_SRC` points at a UniForge checkout **at that commit**, the emitter is run and
+    its output compared to the vendored payload byte for byte. When it does not — which for a
+    private repository means almost everywhere — this returns
+    `unverified — engine source absent` and asserts nothing. Same shape as the record's
+    snapshot-integrity layer, and for the same reason: a check that quietly skips is worse than one
+    that is absent, because it teaches people the green tick means something it does not.
+    """
+    import subprocess
+
+    source = os.environ.get("UNIFORGE_SRC")
+    if not source:
+        return "unverified — engine source absent (set UNIFORGE_SRC to a UniForge checkout)"
+    root = Path(source).expanduser()
+    if not (root / "core" / "napkin").is_dir():
+        return f"unverified — engine source absent ({source} is not a UniForge checkout)"
+
+    lock = load_engine_lock(errors)
+    pinned = (lock.get("sha") or [""])[0]
+    head = subprocess.run(  # noqa: S603 - a fixed argv, no shell
+        ["git", "-C", str(root), "rev-parse", "HEAD"],
+        capture_output=True, text=True, timeout=60, check=False,
+    ).stdout.strip()
+    if head != pinned:
+        return (f"unverified — the engine source is at {head[:7] or '?'} and engine.lock pins "
+                f"{pinned[:7]}")
+
+    built = subprocess.run(  # noqa: S603 - a fixed argv, no shell
+        ["cargo", "run", "--quiet", "--release", "-p", "napkin", "--bin", "napkin-export"],
+        capture_output=True, text=True, cwd=root / "core", timeout=1800, check=False,
+    )
+    if built.returncode != 0:
+        detail = (built.stderr or "").strip().splitlines()
+        errors.append(
+            f"engine integrity: the emitter would not build at the pinned commit — "
+            f"{detail[-1] if detail else f'cargo exited {built.returncode}'}"
+        )
+        return "unavailable"
+
+    vendored = (ENGINE_DIR / "napkin.json").read_text(encoding="utf-8")
+    if built.stdout != vendored:
+        errors.append(
+            f"engine integrity: a fresh export from {pinned[:7]} is not the vendored "
+            f"engine/napkin.json ({len(built.stdout)} bytes built, {len(vendored)} vendored) — "
+            f"engine/ was not produced by the commit engine.lock names, or it was edited afterwards"
+        )
+        return "unavailable"
+    return f"verified — a fresh export from {pinned[:7]} is the vendored bytes, all {len(vendored)}"
 
 
 def check_napkin_export(errors: List[str]) -> str:
@@ -828,6 +1041,41 @@ def check_demo_cross_check(errors: List[str]) -> str:
         return "unavailable"
     summary = [line for line in finished.stdout.splitlines() if line.startswith("core.test.mjs:")]
     return summary[-1].split(": ", 1)[1] if summary else "passed, with no summary line"
+
+
+
+def check_engine_published(errors: List[str]) -> str:
+    """The built site actually carries the engine, byte for byte.
+
+    `engine/` sits outside `chapters/`, so it reaches the published site only through the
+    `chapters/engine` symlink that mdBook copies — the same mechanism that carries `record/` and
+    `demos/`. That is a piece of wiring nothing would notice breaking: the book would build, every
+    check above would pass, and the reader's browser would 404 on the WebAssembly module.
+
+    The bytes are compared rather than the names, because a truncated copy of a 322 kB module is a
+    file that exists. GitHub Pages serves `.wasm` as `application/wasm`, which is what
+    `WebAssembly.instantiateStreaming` requires, so no MIME configuration is needed here — and if
+    that ever stopped being true, the glue falls back to `arrayBuffer()` and the page still runs.
+    """
+    built = RENDER_DIR / "engine"
+    if not built.is_dir():
+        errors.append(
+            "engine published: book/engine/ does not exist — mdBook did not copy engine/ into the "
+            "build. Is chapters/engine still a symlink to ../engine?"
+        )
+        return "unavailable"
+    total = 0
+    for source in sorted(ENGINE_DIR.rglob("*")):
+        if not source.is_file() or source.name.startswith(".") or source.suffix == ".md":
+            continue
+        published = built / source.relative_to(ENGINE_DIR)
+        if not published.is_file():
+            errors.append(f"engine published: book/engine/{source.name} is missing from the site")
+        elif published.read_bytes() != source.read_bytes():
+            errors.append(f"engine published: book/engine/{source.name} is not the vendored file")
+        else:
+            total += published.stat().st_size
+    return f"{total:,} bytes of engine served from book/engine/, byte-for-byte"
 
 
 def check_demos_published(errors: List[str]) -> str:
@@ -1553,6 +1801,12 @@ def main() -> int:
         lambda: check_snapshot_integrity(declared_record_paths(manifest), errors),
     )
 
+    # The engine contract, the record's mirror image: the record is what the book quotes, the
+    # engine is what it runs. Two lines, the same split — what every clone can check, and what only
+    # a machine with the private engine on it can. The second says `unverified` rather than passing.
+    status(errors, "engine", lambda: check_engine(errors))
+    status(errors, "engine integrity", lambda: check_engine_integrity(errors))
+
     # The guard is tested before it is trusted, on every run — not only under --self-test.
     self_test(manifest, errors)
 
@@ -1643,6 +1897,7 @@ def main() -> int:
         status(errors, "reader-note links", lambda: check_note_links(order, errors))
         status(errors, "external assets", lambda: check_no_external_assets(order, errors))
         status(errors, "demos published", lambda: check_demos_published(errors))
+        status(errors, "engine published", lambda: check_engine_published(errors))
 
     return report(errors, narrative, sections, manifest, args)
 

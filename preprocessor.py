@@ -18,8 +18,8 @@ puts the appendix under the same discipline the project applies to run data, so 
 check. Build the book and the working tree stays clean, or the record moved and you want to know.
 
 It does two more things to the book on the way past, both of them additions to a page rather than
-edits to prose: it computes every `{{napkin:…}}` token, and it puts one **reader's note link** at
-each section heading. The note pass is driven by the `<!-- beat N -->` marker that already sits
+edits to prose: it renders every `{{napkin:…}}` token from the vendored
+engine, and it puts one **reader's note link** at each section heading. The note pass is driven by the `<!-- beat N -->` marker that already sits
 under every section heading, which is the only place in the book where a section's heading and its
 beat number are written down together — so a section that is renamed, renumbered or moved carries a
 correct link without anyone maintaining one. `tools/reader_note.py` holds the URL format;
@@ -39,13 +39,14 @@ import sys
 
 import gen_appendix
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent / "tools"))
+import engine  # noqa: E402  (needs the path above)
 import napkin  # noqa: E402  (needs the path above)
-import napkin_export  # noqa: E402  (needs the path above)
 import reader_note  # noqa: E402  (needs the path above)
 
 # `{{napkin:NAME}}` — the Rewrite lane writes these in chapter prose; this replaces each with the
-# arithmetic run at build time. The token is the whole contract between the two lanes: the lane that
-# writes chapters never touches this file, and this file never touches a chapter's prose.
+# block `tools/napkin.py` renders from the vendored engine (`engine/`, pinned by `engine.lock`).
+# The token is the whole contract between the two lanes: the lane that writes chapters never touches
+# this file, and this file never touches a chapter's prose.
 NAPKIN = re.compile(r"\{\{napkin:([a-z0-9_]+)\}\}")
 
 # The chapter's own title, and its section headings. Used by the reader-note pass below, which adds
@@ -182,13 +183,15 @@ def main() -> int:
 
     _context, book = json.load(sys.stdin)
 
-    # The demos' oracle, written on every build for exactly the reason the appendix is: it puts
-    # `demos/data/napkin.json` under `git status`, so a change to the napkin that moves a number a
-    # demo shows becomes a dirty tree rather than a page that quietly disagrees with the book.
-    # `check_edition.py` compares the committed copy against a fresh derivation and fails by name.
-    if napkin_export.write():
+    # The demos' copy of the engine's payload, written on every build for exactly the reason the
+    # appendix is: it puts `demos/data/napkin.json` under `git status`, so an engine bump that moves
+    # a number a demo shows becomes a dirty tree rather than a page that quietly disagrees with the
+    # book. `check_edition.py` compares the committed copy against the vendored engine and against
+    # the Python oracle, and fails by name.
+    if engine.publish_demo_data():
         print(
-            f"napkin export: rewrote {napkin_export.TARGET.name} — the napkin's numbers moved",
+            "napkin export: rewrote demos/data/napkin.json from engine/ — the engine's numbers "
+            "moved",
             file=sys.stderr,
         )
 
