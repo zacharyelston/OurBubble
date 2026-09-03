@@ -178,6 +178,14 @@ export const ATTACKS = [
     from: "yaw 5.585", to: "yaw 5.999",
     expect: "which SWEEP does not" },
 
+  // ── 9b: DEMOS.md's own beat numbers ─────────────────────────────────────────────────────────
+  { guard: "gate 9b · a stale beat range in the page table", file: "DEMOS.md",
+    from: "| 13–22 |", to: "| 13–23 |",
+    expect: "and steps.json derives" },
+  { guard: "gate 9b · a beat named by number in the prose", file: "DEMOS.md",
+    from: "the poke step's table still said", to: "beat 42's table still said",
+    expect: "outside its page table" },
+
   // ── the engine itself ────────────────────────────────────────────────────────────────────────
   // The engine's hashes are `check_edition.py`'s business, not this file's. What THIS check owns is
   // that the two vendored artifacts are one engine, so the mutation is aimed at that.

@@ -418,7 +418,46 @@ const SWEEP = {
   }
 }
 
+// ── 9b · DEMOS.md names no beat by a number it typed ──────────────────────────────────────────────
+//
+// The demos hold no beat numbers because a renumber would strand them — that is the whole reason
+// `steps.json` is generated. **This file did not extend that discipline to its own prose**, and the
+// preface's renumber proved it: every beat in the book moved by four, and nine hand-written "beat
+// N" references in DEMOS.md went silently wrong while the pages themselves were fine.
+//
+// Two rules, and between them the family cannot come back. The page table's ranges must be
+// `steps.json`'s, so they are checked rather than remembered. And everywhere else a beat is named by
+// **what it is** — the poke step, the walk step, the dial step — because a name does not need
+// renumbering.
+{
+  const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
+  for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
+    const row = doc.split("\n").find((line) => line.includes(`${slug}.html`));
+    if (!row) {
+      fail(`DEMOS.md has no page-table row for ${slug}`);
+      continue;
+    }
+    const found = /\|\s*(\d+)[–-](\d+)\s*\|/.exec(row);
+    if (!found) {
+      fail(`DEMOS.md's row for ${slug} states no beat range`);
+    } else if (Number(found[1]) !== chapter.first || Number(found[2]) !== chapter.last) {
+      fail(`DEMOS.md says ${slug} is beats ${found[1]}–${found[2]}, and steps.json derives `
+        + `${chapter.first}–${chapter.last} from OUTLINE.md and the chapter's markers`);
+    }
+  }
+  for (const line of doc.split("\n")) {
+    if (line.includes(".html")) continue;          // the page table, checked above
+    const found = /\bbeats?\s+\d+/.exec(line);
+    if (found) {
+      fail(`DEMOS.md writes "${found[0]}" outside its page table. A beat number in prose goes stale `
+        + `the next time the book is renumbered — the preface moved every beat by four and stranded `
+        + `nine of them. Name the beat by what it is instead: the poke step, the walk step`);
+    }
+  }
+}
+
 // ── 4 · every drawing is its own census ───────────────────────────────────────────────────────────
+
 
 /**
  * What each kind of drawing may emit, and what every mark in it must be.
@@ -924,7 +963,8 @@ function censusOf(svg, where) {
   // lower left, `AD` to the lower right. Those three sentences are the check.
   if (kind === "ring") {
     // The ring's convention is four sentences, and this used to be three inequalities. A reader
-    // rotated the inner dots twenty degrees off their partners' rays and it passed — while beat 42's
+    // rotated the inner dots twenty degrees off their partners' rays and it passed — while the poke
+    // step's
     // table still says *poked AB · its opposite CD* and DEMOS.md's stated reason for the whole
     // convention is that "opposite is literally straight through the middle, which is what the poke
     // beat needs a reader to see". She was being told to look at a thing the drawing had stopped
@@ -1328,7 +1368,9 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         fail(`${slug} ${step.label}: rendering threw — ${failure.message}`);
         continue;
       }
-      // The step's own label — "beat 41", "beats 37–38" — is the one place a number on the page is
+      // The step's own label — a beat number, or a range where a pair is folded — is the one place
+      // a number on the page is
+
       // not the engine's, and it is not typed either: it is `steps.json`'s, derived from the
       // chapter's markers, and gate 5 above holds it to them. Everything else is scanned.
       const surfacesHere = [

@@ -305,7 +305,26 @@ what its diff does.** One here narrated three fixes the diff did not contain, be
 aborted before writing and the message was composed from intent. That is the headline-lies class the
 whole repository is built to refuse, committed by the person who wrote the checks for it.
 
+### The renumber that proved the rule, on this file
+
+The preface landed while this branch was open and moved **every beat in the book by four**. The pages
+did not notice, which is what the generated scaffolding is for: `steps.json` was regenerated,
+`tools/demo_steps.py` produced one changed file, and the check caught the stale one before anything
+else did.
+
+**This document did notice, and it had not extended the discipline to itself.** Nine hand-written
+"beat N" references in the prose here went silently wrong — the poke step, the walk step, the dial
+step, all named by a number that had moved. A file whose whole argument is *no beat number is ever
+typed into a demo* had typed nine.
+
+Both halves are now guarded rather than remembered. The page table's ranges are checked against
+`steps.json`, so a renumber that skips them fails. And **everywhere else a beat is named by what it
+is** — the poke step, the walk step, chapter one's opening step — because a name needs no
+renumbering. The same went for the source: the fold comments in `steps.mjs` named their beats by
+number and now name them by what they fold.
+
 ### What no check here can catch
+
 
 
 **Any value the engine produced, anywhere, put where it does not belong.** `cut.oct_dots` printed in
@@ -376,17 +395,23 @@ is narrowed to what the engine can answer. They are the register rows to ask Uni
 
 | what a step wanted | what it does instead |
 |---|---|
-| **the rule with the dial turned** — `slosh_json` runs with every line counted the same, so the reader cannot turn the dial and re-run | beat 36 offers the two positions the engine computed and vendored (`motion.plain`, `motion.dialed`, `AB` counted double), as a choice rather than a dial |
-| **the outward-oriented eight-face sum** — `loops_json` walks the octahedron's faces in the complex's own orientation, which does not sum to zero; the vendored `face_sum` is the outward walk, and it does | beat 43 walks the eight faces of the vendored arrow set; the reader steps through the faces rather than changing an arrow |
-| **a tick-to-tick difference** — `slosh_json` returns the history and no diff, so "which dots moved this tick" cannot be asked | beats 37–38 print *other dots not at nothing*, which is what the number is, rather than a difference computed in JavaScript |
-| **the two-dot complex** — `loops_json` answers for the book's four objects, and two dots and a line is not one of them | beat 10 asks the triangle for the difference on `AB` and reads `AB` alone. It is the same line and the same coboundary either way |
+| **the rule with the dial turned** — `slosh_json` runs with every line counted the same, so the reader cannot turn the dial and re-run | the dial step offers the two positions the engine computed a
+nd vendored (`motion.plain`, `motion.dialed`, `AB` counted double), as a choice rather than a dial |
+| **the outward-oriented eight-face sum** — `loops_json` walks the octahedron's faces in the complex's own orientation, which does not sum to zero; the vendored `face_sum` is the outward walk, and it does | the eight-face walk uses the eight faces
+ of the vendored arrow set; the reader steps through the faces rather than changing an arrow |
+| **a tick-to-tick difference** — `slosh_json` returns the history and no diff, so "which dots moved this tick" cannot be asked | the poke on the tetrahedron prints *other dots not at nothing*
+, which is what the number is, rather than a difference computed in JavaScript |
+| **the two-dot complex** — `loops_json` answers for the book's four objects, and two dots and a line is not one of them | the second step of chapter one asks the triangle for the difference on `AB`
+ and reads `AB` alone. It is the same line and the same coboundary either way |
 
-The fourth: `certificate_json` panics on `"triangle"` rather than answering, so beat 33 shows the
+The fourth: `certificate_json` panics on `"triangle"` rather than answering, so the step where the tick belongs to the shape shows the
+
 triangle's two ticks through their runs — which rows a napkin can write, and whether it comes home —
 rather than through a ceiling.
 
 The fifth, noted rather than wanted: `loops_json` gives no **running partial sums** along a walk, so
-beat 14 shows each step's own contribution and the engine's total rather than a running tally. What
+the walk step shows each step's own contribution
+ and the engine's total rather than a running tally. What
 it *does* give is each line's contribution on its own — ask it about one line with every other set to
 nothing, and what comes back is that line's term in the walk, with the orientation the object gives
 it. That is how the walk's terms are got (`Engine.contribution`), and it is why **the page never
@@ -410,7 +435,8 @@ onto the next line's name across the fold. `D` appears three times and carries t
 times, because it is one dot.
 
 Chapter 1 draws its dots as dots, and the net does not. That is not an inconsistency to be tidied
-away: in the net a corner is where lines meet, and there is always a line. In beat 9 there is not —
+away: in the net a corner is where lines meet, and there is always a line. In chapter one's opening step there is not —
+
 the question is *where could you put a number*, and its answer needs something to point at. Chapter
 1's triangle is the net's central panel, framed to itself, so when the fourth dot arrives the
 triangle is already where the net puts `ABC`.
@@ -425,7 +451,8 @@ what the poke beat needs a reader to see.
 **Those are four sentences, and all four are checked** — which they were not. The check was three
 inequalities about which dot was above or left of which, and a reader rotated the inner three twenty
 degrees off their partners' rays and passed: every opposite pair 160° apart and sixteen pixels off a
-line through the centre, while beat 42's table still said *poked AB · its opposite CD*. She was being
+line through the centre, while the poke step's table still said *poked AB · its opposite CD*
+. She was being
 told to look at a thing the drawing had stopped showing. Unequal radii and a twelve-degree rotation
 of the whole ring passed too. So the sentences are the test now: **two circles about their common
 centre with three dots on each**, **every opposite pair straight through that centre** (180.0°, and
@@ -523,7 +550,8 @@ tetrahedron and nothing else.
 ### A drawing carries what its beat is about
 
 The last thing the label search taught, which no gate says: **a drawing that carries every number is
-not more honest, it is just unreadable.** Chapter 2's net at beat 21 was made to carry four corner
+not more honest, it is just unreadable.** Chapter 2's net at the four-corner-numbers step was made to carry four corner
+
 numbers, six differences and four face totals at once — thirty-eight labels on one small frame — and
 once nothing overlapped any more it was still the worst drawing of the three. The beat asks *what
 does each face say?*, so the drawing now carries the corners she typed and the zero each face comes

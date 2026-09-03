@@ -79,7 +79,7 @@ export function initialState(step, view) {
  * **Including a typed one.** This used to enumerate ticks, presses and choices and never a typed
  * value, so the eight beats that invite her to type — 9, 10, 13, 14, 21, 22, 23, 35 — were checked
  * only at their opening numbers. A reader planted a wrong total that appeared *only after typing*
- * on beat 23, whose instruction is literally "Change an arrow.", and it was green across every sum,
+ * on the step whose instruction is literally "Change an arrow.", and it was green across every sum,
  * every still and the whole numeric scan. The check was reading a page nobody had touched.
  *
  * Two typed states, both derived from the control's own opening values so that no digit enters this

@@ -298,7 +298,8 @@ export function chapterSteps(engine, draw) {
             }),
             tables: [
               cornerTable(values),
-              // The terms the walk uses, not each line's own difference. Beat 16 already printed
+              // The terms the walk uses, not each line's own difference. The unprintable-corner
+              // step already printed
               // these; here the two tables sat side by side — AC as −1 in one and +1 in the packed
               // row of the other — with nothing on the page reconciling the sign.
               table("the terms the walk uses", ["line", "its term"],
@@ -345,7 +346,8 @@ export function chapterSteps(engine, draw) {
         },
       },
       {
-        // Beats 17 and 18 fold together: neither has anything of its own to do, and the one action
+        // The two folded here — "what you never used" and "nothing at all" — have nothing of
+        // their own to do, and the one action
         // that answers both is taking every number away. What is left is the world, which is what
         // both beats are about — no length was ever used, and nothing was ever assumed.
         anchors: ["what-you-never-used", "nothing-at-all"],
@@ -398,7 +400,7 @@ export function chapterSteps(engine, draw) {
 
     return [
       {
-        // Beats 19 and 20 fold: the count is what adding the dot shows, so there is one action.
+        // Folded: the count is what adding the dot shows, so there is one action.
         anchors: ["four-dots-and-everything-you-can-draw-between-them", "the-whole-inventory"],
         act: "Add the fourth dot.",
         controls: [{ kind: "tick", count: 1, noun: "dot" }],
@@ -527,7 +529,7 @@ export function chapterSteps(engine, draw) {
         },
       },
       {
-        // Beats 25 and 26 fold: the dial is the action, and "is this a complete world" is what the
+        // Folded: the dial is the action, and "is this a complete world" is what the
         // table under it already answers — every kind of number, both coming-home zeros, one dial.
         anchors: ["the-one-choice-what-a-line-is-worth", "enough-for-a-world"],
         act: `Count ${dialed} double.`,
@@ -590,7 +592,7 @@ export function chapterSteps(engine, draw) {
 
     return [
       {
-        // Beats 27 and 28 fold: one action answers both — press the clock and watch nothing happen,
+        // Folded: one action answers both — press the clock and watch nothing happen,
         // because a clock on its own is not a rule.
         anchors: ["a-clock", "ticks-all-the-same"],
         act: "Tick.",
@@ -641,7 +643,7 @@ export function chapterSteps(engine, draw) {
         },
       },
       {
-        // Beats 30 and 31 fold: "is that really the whole law" is answered by there being one
+        // Folded: "is that really the whole law" is answered by there being one
         // button, and it does the same thing every time.
         anchors: ["what-one-tick-does", "nothing-else-ever"],
         act: "Tick, once.",
@@ -815,7 +817,7 @@ export function chapterSteps(engine, draw) {
         },
       },
       {
-        // Beats 37 and 38 fold: the poke is the action, and "what can I not ask here" is what the
+        // Folded: the poke is the action, and "what can I not ask here" is what the
         // hop table under it says — every dot is one line from every other, so there is no further.
         anchors: ["where-is-the-ring", "the-question-this-world-cannot-answer"],
         act: `Poke ${NAMES[0]}.`,
@@ -1182,7 +1184,7 @@ export function chapterSteps(engine, draw) {
         },
       },
       {
-        // Beats 48 and 49 fold: trying every writable tick at once is the action, and what it hands
+        // Folded: trying every writable tick at once is the action, and what it hands
         // the machine is the table it leaves behind.
         anchors: ["the-surprise", "what-the-machine-is-handed-and-what-comes-back"],
         act: "Try every tick at once.",
