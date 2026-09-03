@@ -244,6 +244,20 @@ closed** — a wrong count hidden in an SVG description, closed by the no-digit 
 stayed honest, closed by resolving each stroke's ends to the nearest drawn dot and holding *that*
 pair to the census.
 
+The suite is now run as a suite, against the branch as it stands: **thirteen mutations, thirteen
+caught.** A digit in a caption; a digit in a column heading; a number computed in JavaScript into a
+cell; a number appended to a drawing's title; a wrong count in its description; a number written into
+a page's own HTML; a beat number typed into a step; every line in the wireframe pointed at the wrong
+dot; a stray unlabelled `<line>`; the same stray stroke as a `<path>`; a walk whose terms do not add
+to its total; that same walk with its heading renamed; and a step quietly dropping a chapter section.
+
+One of the thirteen looked at first like an escape and was not: appending a number to `drawWire`'s
+**fallback** title changed nothing, because every step passes a title of its own and that fallback is
+never reached — confirmed by rendering all 162 drawings and finding none without an explicit title.
+Mutating the title a step actually uses turns the check red twice over. The lesson kept from that:
+a mutation that fails to fail may be a hole or may be dead code, and the two are told apart by
+checking that the mutation was reachable, not by reading the diff.
+
 A second read of the same branch got four more past: a printed total whose column had been renamed;
 a printed total whose terms had been moved to another table; a stray stroke drawn as a `<path>`
 rather than a `<line>`; and two counters of the same thing disagreeing on the face-walk. **Six in
