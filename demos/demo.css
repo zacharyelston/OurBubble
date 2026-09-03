@@ -162,6 +162,12 @@ nav.steps button[aria-current="step"] {
 .ring .absent line { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.45; }
 .ring .dots circle { fill: var(--ink); stroke: none; }
 .ring .dots circle.tip { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+/* The one highlight either drawing has: the piece this step is about, drawn with a ring around it.
+   Not a colour — there is none spare, by CANON.md's rule 5 — and never a kind of piece. */
+.ring .dots circle.strong, .wire .dots circle.strong {
+  stroke: var(--ink); stroke-width: 3; paint-order: stroke;
+}
+.ring .labels text.strong, .wire .labels text.strong, .net .labels text.strong { font-weight: 700; }
 .net .labels, .ring .labels {
   fill: var(--ink);
   font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;

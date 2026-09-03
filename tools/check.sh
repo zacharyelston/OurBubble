@@ -15,9 +15,15 @@
 #          (always, in any clone); and, when UNIFORGE_SRC points at a UniForge checkout at the
 #          pinned commit, a fresh export from it reproduces the vendored bytes. The second reads
 #          "unverified" rather than passing when the private engine is not on the machine.
-#        · the demos, in two lines: `demos/data/napkin.json` is what the napkin now exports, and the
-#          arithmetic the demo pages run in a browser equals it value for value. The second needs
-#          node; without it that line reads "unverified" rather than passing. See demos/DEMOS.md.
+#        · the demos, in three lines: `demos/data/napkin.json` is what the napkin now exports;
+#          `demos/steps.json` is what OUTLINE.md and the chapters' beat markers now derive, so a
+#          renumber the demos have not caught up with is red rather than a page quoting last week's
+#          numbering; and every number the demo pages RENDER, on every surface, at every state of
+#          every step, is one the vendored engine produced. That last check changed its meaning when
+#          the engine was vendored: there is one implementation now, so it no longer compares two —
+#          it holds the page to the engine. It needs node; without it that line reads "unverified"
+#          rather than passing. It also prints each page's reader-facing word count, which is the
+#          owner's budget and the thing most likely to drift back. See demos/DEMOS.md.
 #   3. the three guards the edition check does not reach — `tools/engine_check.py` (the Python
 #      oracle recomputes the whole payload and must reproduce the vendored engine's bytes exactly),
 #      `tools/octahedron.py`'s own assertions (the geometry the octahedron chapter's appendix note

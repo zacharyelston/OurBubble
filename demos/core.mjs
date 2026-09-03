@@ -204,8 +204,14 @@ export async function mount(slug) {
   const nav = element("nav", { class: "steps", "aria-label": "the beats" });
   const list = element("ol");
   const chips = steps.map((step, index) => {
+    // The chip carries the whole range a folded step covers, so a reader counting along the row
+    // does not find a beat missing and wonder where it went.
     const button = element("button", {
-      type: "button", text: String(step.beat), "aria-label": `${step.label}: ${step.title}`,
+      type: "button",
+      text: step.beats.length === 1
+        ? String(step.beats[0])
+        : `${step.beats[0]}–${step.beats[step.beats.length - 1]}`,
+      "aria-label": `${step.label}: ${step.title}`,
       title: step.title,
     });
     button.addEventListener("click", () => show(index));

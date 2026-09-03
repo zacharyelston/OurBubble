@@ -22,7 +22,7 @@
 //
 // A beat with nothing for her to do is not a step. It is **folded into its neighbour**, whose
 // `anchors` then names both sections; the fold keeps the question of the beat whose action the step
-// performs, and the page prints the range. Six beats are folded here, each named at its step.
+// performs, and the page prints the range. Seven pairs are folded here, each named at its step.
 //
 // And no number in this file is a number. Every value comes off the engine — `engine/napkin.json`,
 // `engine/rows.json`, or the compiled wasm — and `core.test.mjs` reads this file's own source and
@@ -627,7 +627,9 @@ export function chapterSteps(engine, draw) {
             drawing: draw.drawTriangle({
               dots: 3, showFace: true,
               values: Object.fromEntries(triangleNames.map((name, index) =>
-                [name, show(run.history[Math.min(printable, run.history.length - 1)][index])])),
+                // The last row a napkin can still write down, which at one of the two ticks is the
+                // last row there is and at the other is the third.
+                [name, show(run.history[printable - 1][index])])),
               title: "The tick belongs to the shape",
             }),
             tables: [

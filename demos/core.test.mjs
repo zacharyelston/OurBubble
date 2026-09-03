@@ -212,6 +212,20 @@ function drawingText(svg) {
   return out;
 }
 
+/**
+ * A drawing's own sentences — its `<title>` and its `<desc>` — carry **no digit at all**.
+ *
+ * The `<desc>` is the whole of what a screen-reader user is given for a picture, so it is prose, and
+ * prose about this object counts in words: *thirty-six lines*, not *36 lines*. That makes the rule
+ * checkable, and it closes the one hole an attack found: "an orthographic wireframe of 3 tetrahedra"
+ * slipped through the numeric scan, because three is a number the engine does produce — somewhere
+ * else, about something else. Every actual value belongs in a `<text>` element or in a table, where
+ * the scan can hold it to the engine.
+ */
+function sentencesOf(svg) {
+  return [...svg.matchAll(/<(title|desc)[^>]*>([\s\S]*?)<\/\1>/g)].map((found) => found[2]);
+}
+
 const wordsOf = (text) => text.split(/\s+/).filter((word) => /[a-z]/i.test(word)).length;
 
 const report = [];
@@ -290,6 +304,13 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
             fail(`${slug} ${step.label}: the number ${token} appears in "${surface}", and the `
               + `engine did not produce it`);
           }
+        }
+      }
+      for (const sentence of sentencesOf(rendered.drawing)) {
+        if (/\d/.test(sentence)) {
+          fail(`${slug} ${step.label}: the drawing's own words carry a digit — "${sentence}". A `
+            + `title and a description are prose, and prose about this object counts in words; `
+            + `every value goes in the drawing's text or in a table, where it is held to the engine`);
         }
       }
       if (!rendered.tables.length) {
