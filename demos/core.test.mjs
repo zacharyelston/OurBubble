@@ -87,8 +87,67 @@ const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")
 const { joinSteps, statesOf, stillFrom, SVG_STILL_STYLE_TEXT } = await import(
   pathToFileURL(path.join(HERE, "core.mjs")).href);
 
+// ── which of this file's own fail sites a run reached ─────────────────────────────────────────────
+//
+// A guard nothing has ever made fire is a guard nobody has tested, and counting the mutations in
+// `attacks.mjs` does not say how many guards they cover: 91 places in this file can complain, and
+// the first census of what the suite actually reached found about a third of them. Two of the three
+// most important — a label drawn across a stroke, a label on a dot's ink — were among the rest.
+//
+// So every `fail(` site here is enumerated from this file's own source, every call records the site
+// it came from, and with `DEMO_FAIL_SITES` set the run prints which ones it reached. `attacks.mjs`
+// unions that over every mutation and compares it against a committed baseline, so coverage
+// shrinking is a failure rather than a thing somebody notices.
 const failures = [];
-const fail = (message) => failures.push(message);
+
+/** Every line of this file that can complain, keyed by the line's own text rather than its number. */
+function failSites(source) {
+  const sites = new Map();
+  const seen = new Map();
+  source.split("\n").forEach((text, index) => {
+    const bare = text.trim();
+    if (bare.startsWith("//") || bare.startsWith("*") || bare.startsWith("/*")) return;
+    if (/const fail = /.test(text)) return;                      // the definition, not a site
+    if (!/(^|[^\w.])fail\(/.test(text)) return;
+    const key = bare.replace(/\s+/g, " ");
+    const before = seen.get(key) || 0;
+    seen.set(key, before + 1);
+    sites.set(index + 1, before ? `${key} #${before + 1}` : key);
+  });
+  return sites;
+}
+
+const FAIL_SITES = failSites(readFileSync(path.join(HERE, "core.test.mjs"), "utf8"));
+const REACHED = new Set();
+
+const fail = (message) => {
+  // The caller's line, off the stack: frame 0 is the `Error` header, frame 1 is this function.
+  const frame = (new Error().stack || "").split("\n")[2] || "";
+  const at = /core\.test\.mjs:(\d+):\d+/.exec(frame);
+  REACHED.add(at ? Number(at[1]) : 0);
+  failures.push(message);
+};
+
+/**
+ * What this run reached, for `attacks.mjs` to union — printed only when it asks.
+ *
+ * `DEMO_FAIL_SITES=all` also prints the whole census, which is how the suite learns the names of
+ * the sites nothing reached without reimplementing the enumeration above. One enumeration, one
+ * file: two copies of it would drift, and a coverage census that has drifted is worse than none.
+ */
+function printFailSites() {
+  if (!process.env.DEMO_FAIL_SITES) return;
+  process.stdout.write(`core.test.mjs: fail-site-census ${FAIL_SITES.size}\n`);
+  if (process.env.DEMO_FAIL_SITES === "all") {
+    for (const key of FAIL_SITES.values()) {
+      process.stdout.write(`core.test.mjs: fail-site-known ${key}\n`);
+    }
+  }
+  for (const line of [...REACHED].sort((a, b) => a - b)) {
+    const key = FAIL_SITES.get(line);
+    process.stdout.write(`core.test.mjs: fail-site ${key || `UNKNOWN SITE at line ${line}`}\n`);
+  }
+}
 
 // `LABEL_GAP` is imported from `draw.mjs` rather than chosen here, so that the placement and the
 // check cannot drift apart — but importing it means one edit to that constant would relax the
@@ -292,22 +351,55 @@ const SWEEP = {
   openingLost: 0,
 };
 
-{
-  // The central symmetry the mirror argument rests on, checked rather than asserted: every point of
-  // the threaded pair has its own negative in the set.
-  const q = (value) => {
-    const [top, bottom] = String(value).split("/");
-    return bottom === undefined ? Number(top) : Number(top) / Number(bottom);
-  };
-  const symmetric = payload.stella.points.every((point) =>
-    payload.stella.points.some((other) => point.every((value, axis) =>
-      Math.abs(q(value) + q(other[axis])) < 1e-9)));
-  if (!symmetric) {
-    fail("the threaded pair is no longer centrally symmetric, and the position census's reasoning "
-      + "about mirrored views depends on it — a mirror of a view is another view only because "
-      + "every point has its negative in the set");
-  }
+// ── the two facts the wireframe's mirror-and-flip verdict rests on ────────────────────────────────
+//
+// The position census below exempts a **mirrored** wireframe and refuses a **flipped** one, and for
+// three rounds this file gave the wrong reason for the first: that the threaded pair is centrally
+// symmetric, so every point has its negative in the set. That is true of this object and it is not
+// the reason. Mirroring the horizontal of this projection is
+//
+//     M ∘ P(yaw, pitch) ≡ P(yaw + π, −pitch)
+//
+// which is an identity of the projection for **any** set of points whatever — central symmetry
+// never enters it. A reader who spotted that also spotted what it means for the guard: the property
+// the old check was watching was irrelevant to the verdict, so it was a tripwire on the wrong wire.
+//
+// The flip is refused for a reason of the same kind. Negating the vertical is P(yaw, pitch + π) —
+// also a view of the same object, in the same sense — and it is caught for one reason only: the
+// search that recovers a drawing's view sweeps pitch over **[−π/2, π/2)**, and pitch + π is not in
+// it. That is a fact about the sweep, not about the object, so widening the sweep would quietly
+// admit every flipped drawing. Both facts are now checked here.
+const PITCH_FROM = -Math.PI / 2;
+const PITCH_SPAN = Math.PI;
+const sweptYaw = (a) => (a / VIEW_GRID) * Math.PI * 2;
+const sweptPitch = (b) => PITCH_FROM + (b / VIEW_GRID) * PITCH_SPAN;
 
+{
+  if (PITCH_FROM !== -Math.PI / 2 || PITCH_SPAN !== Math.PI) {
+    fail(`the view search sweeps pitch from ${PITCH_FROM} over a span of ${PITCH_SPAN}, and the `
+      + `flip guard requires exactly [−π/2, π/2): a flipped drawing is the view at pitch + π, so a `
+      + `sweep any wider than a half turn matches it and the FLIPPED verdict silently stops `
+      + `happening`);
+  }
+  // And the mirror identity itself, at an arbitrary view — checked rather than argued, because it
+  // is the whole justification for letting a mirrored wireframe pass.
+  const yaw = 1.1;
+  const pitch = 0.37;
+  const mirrored = payload.stella.points
+    .map((point) => ownProject3d(point, yaw, pitch))
+    .map(([x, y]) => [-x, y]);
+  const elsewhere = payload.stella.points
+    .map((point) => ownProject3d(point, yaw + Math.PI, -pitch));
+  const worst = Math.max(...mirrored.map((one, index) =>
+    Math.hypot(one[0] - elsewhere[index][0], one[1] - elsewhere[index][1])));
+  if (worst > 1e-9) {
+    fail(`mirroring a view's horizontal is supposed to BE the view at yaw + π and −pitch, and it `
+      + `comes out ${worst.toExponential(2)} away. The position census lets a mirrored wireframe `
+      + `pass on the strength of that identity, so if it does not hold the exemption is unearned`);
+  }
+}
+
+{
   const { points, edges } = draw.wireframe();
   if (VIEW_GRID !== SWEEP.grid) {
     fail(`the sweep is ${VIEW_GRID} directions per angle and DEMOS.md says ${SWEEP.grid}`);
@@ -322,8 +414,8 @@ const SWEEP = {
   const lostThere = new Set();
   for (let a = 0; a < VIEW_GRID; a += 1) {
     for (let b = 0; b < VIEW_GRID; b += 1) {
-      const yaw = (a / VIEW_GRID) * Math.PI * 2;
-      const pitch = (b / VIEW_GRID) * Math.PI - Math.PI / 2;
+      const yaw = sweptYaw(a);
+      const pitch = sweptPitch(b);
       const cost = viewCost(points, edges, yaw, pitch);
       if (cost.lies < floor) { floor = cost.lies; atFloor = 0; shapes.clear(); }
       if (cost.lies === floor) {
@@ -431,8 +523,14 @@ const SWEEP = {
 // renumbering.
 {
   const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
+  // The rows the loop below actually checks, and nothing else, are what the prose scan skips. It
+  // used to skip **any** line containing ".html", which is a much bigger hole than it looks: a
+  // sentence naming a page and a beat in the same breath — the likeliest sentence to write — went
+  // straight through. A reader found it by writing one.
+  const tableRows = new Set();
   for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
     const row = doc.split("\n").find((line) => line.includes(`${slug}.html`));
+    if (row) tableRows.add(row);
     if (!row) {
       fail(`DEMOS.md has no page-table row for ${slug}`);
       continue;
@@ -446,7 +544,7 @@ const SWEEP = {
     }
   }
   for (const line of doc.split("\n")) {
-    if (line.includes(".html")) continue;          // the page table, checked above
+    if (tableRows.has(line)) continue;             // the page-table rows, checked above
     const found = /\bbeats?\s+\d+/.exec(line);
     if (found) {
       fail(`DEMOS.md writes "${found[0]}" outside its page table. A beat number in prose goes stale `
@@ -615,8 +713,8 @@ function wireViewOf(svg) {
   let best = null;
   for (let a = 0; a < VIEW_GRID; a += 1) {
     for (let b = 0; b < VIEW_GRID; b += 1) {
-      const yaw = (a / VIEW_GRID) * Math.PI * 2;
-      const pitch = (b / VIEW_GRID) * Math.PI - Math.PI / 2;
+      const yaw = sweptYaw(a);
+      const pitch = sweptPitch(b);
       const flat = points.map((point) => ownProject3d(point, yaw, pitch));
       // Compare shapes, not sizes: each set is centred and scaled to its own spread first, so a
       // resizing of the drawing is not mistaken for a distortion of it.
@@ -1652,6 +1750,10 @@ for (const line of report) {
   process.stdout.write(`core.test.mjs: ${line.slug} — ${line.steps} steps over ${line.beats} `
     + `beats, ${line.words} words\n`);
 }
+
+// Before the verdict, and on both sides of it: a red run is exactly the run whose coverage
+// `attacks.mjs` is measuring, so this cannot sit after the exit.
+printFailSites();
 
 if (failures.length) {
   for (const failure of failures) process.stderr.write(`${failure}\n`);

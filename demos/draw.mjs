@@ -206,6 +206,32 @@ export function boxMeetsSegment(box, from, to) {
 }
 
 /**
+ * Is one candidate place clear? Its box, or nothing.
+ *
+ * Five tests, and they were written twice — once in the ladder below and once in its last-resort
+ * sweep, as two copies of the same five lines. Duplicated tests are how a rule comes to hold in one
+ * half of a search and not the other, and they are also untestable: a mutation aimed at one copy
+ * cannot be named unambiguously in `attacks.mjs`, which is how the three most important label rules
+ * came to have no mutation at all. One function, called from both.
+ *
+ * The last of the five is the association rule: a candidate that some **stranger's** dot is nearer
+ * to than the dot this label belongs to is not a place for it, however much clear paper is there.
+ * Two readers found a name parked nearer another dot than its own, which is the wrong-noun defect
+ * drawn instead of printed.
+ */
+function clearSpot(x, y, text, size, obstacles, taken, owner) {
+  const box = textBox(x, y, text, size);
+  if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) return null;
+  if (obstacles.dots.some((dot) => boxMeetsDot(box, dot))) return null;
+  if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) return null;
+  if (owner && obstacles.dots.some((dot) =>
+    Math.hypot(dot[0] - x, dot[1] - y) < Math.hypot(owner[0] - x, owner[1] - y) - 0.01)) {
+    return null;
+  }
+  return box;
+}
+
+/**
  * Where a label goes: the first candidate place that touches nothing.
  *
  * The ring's labels used to be placed by a rule — outward from the centre by a fixed step, and the
@@ -230,18 +256,8 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20, owner 
       const theta = angle + swing;
       const x = anchor[0] + Math.cos(theta) * out;
       const y = anchor[1] + Math.sin(theta) * out;
-      const box = textBox(x, y, text, size);
-      if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
-      if (obstacles.dots.some((dot) => boxMeetsDot(box, dot))) continue;
-      if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
-      // And it must be nearest the dot it belongs to. Clearing every stroke is not enough: two
-      // readers found a name parked nearer a different dot than its own, which is the wrong-noun
-      // defect drawn instead of printed. A candidate a stranger's dot is closer to is not a place
-      // for this label, however much clear paper is there.
-      if (owner && obstacles.dots.some((dot) =>
-        Math.hypot(dot[0] - x, dot[1] - y) < Math.hypot(owner[0] - x, owner[1] - y) - 0.01)) {
-        continue;
-      }
+      const box = clearSpot(x, y, text, size, obstacles, taken, owner);
+      if (!box) continue;
       taken.push(box);
       return [x, y];
     }
@@ -259,18 +275,8 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20, owner 
       const theta = angle + swing;
       const x = anchor[0] + Math.cos(theta) * out;
       const y = anchor[1] + Math.sin(theta) * out;
-      const box = textBox(x, y, text, size);
-      if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
-      if (obstacles.dots.some((dot) => boxMeetsDot(box, dot))) continue;
-      if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
-      // And it must be nearest the dot it belongs to. Clearing every stroke is not enough: two
-      // readers found a name parked nearer a different dot than its own, which is the wrong-noun
-      // defect drawn instead of printed. A candidate a stranger's dot is closer to is not a place
-      // for this label, however much clear paper is there.
-      if (owner && obstacles.dots.some((dot) =>
-        Math.hypot(dot[0] - x, dot[1] - y) < Math.hypot(owner[0] - x, owner[1] - y) - 0.01)) {
-        continue;
-      }
+      const box = clearSpot(x, y, text, size, obstacles, taken, owner);
+      if (!box) continue;
       taken.push(box);
       return [x, y];
     }
