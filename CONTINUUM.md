@@ -56,6 +56,8 @@ Rules of the ledger:
   and the integrity layer diffs it byte for byte whenever the engine is reachable. Editing a file
   there to make a quotation fit is the one failure this repository is built to catch.
 
+> **Handover (2026-09-03).** This work moved from a local decision session to cloud sessions. The epic with the state, the operating rules and the open work is https://github.com/zacharyelston/OurBubble/issues/67 — read it before this file.
+
 ## Active lanes
 
 | lane | role | territory | delivery | state |
