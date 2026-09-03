@@ -3,7 +3,7 @@
 **A book about a small world we built inside a computer, and what happened when we pointed real
 tests at it.**
 
-Fourteen chapters and an appendix. It starts with a child noticing her shadow and a Greek who knew what
+Fifteen chapters and an appendix. It starts with a child noticing her shadow and a Greek who knew what
 to do next, and it ends with you running the checks yourself. In between: a structure built out of
 points and lines, a ripple that came out lopsided until one setting fixed it, a wall that worked and
 a hoped-for effect that did not, an energy bill, a measurement with no answer key, and a law that
@@ -32,7 +32,7 @@ UniForge builds The Container. The lab tests it. Our Bubble teaches it.
 The reading order is [`chapters/SUMMARY.md`](chapters/SUMMARY.md) — that file is the *only* place
 the order is written down, so a chapter carries no number in its name and none in its prose.
 
-The fourteen chapters are narrative. They carry no rung labels and no quotations, on purpose. Everything
+The fifteen chapters are narrative. They carry no rung labels and no quotations, on purpose. Everything
 a skeptic wants — which registered experiment each chapter rests on, its gate, its data-true figure,
 the exact numbers quoted and the file that carries each one, and the commands that regenerate them —
 is in [the appendix](chapters/the-simulations.md), one section per chapter, and each chapter closes
@@ -89,11 +89,11 @@ Building can legitimately modify a tracked file: `chapters/the-simulations.md` i
 to the record and someone remembering to run a script. `git status` is therefore part of the check —
 a clean tree after a build means the appendix and the record agree.
 
-The build also **puts some of the book's numbers on the page from the engine**. Chapters 1–4 live on
+The build also **puts some of the book's numbers on the page from the engine**. Chapters 1–5 live on
 one triangle, one tetrahedron and the two shapes it is made of, where every number is
 finger-countable, so rather than quote them the chapters carry `{{napkin:…}}` tokens that the
-preprocessor replaces at build time — the census, the loop sums, the ten-tick table, the octahedron's
-crossing. Each rendered block says so on its last line. The arithmetic is exact (rational, no
+preprocessor replaces at build time — the census, the loop sums, the triangle's and the
+tetrahedron's ten-tick tables, the octahedron's crossing, and the threaded pair's refusal. Each rendered block says so on its last line. The arithmetic is exact (rational, no
 floating point), each block is recomputed twice on every check to prove it is deterministic, and each
 token asserts its own claim — loop sums zero, total conserved — before it renders anything. The
 tokens and the scope of their one exemption from the appendix-anchoring rule are specified in
@@ -136,7 +136,7 @@ must reproduce the vendored bytes exactly. Two implementations sharing no code, 
 and no language, agreeing on 22 969 bytes, is what makes a number on a page a fact about the object
 rather than a fact about one program.
 
-[`TOKENS.md`](TOKENS.md) lists all 23 rows, which thirteen the chapters render today, and how to add
+[`TOKENS.md`](TOKENS.md) lists all 23 rows, which sixteen the chapters render today, and how to add
 a token for one of the others.
 
 ### Bumping the engine
@@ -148,7 +148,9 @@ artifact and the hashes together. `engine.lock`'s header is the long version.
 ## The demos
 
 Chapters 1–4 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
-numbers in the reader's browser** and walks her through the chapter's beats one at a time. They are
+numbers in the reader's browser** and walks her through the chapter's beats one at a time. Their
+beat ranges moved when the outline gained chapter five; `demos/DEMOS.md` says which pages have yet
+to catch up. They are
 plain static pages — one shared vanilla-JS module, one stylesheet, nothing loaded from anywhere — and
 they are published beside the book, at `…/OurBubble/demos/`, through the `chapters/demos` symlink
 that mdBook copies.
@@ -214,14 +216,14 @@ records the SHA it was taken at, and it must match the lock.
 
 | path | what it is |
 |---|---|
-| `chapters/` | the book — `SUMMARY.md` (the reading order), nine chapters, the generated appendix, and `assets/` (the editorial illustration studies) |
+| `chapters/` | the book — `SUMMARY.md` (the reading order), the chapters, the generated appendix, and `assets/` (the editorial illustration studies) |
 | `theme/` | the edition's CSS |
 | `edition.json` | the manifest: per-chapter sources, the appendix's sections, the declared quotations, and the excluded-claims guard with the probe sentences that test it |
 | `check_edition.py` | the checker |
 | `gen_appendix.py` · `preprocessor.py` | the appendix generator, and the mdBook hook that runs it on every build |
 | `record.lock` · `record/` · `tools/fetch_record.sh` · `tools/snapshot_record.sh` | the record contract: the pin, the committed snapshot, and the two scripts that derive it |
 | `engine.lock` · `engine/` · `tools/build_engine.sh` · `tools/lock_engine.py` | the engine contract: the pin, the vendored artifact, and the two scripts that produce them |
-| `tools/engine.py` · `tools/napkin.py` · `preprocessor.py` · `TOKENS.md` | the only door to the vendored data, the renderer that turns it into the book's thirteen blocks, the mdBook hook that runs them, and what else is available |
+| `tools/engine.py` · `tools/napkin.py` · `preprocessor.py` · `TOKENS.md` | the only door to the vendored data, the renderer that turns it into the book's sixteen blocks, the mdBook hook that runs them, and what else is available |
 | `tools/oracle.py` · `tools/octahedron.py` · `tools/engine_check.py` · `tools/engine_wasm_check.mjs` | the Python that used to be the engine, kept as the independent recomputation that must reproduce it byte for byte, and the node probe that proves the vendored wasm is the same engine as the vendored JSON |
 | `tools/renumber_beats.py` | moves beat numbers through `OUTLINE.md` and every chapter's markers together, when a beat is inserted |
 | `demos/` · `tools/napkin_export.py` | the demos: one page per chapter of the napkin world, recomputing its numbers in the reader's browser, and the export they are checked against — `demos/DEMOS.md` |

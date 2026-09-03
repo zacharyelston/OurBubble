@@ -5,6 +5,7 @@
 - [One tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md)
 - [Make it move](make-it-move.md)
 - [The shape between](the-shape-between.md)
+- [Two worlds threaded](two-worlds-threaded.md)
 - [Room, and a world with no edge](room-and-a-world-with-no-edge.md)
 - [Is it round?](the-round-ripple.md)
 - [What does pushing on it cost?](the-bubble-and-its-bill.md)

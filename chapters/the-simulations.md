@@ -109,17 +109,28 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 **The chapter.** [the-shape-between.md](the-shape-between.md)
 
-**What this chapter deliberately does not say.** Three readings of the shape between the tips were put to the same arithmetic and refused. They are recorded here rather than in the prose, because a chapter is a poor place to argue with a claim nobody made to the reader.
+**Standards and record this section rests on.**
 
-**A tick is not a trip round the octahedron.** Crossing it takes two ticks; going round its equator takes four. The twelve-tick repeat belongs to the tick size and not to the shape — turn the tick to a quarter or a fifth and it never repeats at all.
+- [`book/chapters/00-the-object/chapter.md`](record/book/chapters/00-the-object/chapter.md)
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
 
-**Gathering the work at the octahedron saves nothing.** On the fourteen-dot motif it is the same thirty-seven line-visits, differently grouped. On the record's tiling it is thirteen sevenths of the plain per-line loop, because each of an octahedron's edges belongs to a second octahedron too.
+**Numbers.** None quoted. Every number in this section's chapter is worked out while the book is built — by [`tools/napkin.py`](../tools/napkin.py), which holds the rule and the tables, and [`tools/octahedron.py`](../tools/octahedron.py), which holds the shapes larger than one tetrahedron — and re-derived on every build, so the thing to check is not a file but the arithmetic, which the chapter shows you.
 
-**And nothing finishes first.** One tick reads only the tick before it, so there is no order inside a tick for that to be a statement about.
+---
 
-What the octahedron does uniquely supply, on the record's tiling, is one line in seven — two of every dot's fourteen — that no tetrahedron provides. On the faces the pairing with tetrahedra is exactly one to one; on the lines, two tetrahedra touch each other directly. The chapter says the face fact and the line fact and stops there.
+<a id="s-two-worlds-threaded"></a>
 
-All of it is computed and asserted by [`tools/octahedron.py`](../tools/octahedron.py), whose report is reproduced in [`notes/octahedron-crossing.md`](../notes/octahedron-crossing.md).
+## §05 · Two worlds threaded — the last object that fits on a napkin, and the first that does not
+
+**The chapter.** [two-worlds-threaded.md](two-worlds-threaded.md)
+
+**What this chapter deliberately does not say.** Two readings of the threaded pair were put to the same arithmetic and refused. Both are on the page above, rather than argued with in the prose.
+
+**No tick both holds and comes home.** The book's tick is over the size this shape's own numbers allow, so the run grows instead of sloshing. A smaller tick stops the growth and buys nothing else. At no tick that can be written as a fraction does the pair of rows return to the pair it started from.
+
+**And no such tick gives a table.** Every tick under the bound prints two rows at most. After that the numbers stop fitting in a couple of decimal places, which is the test every table in these chapters is held to.
+
+Both come from the vendored engine, rendered by `stella_refusal` — register rows R16, R17, R18 and R20 of `lab/napkin/0001`. The bound is certified by an integer eigenvector: whole numbers throughout, no decimals, no square roots. That is why a refusal about an object of fourteen dots is still something a reader can check.
 
 **Standards and record this section rests on.**
 
@@ -132,7 +143,7 @@ All of it is computed and asserted by [`tools/octahedron.py`](../tools/octahedro
 
 <a id="s-room-and-a-world-with-no-edge"></a>
 
-## §05 · Room, and a world with no edge — why tetrahedra need a compromise
+## §06 · Room, and a world with no edge — why tetrahedra need a compromise
 
 **The chapter.** [room-and-a-world-with-no-edge.md](room-and-a-world-with-no-edge.md)
 
@@ -169,7 +180,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 <a id="s-the-round-ripple"></a>
 
-## §06 · Is it round? — the dial, set twice
+## §07 · Is it round? — the dial, set twice
 
 **The chapter.** [the-round-ripple.md](the-round-ripple.md)
 
@@ -223,7 +234,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 <a id="s-the-bubble-and-its-bill"></a>
 
-## §07 · What does pushing on it cost? — the shaped push and its bill
+## §08 · What does pushing on it cost? — the shaped push and its bill
 
 **The chapter.** [the-bubble-and-its-bill.md](the-bubble-and-its-bill.md)
 
@@ -263,7 +274,7 @@ cargo run  --release -p viz     --bin gen_energy
 
 <a id="s-the-wall-that-worked-and-didnt"></a>
 
-## §08 · Can you wall a piece off? — one experiment, one yes and one no
+## §09 · Can you wall a piece off? — one experiment, one yes and one no
 
 **The chapter.** [the-wall-that-worked-and-didnt.md](the-wall-that-worked-and-didnt.md)
 
@@ -308,7 +319,7 @@ cargo run  --release -p viz     --bin gen_null
 
 <a id="s-where-negative-energy-appears"></a>
 
-## §09 · Can a gap be emptier than empty? — the one place the sign is real
+## §10 · Can a gap be emptier than empty? — the one place the sign is real
 
 **The chapter.** [where-negative-energy-appears.md](where-negative-energy-appears.md)
 
@@ -355,7 +366,7 @@ cargo run  --release -p viz     --bin gen_casimir
 
 <a id="s-a-number-without-the-answer-key"></a>
 
-## §10 · Can it tell me something I didn't tell it? — the answer key taken away
+## §11 · Can it tell me something I didn't tell it? — the answer key taken away
 
 **The chapter.** [a-number-without-the-answer-key.md](a-number-without-the-answer-key.md)
 
@@ -413,7 +424,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §11 · When the world you built says no — the obvious answer, refused
+## §12 · When the world you built says no — the obvious answer, refused
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 
@@ -455,7 +466,7 @@ cargo run  --release -p viz     --bin gen_shift_law
 
 <a id="s-a-few-thousand-years-of-sharper-shadows"></a>
 
-## §12 · A few thousand years of sharper shadows — history, and our own two misses
+## §13 · A few thousand years of sharper shadows — history, and our own two misses
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
@@ -493,7 +504,7 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 <a id="s-cast-your-own-shadow"></a>
 
-## §13 · Cast your own shadow — the reproduce path
+## §14 · Cast your own shadow — the reproduce path
 
 **The chapter.** [cast-your-own-shadow.md](cast-your-own-shadow.md)
 

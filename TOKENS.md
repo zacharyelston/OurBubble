@@ -8,7 +8,7 @@ There is one engine: UniForge's `napkin` crate, vendored under [`engine/`](engin
 pinned by [`engine.lock`](engine.lock). It computes **23 registered rows** (`lab/napkin/0001`).
 **Twenty-one of them are vendored as data**, and the two that are not — R22 and R23 — are not data
 at all: they are properties of the engine (it refuses a non-complex; its output is canonical JSON,
-byte for byte), and they are checked rather than shown. The chapters currently render **thirteen**.
+byte for byte), and they are checked rather than shown. The chapters currently render **sixteen**.
 
 This file is the difference between those two numbers. It exists so that the answer to "can a
 chapter show *that*?" is a lookup rather than a piece of engine work: if a row is listed here, the
@@ -17,7 +17,7 @@ data is already in the repository and adding a token is writing a renderer for i
 Nothing here proposes a new token. Deciding what a chapter shows is the Structure lane's, and it
 happens against `OUTLINE.md`'s beats.
 
-## The thirteen the chapters render today
+## The sixteen the chapters render today
 
 Each is a `{{napkin:NAME}}` in a chapter's prose; `preprocessor.py` replaces it at build time with
 what `tools/napkin.py` renders from `engine/`. Every rendered block carries the italic line
@@ -29,15 +29,18 @@ what `tools/napkin.py` renders from `engine/`. Every rendered block carries the 
 | `triangle_loop_example` | Two dots, a line, and the first thing that closes | R03 | three differences from the corners 2, 5, 1, and their sum |
 | `tetra_face_loops` | One tetrahedron is a whole world | R04 | six differences, and each of four faces walked round to zero |
 | `tetra_inside_sum` | One tetrahedron is a whole world | R05 | four non-zero faces from six freely chosen arrows, adding to zero |
+| `triangle_slosh_table` | Make it move | R07 | the triangle at `2/3`, from 2, 5, 2 — eleven whole-numbered rows |
+| `tick_belongs_to_shape` | Make it move | R07 R16 | the same three numbers at `1/2`: three printable rows, no return, and the four-dot ceiling |
 | `slosh_table` | Make it move | R08 | ten ticks from rest, every line counting one |
 | `slosh_table_dialed` | Make it move | R09 | the same ten with `AB` counted double — the dial |
+| `no_room` | Make it move | R10 | the four dots' hops: one line from each to each, so the diameter is 1 |
 | `vertex_classes` | Room, and a world with no edge | R19 | three kinds of place on a `6³` wrapped world, and the control |
 | `octa_cut` | The shape between | R11 | the midpoint cut: four tips at an eighth, one shape at a half |
 | `octa_counts` | The shape between | R12 | `6 · 12 · 8`, and the three pairs no line joins |
 | `octa_poke_table` | The shape between | R13 | the crossing: a poke of 1 on `AB`, whole on `CD` at tick 2 |
 | `octa_face_sum` | The shape between | R14 | eight faces of a closed surface, walked from outside, summing to zero |
-| `stella_counts` | The shape between | R15 | the second tetrahedron threaded: 14 dots, 36 lines |
-| `stella_refusal` | The shape between | R16 R17 R18 R20 | three tick ceilings, and the runaway past the third |
+| `stella_counts` | Two worlds threaded | R15 | the second tetrahedron threaded: 14 dots, 36 lines |
+| `stella_refusal` | Two worlds threaded | R16 R17 R18 R20 | three tick ceilings, and the runaway past the third |
 
 ## All 23 rows, and where their data lives
 
@@ -86,9 +89,11 @@ picture the canon governs rather than a second drawing of the same object.
 * **No float, anywhere.** Every rational leaves the engine as an exact `"n/d"` string and is parsed
   back into a `Fraction`. The engine's own type has no float variant, so this is a property of the
   payload rather than a check that runs afterwards.
-* **No `√41`.** The stella's stiffest mode is `(11 + √41)/2`; it is never computed, in floating point
-  or otherwise. What is vendored is an *integer eigenvector* certifying the bound — which is why
-  chapter 4's refusal is checkable on a napkin.
+* **No `√41`.** The threaded pair's spectrum contains `(11 ± √41)/2`, and neither is ever computed,
+  in floating point or otherwise. Neither is the stiffest mode either: that is **10**, which is why
+  the ceiling comes out as an exact `2/5`. What is vendored is an *integer eigenvector* for `λ = 10`
+  certifying the bound — which is why the refusal in *Two worlds threaded* is checkable on a
+  napkin.
 
 ## Adding a token
 

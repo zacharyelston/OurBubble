@@ -9,7 +9,7 @@
   <figcaption><strong>Analogy — not data.</strong> An instrument earns trust on a case whose answer is known, then works where no answer exists — and keeps the one shortfall it predicted for itself. The numbers are in the figures linked below.</figcaption>
 </figure>
 
-<!-- beat 89 -->
+<!-- beat 92 -->
 
 You now have something that can find a law it was not told. The obvious thing to do with it is point
 it somewhere nobody knows the answer — and the obvious thing is where toys go wrong.
@@ -28,7 +28,7 @@ So what would count instead?
 
 ## What would count
 
-<!-- beat 90 -->
+<!-- beat 93 -->
 
 Three properties, and the third is the one that does the work.
 
@@ -42,7 +42,7 @@ world. Where would you even find such a number?
 
 ## Where nature hands you one
 
-<!-- beat 91 -->
+<!-- beat 94 -->
 
 At the edges where things stop being one thing and become another.
 
@@ -63,7 +63,7 @@ Before we point the instrument at one, though, commit to something.
 
 ## ✎ Before we look
 
-<!-- beat 92 -->
+<!-- beat 95 -->
 
 **Write down your answer.** Would you trust an instrument's report about a case nobody has solved,
 before you had seen it recover a case somebody has?
@@ -74,7 +74,7 @@ first. Write down the standard you would want met. One line.
 
 ## Make the instrument earn it
 
-<!-- beat 93 -->
+<!-- beat 96 -->
 
 We used a two-dimensional case that has an exact solution — Lars Onsager's, from 1944, one of the
 results that made universality believable in the first place.
@@ -94,7 +94,7 @@ Now take the answer key away.
 
 ## The case nobody has solved
 
-<!-- beat 94 -->
+<!-- beat 97 -->
 
 The three-dimensional version of the same model has no closed-form solution. Nobody has one. It is
 not that it is hard to look up — it does not exist.
@@ -113,7 +113,7 @@ It was still handed two things, though, and they belong in the same breath.
 
 ## Take the ingredients away too
 
-<!-- beat 95 -->
+<!-- beat 98 -->
 
 The two things were the temperature at which the transition happens, and one of the class numbers
 itself. So the agreement above is real, and it rests on two ingredients it was given rather than
@@ -130,7 +130,7 @@ asks about a strong result: did it miss anything?
 
 ## The miss it called in advance
 
-<!-- beat 96 -->
+<!-- beat 99 -->
 
 It did. One quantity, and it came out too high.
 
@@ -153,7 +153,7 @@ and hit them. What is left for it to prove?
 
 ## The one thing left
 
-<!-- beat 97 -->
+<!-- beat 100 -->
 
 That it can tell us we were wrong.
 
