@@ -88,7 +88,7 @@ Three properties are guaranteed, and each is enforced rather than intended:
 
 Every rendered block ends with one line: *computed while this page was built — <what>.*
 
-**Three rules the captions and the prose around them answer to**, each of them a defect that shipped
+**Four rules the captions and the prose around them answer to**, each of them a defect that shipped
 once and was caught by a reader rather than a check (2026-09-02):
 
 1. **A caption is a caption.** `tools/napkin.py` refuses one over 70 words as it renders, and the
@@ -105,6 +105,27 @@ once and was caught by a reader rather than a check (2026-09-02):
    refuted — those belong to the appendix. This is the only check in the repository that reads what
    the *author* wrote rather than what the tool wrote, and it exists because a corrected table sat
    two paragraphs above prose still making the disproved claim.
+
+4. **Checking is not refusing, and only refusing survives a rewritten builder** (2026-09-02,
+   tranche D, found by attacking the guards rather than by reading). *Checking* asks whether the
+   number the token computed is present on the page; *refusing* asks whether the wrong thing is
+   absent. A check that compares the page against strings the same code just built moves when that
+   code moves — so a caption can carry every word a token pinned and still say the opposite two
+   clauses later, and two fractions can be swapped between their nouns with both strings still
+   present somewhere in the block. Three consequences, each now enforced in `tools/napkin.py`:
+   a token whose verdict matters **builds that verdict from the data and refuses its opposite**
+   (`REFUSED_IN_CAPTION`, registered from what the engine returned, matched on normalised
+   whitespace because a newline inside a refused phrase is invisible to a reader and was invisible
+   to the test); a rendered value is **asserted inside the phrase that says what it is a value of**,
+   never as a bare number the check can find anywhere; and where it is worth it, the phrase is
+   **read back and held to what its own noun means** — a pair smaller than the tetrahedron it was
+   cut from and added to is refused by arithmetic on the rendered characters rather than by the code
+   that wrote them. That last is the only kind of check here that does not trust its own builder.
+
+   A corollary for anyone raising a wording nit against a rendered phrase: **it is not a free
+   edit.** Shortening "3/2 of the tetrahedron you cut" to "3/2 of it" reads better and leaves the
+   read-back with no noun to hold the number to. Say what the phrase is load-bearing for, or drop
+   the leading repetition instead.
 
 ### The exemption, and exactly how far it reaches
 
