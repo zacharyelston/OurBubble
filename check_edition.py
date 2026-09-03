@@ -1120,12 +1120,18 @@ def check_demo_attacks(errors: List[str]) -> str:
     measuring centres instead of ink, a step enumerator that never typed anything. Every one of
     those had been "tested" by an attack run once in a shell and thrown away.
 
-    So the attacks live in the repository and run here. Each applies one mutation, requires the
-    cross-check to complain **by name**, and restores the file. A mutation whose needle has gone
-    stale fails too, which is how a refactor says an attack has stopped testing anything instead of
-    passing quietly.
+    So the attacks live in the repository and run here. Each mutation is applied to a **private copy**
+    of `demos/` and `engine/` under the system temp directory, the cross-check is run from that copy
+    and required to complain **by name**, and the copy is deleted; the working tree is never written,
+    and the suite asks git afterwards whether it kept its word. It also reports how many of the
+    cross-check's own fail sites the mutations reached, against a committed baseline. A mutation
+    whose needle has gone stale fails too, which is how a refactor says an attack has stopped
+    testing anything instead of passing quietly.
 
     Needs node, like the cross-check itself; without it this reads `unverified` rather than passing.
+    And the suite refuses to run at all on a dirty `demos/` or `engine/` — it cannot verify its own
+    no-write claim from a dirty start — which it reports by exiting 3, read here as `unverified`
+    rather than as a failure, so uncommitted demo work does not make the rest of tier 0 unrunnable.
     """
     import shutil
     import subprocess
@@ -1141,6 +1147,9 @@ def check_demo_attacks(errors: List[str]) -> str:
         [node, str(DEMO_ATTACKS)],
         capture_output=True, text=True, cwd=EDITION_DIR, timeout=900, check=False,
     )
+    if finished.returncode == 3:
+        return ("unverified — demos/ or engine/ has uncommitted changes, so the suite could not "
+                "run: it verifies afterwards that it left the tree as it found it")
     if finished.returncode != 0:
         for line in (finished.stderr or "").splitlines():
             if line.strip():

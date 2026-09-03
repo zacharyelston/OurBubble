@@ -269,10 +269,11 @@ is one more figure to go stale:
    intersected passed a drawing whose closest pair had four tenths of a pixel between them, and four
    tenths of a pixel on a screen is two numbers touching. The gap is one constant, exported from
    `draw.mjs` and imported by the check, so the placement and the check cannot drift apart. The
-   tightest pair in all 162 drawings is exactly at it. Three successive label *rules* were called fixed and were not, so the
+   tightest pair anywhere is within a hundredth of it, and the check prints the figure on every
+   run. Three successive label *rules* were called fixed and were not, so the
    placement no longer asserts: it **searches** a fixed ladder of positions out along the ray from
-   each dot and takes the first that touches nothing, and this gate is what says it found one. 162
-   drawings: no label on a stroke, none on a dot, no two labels overlapping. The net's *names* are
+   each dot and takes the first that touches nothing, and this gate is what says it found one. Every
+   drawing, in every state: no label on a stroke, none on a dot, no two labels overlapping. The net's *names* are
    exempt from the search and not from the gate — CANON.md's rule 4 forbids moving them — so only
    their numbers are placed, and the fixed names are obstacles like any other ink.
 9. **The sweep figures in DEMOS.md are the sweep's** — including the opening view's own yaw, pitch,
@@ -284,8 +285,8 @@ is one more figure to go stale:
 10. **Every still stands on its own.** The still button is the reason the drawing code exists, and it
    is the one surface a reader reaches by downloading rather than by looking — a proof-reader could
    not exercise it at all. So every step, in every state, is rendered to its still, and the still is
-   held to carrying its own stylesheet, its own title and description, and the firewall: 162 of them
-   on every run.
+   held to carrying its own stylesheet, its own title and description, and the firewall — and the
+   check prints how many it rendered.
 
 ### No guard lands without the mutation that proves it bites
 
@@ -296,9 +297,63 @@ a sum check keyed to a word, a paragraph rule whose window excluded the figures 
 a dot test that measured centres instead of ink, a step enumerator that never typed anything.
 
 So: **`demos/attacks.mjs` holds the mutation for every guard, the suite runs in tier 0, and a new
-guard lands in the same commit as the mutation that proves it.** The suite applies each mutation to
-a scratch copy of the module, runs the check, and requires it to go red — and requires the tree to
-be clean afterwards. A guard with no mutation is listed by name and fails.
+guard lands in the same commit as the mutation that proves it.** Per mutation, `demos/` and
+`engine/` are **copied** into a fresh directory under the system temp directory, the mutation is
+applied to the copy, the check is run from the copy, its output is required to carry that guard's
+own phrase, and the copy is deleted. A needle that is no longer in the file fails, and so does a
+needle that occurs twice: an ambiguous needle mutates whichever copy comes first, which tests
+something nobody chose.
+
+**The suite does not write to the working tree, and says so by checking.** The version this
+paragraph used to describe did write to it — the real `demos/` and `engine/`, hash-pinned
+`engine/napkin.json` included — and restored the files from an in-memory copy hung on
+`process.on("exit")`. The loop is synchronous, so a killed run never reaches that handler and exits
+with the tree mutated; and a stray edit to a vendored artifact does not look like damage, it looks
+like a re-export. Two readers made the same finding in the same round. It now **refuses to start**
+on a dirty `demos/` or `engine/` — which is also what makes the claim checkable — and asks git
+afterwards whether it kept its word.
+
+**Every mutation red is not the same as every guard tested.** The first census of which fail sites
+any mutation actually reached found about a third of them, and among the rest were a label drawn
+across a stroke and a label sitting on a dot's ink — two of the three most important guards on the
+two most visual pages. Guards with no mutation are exactly the guards that were found holed on the
+next read, five rounds running; a reviewer made the point by turning eight uncovered ones into
+`if (false)`, with every mutation still red and the coverage number unmoved.
+
+So the check enumerates every place in itself that can complain, reports the ones a run reached, and
+the suite unions that over every mutation and prints it beside the pass count.
+`demos/attacks.baseline.json` records the split by each guard's own text, and **every site has a
+mutation as this lands.** A run that reaches fewer sites than the baseline's `floor` **fails** — the
+floor is the highest coverage the suite has ever had, `--baseline` will not lower it, and it may
+not sit below the number of covered sites the same file lists — so walking coverage down means
+deleting those entries too, one line each. And the last quiet way down is shut: **every site in the
+check has a mutation as this lands, so the uncovered list being empty is the invariant**, and a
+walk-down has to put a site back into it, which fails. A guard that genuinely cannot be mutated is
+then a reason to change that rule, in a commit saying which guard and why — which is the standard
+this whole file is for: not that the coverage file cannot be edited, but that editing it has to say
+what it is doing. A baseline behind its own run fails,
+because a coverage file that is out of date is one more status that lies; and the commonest ways of
+switching a guard off in place — `if (false)`, `if (true)`, `&& false`, `|| true` and their
+one-character cousins — are refused outright in the four modules the suite mutates. A regex cannot
+enumerate the ways to write *false*, which is the argument for a mutation per site rather than for a
+better regex: a guard gutted in a spelling the audit misses stops being able to complain, and its
+mutation stops being red. Rewrite the baseline with
+`node demos/attacks.mjs --baseline`, in the commit that changed the coverage — it refuses to write
+one from a run that is not green, and it names each site it is dropping.
+
+Those comparison rules live in the suite rather than in the check, where a mutation of the check
+cannot reach them — and the standing rule does not care where a guard lives. So the comparison is a
+pure function with **one case per rule**, each handed the edit it exists to refuse: a floor lowered
+to meet a worse run, coverage under the floor, a covered site nothing reaches any more, a site with
+no mutation, an edited census count, a missing floor, a baseline behind its run, and a run that
+matches its baseline exactly and must pass. A rule that stops firing on its own case fails the
+suite.
+
+Two of the mutations earned their place by finding holes rather than by demonstrating guards. A
+wireframe that draws no dots **crashed** the check instead of failing it. And one of the net's
+twelve strokes left out entirely passed every gate: the count rule walked the drawing's own marks,
+and a line drawn nowhere is not among them — so it now walks the engine's list as well. Both are
+fixed in the commit that found them, which is what the mutations are for.
 
 The second half of the rule is about commit messages, and it cost a round: **a message states only
 what its diff does.** One here narrated three fixes the diff did not contain, because a script
@@ -318,8 +373,10 @@ step, all named by a number that had moved. A file whose whole argument is *no b
 typed into a demo* had typed nine.
 
 Both halves are now guarded rather than remembered. The page table's ranges are checked against
-`steps.json`, so a renumber that skips them fails. And **everywhere else a beat is named by what it
-is** — the poke step, the walk step, chapter one's opening step — because a name needs no
+`steps.json`, so a renumber that skips them fails. The prose scan skips **only the page-table rows
+it just checked**: it used to skip any line containing `.html`, which let a sentence naming a page
+and a beat in the same breath — the likeliest such sentence anyone would write — straight through.
+And **everywhere else a beat is named by what it is** — the poke step, the walk step, chapter one's opening step — because a name needs no
 renumbering. The same went for the source: the fold comments in `steps.mjs` named their beats by
 number and now name them by what they fold.
 
@@ -350,8 +407,8 @@ closed** — a wrong count hidden in an SVG description, closed by the no-digit 
 stayed honest, closed by resolving each stroke's ends to the nearest drawn dot and holding *that*
 pair to the census.
 
-The suite is now run as a suite, against the branch as it stands: **thirteen mutations, thirteen
-caught.** A digit in a caption; a digit in a column heading; a number computed in JavaScript into a
+The suite was first run as a suite in the round that established the method — **thirteen mutations,
+thirteen caught.** It has many more now, and prints the count beside the coverage on every run. A digit in a caption; a digit in a column heading; a number computed in JavaScript into a
 cell; a number appended to a drawing's title; a wrong count in its description; a number written into
 a page's own HTML; a beat number typed into a step; every line in the wireframe pointed at the wrong
 dot; a stray unlabelled `<line>`; the same stray stroke as a `<path>`; a walk whose terms do not add
@@ -359,7 +416,7 @@ to its total; that same walk with its heading renamed; and a step quietly droppi
 
 One of the thirteen looked at first like an escape and was not: appending a number to `drawWire`'s
 **fallback** title changed nothing, because every step passes a title of its own and that fallback is
-never reached — confirmed by rendering all 162 drawings and finding none without an explicit title.
+never reached — confirmed by rendering every drawing and finding none without an explicit title.
 Mutating the title a step actually uses turns the check red twice over. The lesson kept from that:
 a mutation that fails to fail may be a hole or may be dead code, and the two are told apart by
 checking that the mutation was reachable, not by reading the diff.
@@ -486,6 +543,24 @@ else*. On a net, "the opposite dot" is two or three marks on the paper.
 Above. The charter's condition for leaving the plane was that 2-D genuinely could not show the step,
 and the crossings count is the evidence: twenty is the floor.
 
+**A mirrored wireframe is another view; a flipped one is not — and the reason is about the
+projection, not about the object.** The position census exempts the first and refuses the second,
+and it used to give a reason that sounded better than it was: that the threaded pair is centrally
+symmetric, so every point has its negative in the set. True of this object, and beside the point.
+Mirroring the horizontal of this projection is
+
+> M ∘ P(yaw, pitch) ≡ P(yaw + π, −pitch)
+
+which is an identity of the projection for **any** set of points whatever — half a turn of yaw
+negates the horizontal, and negating the pitch puts the vertical back. Central symmetry never
+enters, so the guard that watched for it was a tripwire on a property the verdict does not use. And
+the flip is refused for a reason of the same shape: negating the vertical is P(yaw, pitch + π),
+which is a perfectly good view of the object and is caught for one reason only — the search that
+recovers a drawing's view sweeps pitch over **[−π/2, π/2)**, and pitch + π is not in that range.
+That is a fact about the sweep, so widening the sweep would quietly admit every flipped drawing.
+Both the identity and the range are now asserted in `core.test.mjs`, each with the mutation that
+makes it fire.
+
 ### The leader, and why there is a fourth kind of mark
 
 Three conventions govern the shapes. There is one further mark, and it is not a fourth convention:
@@ -508,7 +583,7 @@ An exemption wants guarding, so it has four:
 * and **at most two per drawing** may need one. Forcing every label onto the leader path was how the
   proximity rule was made to vanish entirely, so the cap is enforced and it is red when breached.
 
-As built, **sixteen of the 162 drawings use one**, never more than one at a time: `A′` on the ring
+As built, a handful of the drawings use one, never more than one at a time: `A′` on the ring
 when the tips are shown, and `B′` on the wireframe. The cap of two therefore has a spare, which is
 deliberate — it is the ceiling an escape has to breach, not a quota to fill.
 
