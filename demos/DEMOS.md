@@ -152,7 +152,7 @@ fact about the object rather than about a program. The pages themselves read `..
 
 It used to compare **two implementations** and it no longer can, because there is one. So
 [`core.test.mjs`](core.test.mjs) asks a different question: **does the page show what the engine
-said?** Six gates:
+said?** Eight gates:
 
 1. **The engine is the engine.** The vendored wasm answers the census question with the vendored
    JSON's own bytes — byte for byte, not value for value.
@@ -165,15 +165,29 @@ said?** Six gates:
    string literal is refused**, in any quote style, with `${…}` cut out because that is code. The
    same rule is held over the pages' HTML: no digit in any text a reader sees, which is why the beat
    ranges on the pages are written by JavaScript at run time.
-4. **The drawing is the census.** Every segment the wireframe draws is an edge the engine exported
-   and every dot one of its vertices — thirty-six and fourteen, both directions checked, and checked
-   **by where the ends of each stroke actually are** rather than by what the stroke says about
-   itself, because a drawing that names its lines correctly and points them all at the wrong dot is
-   the failure a reader is invited to catch by counting. The ring is held to drawing its twelve lines
+4. **The drawing is the census.** **Every stroke** the wireframe emits — labelled or not — is an
+   edge the engine exported, and every dot one of its vertices: thirty-six and fourteen, both
+   directions checked, and checked **by where the ends of each stroke actually are** rather than by
+   what the stroke says about itself. Both halves of that were holes, and both were found rather
+   than foreseen. A drawing that names its lines correctly and points them all at the wrong dot is
+   the failure a reader is invited to catch by counting; and an unlabelled stroke joining nothing to
+   nothing rode into a commit while the labelled count stayed at thirty-six. A drawing does not get
+   to decide which of its own marks are up for checking. The ring is held to drawing its twelve lines
    with none crossing another. And a drawing's `<title>` and `<desc>` carry **no digit at all**: they
    are prose, and prose about this object counts in words.
 5. **The steps are the outline's**, as above.
 6. **The words are under budget**, printed either way.
+7. **A printed sum is a sum.** Any table with a column headed *added up* or *the whole way round*
+   has the numbers printed beside it added up — on the digits a reader sees, in exact arithmetic —
+   and the two must agree. 591 of them on every run. This is the one part of the hole below that a
+   machine *can* close, and it is here because the hole was not hypothetical: this pass shipped two
+   walks whose printed terms did not add to their printed total, and a fresh reader found both by
+   doing the arithmetic the page invites her to do.
+8. **Every still stands on its own.** The still button is the reason the drawing code exists, and it
+   is the one surface a reader reaches by downloading rather than by looking — a proof-reader could
+   not exercise it at all. So every step, in every state, is rendered to its still, and the still is
+   held to carrying its own stylesheet, its own title and description, and the firewall: 162 of them
+   on every run.
 
 ### What no check here can catch
 
@@ -182,10 +196,12 @@ the "lines" column reads as *six lines, twelve dots*; a tip named `A′` in a ta
 that has just placed `D′` is right in every number and wrong in every noun; a bare `36` in a drawing,
 attached to nothing, is a number the engine did produce. None of the three can be seen by a scan over
 numbers. Gate 3 is what shrinks the hole — a wrong number cannot be *typed* anywhere, so it has to be
-a real value used wrongly — but only reading the page catches what is left, which is what the
-proof-reader pass is for. That is not hypothetical: the first round of this pass shipped three of
-them, including two walks whose printed terms did not add to their printed total, and a fresh reader
-found all three.
+a real value used wrongly, and gate 7 is what closes the commonest and most checkable case of that
+— a row of numbers with a total under them. What is left after those two is a value that is neither
+typed nor part of a printed sum, and only reading the page catches it, which is what the proof-reader
+pass is for. That is not hypothetical: the first round of this pass shipped three of them, and a
+fresh reader found all three. Two were sums, and are now a gate; the third — a table naming the tips
+`A′ B′ C′ D′` beside a drawing that had just placed `D′` — is the kind that remains.
 
 The first version of this file claimed more than it checked, and a fresh reviewer walked twelve wrong
 numbers past it. This pass was attacked the same way — six times by its author, then fourteen times
@@ -197,6 +213,13 @@ closed** — a wrong count hidden in an SVG description, closed by the no-digit 
 `<desc>`; and a wireframe whose every line pointed at the wrong dot while its `data-edge` attribute
 stayed honest, closed by resolving each stroke's ends to the nearest drawn dot and holding *that*
 pair to the census. The paragraph above is what remains.
+
+One more thing this file has to say, because it cost something: **a reviewer and an author must not
+share a working tree.** The proof-reader for this pass worked in the author's worktree and reverted
+its own attack edits with `git checkout --`, which silently reverted two of the author's uncommitted
+fixes; and one attack edit was still in the tree when the author committed, so an unlabelled stroke
+shipped. Both were caught, and the second is now gate 4's business rather than luck. The reviewer
+gets its own checkout.
 
 Run it by hand:
 

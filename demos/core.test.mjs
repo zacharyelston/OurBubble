@@ -31,6 +31,19 @@
 //      every marked section is covered, and the beat numbers and questions are `steps.json`'s.
 //   6. **the words are under budget.** Every reader-facing word on each page is counted and held
 //      under the owner's limit, and the count is printed whether or not it passes.
+//   7. **a printed sum is a sum.** Any table with a column headed "added up" or "the whole way
+//      round" has the numbers printed beside it added up, here, on the digits a reader sees, and the
+//      two must agree. This is the one part of the "right value, wrong place" hole a machine *can*
+//      close, and it is here because the hole was not hypothetical: this pass shipped two walks
+//      whose printed terms did not add to their printed total, and a fresh reader found both by
+//      doing the arithmetic the page invites her to do. The check does it now, on every row of
+//      every state.
+//   8. **every still stands on its own.** The still button is the reason the drawing code exists —
+//      those files are the intended replacement for the chapters' illustration studies — and it is
+//      the one surface a reader reaches by downloading rather than by looking, so a proof-reader
+//      could not exercise it at all. Every step, in every state, is rendered to its still, and the
+//      still is held to carrying its own stylesheet, its own title and description, and the
+//      firewall.
 //
 // What no check here can catch is unchanged, and `DEMOS.md` says so in the same words: **a number
 // computed correctly and then put in the wrong place.** Gate 3 is what shrinks that hole — a wrong
@@ -49,7 +62,8 @@ const ENGINE_DIR = path.join(ROOT, "engine");
 const { Engine } = await import(pathToFileURL(path.join(HERE, "engine.mjs")).href);
 const { drawings } = await import(pathToFileURL(path.join(HERE, "draw.mjs")).href);
 const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")).href);
-const { joinSteps, statesOf } = await import(pathToFileURL(path.join(HERE, "core.mjs")).href);
+const { joinSteps, statesOf, stillFrom } = await import(
+  pathToFileURL(path.join(HERE, "core.mjs")).href);
 
 const failures = [];
 const fail = (message) => failures.push(message);
@@ -137,11 +151,24 @@ const view = draw.wireDefaultView();
     const distance = Math.hypot(dot.x - x, dot.y - y);
     return best === null || distance < best.distance ? { dot, distance } : best;
   }, null);
-  const lines = [...drawn.matchAll(
-    /<line[^>]*data-edge="([^"]+)"[^>]*x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/g)];
-  if (lines.length !== payload.stella.lines) {
-    fail(`the wireframe drew ${lines.length} segments; the engine has ${payload.stella.lines}`);
+  // EVERY stroke, labelled or not. The first version of this gate matched only lines carrying a
+  // `data-edge`, and an unlabelled stroke joining nothing to nothing rode into a commit through it
+  // while the count stayed at thirty-six. A drawing does not get to decide which of its own marks
+  // are up for checking.
+  const strokes = [...drawn.matchAll(/<line\b[^>]*>/g)].map((found) => found[0]);
+  if (strokes.length !== payload.stella.lines) {
+    fail(`the wireframe drew ${strokes.length} strokes; the engine has ${payload.stella.lines} `
+      + `lines — every stroke in this drawing has to be one of them`);
   }
+  const lines = strokes.map((stroke) => {
+    const edge = /data-edge="([^"]+)"/.exec(stroke);
+    const at = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(stroke);
+    if (!edge || !at) {
+      fail(`the wireframe drew a stroke that does not say which edge it is: ${stroke}`);
+      return null;
+    }
+    return [stroke, edge[1], at[1], at[2], at[3], at[4]];
+  }).filter((line) => line !== null);
   const census = new Set(wire.edges.map(([a, b]) =>
     [wire.names[a], wire.names[b]].sort().join("|")));
   const drawnKeys = new Set();
@@ -265,7 +292,29 @@ function sentencesOf(svg) {
 
 const wordsOf = (text) => text.split(/\s+/).filter((word) => /[a-z]/i.test(word)).length;
 
+/**
+ * One printed cell as an exact fraction, or null when the cell is not a number at all.
+ *
+ * It reads what a **reader** sees — the engine's own printing, decimals and all — rather than the
+ * value behind it. That is the point of gate 7: this is the arithmetic she would do with a pencil,
+ * done the way she would have to do it, on the digits actually on the page.
+ */
+function exact(cell) {
+  const text = String(cell).trim().replace(/[−–]/g, "-").replace(/^\+/, "");
+  let found = /^(-?\d+)\/(\d+)$/.exec(text);
+  if (found) return [BigInt(found[1]), BigInt(found[2])];
+  found = /^(-?)(\d+)\.(\d+)$/.exec(text);
+  if (found) {
+    const bottom = 10n ** BigInt(found[3].length);
+    const top = BigInt(found[2]) * bottom + BigInt(found[3]);
+    return [found[1] ? -top : top, bottom];
+  }
+  return /^-?\d+$/.test(text) ? [BigInt(text), 1n] : null;
+}
+
 const report = [];
+let sums = 0;
+let stills = 0;
 for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
   const build = definitions[slug];
   if (!build) { fail(`there is no demo for the chapter ${slug}`); continue; }
@@ -350,6 +399,50 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
             + `every value goes in the drawing's text or in a table, where it is held to the engine`);
         }
       }
+      // Gate 7: a printed sum adds up. The terms are the numeric columns between the row's own
+      // label and the total, or — when a row packs them into one cell — that cell split on spaces.
+      for (const table of rendered.tables) {
+        const at = table.head.findIndex((head) =>
+          head === "added up" || head === "the whole way round");
+        if (at < 1) continue;
+        for (const row of table.rows) {
+          const total = exact(row[at]);
+          if (total === null) continue;
+          const packed = String(row[at - 1]).trim().split(/\s+/);
+          const terms = packed.length > 1 && packed.every((term) => exact(term) !== null)
+            ? packed.map(exact)
+            : row.slice(1, at).map(exact).filter((term) => term !== null);
+          if (terms.length < 2) continue;
+          sums += 1;
+          let running = [0n, 1n];
+          for (const [top, bottom] of terms) {
+            running = [running[0] * bottom + top * running[1], running[1] * bottom];
+          }
+          if (running[0] * total[1] !== total[0] * running[1]) {
+            fail(`${slug} ${step.label}: "${table.caption}" prints ${terms.length} numbers and says `
+              + `they come to ${row[at]}, and they do not — the row is ${row.join(" · ")}`);
+          }
+        }
+      }
+
+      // Gate 8: the still of this exact state.
+      const still = stillFrom(rendered.drawing, {
+        chapter: slug, beat: step.beats.join("–"), title: `${chapter.title} — ${step.label}`,
+      });
+      for (const [pattern, what] of [
+        [/^<!-- Our Bubble demo still/, "the comment naming the beat it came from"],
+        [/nothing in it is a claim about nature/, "the firewall line"],
+        [/<svg[^>]*>\n  <style>/, "its own stylesheet, inlined"],
+        [/<title>[^<]+<\/title>/, "a title"],
+        [/<desc>[^<]+<\/desc>/, "a description"],
+      ]) {
+        if (!pattern.test(still)) {
+          fail(`${slug} ${step.label}: the still has no ${what} — a still has to stand on its own, `
+            + `because it is meant to end up in a chapter`);
+        }
+      }
+      stills += 1;
+
       if (!rendered.tables.length) {
         fail(`${slug} ${step.label}: a step with no table — every number has to be readable as text`);
       }
@@ -394,5 +487,6 @@ const totalSteps = report.reduce((total, line) => total + line.steps, 0);
 process.stdout.write(
   `core.test.mjs: ${report.length} chapters, ${totalSteps} steps, every rendered number the `
   + `engine's, no digit typed, ${engine.calls.length} engine calls, the wireframe's `
-  + `${payload.stella.lines} segments the census's, at most ${totalWords} words on a page\n`,
+  + `${payload.stella.lines} strokes the census's, ${sums} printed sums that add up, `
+  + `${stills} stills standing on their own, at most ${totalWords} words on a page\n`,
 );
