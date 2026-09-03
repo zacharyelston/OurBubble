@@ -1,3 +1,11 @@
+> **Provenance note (2026-09-02).** Issue #28 chartered this file as *octahedron-timekeeper.md*; the
+> owner reframed the question mid-lane ("we don't have to call it time — it's information transfer")
+> and the file was renamed to *crossing* without the rename being recorded. Recorded here. The
+> verdicts below test ONE reading — the bare octahedron, 0-forms, a time-symmetric leapfrog — and say
+> nothing about the family's actual claim (a one-way screw on the chiral periodic mesh, 1-forms),
+> which remains open: see UniForge `lab/napkin/0002-octahedron-clock-review/review.md` (issue #356).
+> "Computed FALSE" is warranted only for *a tick is not a trip round the bare octahedron*.
+
 # The octahedron as the crossing between cells — what the numbers say
 
 Lane note, not chapter text. Issue [#28](https://github.com/zacharyelston/OurBubble/issues/28).
