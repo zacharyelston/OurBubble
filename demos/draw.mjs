@@ -205,7 +205,7 @@ export function boxMeetsSegment(box, from, to) {
  * drawing is the same every time — and `core.test.mjs` checks the result on the emitted SVG, so a
  * ladder too short to find a clear spot fails rather than shipping a struck-through number.
  */
-function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
+function placeClear(anchor, ray, text, size, obstacles, taken, from = 20, owner = null) {
   const angle = Math.atan2(ray[1], ray[0]);
   // A name may not sit hard against the dot it names: the nearest rung of the ladder has to clear
   // the dot's own mark and half the label's height, or the two touch even though nothing overlaps.
@@ -221,6 +221,14 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
       if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
         && dy >= box.y0 && dy <= box.y1)) continue;
       if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
+      // And it must be nearest the dot it belongs to. Clearing every stroke is not enough: two
+      // readers found a name parked nearer a different dot than its own, which is the wrong-noun
+      // defect drawn instead of printed. A candidate a stranger's dot is closer to is not a place
+      // for this label, however much clear paper is there.
+      if (owner && obstacles.dots.some((dot) =>
+        Math.hypot(dot[0] - x, dot[1] - y) < Math.hypot(owner[0] - x, owner[1] - y) - 0.01)) {
+        continue;
+      }
       taken.push(box);
       return [x, y];
     }
@@ -243,11 +251,51 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
       if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
         && dy >= box.y0 && dy <= box.y1)) continue;
       if (taken.some((other) => boxesOverlap(box, other, LABEL_GAP))) continue;
+      // And it must be nearest the dot it belongs to. Clearing every stroke is not enough: two
+      // readers found a name parked nearer a different dot than its own, which is the wrong-noun
+      // defect drawn instead of printed. A candidate a stranger's dot is closer to is not a place
+      // for this label, however much clear paper is there.
+      if (owner && obstacles.dots.some((dot) =>
+        Math.hypot(dot[0] - x, dot[1] - y) < Math.hypot(owner[0] - x, owner[1] - y) - 0.01)) {
+        continue;
+      }
       taken.push(box);
       return [x, y];
     }
   }
   return null;
+}
+
+/**
+ * A leader: a thin line from a dot to a label that could not be put beside it.
+ *
+ * Requiring a name to be nearest its own dot is right and is not always possible — a dot buried in
+ * the middle of a dense projection has some other dot nearer to *every* clear spot on the paper,
+ * and tightening the search only moved the failure: the name then had nowhere clear to go at all.
+ * So where proximity cannot carry the association, the drawing states it: one thin mark from the
+ * dot to its name, stopping short of the glyphs. It is what a draughtsman does, it carries its own
+ * identity so the census holds it to a real dot, and it is the only mark in these drawings that
+ * exists to say which label belongs to what.
+ */
+function leaderGroup(leaders) {
+  if (!leaders.length) return "";
+  const out = ['  <g class="leaders">'];
+  for (const [name, dot, label] of leaders) {
+    const run = [label[0] - dot[0], label[1] - dot[1]];
+    const length = Math.hypot(...run) || 1;
+    const stop = Math.max(0, length - 14);
+    out.push(`    <line class="leader" data-leader="${esc(name)}" x1="${d2(dot[0])}" y1="${d2(dot[1])}" x2="${d2(dot[0] + (run[0] / length) * stop)}" y2="${d2(dot[1] + (run[1] / length) * stop)}"/>`);
+  }
+  out.push("  </g>");
+  return out.join("\n");
+}
+
+/** A label's place, and whether it needed a leader to say which dot it belongs to. */
+function placeLabelled(anchor, ray, text, size, obstacles, taken, from = 20) {
+  const nearest = placeClear(anchor, ray, text, size, obstacles, taken, from, anchor);
+  if (nearest) return { at: nearest, leader: false };
+  const anywhere = placeClear(anchor, ray, text, size, obstacles, taken, from);
+  return anywhere ? { at: anywhere, leader: true } : null;
 }
 
 /**
@@ -260,7 +308,7 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
  */
 function placeValue(dot, name, ray, text, size, obstacles, taken) {
   const reach = Math.hypot(name[0] - dot[0], name[1] - dot[1]);
-  return placeClear(dot, ray, text, size, obstacles, taken, reach + size * 1.15);
+  return placeClear(dot, ray, text, size, obstacles, taken, reach + size * 1.15, dot);
 }
 
 function incircle(points) {
@@ -949,6 +997,7 @@ export function drawings(engine) {
       ],
     };
     const taken = [];
+    const leaders = [];
 
     // **A dot's name and its number are one label**, placed as one unit.
     //
@@ -967,9 +1016,10 @@ export function drawings(engine) {
       const ray = [at[name][0], at[name][1]];
       const value = values[name];
       const text = value === undefined ? name : `${name} ${value}`;
-      const spot = placeClear(dot, ray, text, 19, obstacles, taken);
+      const spot = placeLabelled(dot, ray, text, 19, obstacles, taken);
       if (spot === null) throw new Error(`the ring found nowhere clear to put ${text}`);
-      const [lx, ly] = spot;
+      const [lx, ly] = spot.at;
+      if (spot.leader) leaders.push([name, dot, [lx, ly]]);
       body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} font-weight="700" x="${d2(lx)}" y="${d2(ly)}" font-size="19" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`);
     }
     for (const index of shown) {
@@ -979,12 +1029,14 @@ export function drawings(engine) {
         : [places[index].at[0], places[index].at[1]];
       const value = values[names[index]];
       const text = value === undefined ? names[index] : `${names[index]} ${value}`;
-      const spot = placeClear(dot, ray, text, 15, obstacles, taken);
-      const [x, y] = spot === null ? [dot[0], dot[1] - 22] : spot;
+      const spot = placeLabelled(dot, ray, text, 15, obstacles, taken);
+      const [x, y] = spot === null ? [dot[0], dot[1] - 22] : spot.at;
       if (spot === null) taken.push(textBox(x, y, text, 15));
+      else if (spot.leader) leaders.push([names[index], dot, [x, y]]);
       body.push(`    <text class="tip" x="${d2(x)}" y="${d2(y)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`);
     }
     body.push("  </g>");
+    body.push(leaderGroup(leaders));
     body.push("</svg>");
     return refit(body.join("\n"));
   }
@@ -1088,6 +1140,7 @@ export function drawings(engine) {
       dots: [...drawnDots].map((index) => at[index]),
     };
     const wireTaken = [];
+    const wireLeaders = [];
 
     body.push('  <g class="labels">');
     names.forEach((name, index) => {
@@ -1096,21 +1149,53 @@ export function drawings(engine) {
       const ray = [flat[index][0] / away, flat[index][1] / away];
       const value = values[name];
       const text = value === undefined ? name : `${name} ${value}`;
-      const spot = placeClear(at[index], ray, text, 15, wireObstacles, wireTaken);
+      const spot = placeLabelled(at[index], ray, text, 15, wireObstacles, wireTaken);
       const [lx, ly] = spot === null
         ? [at[index][0] + ray[0] * 24, at[index][1] + ray[1] * 24]
-        : spot;
+        : spot.at;
       if (spot === null) wireTaken.push(textBox(lx, ly, text, 15));
+      else if (spot.leader) wireLeaders.push([name, at[index], [lx, ly]]);
       body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} x="${d2(lx)}" y="${d2(ly)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`);
     });
     body.push("  </g>");
+    body.push(leaderGroup(wireLeaders));
     body.push("</svg>");
     return refit(body.join("\n"));
+  }
+
+  /**
+   * Where each named dot belongs, in each flat convention's own drawn coordinates.
+   *
+   * Exposed because "the drawing agrees with itself" is not the same as "the drawing is the
+   * object". A proof-reader mirrored the net left-to-right, moving every mark together: every
+   * identity still honest, every stroke still meeting its neighbours at a point, and `A` and `B`
+   * swapped sides — which `CANON.md` forbids outright and which breaks the continuity this file
+   * claims across chapters ("the triangle is already where the net puts ABC").
+   *
+   * The net's and the triangle's come from the engine's own panel positions; the ring's from the
+   * convention `DEMOS.md` states, which is the only definition it has. Both are the same source the
+   * drawing draws from, so what the check catches is not a disagreement between two computations
+   * but a **transformation applied after** either of them.
+   */
+  function whereDotsBelong(kind) {
+    if (kind === "ring") {
+      const { at } = ringLayout();
+      return Object.fromEntries(Object.entries(at).map(([name, point]) => [name, [point]]));
+    }
+    const wanted = kind === "triangle" ? panels.slice(0, 1) : panels;
+    const out = {};
+    for (const panel of wanted) {
+      [...panel.face].forEach((letter, index) => {
+        const [x, u] = panel.positions[index];
+        (out[letter] = out[letter] || []).push([x, u * SQRT3]);
+      });
+    }
+    return out;
   }
 
   return {
     drawNet, drawTriangle, drawRing, drawWire,
     ringLayout, ringPlanarity, ringOuterFace, tipNames, tipPlaces,
-    wireframe, wireDefaultView,
+    wireframe, wireDefaultView, whereDotsBelong,
   };
 }

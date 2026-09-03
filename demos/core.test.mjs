@@ -200,7 +200,10 @@ const view = draw.wireDefaultView();
         + `${WIRE_TAGS.join(", ")} — every mark in it has to be a line of the census or a dot`);
     }
   }
-  const strokes = [...drawn.matchAll(/<line\b[^>]*>/g)].map((found) => found[0]);
+  // Every stroke, labelled or not — except a leader, which is a pointer at the object rather than a
+  // piece of it, and is counted and checked separately by the census gate.
+  const strokes = [...drawn.matchAll(/<line\b[^>]*>/g)].map((found) => found[0])
+    .filter((mark) => !/data-leader=/.test(mark));
   if (strokes.length !== payload.stella.lines) {
     fail(`the wireframe drew ${strokes.length} strokes; the engine has ${payload.stella.lines} `
       + `lines — every stroke in this drawing has to be one of them`);
@@ -378,6 +381,7 @@ const DRAWINGS = (() => {
     triangle: {
       tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
       identity: {
+        leader: (value) => NAMES.slice(0, 3).includes(value),
         line: (value) => triangleLines.has(value),
         dot: (value) => NAMES.slice(0, 3).includes(value),
         region: (value) => faceNames.has(value),
@@ -390,6 +394,7 @@ const DRAWINGS = (() => {
     net: {
       tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
       identity: {
+        leader: (value) => Object.keys(netDotPlaces).includes(value),
         line: (value) => tetraLines.has(value),
         middle: (value) => tetraLines.has(value),
         dot: () => false,          // the net draws no dots of its own
@@ -403,6 +408,7 @@ const DRAWINGS = (() => {
     ring: {
       tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
       identity: {
+        leader: (value) => MID.includes(value) || tipNames.has(value),
         line: (value) => midLines.has(key(value)),
         absent: (value) => absences.has(key(value)),
         "tip-line": (value) => {
@@ -419,6 +425,7 @@ const DRAWINGS = (() => {
     wire: {
       tags: ["svg", "title", "desc", "g", "line", "circle", "text"],
       identity: {
+        leader: (value) => stellaNames.has(value),
         edge: (value) => stellaEdges.has(key(value)),
         dot: (value) => stellaNames.has(value),
       },
@@ -515,6 +522,7 @@ function censusOf(svg, where) {
     if (attribute === "dot") return [value];
     if (attribute === "middle") return [];      // a middle is a point, not a pair of dots
     if (attribute === "walk") return [];        // an arrowhead sits ALONG a line, not at a dot
+    if (attribute === "leader") return [value];  // a leader starts AT the dot it names
     return value.includes("|") ? value.split("|") : [...value];
   });
   const strokes = marks.filter((mark) => mark.element !== "polygon");
@@ -603,6 +611,182 @@ function censusOf(svg, where) {
     if (clusters.length > ceiling) {
       fail(`${where}: the ${kind} drawing puts marks naming ${name} at ${clusters.length} `
         + `different points, and the object has it in ${Math.max(allowed, 1)}`);
+    }
+  }
+
+  // ── 2b · and every mark is where the convention PUTS it ──────────────────────────────────────
+  //
+  // Identity is checked; internal consistency is checked. What both miss is a **consistent**
+  // distortion: move every mark together and the drawing still agrees with itself. A reader
+  // mirrored the net left-to-right — every identity honest, every stroke still meeting its
+  // neighbours — and `A` and `B` swapped sides, which CANON.md forbids outright and which breaks
+  // this repository's own continuity claim that chapter 1's triangle is already where the net puts
+  // `ABC`. A top-to-bottom flip passed too, and so did one dot displaced eighty-one pixels with its
+  // three strokes following it.
+  //
+  // So the drawn positions are held to the convention's own: the same scale on both axes, the
+  // orientation the convention fixes, and every dot where it belongs. A mirror makes the x-scale
+  // negative, a flip makes the y-scale the wrong sign, and a displacement fits nothing.
+  const ORIENTATION = { net: -1, triangle: -1, ring: 1 };
+  if (kind in ORIENTATION) {
+    const belong = draw.whereDotsBelong(kind);
+    const dotMarks = marks.filter((mark) => mark.element === "circle"
+      && mark.named.some(([attribute]) => attribute === "dot"));
+    const drawnByName = {};
+    for (const mark of dotMarks) {
+      const name = mark.named.find(([attribute]) => attribute === "dot")[1];
+      (drawnByName[name] = drawnByName[name] || []).push(mark.points[0]);
+    }
+    // The net draws no dots of its own, so a corner has to be found: it is the point the strokes
+    // naming it, in one panel, have in common. Pooling both ends of every stroke instead — which an
+    // earlier draft did — hands back every dot's position for every name and fits nothing.
+    if (!dotMarks.length) {
+      const panels = [...new Set(strokes.map((mark) => mark.panel))];
+      for (const panel of panels) {
+        const here = strokes.filter((mark) => mark.panel === panel);
+        const named = new Set(here.flatMap((mark) => dotsNamedBy(mark)));
+        for (const name of named) {
+          const touching = here.filter((mark) => dotsNamedBy(mark).includes(name));
+          if (touching.length < 2) continue;
+          const shared = touching[0].points.find((point) =>
+            touching.every((mark) => mark.points.some((other) => near(other, point))));
+          if (!shared) continue;
+          const found = (drawnByName[name] = drawnByName[name] || []);
+          if (!found.some((point) => near(point, shared))) found.push(shared);
+        }
+      }
+    }
+
+    // Fit from the names the convention puts in exactly one place, which is every name but `D` on
+    // the flat net.
+    const anchors = Object.keys(belong)
+      .filter((name) => belong[name].length === 1 && (drawnByName[name] || []).length === 1)
+      .map((name) => ({ name, from: belong[name][0], to: drawnByName[name][0] }));
+    // A drawing with fewer than two locatable dots — chapter 1's opening beat has one — cannot be
+    // fitted and cannot meaningfully be mirrored either. The counts and the identity checks still
+    // hold it; there is simply no orientation to test.
+    if (anchors.length >= 2) {
+      const spread = (axis) => anchors.reduce((best, one) => anchors.reduce((inner, two) =>
+        (Math.abs(one.from[axis] - two.from[axis]) > Math.abs(inner.a.from[axis] - inner.b.from[axis])
+          ? { a: one, b: two } : inner), best), { a: anchors[0], b: anchors[1] });
+      const scales = [0, 1].map((axis) => {
+        const { a, b } = spread(axis);
+        const run = a.from[axis] - b.from[axis];
+        return Math.abs(run) < 1e-9 ? null : (a.to[axis] - b.to[axis]) / run;
+      });
+      const [sx, sy] = scales;
+      // A step that draws two dots on one horizontal line gives the vertical axis no spread to fit
+      // — chapter 1's first two beats are exactly that — and there is nothing to flip in a line, so
+      // that axis is simply not tested rather than treated as a failure. The axis that HAS spread
+      // is still tested, and a two-dot drawing can still be mirrored.
+      if (sx === null && sy === null) {
+        fail(`${where}: the ${kind} drawing gives neither axis any spread to check`);
+      } else if (sx !== null && sx <= 0) {
+        fail(`${where}: the ${kind} drawing is MIRRORED — its horizontal scale is ${sx.toFixed(2)}. `
+          + `CANON.md: the diagram is never rotated or mirrored`);
+      } else if (sy !== null && Math.sign(sy) !== ORIENTATION[kind]) {
+        fail(`${where}: the ${kind} drawing is FLIPPED top to bottom — its vertical scale is `
+          + `${sy.toFixed(2)}, and this convention's is ${ORIENTATION[kind] > 0 ? "positive" : "negative"}`);
+      } else if (sx !== null && sy !== null
+        && Math.abs(Math.abs(sx) - Math.abs(sy)) > 0.01 * Math.abs(sx)) {
+        fail(`${where}: the ${kind} drawing is stretched — ${Math.abs(sx).toFixed(2)} across and `
+          + `${Math.abs(sy).toFixed(2)} down. One scale, or the shape is not the object's`);
+      } else {
+        const anchor = anchors[0];
+        // Where an axis had no spread, the other axis's scale stands in — the two are equal by the
+        // test above wherever both are measurable.
+        const ax = sx === null ? Math.abs(sy) : sx;
+        const ay = sy === null ? Math.abs(sx) * ORIENTATION[kind] : sy;
+        const place = (point) => [
+          anchor.to[0] + (point[0] - anchor.from[0]) * ax,
+          anchor.to[1] + (point[1] - anchor.from[1]) * ay,
+        ];
+        for (const [name, wanted] of Object.entries(belong)) {
+          const drawn = drawnByName[name] || [];
+          if (!drawn.length) continue;             // this step does not draw that dot
+          for (const one of wanted) {
+            const to = place(one);
+            if (!drawn.some((point) => Math.hypot(point[0] - to[0], point[1] - to[1]) <= 1.5)) {
+              fail(`${where}: the ${kind} drawing puts ${name} where the convention does not — `
+                + `nothing of that name is at ${to.map((v) => v.toFixed(0)).join(",")}`);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // ── 2b(ii) · the ring's stated orientation ────────────────────────────────────────────────────
+  //
+  // The ring has no coordinates in the engine — DEMOS.md's convention is its only definition — so
+  // the fit above compares it against `ringLayout`, which is the same function that draws it. A
+  // reader mirrored that function and both sides moved together. What CAN be held independently is
+  // what the convention says in words: the middle of `AB` on the outside at the top, `AC` to the
+  // lower left, `AD` to the lower right. Those three sentences are the check.
+  if (kind === "ring") {
+    const at = {};
+    for (const mark of marks.filter((m) => m.element === "circle")) {
+      const named = mark.named.find(([attribute]) => attribute === "dot");
+      if (named) at[named[1]] = mark.points[0];
+    }
+    const [ab, ac, ad] = ["AB", "AC", "AD"].map((name) => at[name]);
+    if (ab && ac && ad) {
+      if (!(ab[1] < ac[1] && ab[1] < ad[1])) {
+        fail(`${where}: the ring does not put AB's middle at the top, which is where DEMOS.md's `
+          + `convention puts it`);
+      }
+      if (!(ac[0] < ad[0])) {
+        fail(`${where}: the ring puts AC to the right of AD; the convention has AC lower left and `
+          + `AD lower right — the drawing is mirrored`);
+      }
+    }
+  }
+
+  // ── 2c · a label is nearer the mark it names than any other ──────────────────────────────────
+  //
+  // The sharpest form of the same family: displace a dot and let its strokes follow, and the label
+  // stays at its old position while the mark it names has moved a hundred pixels away. Nothing said
+  // a name had to be near its own dot. Two readers found this independently, one by moving a mark
+  // and one by finding `A′` eighteen pixels from `B` and eighty from `A′`.
+  {
+    const positions = new Map();
+    for (const mark of marks.filter((m) => m.element === "circle")) {
+      const named = mark.named.find(([attribute]) => attribute === "dot"
+        || attribute === "middle");
+      if (named) positions.set(named[1], [...(positions.get(named[1]) || []), mark.points[0]]);
+    }
+    for (const [name, clusters] of placesOf) {
+      if (!positions.has(name)) positions.set(name, clusters);
+    }
+    const names = [...positions.keys()].sort((a, b) => b.length - a.length);
+    // A label a leader runs to has been told which dot it belongs to in ink, which is a stronger
+    // statement than being near it. Those are exempt from the proximity rule and not from anything
+    // else — the leader itself is a mark, held to a real dot and to starting at it.
+    const led = new Set([...svg.matchAll(/data-leader="([^"]*)"/g)].map((m) => m[1]));
+    // A leader is the exception, so it has to stay exceptional. One drawing needing a leader for
+    // half its names is a placement that has given up, and every one of those labels would then be
+    // exempt from the proximity rule — which is how a reader made the whole rule vanish by forcing
+    // the leader path. Two is the ceiling: the ring needs one and the wireframe needs one.
+    if (led.size > 2) {
+      fail(`${where}: ${led.size} labels needed a leader. A leader is for the dot proximity cannot `
+        + `reach; when most of them need one, the placement has failed and the proximity rule has `
+        + `quietly stopped applying to anything`);
+    }
+    for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
+      const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
+      if (!at) continue;
+      const text = found[2].trim();
+      const mine = names.find((name) => text === name || text.startsWith(`${name} `));
+      if (!mine || led.has(mine)) continue;
+      const here = [+at[1], +at[2]];
+      const away = (name) => Math.min(...positions.get(name)
+        .map((point) => Math.hypot(point[0] - here[0], point[1] - here[1])));
+      const nearer = names.filter((name) => name !== mine && away(name) < away(mine));
+      if (nearer.length) {
+        fail(`${where}: the label "${text}" is ${away(mine).toFixed(0)}px from ${mine} and `
+          + `${away(nearer[0]).toFixed(0)}px from ${nearer[0]} — a name has to be nearest the mark `
+          + `it names`);
+      }
     }
   }
 
@@ -947,9 +1131,13 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
       // Gate 8: nothing in the drawing is struck through. Read off the emitted SVG.
       {
         const svg = rendered.drawing;
-        const strokes = [...svg.matchAll(
-          /<line[^>]*x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/g)]
-          .map((found) => [[+found[1], +found[2]], [+found[3], +found[4]]]);
+        const strokes = [...svg.matchAll(/<line\b[^>]*>/g)].map((mark) => {
+          const at = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(mark);
+          return at
+            ? { ends: [[+at[1], +at[2]], [+at[3], +at[4]]],
+              leaderFor: (/data-leader="([^"]*)"/.exec(mark) || [])[1] }
+            : null;
+        }).filter(Boolean);
         const marks = [...svg.matchAll(/<circle[^>]*cx="([-\d.]+)" cy="([-\d.]+)"/g)]
           .map((found) => [+found[1], +found[2]]);
         const boxes = [];
@@ -958,7 +1146,11 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
           const size = /font-size="([\d.]+)"/.exec(found[1]);
           if (!at || !size || !found[2].trim()) continue;
           const box = textBox(+at[1], +at[2], found[2], +size[1]);
-          if (strokes.some(([a, b]) => boxMeetsSegment(box, a, b))) {
+          // A leader is drawn TO its own label, so that one stroke may reach it; every other must
+          // not.
+          const mine = found[2].trim().split(" ")[0];
+          if (strokes.some((stroke) => stroke.leaderFor !== mine
+            && boxMeetsSegment(box, stroke.ends[0], stroke.ends[1]))) {
             fail(`${slug} ${step.label}: the label "${found[2]}" is drawn across a stroke`);
           }
           if (marks.some(([x, y]) => x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1)) {

@@ -190,6 +190,12 @@ nav.steps button[aria-current="step"] {
 .ring .labels .tip { font-style: italic; }
 .ring .labels .note { fill: var(--ink-soft); font-style: italic; }
 
+/* A leader: the one mark in these drawings whose job is to say which label belongs to what. Thin,
+   because it is not part of the object — it is a pointer at it. */
+.net .leaders line, .ring .leaders line, .wire .leaders line {
+  stroke: var(--ink-soft); stroke-width: 1; fill: none;
+}
+
 /* ── the wireframe ─────────────────────────────────────────────────────────────────────────────── */
 /* No shading, no perspective, no fill. Weight is the only thing that varies, and it says which of
    the three families a line belongs to — the first tetrahedron full, the second lighter, the
