@@ -24,20 +24,26 @@
 //      literal is refused**, in any quote style, with `${…}` cut out because that is code. A count
 //      arrives as an engine value or it does not arrive. The same rule is held over the pages' HTML:
 //      no digit in any text a reader sees.
-//   4. **the drawing is the census.** Every segment the wireframe draws is an edge the engine
-//      exported and every dot one of its vertices, by name, both ways round; and the ring draws its
-//      twelve lines with none crossing another.
+//   4. **the drawing is the census.** The wireframe may emit only seven element names — a
+//      whitelist, not a search — every one of its strokes is an edge the engine exported and every
+//      dot one of its vertices, thirty-six and fourteen, both ways round, and the pair each stroke
+//      is held to is taken from **where its ends actually are** rather than from what it says about
+//      itself. The ring is held separately to drawing its twelve lines with none crossing another.
+//      And a drawing's own sentences — its `<title>` and `<desc>` — carry no digit at all.
 //   5. **the steps are the outline's.** Every step maps onto exactly one marked chapter section,
 //      every marked section is covered, and the beat numbers and questions are `steps.json`'s.
 //   6. **the words are under budget.** Every reader-facing word on each page is counted and held
 //      under the owner's limit, and the count is printed whether or not it passes.
-//   7. **a printed sum is a sum.** Any table with a column headed "added up" or "the whole way
-//      round" has the numbers printed beside it added up, here, on the digits a reader sees, and the
-//      two must agree. This is the one part of the "right value, wrong place" hole a machine *can*
-//      close, and it is here because the hole was not hypothetical: this pass shipped two walks
-//      whose printed terms did not add to their printed total, and a fresh reader found both by
-//      doing the arithmetic the page invites her to do. The check does it now, on every row of
-//      every state.
+//   7. **a table says what its numbers mean, and a total is a total.** Every table whose rows carry
+//      three or more numbers declares itself — `{ total: i }` or `{ notASum: true }` — and a
+//      declared total is added up here, on the digits a reader sees, on every row of every state.
+//      The declaration is by **column index** rather than by heading, because the first version of
+//      this gate read the column headed "added up" and was switched off twice: once by renaming
+//      that column in the same edit that broke the arithmetic under it, once by moving the terms
+//      into a second table. This is the one part of the "right value, wrong place" hole a machine
+//      *can* close, and the hole was not hypothetical: this pass shipped two walks whose printed
+//      terms did not add to their printed total, and a fresh reader found both by doing the
+//      arithmetic the page invites her to do.
 //   8. **every still stands on its own.** The still button is the reason the drawing code exists —
 //      those files are the intended replacement for the chapters' illustration studies — and it is
 //      the one surface a reader reaches by downloading rather than by looking, so a proof-reader
