@@ -800,20 +800,73 @@ function censusOf(svg, where) {
   // what the convention says in words: the middle of `AB` on the outside at the top, `AC` to the
   // lower left, `AD` to the lower right. Those three sentences are the check.
   if (kind === "ring") {
+    // The ring's convention is four sentences, and this used to be three inequalities. A reader
+    // rotated the inner dots twenty degrees off their partners' rays and it passed — while beat 42's
+    // table still says *poked AB · its opposite CD* and DEMOS.md's stated reason for the whole
+    // convention is that "opposite is literally straight through the middle, which is what the poke
+    // beat needs a reader to see". She was being told to look at a thing the drawing had stopped
+    // showing. Unequal radii and a twelve-degree rotation passed too.
+    //
+    // So the sentences are the check: six dots on two circles about their common centre, three on
+    // each; every opposite pair straight through that centre; AB's middle on the vertical above it.
     const at = {};
     for (const mark of marks.filter((m) => m.element === "circle")) {
       const named = mark.named.find(([attribute]) => attribute === "dot");
-      if (named) at[named[1]] = mark.points[0];
+      if (named && payload.cut.mid_names.includes(named[1])) at[named[1]] = mark.points[0];
     }
-    const [ab, ac, ad] = ["AB", "AC", "AD"].map((name) => at[name]);
-    if (ab && ac && ad) {
-      if (!(ab[1] < ac[1] && ab[1] < ad[1])) {
-        fail(`${where}: the ring does not put AB's middle at the top, which is where DEMOS.md's `
-          + `convention puts it`);
+    const middles = payload.cut.mid_names.filter((name) => at[name]);
+    if (middles.length === payload.cut.mid_names.length) {
+      // The centre: three dots at a hundred and twenty degrees sum to it on each circle, so the
+      // middle of all six is the common centre whatever the two radii are.
+      const centre = middles.reduce((sum, name) =>
+        [sum[0] + at[name][0] / middles.length, sum[1] + at[name][1] / middles.length], [0, 0]);
+      const radius = (name) => Math.hypot(at[name][0] - centre[0], at[name][1] - centre[1]);
+      const radii = middles.map(radius);
+
+      // Two circles, three dots on each.
+      const rings = [];
+      for (const r of radii) {
+        const seen = rings.find((one) => Math.abs(one.r - r) <= 1);
+        if (seen) seen.count += 1;
+        else rings.push({ r, count: 1 });
       }
-      if (!(ac[0] < ad[0])) {
-        fail(`${where}: the ring puts AC to the right of AD; the convention has AC lower left and `
-          + `AD lower right — the drawing is mirrored`);
+      if (rings.length !== 2 || rings.some((one) => one.count !== 3)) {
+        fail(`${where}: the ring's six dots do not sit three and three on two circles — the radii `
+          + `are ${radii.map((r) => r.toFixed(0)).join(", ")}. DEMOS.md: six dots on two `
+          + `concentric circles`);
+      }
+
+      // Every opposite pair straight through the centre.
+      for (const [one, other] of payload.cut.opposite_pairs) {
+        if (!at[one] || !at[other]) continue;
+        const a = [at[one][0] - centre[0], at[one][1] - centre[1]];
+        const b = [at[other][0] - centre[0], at[other][1] - centre[1]];
+        const lengthA = Math.hypot(...a) || 1;
+        const lengthB = Math.hypot(...b) || 1;
+        const off = Math.abs(a[0] * b[1] - a[1] * b[0]) / lengthB;   // centre's distance from the line
+        const cosine = (a[0] * b[0] + a[1] * b[1]) / (lengthA * lengthB);
+        if (off > 1.5 || cosine > -0.999) {
+          const degrees = (Math.acos(Math.max(-1, Math.min(1, cosine))) * 180) / Math.PI;
+          fail(`${where}: ${one} and ${other} are ${degrees.toFixed(1)}° apart through the centre, `
+            + `${off.toFixed(1)}px off a straight line through it. They are the pair joined by `
+            + `nothing, and the convention exists so that opposite is literally straight through `
+            + `the middle — which is what the poke beat asks her to see`);
+        }
+      }
+
+      // AB's middle on the vertical, above the centre.
+      const ab = at[payload.cut.mid_names[0]];
+      if (Math.abs(ab[0] - centre[0]) > 1.5 || ab[1] >= centre[1]) {
+        fail(`${where}: the ring does not put ${payload.cut.mid_names[0]}'s middle straight above `
+          + `the centre — it is ${(ab[0] - centre[0]).toFixed(1)}px to the side. The drawing is `
+          + `rotated, and the convention fixes it`);
+      }
+      // And which way round the other two go, which is what a mirror changes.
+      const [ac, ad] = [payload.cut.mid_names[1], payload.cut.mid_names[2]].map((name) => at[name]);
+      if (ac && ad && !(ac[0] < ad[0])) {
+        fail(`${where}: the ring puts ${payload.cut.mid_names[1]} to the right of `
+          + `${payload.cut.mid_names[2]}; the convention has one lower left and the other lower `
+          + `right — the drawing is mirrored`);
       }
     }
   }
@@ -843,6 +896,39 @@ function censusOf(svg, where) {
     // half its names is a placement that has given up, and every one of those labels would then be
     // exempt from the proximity rule — which is how a reader made the whole rule vanish by forcing
     // the leader path. Two is the ceiling: the ring needs one and the wireframe needs one.
+    // A leader has to REACH the label it names. Reversing one leaves it starting exactly on its dot
+    // — so the meet test passes — with its far end seventy pixels from the label, pointing into
+    // empty space the opposite way, and the label keeps its proximity exemption. The exemption's
+    // whole justification is that the association is stated in ink; this is what checks the ink
+    // arrives.
+    const labelAt = new Map();
+    for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
+      const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
+      if (!at) continue;
+      const text = found[2].trim();
+      const owner = [...led].find((name) => text === name || text.startsWith(`${name} `));
+      if (owner) labelAt.set(owner, [+at[1], +at[2]]);
+    }
+    for (const found of svg.matchAll(/<line\b[^>]*data-leader="([^"]*)"[^>]*>/g)) {
+      const name = found[1];
+      const ends = /x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/.exec(found[0]);
+      const label = labelAt.get(name);
+      if (!ends) continue;
+      if (!label) {
+        fail(`${where}: a leader claims the dot ${name} and there is no label of that name for it `
+          + `to reach`);
+        continue;
+      }
+      const reach = Math.min(
+        Math.hypot(+ends[1] - label[0], +ends[2] - label[1]),
+        Math.hypot(+ends[3] - label[0], +ends[4] - label[1]),
+      );
+      if (reach > 20) {
+        fail(`${where}: the leader for ${name} stops ${reach.toFixed(1)}px from the label it names. `
+          + `A leader is what earns that label its exemption from being nearest its own dot, and a `
+          + `leader that does not arrive earns nothing`);
+      }
+    }
     if (led.size > 2) {
       fail(`${where}: ${led.size} labels needed a leader. A leader is for the dot proximity cannot `
         + `reach; when most of them need one, the placement has failed and the proximity rule has `

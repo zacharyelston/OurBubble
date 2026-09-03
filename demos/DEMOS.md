@@ -367,7 +367,7 @@ nothing, and what comes back is that line's term in the walk, with the orientati
 it. That is how the walk's terms are got (`Engine.contribution`), and it is why **the page never
 flips a sign**.
 
-## The drawings: three conventions, and no fourth
+## The drawings: three conventions, and one mark that is not a convention
 
 ### The tetrahedron — CANON.md's flat unfolded net
 
@@ -395,7 +395,17 @@ triangle is already where the net puts `ABC`.
 **Six dots on two concentric circles**: the middles of the three lines that leave `A` on the outside,
 and the three no line joins them to on the inside, each on the same ray out of the centre as its
 partner and on the other side of it. So *opposite* is literally straight through the middle, which is
-what the poke beat needs a reader to see. The three joins that are **not** there are marked by a
+what the poke beat needs a reader to see.
+
+**Those are four sentences, and all four are checked** — which they were not. The check was three
+inequalities about which dot was above or left of which, and a reader rotated the inner three twenty
+degrees off their partners' rays and passed: every opposite pair 160° apart and sixteen pixels off a
+line through the centre, while beat 42's table still said *poked AB · its opposite CD*. She was being
+told to look at a thing the drawing had stopped showing. Unequal radii and a twelve-degree rotation
+of the whole ring passed too. So the sentences are the test now: **two circles about their common
+centre with three dots on each**, **every opposite pair straight through that centre** (180.0°, and
+0px off the line, as shipped), and **`AB`'s middle on the vertical above it**. All three distortions
+are red. The three joins that are **not** there are marked by a
 faint line through the centre, and that is the only mark in any of these drawings standing for an
 absence.
 
@@ -423,6 +433,32 @@ else*. On a net, "the opposite dot" is two or three marks on the paper.
 
 Above. The charter's condition for leaving the plane was that 2-D genuinely could not show the step,
 and the crossings count is the evidence: twenty is the floor.
+
+### The leader, and why there is a fourth kind of mark
+
+Three conventions govern the shapes. There is one further mark, and it is not a fourth convention:
+it draws nothing about the object. A **leader** is a thin line from a dot to its own name, and it
+exists because a rule this file states — *a label is nearest the mark it names* — cannot always be
+kept. A dot buried in the middle of a dense projection has some other dot nearer to **every** clear
+spot on the paper; tightening the search only moves the failure to *nowhere clear at all*. So where
+proximity cannot carry the association, the drawing states it in ink instead of implying it by
+distance. That is what a draughtsman does with a label that will not sit beside its feature.
+
+It is the only mark here whose job is to say which label belongs to what, and the only thing that
+**suspends** one of the checks' rules — a label a leader reaches is exempt from the proximity test.
+An exemption wants guarding, so it has four:
+
+* a leader carries an identity the census holds to a **real dot** of that drawing;
+* its near end must be **at** that dot, by the same meeting test every other mark takes;
+* its far end must **reach** the label it names — within twenty pixels. Reversed, a leader still
+  starts exactly on its dot and ends eighty pixels away pointing into empty space, with the label
+  keeping its exemption. That was green until a reader reversed one;
+* and **at most two per drawing** may need one. Forcing every label onto the leader path was how the
+  proximity rule was made to vanish entirely, so the cap is enforced and it is red when breached.
+
+As built, **sixteen of the 162 drawings use one**, never more than one at a time: `A′` on the ring
+when the tips are shown, and `B′` on the wireframe. The cap of two therefore has a spare, which is
+deliberate — it is the ceiling an escape has to breach, not a quota to fill.
 
 ### Where a label goes: searched, not ruled
 
