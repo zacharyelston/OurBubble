@@ -297,6 +297,32 @@ const SWEEP = {
 
 }
 
+{
+  // The other half of the paragraph's rule, which until now was kept by hand: not only must every
+  // figure it quotes be one `SWEEP` asserts, but **nothing** in it may be a figure `SWEEP` does not
+  // assert. Checked by reading the paragraph out of DEMOS.md and pulling every emphasised number.
+  // This found a fifth wrong number the moment it was written — the sentence claiming how many
+  // figures the paragraph had.
+  const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
+  const from = doc.indexOf("Twenty is the floor of the **score**");
+  const to = doc.indexOf("That is the argument for leaving the plane");
+  if (from < 0 || to < 0) {
+    fail("DEMOS.md no longer has the crossings paragraph this gate is written against");
+  } else {
+    const asserted = new Set(Object.values(SWEEP).map((value) => String(value)));
+    asserted.add(SWEEP.shape.split("/")[0]);
+    for (const found of doc.slice(from, to).matchAll(/\*\*([^*]*?)\*\*/g)) {
+      for (const token of found[1].match(/\d[\d\u202f\u00a0 ]*\d|\d/g) || []) {
+        const bare = token.replace(/[\u202f\u00a0 ]/g, "");
+        if (!asserted.has(bare)) {
+          fail(`DEMOS.md's crossings paragraph emphasises the figure ${token}, which SWEEP does not `
+            + `assert. Its own rule: delete it, do not correct it`);
+        }
+      }
+    }
+  }
+}
+
 // ── 4 · every drawing is its own census ───────────────────────────────────────────────────────────
 
 /**

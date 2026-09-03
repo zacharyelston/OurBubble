@@ -99,7 +99,10 @@ edges are not in the picture to be counted.
 A previous draft went on to compare how many pairs of lines *touch* at a good view and at a
 degenerate one, with two figures. A reader established that those figures described something other
 than what the sentence claimed was being counted, and the paragraph's own rule then applies without
-argument: **they are deleted, not corrected.** Four figures remain, and the gate asserts all four.
+argument: **they are deleted, not corrected.** What remains is what `SWEEP` asserts and nothing
+else — and note that "four figures remain" is what this sentence said until a count of the figures
+was itself checked, and found to be six. A paragraph this wrong this often should not be counting
+its own contents either.
 
 That is the argument for leaving the plane, and it does not need the strong claim: *every flat
 drawing of this object is either full of crossings, or full of joins that are not there.* The score
