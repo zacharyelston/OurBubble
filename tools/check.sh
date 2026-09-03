@@ -5,17 +5,23 @@
 # The order matters, and it is the order of trust:
 #
 #   1. fetch the pinned engine, if it is reachable at all  (soft: no engine access is not a failure)
-#   2. check the edition — the record's two layers, plus the demos:
+#   2. check the edition — the record's two layers, the ENGINE's three, plus the demos:
 #        · snapshot integrity, when step 1 succeeded: `record/` is the engine at the pinned commit,
 #          byte for byte. This is what makes the committed copy evidence rather than a copy.
 #        · quotations, always: every declared number verbatim in `record/`. Needs no engine access,
 #          so a clean clone and the published site are gated exactly as strongly as a dev box.
+#        · the engine, in two lines: every file under `engine/` hashes to what `engine.lock` says
+#          and the vendored wasm answers the census question with the vendored JSON's own bytes
+#          (always, in any clone); and, when UNIFORGE_SRC points at a UniForge checkout at the
+#          pinned commit, a fresh export from it reproduces the vendored bytes. The second reads
+#          "unverified" rather than passing when the private engine is not on the machine.
 #        · the demos, in two lines: `demos/data/napkin.json` is what the napkin now exports, and the
 #          arithmetic the demo pages run in a browser equals it value for value. The second needs
 #          node; without it that line reads "unverified" rather than passing. See demos/DEMOS.md.
-#   3. the two guards the edition check does not reach — `tools/octahedron.py`'s own assertions
-#      (the geometry the octahedron chapter's appendix note rests on) and `tools/beat_coverage.py`
-#      (the prose against OUTLINE.md's beats). Both were previously run by hand only.
+#   3. the three guards the edition check does not reach — `tools/engine_check.py` (the Python
+#      oracle recomputes the whole payload and must reproduce the vendored engine's bytes exactly),
+#      `tools/octahedron.py`'s own assertions (the geometry the octahedron chapter's appendix note
+#      rests on) and `tools/beat_coverage.py` (the prose against OUTLINE.md's beats).
 #   4. build the book — which regenerates the appendix from the record
 #   5. check the built pages, including that every record link resolves and that the built site
 #      actually carries demos/ — the one piece of wiring nothing else would notice breaking
@@ -53,7 +59,7 @@ fi
 step "2/5 · check the edition (snapshot integrity + quotations)"
 python3 -B check_edition.py
 
-step "3/5 · the two guards the edition check does not reach"
+step "3/5 · the three guards the edition check does not reach"
 # Why these are here (a proofreader, 2026-09-02): both were run by nothing automated, and both
 # back claims the book makes. `octahedron.py` asserts the geometry the octahedron chapter's
 # appendix note rests on — the 1:1 face pairing, one line in seven, 13/7×, "never comes home" —
@@ -62,6 +68,12 @@ step "3/5 · the two guards the edition check does not reach"
 # is the only thing that checks the prose against OUTLINE.md's beats at all, and it is what
 # caught a double-applied renumbering that `renumber_beats.py`'s own self-check waved through.
 # Together they cost under a second.
+# `engine_check.py` is the first of them and the newest (2026-09-02): the book has ONE engine now,
+# UniForge's `napkin` crate, vendored under `engine/`. The Python that used to be the engine is kept
+# as an independent recomputation of it, and this is where the two are required to agree byte for
+# byte. Two implementations sharing no code, no arithmetic library and no language, agreeing on
+# 22 969 bytes, is what makes a number on a page a fact about the object rather than about a program.
+python3 -B tools/engine_check.py
 python3 -B tools/octahedron.py > /dev/null
 python3 -B tools/beat_coverage.py > /dev/null
 echo "octahedron.py: every audit asserted · beat_coverage.py: every beat claimed, in order"

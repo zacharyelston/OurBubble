@@ -14,6 +14,28 @@ as you read**, in exact arithmetic.
 | [`make-it-move.html`](make-it-move.html) | Make it move | 27–35 |
 | [`the-shape-between.html`](the-shape-between.html) | The shape between | 36–46 |
 
+## 2026-09-02 — the engine is vendored, and this JavaScript is on notice
+
+The owner's decision that day: **one engine for the book and its demos** — UniForge's `napkin`
+crate, registered as `lab/napkin/0001`. It is now vendored in this repository at
+[`engine/`](../engine/PROVENANCE.md) and pinned by [`engine.lock`](../engine.lock) exactly the way
+`record/` is pinned: the canonical payload, and the crate compiled to WebAssembly with its
+`wasm-bindgen` glue, hashed file by file, committed, and served from the built site at
+`book/engine/`. The book's thirteen tokens already render from it.
+
+**`core.mjs`'s arithmetic is to be replaced by calls into `engine/napkin.js`.** That is step
+three-B, on the `demos/do-not-narrate` branch, and it is not done here — nothing under `demos/` was
+rewritten in the vendoring step. What changed underneath these pages is only where their oracle
+comes from: `data/napkin.json` is now a copy of `engine/napkin.json` rather than a fresh run of the
+Python, so the value-by-value cross-check below already measures this JavaScript against the engine
+itself. When the rewrite lands, the second implementation these pages currently carry stops
+existing, and the guarantee below gets shorter by one clause.
+
+The module exposes six entry points, strings in and strings out, so no rational type and no float
+crosses the boundary: `census_json`, `slosh_json`, `loops_json`, `cut_json`, `certificate_json`,
+`number_json`. GitHub Pages serves `.wasm` as `application/wasm`, and the glue falls back to
+`arrayBuffer()` if it ever does not.
+
 ## What these pages guarantee, and what they do not
 
 **Every number a demo shows is one it computed, it equals the napkin's to the last digit, and no
@@ -23,12 +45,15 @@ The pages recompute the book's arithmetic rather than displaying numbers Python 
 the point of them, and it is also the whole risk, because two implementations of the same arithmetic
 are two places the book can disagree with itself. So the boundary between them is a checked one:
 
-1. [`tools/napkin_export.py`](../tools/napkin_export.py) dumps every napkin token's **underlying
-   data** — the counts, the coboundary matrices, the histories, the volumes, the ceilings — and
-   deliberately none of its prose, to [`data/napkin.json`](data/napkin.json). Every rational leaves
-   as an exact `"n/d"` string; a float anywhere in the payload is refused by name.
-2. It is written on **every build**, by [`preprocessor.py`](../preprocessor.py), for the same reason
-   the appendix is: `git status` is then the check.
+1. The engine emits every napkin token's **underlying data** — the counts, the coboundary matrices,
+   the histories, the volumes, the ceilings — and deliberately none of its prose, as
+   [`engine/napkin.json`](../engine/napkin.json). Every rational leaves as an exact `"n/d"` string; a
+   float anywhere in the payload is refused by name.
+   [`tools/napkin_export.py`](../tools/napkin_export.py) is the Python that used to produce that
+   file and now only has to reproduce it, byte for byte, in `tools/engine_check.py`.
+2. [`data/napkin.json`](data/napkin.json) is a copy of it, written on **every build** by
+   [`preprocessor.py`](../preprocessor.py), for the same reason the appendix is: `git status` is
+   then the check.
 3. [`core.test.mjs`](core.test.mjs) runs [`core.mjs`](core.mjs) under node and compares the two
    implementations **value by value, as exact strings** — never with a tolerance. This is the check
    that carries the weight.
