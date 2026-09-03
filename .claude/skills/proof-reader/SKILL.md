@@ -89,6 +89,15 @@ the wrongness.
    rule 4 — checking asks whether the computed number is present, refusing asks whether the wrong
    thing is absent, and only refusing survives a builder that gets rewritten along with its own
    check. (Caught 2026-09-02, Our Bubble tranche D.)
+13. **Counts that describe the artefact itself.** "Five chapters after this one", "seven names",
+   "two borrowed words", "the four steps" — prose that counts the book's own parts. Nothing guards
+   an unemphasised number in prose (three wrong counts at once build green), the count drifts every
+   time a chapter is inserted or a list is trimmed, and a wrong count is the one falsehood every
+   reader can catch by turning pages. It produced a blocker in two consecutive rounds of one
+   preface, and the second was the first *moved*, not fixed. Method: for every count on the page,
+   walk the table of contents or the list it describes and tally; then mutate the count and confirm
+   tier 0 stays green, so the finding names the hole and not just the instance. Preferred fix: take
+   the count off the page unless it is a token. (Caught 2026-09-02, Our Bubble preface.)
 
 ## 3 · Render the comments
 
