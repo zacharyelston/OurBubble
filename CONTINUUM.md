@@ -35,6 +35,14 @@ Rules of the ledger:
   that must reproduce the vendored bytes. A lane that needs a number the engine does not emit asks
   for a register row in UniForge — it does not add arithmetic here. `TOKENS.md` says what is already
   available.
+- **A reading that is under review is not a chapter's to make in either direction** (owner,
+  2026-09-02). Where the owner has sent a question back to the engine, the *edition* says nothing
+  about it — not as a claim, not as history, and not as a verdict, however the narrow computation
+  came out. The lane notes and the code keep their negatives, because negatives are first-class
+  (R5); what they gain is scope. A computed negative is quoted with the reading it tested, never as
+  a verdict on the wider claim, and the wider claim's review is named where the negative is written
+  down. The readings currently under review are the octahedron-and-time group (issue #51; the note's
+  own provenance banner and UniForge `lab/napkin/0002` carry the scope).
 - **The record is pinned, never followed.** A lane that needs newer evidence bumps `record.lock`
   deliberately — fetch, re-snapshot, checker, one commit (see the README). No lane tracks the
   engine's `main`.

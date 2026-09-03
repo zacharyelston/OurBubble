@@ -263,6 +263,25 @@ def shows_exactly(name: str, fragment: str, expected: Sequence[Fraction]) -> Non
     )
 
 
+#: What a token's own caption may not say, whatever else it says. `REFUSED_IN_PROSE` holds a
+#: chapter to its tokens' arithmetic; this holds a caption to its own, and it exists because a pin
+#: on the caption's *verdict words* is not enough on its own: leave the pinned words in place and
+#: append a contradicting clause — "the pair never returns … though it comes home every four after
+#: that" — and every check stays green (a proofreader, tranche D round 2). A pin says the right
+#: words are present. This says the wrong ones are not.
+REFUSED_IN_CAPTION: Dict[str, List[str]] = {}
+
+
+def refuse_in_caption(name: str, *phrases: str) -> None:
+    """Register phrasings this token's caption may not contain, for `checked_block` to enforce.
+
+    Registered from inside the token, because what is refused depends on what the engine returned:
+    a run with no period may not say it comes home, and one with a period may not say it never
+    does. The refusal is therefore a function of the data rather than a constant.
+    """
+    REFUSED_IN_CAPTION[name] = list(phrases)
+
+
 def checked_block(name: str, body: str, what: str,
                   in_caption: Dict[str, str] | None = None, **values: str) -> str:
     """Render a token, and check the block AND the caption each carry the numbers they claim.
@@ -278,6 +297,12 @@ def checked_block(name: str, body: str, what: str,
     carries(name, text, **values)
     if in_caption:
         carries(f"{name}'s caption", what, **in_caption)
+    lowered = what.casefold()
+    for phrase in REFUSED_IN_CAPTION.get(name, []):
+        assert phrase.casefold() not in lowered, (
+            f"{name}'s caption says {phrase!r}, which this token's own arithmetic refuses — see "
+            f"napkin.REFUSED_IN_CAPTION"
+        )
     return text
 
 
@@ -681,6 +706,11 @@ def tick_belongs_to_shape() -> str:
         f"one the section contrasts with the runaway"
     )
 
+    # Whatever else this caption says, it may not say the run comes home: the engine's period is 0.
+    refuse_in_caption("tick_belongs_to_shape",
+                      *(("comes home", "returns every", "repeats every")
+                        if wrong["period"] == 0 else ("never returns", "never comes home")))
+
     body = (
         f"The same three numbers and the same rule, at {fraction_text(tetra_tick)} — the tick the "
         f"tetrahedron uses in the next section:\n\n"
@@ -993,9 +1023,9 @@ def stella_counts() -> str:
         f"you started with and the four the second tetrahedron brought "
         f"({' · '.join(both['apex_names'])}). Every middle has {both['middle_degree']} lines and "
         f"every tip has {both['tip_degree']}, and **no two tips are joined at all**, so nothing "
-        f"gets from one tip to another without going through the middle. Together they fill "
-        f"{fraction_text(both['in_its_cube'])} of the cube whose eight corners the tips "
-        f"are — half again as much room as the tetrahedron you cut."
+        f"gets from one tip to another without going through the middle. Together they take up "
+        f"{fraction_text(both['in_tetrahedra'])} of the tetrahedron you cut, and fill "
+        f"{fraction_text(both['in_its_cube'])} of the cube whose eight corners the tips are."
     )
     # Phrases, not bare digits: a "6" on its own is in the table too, so asserting the digit would
     # let a literal into the sentence beside it. The attack that found this typed "The 15 are…"
@@ -1012,6 +1042,7 @@ def stella_counts() -> str:
         tip_degree=f"every tip has {both['tip_degree']}",
         apexes=" · ".join(both["apex_names"]),
         in_its_cube=fraction_text(both["in_its_cube"]),
+        in_tetrahedra=fraction_text(both["in_tetrahedra"]),
         in_caption={"middles": f"its own {word(both['middles'])} middles",
                     "tips": f"the {word(both['tips'])} tips"})
 
@@ -1102,10 +1133,10 @@ def stella_refusal() -> str:
 # token names the phrasings its own numbers disprove, `check_edition.py` refuses them in the
 # chapter's source, and the contradiction cannot be reintroduced by an edit two paragraphs away.
 #
-# The last group is the three readings `notes/octahedron-crossing.md` computed and refuted. They are
-# the appendix's business (they are that chapter's `note` in `edition.json`) and they are refused in
-# every chapter's prose, whether or not it carries a token, because a refuted claim is not a
-# chapter's to make.
+# The last group is the readings of the octahedron and time. What has been computed is narrow: a tick is not a trip round the bare octahedron under a time-symmetric rule on 0-forms; the family's claim (screw, 1-forms, chiral mesh) is under review: UniForge lab/napkin/0002.
+# They are refused in every chapter's prose, whether or not it carries a token, because neither the
+# narrow finding nor the wider claim is a chapter's to make while the wider one is open — and this
+# list is a guard rather than a verdict: it keeps a phrasing out and states nothing itself.
 REFUSED_IN_PROSE: Dict[str, List[str]] = {
     "triangle_slosh_table": [
         "the triangle settles",

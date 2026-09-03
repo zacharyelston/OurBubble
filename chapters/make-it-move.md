@@ -93,7 +93,7 @@ all of it is that sentence on a bigger object.
 
 There is no second rule for the hard chapters, and no extra term switched on when a result needs
 help. When a later chapter surprises you, the surprise is in what that sentence *does*, not in
-anything added to it.
+anything added.
 
 So run it. Not on the tetrahedron, though — on something smaller.
 
@@ -110,7 +110,8 @@ nothing in the rule that cares how many dots there are. Put a number on each cor
 They slosh. And they come home — the pair of rows at tick four is the pair it started from, so from
 there the whole thing happens again, and again, for ever.
 
-Two things to check with a finger before reading on. Add each row up: the same total, every time.
+Two things to check with a finger before reading on. Add each row up against the last column: the
+same total, every time.
 And nothing settles: this is the plucked string, not the ink. Whole numbers all the way down the
 table, too, which is what the third corner bought.
 

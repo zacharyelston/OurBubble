@@ -217,9 +217,11 @@ the tips and an octahedron between them; that same octahedron has room for four 
 their numbers are a surprise world with an interesting shadow. That surprise is now its own chapter,
 5, so chapter 4 closes on the four bare faces rather than filling them. The shadow is the reader's
 forward question, never a claim — the book's shadows are the record's results, so the last beat asks
-what this world's shadow will look like and hands her on. On what these chapters may say about the
-octahedron and time: **nothing, in either direction** (owner, 2026-09-02). That question has gone
-back to the engine for review, so the chapters neither assert it nor report a verdict on it, and the
-guard in `napkin.REFUSED_IN_PROSE` that keeps those phrasings out of the prose stays where it is.
-What the chapters do carry is *two rows*, which rests on the rule the tables are produced by and on
-nothing about any shape.*
+what this world's shadow will look like and hands her on. On what these chapters may say about the octahedron
+and time: **nothing, in either direction** (owner, 2026-09-02). What has been computed is one narrow
+reading — a tick is not a trip round the bare octahedron under a time-symmetric rule on 0-forms —
+and the family's actual claim, on the chiral mesh with a screw and 1-forms, is under review in the
+engine. So the chapters neither assert it nor report a verdict on it, and the guard in
+`napkin.REFUSED_IN_PROSE` that keeps those phrasings out of the prose stays where it is. What the
+chapters do carry about time is *two rows*, which rests on the rule the tables are produced by and
+on nothing about any shape.*
