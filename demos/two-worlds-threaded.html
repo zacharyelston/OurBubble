@@ -14,7 +14,7 @@
   <p class="kicker">Our Bubble · a demo · <span id="chapter-beats"></span></p>
   <h1 id="chapter-title"></h1>
   <div class="bar">
-    <a id="back-to-chapter" href="../make-it-move.html">read the chapter</a>
+    <a id="back-to-chapter" href="../two-worlds-threaded.html">read the chapter</a>
     <span id="theme"></span>
   </div>
 </header>
@@ -28,7 +28,7 @@
 
 <noscript>
   <p>Scripting is off, so there is nothing to run. Every number is in the chapter's own text —
-  <a href="../make-it-move.html">read it there</a>.</p>
+  <a href="../two-worlds-threaded.html">read it there</a>.</p>
 </noscript>
 
 <footer class="foot">
@@ -40,7 +40,7 @@
 <script type="module">
   import { mount, themeSwitch } from "./core.mjs";
   themeSwitch(document.querySelector("#theme"));
-  mount("make-it-move").catch((failure) => {
+  mount("two-worlds-threaded").catch((failure) => {
     document.querySelector("#demo").textContent =
       `The engine did not start: ${failure.message}`;
   });

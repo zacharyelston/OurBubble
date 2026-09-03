@@ -744,8 +744,16 @@ DEMO_PAGES = (
     "one-tetrahedron-is-a-whole-world.html",
     "make-it-move.html",
     "the-shape-between.html",
+    "two-worlds-threaded.html",
 )
-DEMO_ASSETS = ("core.mjs", "core.test.mjs", "demo.css", "data/napkin.json")
+# The five modules a page needs, and the scaffolding it reads its beat numbers off. `steps.json` is
+# generated from OUTLINE.md and the chapters' markers by `tools/demo_steps.py`, so it is listed here
+# for the same reason the pages are: a page that lost it would render with no beats at all.
+DEMO_ASSETS = (
+    "core.mjs", "core.test.mjs", "engine.mjs", "draw.mjs", "steps.mjs", "steps.json",
+    "demo.css", "data/napkin.json",
+)
+DEMO_STEPS = DEMOS_DIR / "steps.json"
 
 
 
@@ -1009,18 +1017,60 @@ def check_napkin_export(errors: List[str]) -> str:
     return line
 
 
-def check_demo_cross_check(errors: List[str]) -> str:
-    """Run the demos' core under node and hold every number it computes to the napkin's export.
+def check_demo_steps(errors: List[str]) -> str:
+    """The demos' step scaffolding is what `OUTLINE.md` and the chapters' markers now derive.
 
-    Three things, precisely. Every value the browser computes equals the napkin's, compared as exact
-    rational strings. No numeric token appears on any surface a reader meets — cell, heading,
-    caption, title, prose, note, or text inside a drawing — that the export does not contain. And no
-    digit is typed into a step at all: the step definitions' own source is read, and a string literal
-    holding a digit fails, in any quote style.
+    No beat number is typed into a demo. `tools/demo_steps.py` reads the questions off `OUTLINE.md`
+    and the numbers off each chapter's `<!-- beat N -->` markers, keyed by section anchor, and writes
+    `demos/steps.json`; the pages render their titles and beat labels from that. So the file has to
+    be in step with the contract, and this is where a renumber that has not been regenerated becomes
+    a red check rather than a page quoting last week's numbering. The preface being drafted will move
+    every beat in the book, which is precisely the event this is here for.
+    """
+    import subprocess
+
+    script = EDITION_DIR / "tools" / "demo_steps.py"
+    if not script.exists():
+        errors.append("demo steps: tools/demo_steps.py is missing")
+        return "unavailable"
+    finished = subprocess.run(  # noqa: S603 - a fixed argv, no shell
+        [sys.executable, "-B", str(script), "--check"],
+        capture_output=True, text=True, cwd=EDITION_DIR, timeout=120, check=False,
+    )
+    if finished.returncode != 0:
+        for line in (finished.stderr or finished.stdout or "").splitlines():
+            if line.strip():
+                errors.append(f"demo steps: {line.strip()}")
+        return "unavailable"
+    if not DEMO_STEPS.exists():
+        errors.append("demo steps: demos/steps.json is missing")
+        return "unavailable"
+    scaffold = json.loads(DEMO_STEPS.read_text(encoding="utf-8"))
+    sections = sum(len(chapter["sections"]) for chapter in scaffold["chapters"].values())
+    return (f"{len(scaffold['chapters'])} chapters and {sections} beats, read off OUTLINE.md and "
+            f"the chapters' markers")
+
+
+def check_demo_cross_check(errors: List[str]) -> str:
+    """Run the demo pages under node and hold every number they render to what the engine emitted.
+
+    This check changed its meaning when the engine was vendored, and the change is the point of the
+    rebuild. It used to compare **two implementations** of the book's arithmetic — the demos' own
+    exact rationals in JavaScript against the napkin's in Python — because there were two. There is
+    one now, so what is asked is no longer *do the two agree* but **does the page show what the
+    engine said**.
+
+    Six gates, and `demos/core.test.mjs` states each one at the point it runs: the vendored wasm and
+    the vendored JSON agree byte for byte on the census; every numeric token on every surface a
+    reader meets, at every state of every step, is a value the engine returned in that run; no digit
+    is typed into a step's source or into a page's HTML at all; every segment the wireframe draws is
+    an edge of the engine's census and every dot one of its vertices; every step maps onto exactly
+    one marked chapter section and the beat numbers agree; and every page's reader-facing words are
+    counted and held under the owner's budget — printed either way, so the count cannot drift back.
 
     What it does not catch, and `demos/DEMOS.md` says so in the same words: a number computed
-    correctly and put in the wrong place. Every such value is one the export contains, so no scan
-    over the numbers can see it — only reading the page can.
+    correctly and put in the wrong place. Only reading the page catches that, which is what the
+    proof-reader pass is for.
 
     **When node is absent this reports `unverified`, and never a pass.** That is the same shape as
     the snapshot-integrity layer: a check that could not run says so, on its own line, rather than
@@ -1049,8 +1099,13 @@ def check_demo_cross_check(errors: List[str]) -> str:
                 f"demo cross-check: node exited {finished.returncode} with nothing on stderr"
             )
         return "unavailable"
-    summary = [line for line in finished.stdout.splitlines() if line.startswith("core.test.mjs:")]
-    return summary[-1].split(": ", 1)[1] if summary else "passed, with no summary line"
+    lines = [line for line in finished.stdout.splitlines() if line.startswith("core.test.mjs:")]
+    # The per-chapter word counts are printed rather than folded into the headline, because the
+    # owner's budget is the thing most likely to drift back and the only way it stays visible is if
+    # a reader of the check output sees it on every run.
+    for line in lines[:-1]:
+        print(f"    {line.split(': ', 1)[1]}")
+    return lines[-1].split(": ", 1)[1] if lines else "passed, with no summary line"
 
 
 
@@ -1837,12 +1892,14 @@ def main() -> int:
     # rather than reach a reader as a second, differently-labelled picture of the same object.
     status(errors, "canon self-test", lambda: check_canon(errors))
 
-    # And the demos, which recompute chapters 1–4 in the reader's browser. Two lines, because two
-    # different things can be wrong: the export the browser is measured against can go stale, and the
-    # browser's own arithmetic can drift from it. The second says `unverified` rather than passing
-    # when node is not installed.
+    # And the demos, which run chapters 1–5 on the vendored engine in the reader's browser. Three
+    # lines, because three different things can be wrong: the Python that used to be the engine can
+    # stop reproducing it, the generated step scaffolding can fall behind a renumber, and a page can
+    # render a number the engine never produced. The last says `unverified` rather than passing when
+    # node is not installed.
     status(errors, "napkin export", lambda: check_napkin_export(errors))
     if not args.rendered:
+        status(errors, "demo steps", lambda: check_demo_steps(errors))
         status(errors, "demo cross-check", lambda: check_demo_cross_check(errors))
 
     appendix_file = str(manifest["appendix"]["file"])
