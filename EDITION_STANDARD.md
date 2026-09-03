@@ -176,3 +176,16 @@ a title word that means two things means neither of them reliably.
 
 It never means that the stella octangula is the universe, that its combinatorics derive constants of
 nature, or that a toy result establishes a physical technology.
+
+## The excluded-claims guard is a denylist, and its limit is the writer's job
+
+`edition.json`'s `forbidden_chapter_phrases` and `forbidden_chapter_patterns` refuse the *named*
+legacy claims and paraphrases of them, and `forbidden_probe_texts` proves on every build that the
+refusals fire. That is the whole of what they do. **A novel claim about nature, in words the
+denylist has never seen, passes** — verified by mutation on 2026-09-02 (a proofreader appended a
+sentence asserting the lattice is what spacetime is made of; tier 0 stayed green).
+
+So the firewall is held by the Scope block, by this contract, and by whoever is reading — never by
+`check_edition.py` alone. A drafter may not treat a green check as evidence that a sentence honours
+the firewall, and a proof-read may not skip the naive read on the grounds that the guard would have
+caught it.

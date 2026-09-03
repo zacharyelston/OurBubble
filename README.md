@@ -151,8 +151,8 @@ artifact and the hashes together. `engine.lock`'s header is the long version.
 
 Chapters 2–5 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
 numbers in the reader's browser** and walks her through the chapter's beats one at a time. Their
-beat ranges moved when the outline gained chapter five; `demos/DEMOS.md` says which pages have yet
-to catch up. They are
+beat ranges moved twice — when the outline gained *Two worlds threaded*, and again when it gained
+the front door; `demos/DEMOS.md` says which pages have yet to catch up. They are
 plain static pages — one shared vanilla-JS module, one stylesheet, nothing loaded from anywhere — and
 they are published beside the book, at `…/OurBubble/demos/`, through the `chapters/demos` symlink
 that mdBook copies.

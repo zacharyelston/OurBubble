@@ -49,7 +49,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 **The chapter.** [what-you-will-have.md](what-you-will-have.md)
 
-**What this section carries.** No experiment, and no number. The front door says what the book is about, what a reader will be able to do by the end, and how to read it — and every promise it makes is redeemed in a later chapter, which is where the provenance for it sits. The standards below are what its one scope claim rests on.
+**What this section carries.** No rung, no gate, no figure and no quoted number — the front door is a statement about the book and how to read it, and it is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. Its promises are the later chapters' to keep, and each of those has its own section below. The standards are what its one scope claim rests on.
 
 
 **Standards and record this section rests on.**

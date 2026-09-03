@@ -29,7 +29,7 @@ reader every time instead of explained to her once.
 
 ## 0 · What you will have
 
-1. What is this book actually about — and should I go and look it up?  *(a thing called **discrete exterior calculus**: a way of doing calculus on a shape made of dots, lines and faces. No — every forbidding name in it arrives last, after she has already counted the thing it names)*
+1. What is this book actually about — and should I go and look it up?  *(a thing called **discrete exterior calculus**: a way of doing calculus on a shape made of dots, lines and faces. No — she will meet all five of the forbidding names as things she can count, and almost none of them as words. The two borrowed names the book does use arrive after the thing they name)*
 2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, a machine's honest no she can read, and a path from any number to the file it came out of. Nothing to believe: the first half checks with a pencil, the second is quoted from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
 3. What is the road?  *(five chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
 4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. It starts where measurement started: one shadow, and the smallest possible next thing)*
@@ -206,13 +206,21 @@ test, its regenerate command. The chapters stay free of it; it stays complete.*
 *Drafter's note on chapter 0 (owner, 2026-09-02). The front door exists because the book teaches a
 subject people spend years learning under forbidding names, and a reader deserves to be told what
 she is walking into and what she will have at the end of it. So it names the subject **once** —
-discrete exterior calculus — asks her not to look it up, and lists the forbidding names precisely so
-they stop being frightening: every one of them arrives last in this book, after the thing it names
-has been counted. The tease is the owner's — she will know what the people who work on this know —
-and it is bounded by the firewall in the same breath: what she will not have is a claim about the
-world. It carries no figure, no number and no quotation, by design, so there is nothing in it a
-reader has to take on trust before the book has earned any. Its four beats were inserted at the
-front, and every later beat and chapter moved by one pass of `tools/renumber_beats.py`.*
+discrete exterior calculus — asks her not to look it up, and lists five forbidding names precisely
+so they stop being frightening, then hands her each of the five things they name in plain words.
+**It does not say the names arrive later, because five of them never do** (a proofreader, 2026-09-02:
+*Hodge*, *Laplacian*, *exactness*, *forms* and *stability* appear nowhere in the chapters, and the
+first draft promised all seven would). What it says instead is what is true and better: she will
+meet the things and almost none of the words. The two borrowed names the book really does use — *the
+vacuum* and *universality* — are named as the exceptions, and both arrive after the thing they name.
+
+The tease is the owner's — she will know what the people who work on this know — and it is bounded
+by the firewall in the same breath: what she will not have is a claim about the world. It carries no
+figure, no number and no quotation, by design, so there is nothing in it a reader has to take on
+trust before the book has earned any: the census it once retyped from memory was cut when a mutation
+showed no guard would have caught it being wrong. Every promise it makes is a later chapter's to
+keep, and the appendix section says so rather than vouching for them. Its four beats were inserted
+at the front, and every later beat and chapter moved by one pass of `tools/renumber_beats.py`.*
 
 *Drafter's note on chapters 2–6: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the
