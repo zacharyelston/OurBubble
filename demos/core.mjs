@@ -73,7 +73,22 @@ export function initialState(step, view) {
   return state;
 }
 
-/** Every state a step can be driven into — what `core.test.mjs` walks, and what a reader can reach. */
+/**
+ * Every state a step can be driven into — what `core.test.mjs` walks, and what a reader can reach.
+ *
+ * **Including a typed one.** This used to enumerate ticks, presses and choices and never a typed
+ * value, so the eight beats that invite her to type — 9, 10, 13, 14, 21, 22, 23, 35 — were checked
+ * only at their opening numbers. A reader planted a wrong total that appeared *only after typing*
+ * on beat 23, whose instruction is literally "Change an arrow.", and it was green across every sum,
+ * every still and the whole numeric scan. The check was reading a page nobody had touched.
+ *
+ * Two typed states, both derived from the control's own opening values so that no digit enters this
+ * file, and both the same every run. The first **changes every position**: each value is replaced by
+ * the first opening value that differs from it. That matters more than it sounds — the obvious
+ * choice, a reversal and a roll, leaves a repeated value sitting in its own place, and a planted
+ * defect hiding behind exactly such a position escaped this check on its first attempt. The second
+ * is that reversal and roll, kept because two shapes of change are better than one.
+ */
 export function statesOf(step, view) {
   const base = initialState(step, view);
   const out = [base];
@@ -87,13 +102,25 @@ export function statesOf(step, view) {
         out.push({ ...base, choice: { ...option, index } });
       });
     }
+    if (control.kind === "numbers" && control.initial.length > 1) {
+      const different = control.initial.map((value) => {
+        const other = control.initial.find((candidate) => candidate !== value);
+        // All the same? Then the other side of nothing, which is still a change.
+        return other === undefined
+          ? (value.startsWith("-") ? value.slice(1) : `-${value}`)
+          : other;
+      });
+      out.push({ ...base, numbers: different });
+      const rolled = [...control.initial].reverse();
+      out.push({ ...base, numbers: [...rolled.slice(1), rolled[0]] });
+    }
   }
   return out;
 }
 
 // ── the still ─────────────────────────────────────────────────────────────────────────────────────
 
-const SVG_STILL_STYLE = `
+export const SVG_STILL_STYLE_TEXT = `
   .net .panel polygon, .ring .panel polygon { fill: #f4ead8; stroke: none; }
   .net .stroke, .ring .stroke, .wire .stroke { stroke: #20314a; stroke-width: 3; fill: none;
     stroke-linecap: round; stroke-linejoin: round; }
@@ -107,17 +134,21 @@ const SVG_STILL_STYLE = `
   .ring .absent line { stroke: #20314a; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.45; }
   .ring .dots circle { fill: #20314a; stroke: none; }
   .ring .dots circle.tip { fill: none; stroke: #20314a; stroke-width: 2; }
-  .wire .stroke line { stroke-width: 1.6; }
+  .wire .stroke line, .wire .stroke .edge { stroke-width: 1.6; }
+  .wire .stroke.first line { stroke-width: 1.6; }
   .wire .stroke.second line { stroke-width: 1; opacity: 0.55; }
   .wire .stroke.octahedron line { stroke-width: 1.1; opacity: 0.75; }
   .wire .stroke line.strong { stroke-width: 3.2; opacity: 1; }
   .wire .dots circle { fill: #20314a; stroke: none; }
   .wire .dots circle.tip { fill: none; stroke: #20314a; stroke-width: 1.6; }
+  .net .labels .value, .ring .labels .value, .wire .labels .value { font-weight: 600; }
   .net .labels, .ring .labels, .wire .labels { fill: #20314a;
     font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif; }
   .net .labels text, .ring .labels text, .wire .labels text {
     paint-order: stroke fill; stroke: #fffdf8; stroke-width: 4px; stroke-linejoin: round; }
   .ring .labels .tip { font-style: italic; }
+  .net .leaders line, .ring .leaders line, .wire .leaders line { stroke: #5c6a80; stroke-width: 1;
+    fill: none; }
 `;
 
 /**
@@ -134,7 +165,7 @@ export function stillFrom(svgText, { chapter, beat, title }) {
     + `in it is a claim about nature. -->`;
   return svgText.replace(
     /^<svg([^>]*)>/,
-    (_match, attributes) => `${stamp}\n<svg${attributes}>\n  <style>${SVG_STILL_STYLE}</style>`,
+    (_match, attributes) => `${stamp}\n<svg${attributes}>\n  <style>${SVG_STILL_STYLE_TEXT}</style>`,
   ).replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
 }
 

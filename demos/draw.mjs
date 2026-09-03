@@ -1210,6 +1210,16 @@ export function drawings(engine) {
    * drawing draws from, so what the check catches is not a disagreement between two computations
    * but a **transformation applied after** either of them.
    */
+  /** Where the threaded pair's dots belong at one view, from the engine's own points. */
+  function whereWireDotsBelong(view) {
+    if (!view) return {};
+    const out = {};
+    stella.names.forEach((name, index) => {
+      out[name] = [project3d(stella.points[index], view.yaw, view.pitch)];
+    });
+    return out;
+  }
+
   function whereDotsBelong(kind) {
     if (kind === "ring") {
       const { at } = ringLayout();
@@ -1220,7 +1230,17 @@ export function drawings(engine) {
     for (const panel of wanted) {
       [...panel.face].forEach((letter, index) => {
         const [x, u] = panel.positions[index];
-        (out[letter] = out[letter] || []).push([x, u * SQRT3]);
+        const at = [x, u * SQRT3];
+        const seen = (out[letter] = out[letter] || []);
+        // **Deduplicated by position.** Without this, A, B and C each came back with three places
+        // — the same point listed once per panel that touches it — so the caller's "names the
+        // convention puts in exactly one place" filter found none, `anchors` came out empty, and
+        // the whole orientation test silently did not run on the net. A reader mirrored and flipped
+        // it and both passed. `D` still keeps its three, because they are three different points.
+        if (!seen.some((one) => Math.abs(one[0] - at[0]) < 1e-9
+          && Math.abs(one[1] - at[1]) < 1e-9)) {
+          seen.push(at);
+        }
       });
     }
     return out;
@@ -1229,6 +1249,6 @@ export function drawings(engine) {
   return {
     drawNet, drawTriangle, drawRing, drawWire,
     ringLayout, ringPlanarity, ringOuterFace, tipNames, tipPlaces,
-    wireframe, wireDefaultView, whereDotsBelong,
+    wireframe, wireDefaultView, whereDotsBelong, whereWireDotsBelong,
   };
 }

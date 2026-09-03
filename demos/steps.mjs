@@ -298,7 +298,11 @@ export function chapterSteps(engine, draw) {
             }),
             tables: [
               cornerTable(values),
-              differenceTable(values, edges),
+              // The terms the walk uses, not each line's own difference. Beat 16 already printed
+              // these; here the two tables sat side by side — AC as −1 in one and +1 in the packed
+              // row of the other — with nothing on the page reconciling the sign.
+              table("the terms the walk uses", ["line", "its term"],
+                triangleLines.map((name, index) => [name, signed(walkTerms(edges)[index])])),
               table("what the whole walk comes to", ["the three terms, as the walk uses them",
                 "added up"],
                 [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
@@ -357,11 +361,20 @@ export function chapterSteps(engine, draw) {
               values: state.pressed ? {} : netValues(values, edges),
               title: state.pressed ? "The world, with nothing on it" : "The world, with numbers on it",
             }),
-            tables: [
+            tables: state.pressed ? [
               table("what is still here", ["what", "how many"], censusRows(3)),
               table("what it has never had", ["a length", "a direction", "a clock"],
                 [["none", "none", "none"]]),
-              table("what the walk still comes to",
+              // No numbers, so no walk. It used to print "0 0 0 → 0" here — three differences that
+              // came out at nothing — beside a drawing showing nothing at all. The claim of the
+              // beat is that the world is complete with nothing on it, which is the census above.
+              table("what there is to add up", ["numbers on it", "differences"],
+                [["none", "none"]]),
+            ] : [
+              table("what is still here", ["what", "how many"], censusRows(3)),
+              table("what it has never had", ["a length", "a direction", "a clock"],
+                [["none", "none", "none"]]),
+              table("what the walk comes to",
                 ["the three terms, as the walk uses them", "added up"],
                 [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
             ],
@@ -650,7 +663,7 @@ export function chapterSteps(engine, draw) {
                   ["then", ...run.history[from].map(show), show(run.totals[from])],
                   ["now", ...run.history[state.tick].map(show), show(run.totals[state.tick])],
                 ], { total: triangleNames.length + 1 }),
-              table("the tick it ran at", ["tick"], [[show(run.k)]], { notASum: true }),
+              table("the tick it runs at", ["tick"], [[show(run.k)]], { notASum: true }),
             ],
           };
         },
@@ -881,9 +894,18 @@ export function chapterSteps(engine, draw) {
           tables: state.pressed ? [
             table("what fell out", ["pieces at the tips", "shapes between them", "dots in all"],
               [[String(cut.corners), String(cut.octahedra), String(cut.dots)]], { notASum: true }),
+            // The two shares print differently because the engine's rule prints one and refuses the
+            // other — an eighth is not a short decimal, a half is. Side by side with nothing said,
+            // 1/8 beside 0.5 looks like two kinds of carelessness rather than one rule, so the row
+            // says which is which.
             table("and how much of the original each one is",
-              ["each of the tips", "how many tips", "the shape between"],
-              [[show(cut.tip_share), String(cut.corners), show(cut.core_share)]], { notASum: true }),
+              ["each of the tips", "a napkin prints it", "how many tips",
+                "the shape between", "a napkin prints it"],
+              [[show(cut.tip_share), engine.print(cut.tip_share).refused ? "no" : "yes",
+                String(cut.corners),
+                show(cut.core_share), engine.print(cut.core_share).refused ? "no" : "yes"]],
+              { notASum: true }),
+
           ] : [
             // Nothing has fallen out yet, so nothing is counted yet. The first version printed the
             // answer above the button that produces it.
@@ -970,15 +992,27 @@ export function chapterSteps(engine, draw) {
                 tips: atATip.map((entry) => entry.index),
                 title: "Four faces looking at a tip, and four left bare",
               })
-              : draw.drawRing({ face, title: "One face, walked round" }),
+              : draw.drawRing({
+                face,
+                // The title reads off the count. It said a face had been walked at the state where
+                // none had — and a still carries its title into the downloaded file and a screen
+                // reader reads it aloud, so a false title is worse there than on the page.
+                title: walked.length === 0
+                  ? "The shape between, before the walk"
+                  : "One face, walked round",
+              }),
+
             tables: [
               table("the arrows on the lines", ["line", "arrow"],
                 cut.mid_lines.map(([a, b], index) =>
                   [`${MID[a]} → ${MID[b]}`, signed(faceSum.arrows[index])])),
               table("each face, walked the outward way", ["face", "what goes round it"],
-                walked.map((value, index) => [
-                  cut.mid_faces[index].map((i) => MID[i]).join(" · "), signed(value),
-                ])),
+                walked.length === 0
+                  ? [["none yet", "none yet"]]
+                  : walked.map((value, index) => [
+                    cut.mid_faces[index].map((i) => MID[i]).join(" · "), signed(value),
+                  ])),
+
               // The terms and the total in one table, so the check can add them up. They were in
               // two, which is the other way a proof-reader silenced this guard.
               table("all of them added up",
@@ -1024,7 +1058,12 @@ export function chapterSteps(engine, draw) {
             tips: [...atATip.map((entry) => entry.index),
               ...flat.slice(0, state.tick).map((entry) => entry.index)],
             emphasis: state.tick > 0 ? [flat[state.tick - 1].name] : [],
-            title: "A tip on each face that was bare",
+            title: state.tick === 0
+              ? "Four faces looking at a tip, and four still bare"
+              : (state.tick === flat.length
+                ? "A tip on each face that was bare"
+                : "Tips going on, one face at a time"),
+
           }),
           tables: [
             table("the eight faces", ["face", "what is on it"],
@@ -1092,7 +1131,7 @@ export function chapterSteps(engine, draw) {
             }),
             tables: [
               table("the biggest number anywhere, tick by tick",
-                ["tick", "the biggest number", "how many digits before the point"],
+                ["tick", "the biggest number", "at least this big"],
                 runaway.look.slice(0, state.tick + 1).map((entry, index) => [
                   String(entry.tick), engine.print(entry.biggest).text,
                   String(runaway.floors[index].floor),
@@ -1158,7 +1197,8 @@ export function chapterSteps(engine, draw) {
                   show(tried.k), String(tried.printable),
                   tried.period === 0 ? "never" : String(tried.period),
                 ])
-                : []),
+                : [["none tried yet", "none tried yet", "none tried yet"]]),
+
             // The tick is in this table, and the product of tick and stiffness is not. It used to
             // be the other way round, and a proof-reader read the two adjacent columns as the
             // comparison the verdict was making — which they are not, and under which two of the

@@ -10,7 +10,9 @@
 // against the napkin's in Python — because there were two. There is one now: the vendored engine.
 // So what is checked is no longer *do the two agree* but **does the page show what the engine said**.
 //
-// Six gates, in the order of what they would catch:
+// The gates, in the order of what they would catch — numbered for reference, not counted here,
+// because a count of them is one more figure to go stale, and this one already had:
+
 //
 //   1. **the engine is the engine.** The vendored wasm answers the census question with the
 //      vendored JSON's own bytes, so the two artifacts under `engine/` are one engine.
@@ -82,7 +84,7 @@ const { drawings, viewCost, VIEW_GRID, project3d, textBox, boxMeetsSegment, boxe
   boxMeetsDot, LABEL_GAP, DOT_CLEARANCE } = await import(
   pathToFileURL(path.join(HERE, "draw.mjs")).href);
 const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")).href);
-const { joinSteps, statesOf, stillFrom } = await import(
+const { joinSteps, statesOf, stillFrom, SVG_STILL_STYLE_TEXT } = await import(
   pathToFileURL(path.join(HERE, "core.mjs")).href);
 
 const failures = [];
@@ -291,6 +293,21 @@ const SWEEP = {
 };
 
 {
+  // The central symmetry the mirror argument rests on, checked rather than asserted: every point of
+  // the threaded pair has its own negative in the set.
+  const q = (value) => {
+    const [top, bottom] = String(value).split("/");
+    return bottom === undefined ? Number(top) : Number(top) / Number(bottom);
+  };
+  const symmetric = payload.stella.points.every((point) =>
+    payload.stella.points.some((other) => point.every((value, axis) =>
+      Math.abs(q(value) + q(other[axis])) < 1e-9)));
+  if (!symmetric) {
+    fail("the threaded pair is no longer centrally symmetric, and the position census's reasoning "
+      + "about mirrored views depends on it — a mirror of a view is another view only because "
+      + "every point has its negative in the set");
+  }
+
   const { points, edges } = draw.wireframe();
   if (VIEW_GRID !== SWEEP.grid) {
     fail(`the sweep is ${VIEW_GRID} directions per angle and DEMOS.md says ${SWEEP.grid}`);
@@ -516,6 +533,93 @@ const NEARBY = 2;
 const near = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) <= NEARBY;
 
 /**
+ * The orthographic projection, **written here** rather than imported from `draw.mjs`.
+ *
+ * This is the one place in the check that reimplements something the drawing does, and it has to.
+ * The first version asked `draw.mjs`'s own `project3d` where the dots belonged, so mirroring that
+ * function moved the drawing and the expectation together and both of a reader's mirrors passed —
+ * the same weakness the ring has, and the reason the ring is checked against its convention's
+ * *words* instead. The wireframe has an independent definition available: yaw about the upright
+ * axis, then pitch, the vertical up the page, which is the record's own render and what DEMOS.md
+ * describes. So the check does that arithmetic itself, and a change to the drawing's projection is
+ * a disagreement rather than a shared move.
+ */
+function ownProject3d(point, yaw, pitch) {
+  const [x, y, z] = point.map((value) => {
+    const [top, bottom] = String(value).split("/");
+    return bottom === undefined ? Number(top) : Number(top) / Number(bottom);
+  });
+  const cy = Math.cos(yaw);
+  const sy = Math.sin(yaw);
+  const cp = Math.cos(pitch);
+  const sp = Math.sin(pitch);
+  return [cy * x - sy * z, -(sy * sp * x + cp * y + cy * sp * z)];
+}
+
+/**
+ * Which view a wireframe was drawn at, recovered from the drawing itself.
+ *
+ * The wireframe turns, so its expected positions depend on where it is pointing — and the check may
+ * not simply ask the drawing "what yaw did you use?", because a mirrored drawing would answer
+ * honestly and still be mirrored. So the view is **searched for**: the yaw and pitch, over the same
+ * fixed grid `bestView` uses, whose projection of the engine's own points best matches the dots
+ * actually drawn. If the drawing is a mirror of some view, no view in the sweep matches it and the
+ * scale test below is what says so.
+ */
+function wireViewOf(svg) {
+  const drawn = [...svg.matchAll(
+    /<circle[^>]*data-dot="([^"]+)"[^>]*cx="([-\d.]+)" cy="([-\d.]+)"/g)]
+    .map((found) => ({ name: found[1], at: [+found[2], +found[3]] }));
+  if (drawn.length < 3) return null;
+  const names = payload.stella.names;
+  const points = payload.stella.points;
+  let best = null;
+  for (let a = 0; a < VIEW_GRID; a += 1) {
+    for (let b = 0; b < VIEW_GRID; b += 1) {
+      const yaw = (a / VIEW_GRID) * Math.PI * 2;
+      const pitch = (b / VIEW_GRID) * Math.PI - Math.PI / 2;
+      const flat = points.map((point) => ownProject3d(point, yaw, pitch));
+      // Compare shapes, not sizes: each set is centred and scaled to its own spread first, so a
+      // resizing of the drawing is not mistaken for a distortion of it.
+      const cost = shapeDistance(drawn, names, flat);
+      if (best === null || cost < best.cost) best = { yaw, pitch, cost };
+    }
+  }
+  return best;
+}
+
+/** Where the threaded pair's dots belong at one view, by this check's own arithmetic. */
+function ownWireDots(view) {
+  if (!view) return {};
+  const out = {};
+  payload.stella.names.forEach((name, index) => {
+    out[name] = [ownProject3d(payload.stella.points[index], view.yaw, view.pitch)];
+  });
+  return out;
+}
+
+/** How far two point sets are from being the same shape, once centred and scaled. */
+function shapeDistance(drawn, names, flat) {
+  const mine = drawn.map((dot) => flat[names.indexOf(dot.name)]).filter(Boolean);
+  if (mine.length !== drawn.length) return Infinity;
+  const centre = (points) => points.reduce((sum, one) =>
+    [sum[0] + one[0] / points.length, sum[1] + one[1] / points.length], [0, 0]);
+  const spread = (points, mid) => Math.max(...points
+    .map((one) => Math.hypot(one[0] - mid[0], one[1] - mid[1]))) || 1;
+  const aMid = centre(drawn.map((dot) => dot.at));
+  const bMid = centre(mine);
+  const aSize = spread(drawn.map((dot) => dot.at), aMid);
+  const bSize = spread(mine, bMid);
+  let worst = 0;
+  drawn.forEach((dot, index) => {
+    const one = [(dot.at[0] - aMid[0]) / aSize, (dot.at[1] - aMid[1]) / aSize];
+    const two = [(mine[index][0] - bMid[0]) / bSize, (mine[index][1] - bMid[1]) / bSize];
+    worst = Math.max(worst, Math.hypot(one[0] - two[0], one[1] - two[1]));
+  });
+  return worst;
+}
+
+/**
  * Hold one emitted drawing to its kind — its elements, what every mark CLAIMS, and **where it is**.
  *
  * The geometry half is the one this gate was missing, and a proof-reader walked six mutations
@@ -703,9 +807,28 @@ function censusOf(svg, where) {
   // So the drawn positions are held to the convention's own: the same scale on both axes, the
   // orientation the convention fixes, and every dot where it belongs. A mirror makes the x-scale
   // negative, a flip makes the y-scale the wrong sign, and a displacement fits nothing.
-  const ORIENTATION = { net: -1, triangle: -1, ring: 1 };
+  // The wireframe is in this list now; it was exempt, which a reader was right to call out. What it
+  // is held to is the same as the flat conventions: **one scale on both axes**, against the engine's
+  // own points projected — by this check's own arithmetic — at the view the drawing best matches.
+  //
+  // One correction to the finding, measured rather than argued. A **flip** of the projection's
+  // vertical is a distortion and is caught. A **mirror of its horizontal is not a defect at all**:
+  // the threaded pair is centrally symmetric — every point has its negative in the set, which this
+  // check verifies from the engine's own coordinates — so the mirror image of any view *is* another
+  // view of the same object. Mirroring the opening view's x gives, to a residual of 0.000000, the
+  // projection at yaw 2.443 / pitch 0.654. Every dot stays correctly named and the picture stays a
+  // true orthographic projection, so there is nothing there to fail. The guard discriminates
+  // between distorting the object and looking at it from somewhere else, which is the distinction
+  // worth having.
+  // `project3d` already returns a screen-oriented pair — it negates the vertical itself — and
+  // `drawWire` scales it without a further flip, so the wireframe's vertical scale is positive
+  // where the flat conventions' is negative. Measured, not assumed: it comes out at +106.60.
+  const ORIENTATION = { net: -1, triangle: -1, ring: 1, wire: 1 };
   if (kind in ORIENTATION) {
-    const belong = draw.whereDotsBelong(kind);
+    // For the wireframe, the check projects the engine's own points itself — see `ownProject3d`.
+    const belong = kind === "wire"
+      ? ownWireDots(wireViewOf(svg))
+      : draw.whereDotsBelong(kind);
     const dotMarks = marks.filter((mark) => mark.element === "circle"
       && mark.named.some(([attribute]) => attribute === "dot"));
     const drawnByName = {};
@@ -1142,6 +1265,14 @@ function exact(cell) {
 }
 
 const report = [];
+// The narrowest gap between any two labels, anywhere. Not a rule — the rule is `LABEL_GAP`, and it
+// is enforced — but a **headroom** figure, printed on every run because a reader noticed it had
+// narrowed from 9.96px to 3.60px against a 3px rule between two rounds. Nothing was wrong: two
+// labels six pixels apart read as two labels. What had changed was that the placement was working
+// near its limit instead of comfortably inside it, and that is the kind of thing a project
+// remembers for one round and then forgets. Printed, it is observable instead.
+let tightest = Infinity;
+let tightestAt = "";
 let sums = 0;
 let stills = 0;
 for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
@@ -1392,6 +1523,12 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
           for (let j = i + 1; j < boxes.length; j += 1) {
             const a = boxes[i];
             const b = boxes[j];
+            const gap = Math.max(Math.max(a.x0 - b.x1, b.x0 - a.x1),
+              Math.max(a.y0 - b.y1, b.y0 - a.y1));
+            if (gap < tightest) {
+              tightest = gap;
+              tightestAt = `${slug} ${step.label}: "${a.text}" and "${b.text}"`;
+            }
             // The same gap the placement keeps, imported rather than chosen here, so the two cannot
             // drift apart. Merely not intersecting is not enough: a drawing whose closest pair had
             // four tenths of a pixel between them passed the first version of this test, and four
@@ -1419,6 +1556,23 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         if (!pattern.test(still)) {
           fail(`${slug} ${step.label}: the still has no ${what} — a still has to stand on its own, `
             + `because it is meant to end up in a chapter`);
+        }
+      }
+      // c1 · every class the drawing emits has a painting rule in the still's stylesheet.
+      //
+      // SVG's default is `stroke: none`, so a mark whose class the inlined stylesheet does not
+      // mention is **invisible in the downloaded file** while looking right on screen, where the
+      // page's own CSS paints it. That is exactly what happened to the leader: the one mark whose
+      // job is to say which label belongs to what did not render in a single still. And a still is
+      // the artefact meant to end up in a chapter, so it is the worst place for a mark to vanish.
+      for (const found of rendered.drawing.matchAll(/class="([^"]+)"/g)) {
+        for (const name of found[1].split(/\s+/)) {
+          if (!name || name === "strong") continue;
+          if (!SVG_STILL_STYLE_TEXT.includes(`.${name}`)) {
+            fail(`${slug} ${step.label}: the drawing emits class "${name}" and the still's `
+              + `stylesheet has no rule mentioning it — in the downloaded file that mark is `
+              + `painted by nothing`);
+          }
         }
       }
       stills += 1;
@@ -1464,6 +1618,10 @@ if (failures.length) {
 
 const totalWords = report.reduce((total, line) => Math.max(total, line.words), 0);
 const totalSteps = report.reduce((total, line) => total + line.steps, 0);
+process.stdout.write(
+  `core.test.mjs: the narrowest gap between two labels anywhere is `
+  + `${tightest.toFixed(2)}px against a ${LABEL_GAP}px rule — ${tightestAt}\n`,
+);
 process.stdout.write(
   `core.test.mjs: ${report.length} chapters, ${totalSteps} steps, every rendered number the `
   + `engine's, no digit typed, ${engine.calls.length} engine calls, the wireframe's `

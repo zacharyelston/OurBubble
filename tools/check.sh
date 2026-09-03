@@ -23,7 +23,15 @@
 #          the engine was vendored: there is one implementation now, so it no longer compares two —
 #          it holds the page to the engine. It needs node; without it that line reads "unverified"
 #          rather than passing. It also prints each page's reader-facing word count, which is the
-#          owner's budget and the thing most likely to drift back. See demos/DEMOS.md.
+#          owner's budget and the thing most likely to drift back.
+#        · and the demos' ATTACKS: every guard in that cross-check, with the mutation that proves it
+#          bites. Standing rule (2026-09-03): no new guard lands without its mutation, in the same
+#          commit. Five rounds running, a guard written to close a hole was found on the next read
+#          to have a hole of its own, and every one of those had been "tested" by an attack run once
+#          in a shell and thrown away. Each mutation is applied, the cross-check is required to
+#          complain BY NAME, and the file is restored; a mutation whose needle has gone stale fails
+#          too, which is how a refactor says an attack has stopped testing anything. See
+#          demos/DEMOS.md and demos/attacks.mjs.
 #   3. the three guards the edition check does not reach — `tools/engine_check.py` (the Python
 #      oracle recomputes the whole payload and must reproduce the vendored engine's bytes exactly),
 #      `tools/octahedron.py`'s own assertions (the geometry the octahedron chapter's appendix note

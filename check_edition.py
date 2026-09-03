@@ -753,6 +753,7 @@ DEMO_ASSETS = (
     "core.mjs", "core.test.mjs", "engine.mjs", "draw.mjs", "steps.mjs", "steps.json",
     "demo.css", "data/napkin.json",
 )
+DEMO_ATTACKS = DEMOS_DIR / "attacks.mjs"
 DEMO_STEPS = DEMOS_DIR / "steps.json"
 
 
@@ -1107,6 +1108,48 @@ def check_demo_cross_check(errors: List[str]) -> str:
         print(f"    {line.split(': ', 1)[1]}")
     return lines[-1].split(": ", 1)[1] if lines else "passed, with no summary line"
 
+
+
+def check_demo_attacks(errors: List[str]) -> str:
+    """Every guard in the demos' cross-check, with the mutation that proves it bites.
+
+    The standing rule this implements (2026-09-03): **no new guard lands without its mutation, in
+    the same commit.** Five rounds running, a guard written to close a hole was found on the next
+    read to have a hole of its own — a census that checked identity and not geometry, a sum check
+    keyed to a word, a paragraph rule whose window excluded the figures it existed for, a dot test
+    measuring centres instead of ink, a step enumerator that never typed anything. Every one of
+    those had been "tested" by an attack run once in a shell and thrown away.
+
+    So the attacks live in the repository and run here. Each applies one mutation, requires the
+    cross-check to complain **by name**, and restores the file. A mutation whose needle has gone
+    stale fails too, which is how a refactor says an attack has stopped testing anything instead of
+    passing quietly.
+
+    Needs node, like the cross-check itself; without it this reads `unverified` rather than passing.
+    """
+    import shutil
+    import subprocess
+
+    if not DEMO_ATTACKS.exists():
+        errors.append(f"demo attacks: {DEMO_ATTACKS.relative_to(EDITION_DIR)} is missing")
+        return "unavailable"
+    node = shutil.which("node")
+    if node is None:
+        return "unverified — node absent, so no guard was shown to bite"
+
+    finished = subprocess.run(  # noqa: S603 - a fixed argv, no shell
+        [node, str(DEMO_ATTACKS)],
+        capture_output=True, text=True, cwd=EDITION_DIR, timeout=900, check=False,
+    )
+    if finished.returncode != 0:
+        for line in (finished.stderr or "").splitlines():
+            if line.strip():
+                errors.append(f"demo attacks: {line.strip()}")
+        if not (finished.stderr or "").strip():
+            errors.append(f"demo attacks: node exited {finished.returncode} with nothing on stderr")
+        return "unavailable"
+    summary = [line for line in finished.stdout.splitlines() if line.startswith("attacks.mjs:")]
+    return summary[-1].split(": ", 1)[1] if summary else "passed, with no summary line"
 
 
 def check_engine_published(errors: List[str]) -> str:
@@ -1901,6 +1944,7 @@ def main() -> int:
     if not args.rendered:
         status(errors, "demo steps", lambda: check_demo_steps(errors))
         status(errors, "demo cross-check", lambda: check_demo_cross_check(errors))
+        status(errors, "demo attacks", lambda: check_demo_attacks(errors))
 
     appendix_file = str(manifest["appendix"]["file"])
     if appendix_file != APPENDIX_FILE:

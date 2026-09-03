@@ -230,8 +230,14 @@ is one more figure to go stale:
    run.** The declaration is by **column index**, and that is the whole point of its shape: the first
    version of this gate read the column *headed* "added up", and a proof-reader switched it off by
    renaming that column in the same edit that broke the arithmetic under it, then switched it off
-   again by moving the terms into a second table. Neither works now — a renamed heading changes
-   nothing, and a table that splits its terms away has rows of three numbers and must declare itself.
+   again by moving the terms into a second table. Neither of those works now, and it is worth being
+   exact about **why**, because the wording here has been wrong twice. The guard is the
+   **declaration**: a renamed heading changes nothing because the total is named by column index.
+   The heading and caption rules are a **word list** — a heuristic that catches a table which forgot
+   to declare, and one a table can still walk around by declaring `notASum` and printing wrong terms
+   with its total alone in a second single-number table. That escape is inside the documented
+   boundary; this file previously said it was closed, and it is not. What closes it is a reader.
+
    A heading that still reads like a total, with two or more printed numbers beside it, must *be* the
    declared column. Two further escapes closed on the fourth read: a packed terms cell **displaced**
    from its total by an intervening column, which the scan had looked for only immediately before it;
@@ -281,7 +287,26 @@ is one more figure to go stale:
    held to carrying its own stylesheet, its own title and description, and the firewall: 162 of them
    on every run.
 
+### No guard lands without the mutation that proves it bites
+
+**Standing rule, adopted 2026-09-03 after five rounds in which every new guard was found to have a
+hole in it on the next read.** A guard added without a mutation demonstrating it goes red is an
+untested guard, and this lane has shipped several: a census that checked identity and not geometry,
+a sum check keyed to a word, a paragraph rule whose window excluded the figures it was written for,
+a dot test that measured centres instead of ink, a step enumerator that never typed anything.
+
+So: **`demos/attacks.mjs` holds the mutation for every guard, the suite runs in tier 0, and a new
+guard lands in the same commit as the mutation that proves it.** The suite applies each mutation to
+a scratch copy of the module, runs the check, and requires it to go red — and requires the tree to
+be clean afterwards. A guard with no mutation is listed by name and fails.
+
+The second half of the rule is about commit messages, and it cost a round: **a message states only
+what its diff does.** One here narrated three fixes the diff did not contain, because a script
+aborted before writing and the message was composed from intent. That is the headline-lies class the
+whole repository is built to refuse, committed by the person who wrote the checks for it.
+
 ### What no check here can catch
+
 
 **Any value the engine produced, anywhere, put where it does not belong.** `cut.oct_dots` printed in
 the "lines" column reads as *six lines, twelve dots*; a tip named `A′` in a table beside a drawing
