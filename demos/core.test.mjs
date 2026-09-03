@@ -1243,13 +1243,17 @@ function censusOf(svg, where) {
     for (const [value, count] of Object.entries(drawn)) {
       if (count !== expected[value]) {
         fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" ${count} time(s), `
-          + `and the engine puts it in ${expected[value]} place(s)`);
+          + `and the engine puts it in ${expected[value] ?? "no"} place(s)`);
       }
     }
     // And the other direction, which the loop above cannot reach: a value drawn **nowhere** is not
     // a key of `drawn`, so it was invisible. One of the net's twelve strokes simply left out — a
     // whole line of the object missing from the picture — passed every gate; a mutation written for
     // the count rule found it. Iterating the engine's list instead of the drawing's is the fix.
+    //
+    // The constraint that buys, stated because it is real: a drawing of a convention with counted
+    // marks shows **every** one of them or none at all — all 65 net drawings do today, and a step
+    // that wanted to show a partial net would have to say so here rather than read as a bug.
     for (const [value, wanted] of Object.entries(expected)) {
       if (!drawn[value]) {
         fail(`${where}: the ${kind} drawing draws the ${attribute} "${value}" nowhere, and the `

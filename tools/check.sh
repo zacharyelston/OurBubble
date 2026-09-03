@@ -32,8 +32,9 @@
 #          engine/ under the system temp directory, the cross-check is run from the copy and
 #          required to complain BY NAME, and the copy is deleted: the working tree is never
 #          written, and git is asked afterwards whether that held. It also reports how many of the
-#          cross-check's own fail sites the mutations reached, against a committed baseline, so
-#          coverage that shrinks is red. A mutation whose needle has gone stale fails too, which is
+#          cross-check's own fail sites the mutations reached, against a committed baseline whose
+#          floor it may not fall below and which may not be edited down without dropping the sites
+#          it lists, so coverage cannot be walked down quietly. A mutation whose needle has gone stale fails too, which is
 #          how a refactor says an attack has stopped testing anything. The suite refuses to run on
 #          a dirty demos/ or engine/ and that line then reads "unverified" rather than failing. See
 #          demos/DEMOS.md and demos/attacks.mjs.

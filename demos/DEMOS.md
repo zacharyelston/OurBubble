@@ -269,7 +269,8 @@ is one more figure to go stale:
    intersected passed a drawing whose closest pair had four tenths of a pixel between them, and four
    tenths of a pixel on a screen is two numbers touching. The gap is one constant, exported from
    `draw.mjs` and imported by the check, so the placement and the check cannot drift apart. The
-   tightest pair anywhere is exactly at it, and the check prints it on every run. Three successive label *rules* were called fixed and were not, so the
+   tightest pair anywhere is within a hundredth of it, and the check prints the figure on every
+   run. Three successive label *rules* were called fixed and were not, so the
    placement no longer asserts: it **searches** a fixed ladder of positions out along the ray from
    each dot and takes the first that touches nothing, and this gate is what says it found one. Every
    drawing, in every state: no label on a stroke, none on a dot, no two labels overlapping. The net's *names* are
@@ -323,14 +324,30 @@ So the check enumerates every place in itself that can complain, reports the one
 the suite unions that over every mutation and prints it beside the pass count.
 `demos/attacks.baseline.json` records the split by each guard's own text, and **every site has a
 mutation as this lands.** A run that reaches fewer sites than the baseline's `floor` **fails** — the
-floor is the highest coverage the suite has ever had, and `--baseline` will not lower it, so
-coverage cannot be walked down by editing the file it is compared against. A site that appears with
-no mutation and no entry in the uncovered list fails; a baseline behind its own run fails, because a
-coverage file that is out of date is one more status that lies; and `if (false)`, `if (true)`,
-`&& false` and `|| true` are refused outright in these four modules, because that is how a guard is
-switched off while staying in the census. Rewrite the baseline with
+floor is the highest coverage the suite has ever had, `--baseline` will not lower it, and it may
+not sit below the number of covered sites the same file lists — so walking coverage down means
+deleting those entries too, one line each. And the last quiet way down is shut: **every site in the
+check has a mutation as this lands, so the uncovered list being empty is the invariant**, and a
+walk-down has to put a site back into it, which fails. A guard that genuinely cannot be mutated is
+then a reason to change that rule, in a commit saying which guard and why — which is the standard
+this whole file is for: not that the coverage file cannot be edited, but that editing it has to say
+what it is doing. A baseline behind its own run fails,
+because a coverage file that is out of date is one more status that lies; and the commonest ways of
+switching a guard off in place — `if (false)`, `if (true)`, `&& false`, `|| true` and their
+one-character cousins — are refused outright in the four modules the suite mutates. A regex cannot
+enumerate the ways to write *false*, which is the argument for a mutation per site rather than for a
+better regex: a guard gutted in a spelling the audit misses stops being able to complain, and its
+mutation stops being red. Rewrite the baseline with
 `node demos/attacks.mjs --baseline`, in the commit that changed the coverage — it refuses to write
 one from a run that is not green, and it names each site it is dropping.
+
+Those comparison rules live in the suite rather than in the check, where a mutation of the check
+cannot reach them — and the standing rule does not care where a guard lives. So the comparison is a
+pure function with **one case per rule**, each handed the edit it exists to refuse: a floor lowered
+to meet a worse run, coverage under the floor, a covered site nothing reaches any more, a site with
+no mutation, an edited census count, a missing floor, a baseline behind its run, and a run that
+matches its baseline exactly and must pass. A rule that stops firing on its own case fails the
+suite.
 
 Two of the mutations earned their place by finding holes rather than by demonstrating guards. A
 wireframe that draws no dots **crashed** the check instead of failing it. And one of the net's

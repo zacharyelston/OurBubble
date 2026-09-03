@@ -529,6 +529,154 @@ function runCheck(at, census = false) {
 const sitesIn = (output, what) => [...output.matchAll(new RegExp(`^core\\.test\\.mjs: ${what} (.*)$`, "gm"))]
   .map((found) => found[1]);
 
+/**
+ * What a baseline says about a run, as a list of complaints. Pure, and exported, so that every rule
+ * in it can be shown to fire — see `SELF_TEST` below.
+ *
+ * The rules, and what each is for:
+ *
+ *   · coverage under the floor — the floor is the highest coverage this suite has ever had;
+ *   · the floor under the file's own `reached` list — a reviewer walked coverage down by deleting a
+ *     mutation, moving its site into `uncovered`, and setting the floor to 0, all three in the file
+ *     the run is compared against, and the suite went green. The floor may not sit below what the
+ *     baseline itself records as covered, so lowering it means deleting those entries too, one line
+ *     each, in a diff that says what was dropped. A file is evidence a reviewer reads, not a lock;
+ *     what this buys is that walking coverage down cannot be done quietly;
+ *   · `sites` disagreeing with the census — an unread number in a checked-in file is a status
+ *     nobody verified;
+ *   · a missing floor — the one number a rewrite cannot lower on its own;
+ *   · a covered site gone unreached, and a site with no mutation and no entry in the uncovered
+ *     list: the standing rule, mechanised;
+ *   · and a baseline behind its own run, because a coverage file out of date is one more status
+ *     that lies.
+ */
+export function baselineProblems({ known, reached, covered, uncovered, baseline }) {
+  const problems = [];
+  const floor = Number.isFinite(baseline.floor) ? baseline.floor : 0;
+  const lost = (baseline.reached || []).filter((key) => known.includes(key) && !reached.has(key));
+  const grown = uncovered.filter((key) => !(baseline.uncovered || []).includes(key));
+  if (covered.length < floor) {
+    problems.push(`this run covers ${covered.length} fail site(s) and the baseline's floor is `
+      + `${floor}. The floor is the highest coverage this suite has had; it is lowered by hand, `
+      + `in a commit, or not at all`);
+  }
+  if (floor < (baseline.reached || []).length) {
+    problems.push(`the baseline's floor is ${floor} and it records `
+      + `${(baseline.reached || []).length} covered fail site(s). The floor is not allowed below `
+      + `what the file itself says is covered: lower it and the sites it drops come out with it`);
+  }
+  if (Number.isFinite(baseline.sites) && baseline.sites !== known.length) {
+    problems.push(`the baseline says core.test.mjs has ${baseline.sites} fail sites and it has `
+      + `${known.length}`);
+  }
+  if (!Number.isFinite(baseline.floor)) {
+    problems.push("the baseline has no coverage floor, and the floor is the one number in it "
+      + "that a rewrite cannot lower on its own");
+  }
+  if (lost.length) {
+    problems.push(`${lost.length} fail site(s) the baseline says are covered were not reached by `
+      + `any mutation:\n  ${lost.join("\n  ")}`);
+  }
+  if (uncovered.length) {
+    problems.push(`${uncovered.length} fail site(s) have no mutation:\n  `
+      + `${uncovered.join("\n  ")}\nEvery site in the check had one when this rule was written, so `
+      + `the list being empty is the invariant rather than the aspiration — and walking coverage `
+      + `down has to put a site back into it, which is this. A guard that genuinely cannot be `
+      + `mutated is a reason to change this rule, in a commit that says which guard and why`);
+  }
+  if (grown.length) {
+    problems.push(`${grown.length} fail site(s) have no mutation and are not in the baseline's `
+      + `uncovered list. The standing rule is that a guard lands with the mutation that proves `
+      + `it bites; if this one genuinely cannot be mutated, say so by listing it, in the same `
+      + `commit:\n  ${grown.join("\n  ")}`);
+  }
+  const behind = [...new Set([
+    ...covered.filter((key) => !(baseline.reached || []).includes(key)),
+    ...(baseline.uncovered || []).filter((key) => !uncovered.includes(key)),
+    ...(baseline.reached || []).filter((key) => !known.includes(key)),
+  ])];
+  if (behind.length && !lost.length && !grown.length) {
+    problems.push(`the baseline is behind this run at ${behind.length} site(s) — coverage went `
+      + `up or a site was renamed. Rewrite it with \`node demos/attacks.mjs --baseline\` in this `
+      + `commit, so the file keeps saying something true:\n  ${behind.join("\n  ")}`);
+  }
+  return problems;
+}
+
+/**
+ * One case per rule in `baselineProblems`, each a walk-down somebody actually tried.
+ *
+ * The rest of this file proves the CHECK's guards bite by mutating the modules under it. These
+ * rules are in the suite itself, where a mutation of the check cannot reach them — and the standing
+ * rule does not care where a guard lives. So each is handed the edit it exists to refuse, and is
+ * required to say so.
+ */
+const SELF_TEST = [
+  // Each case sits at the rule's **boundary** — the smallest edit it must refuse — because a case
+  // two or eight steps past the boundary lets the rule be relaxed by one and still pass its own
+  // test. A reviewer found both of those by weakening every numeric rule by one.
+  { case: "a floor one below what the same file records as covered",
+    known: ["one", "two"], covered: ["one"], uncovered: ["two"],
+    baseline: { sites: 2, floor: 1, reached: ["one", "two"], uncovered: [] },
+    say: "not allowed below" },
+  { case: "coverage one under the floor",
+    known: ["one", "two"], covered: ["one"], uncovered: ["two"],
+    baseline: { sites: 2, floor: 2, reached: ["one"], uncovered: ["two"] },
+    say: "The floor is the highest coverage" },
+  { case: "a covered site no mutation reaches any more",
+    known: ["one", "two"], covered: ["two"], uncovered: ["one"],
+    baseline: { sites: 2, floor: 1, reached: ["one"], uncovered: ["two"] },
+    say: "the baseline says are covered were not reached" },
+  { case: "a new fail site with no mutation and no entry",
+    known: ["one", "two"], covered: ["one"], uncovered: ["two"],
+    baseline: { sites: 2, floor: 1, reached: ["one"], uncovered: [] },
+    say: "have no mutation and are not in the baseline's" },
+  { case: "the census count edited by one",
+    known: ["one"], covered: ["one"], uncovered: [],
+    baseline: { sites: 2, floor: 1, reached: ["one"], uncovered: [] },
+    say: "fail sites and it has 1" },
+  { case: "a baseline with no floor at all",
+    known: ["one"], covered: ["one"], uncovered: [],
+    baseline: { sites: 1, reached: ["one"], uncovered: [] },
+    say: "has no coverage floor" },
+  { case: "a baseline behind a run that covers more",
+    known: ["one", "two"], covered: ["one", "two"], uncovered: [],
+    baseline: { sites: 2, floor: 2, reached: ["one", "two"], uncovered: ["two"] },
+    say: "is behind this run" },
+  { case: "a site with no mutation at all",
+    known: ["one", "two"], covered: ["one"], uncovered: ["two"],
+    baseline: { sites: 2, floor: 1, reached: ["one"], uncovered: ["two"] },
+    say: "the list being empty is the invariant" },
+  { case: "a run that matches its baseline exactly",
+    known: ["one", "two"], covered: ["one", "two"], uncovered: [],
+    baseline: { sites: 2, floor: 2, reached: ["one", "two"], uncovered: [] },
+    say: null },
+];
+
+/** Every rule in `baselineProblems` handed the edit it refuses, and required to refuse it. */
+function selfTestProblems() {
+  const out = [];
+  for (const one of SELF_TEST) {
+    const said = baselineProblems({
+      known: one.known,
+      reached: new Set(one.covered),
+      covered: one.covered,
+      uncovered: one.uncovered,
+      baseline: one.baseline,
+    });
+    if (one.say === null) {
+      if (said.length) {
+        out.push(`the baseline comparison complains about "${one.case}", which is the case it is `
+          + `supposed to pass: ${said.join(" / ")}`);
+      }
+    } else if (!said.some((problem) => problem.includes(one.say))) {
+      out.push(`the baseline comparison does NOT complain of "${one.say}" for "${one.case}" — `
+        + `that rule has stopped biting, and a coverage file nothing holds is a status that lies`);
+    }
+  }
+  return out;
+}
+
 function main() {
   const argument = process.argv[2];
   if (argument !== undefined && argument !== "--baseline") {
@@ -557,7 +705,7 @@ function main() {
   // The needle audit, before anything is copied. An attack whose needle is missing tests nothing;
   // an attack whose needle occurs twice mutates whichever comes first, which is a test of something
   // nobody chose.
-  const stale = [];
+  const stale = [...selfTestProblems()];
   const source = new Map();
   for (const attack of ATTACKS) {
     const at = path.resolve(HERE, attack.file);
@@ -586,11 +734,17 @@ function main() {
   // A guard whose condition is a literal cannot complain, and a coverage census cannot see the
   // difference: a reviewer turned eight uncovered guards into `if (false) {` with every mutation
   // still red and the coverage number unmoved. The site is still there, still enumerated, still
-  // listed as uncovered — and dead. So the shape is refused outright, in the check and in the three
-  // modules the check is written against.
+  // listed as uncovered — and dead. So the commonest spellings of it are refused outright, here and
+  // in the three modules the check is written against. This is belt and braces, not the defence:
+  // the same reviewer gutted four guards in spellings this does not match — `if (0)`,
+  // `x !== x`, `&& 0`, `!!0` — and coverage caught all four, four ways over. A regex cannot
+  // enumerate the ways to write `false`; a mutation per site does not have to.
   for (const file of ["core.test.mjs", "draw.mjs", "steps.mjs", "core.mjs"]) {
     const text = readFileSync(path.join(HERE, file), "utf8");
-    for (const found of text.matchAll(/if \(\s*(?:false|true)\s*[)&|]|&&\s*false\b|\|\|\s*true\b/g)) {
+    // Aimed at CONDITIONS, not at values: `Math.hypot(...) || 1` is a sensible default and there
+    // are several, so the short-circuit halves match the word literals only.
+    for (const found of text.matchAll(
+      /if \(\s*!*(?:false|true|[01])\s*[)&|]|&&\s*false\b|\|\|\s*true\b|(?<![\w.])([\w.]+)\s*[!=]==\s*\1(?![\w.])/g)) {
       stale.push(`${file} contains "${found[0]}", which is how a guard is turned off without `
         + `removing it: the site stays in the census and stops being able to complain. Delete the `
         + `guard if it is going, and let the diff say so`);
@@ -598,7 +752,7 @@ function main() {
   }
 
   // One run of the unmutated copy, which does two things: it says the copy is faithful (a green
-  // check in it), and it is where the names of all 92 fail sites come from.
+  // check in it), and it is where the name of every fail site comes from.
   const pristine = copyOfTheTree();
   const first = runCheck(pristine, true);
   const known = sitesIn(first, "fail-site-known");
@@ -705,42 +859,10 @@ function main() {
   }
 
   // A guard can be added, a mutation deleted, and the mutation count stay at "all of them red".
-  // Coverage is the number that notices, and the floor is what stops the baseline from being
-  // edited down to meet a worse run.
+  // Coverage is the number that notices; `baselineProblems` is where that comparison lives, and it
+  // is a pure function so the self-test above can hold each of its rules to firing.
   if (baseline) {
-    if (covered.length < floor) {
-      problems.push(`this run covers ${covered.length} fail site(s) and the baseline's floor is `
-        + `${floor}. The floor is the highest coverage this suite has had; it is lowered by hand, `
-        + `in a commit, or not at all`);
-    }
-    if (Number.isFinite(baseline.sites) && baseline.sites !== known.length) {
-      problems.push(`the baseline says core.test.mjs has ${baseline.sites} fail sites and it has `
-        + `${known.length}`);
-    }
-    if (!Number.isFinite(baseline.floor)) {
-      problems.push("the baseline has no coverage floor, and the floor is the one number in it "
-        + "that a rewrite cannot lower on its own");
-    }
-    if (lost.length) {
-      problems.push(`${lost.length} fail site(s) the baseline says are covered were not reached by `
-        + `any mutation:\n  ${lost.join("\n  ")}`);
-    }
-    if (grown.length) {
-      problems.push(`${grown.length} fail site(s) have no mutation and are not in the baseline's `
-        + `uncovered list. The standing rule is that a guard lands with the mutation that proves `
-        + `it bites; if this one genuinely cannot be mutated, say so by listing it, in the same `
-        + `commit:\n  ${grown.join("\n  ")}`);
-    }
-    const behind = [...new Set([
-      ...covered.filter((key) => !(baseline.reached || []).includes(key)),
-      ...(baseline.uncovered || []).filter((key) => !uncovered.includes(key)),
-      ...(baseline.reached || []).filter((key) => !known.includes(key)),
-    ])];
-    if (behind.length && !lost.length && !grown.length) {
-      problems.push(`the baseline is behind this run at ${behind.length} site(s) — coverage went `
-        + `up or a site was renamed. Rewrite it with \`node demos/attacks.mjs --baseline\` in this `
-        + `commit, so the file keeps saying something true:\n  ${behind.join("\n  ")}`);
-    }
+    problems.push(...baselineProblems({ known, reached, covered, uncovered, baseline }));
   }
 
   process.stdout.write(`attacks.mjs: ${red} of ${ATTACKS.length} mutations turned the check red · `
