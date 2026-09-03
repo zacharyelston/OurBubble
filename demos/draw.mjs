@@ -694,7 +694,14 @@ export function drawings(engine) {
       const value = values[name];
       body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} font-weight="700" x="${d2(lx)}" y="${d2(ly)}" font-size="19" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`);
       if (value !== undefined) {
-        body.push(`    <text class="value" x="${d2(lx)}" y="${d2(ly + 19)}" font-size="17" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+        // The number carries on outward past its own name, along the same ray, instead of dropping
+        // straight down onto whatever is under it. Dropping put four of the six values on a stroke
+        // or on their own dot; the halo made them legible and left them in the way.
+        const step = 20;
+        const [vx, vy] = ux === 0 && uy === 0
+          ? [lx, ly + step]
+          : [lx + ux * step * 0.75, ly + uy * step + (uy === 0 ? -step * 0.6 : 0)];
+        body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="17" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     }
     for (const index of shown) {

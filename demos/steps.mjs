@@ -29,8 +29,20 @@
 // **refuses any digit inside any string literal in it**. A count arrives as an engine value or it
 // does not arrive.
 
-/** A table: a caption, column headings, and rows. Labels on data, in DEMOS.md's sense. */
-const table = (caption, head, rows) => ({ caption, head, rows });
+/**
+ * A table: a caption, column headings, rows, and what its numbers mean to each other.
+ *
+ * That last part is `shape`, and it is not optional for a table whose rows carry three or more
+ * numbers. Either `{ total: i }` — column `i` is the sum of the numbers before it, and
+ * `core.test.mjs` adds them up on every row of every state and holds the two together — or
+ * `{ notASum: true }`, which says the numbers in a row are simply several numbers.
+ *
+ * It is declared by **column index** rather than found by reading the headings, because a
+ * proof-reader silenced the first version of that check by renaming a column from "added up" to
+ * "the total" in the same edit that broke the arithmetic under it. A guard a caption can switch off
+ * is not a guard.
+ */
+const table = (caption, head, rows, shape = null) => ({ caption, head, rows, shape });
 
 /** The chapters, in the book's order, each a list of steps. */
 export function chapterSteps(engine, draw) {
@@ -260,7 +272,8 @@ export function chapterSteps(engine, draw) {
                 ["what the steps so far cost you", "the whole way round"],
                 [[taken.map(([from, to]) => signed(walkTerms(edges)[
                   triangleLines.indexOf([corners[from], corners[to]].sort().join(""))]))
-                  .join("  ") || "nothing yet", home ? show(loop) : "not home yet"]]),
+                  .join("  ") || "nothing yet", home ? show(loop) : "not home yet"]],
+                { total: 1 }),
             ],
           };
         },
@@ -288,7 +301,7 @@ export function chapterSteps(engine, draw) {
               differenceTable(values, edges),
               table("what the whole walk comes to", ["the three terms, as the walk uses them",
                 "added up"],
-                [[walkTerms(edges).map(signed).join("  "), show(loop)]]),
+                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
             ],
           };
         },
@@ -341,7 +354,8 @@ export function chapterSteps(engine, draw) {
               table("what is still here", ["what", "how many"], censusRows(3)),
               table("what it has never had", ["a length", "a direction", "a clock"],
                 [["none", "none", "none"]]),
-              table("what the walk still comes to", ["added up"], [[show(loop)]]),
+              table("what the walk still comes to", ["added up"], [[show(loop)]],
+                { notASum: true }),
             ],
           };
         },
@@ -457,7 +471,7 @@ export function chapterSteps(engine, draw) {
                 ["the four terms, as the walk uses them", "added up"],
                 [[FACES.map((name, index) =>
                   signed(engine.contribution("tetrahedron", loops.loops, 2, index)[0])).join("  "),
-                  show(inside.loops[0])]]),
+                  show(inside.loops[0])]], { total: 1 }),
             ],
           };
         },
@@ -515,7 +529,7 @@ export function chapterSteps(engine, draw) {
                   ...KINDS.map((kind) => count(rung(4, kind))),
                   show(loops.sum),
                   show(inside.loops[0]),
-                ]]),
+                ]], { notASum: true }),
             ],
           };
         },
@@ -538,7 +552,8 @@ export function chapterSteps(engine, draw) {
 
     const runTable = (caption, history, totals, names) =>
       table(caption, ["tick", ...names, "added up"],
-        history.map((row, tick) => [String(tick), ...row.map(show), show(totals[tick])]));
+        history.map((row, tick) => [String(tick), ...row.map(show), show(totals[tick])]),
+        { total: names.length + 1 });
 
     const printableRow = (history, printable) => table("how far a napkin gets",
       ["rows it can write", "rows there are"], [[String(printable), count(history)]]);
@@ -559,7 +574,7 @@ export function chapterSteps(engine, draw) {
           }),
           tables: [
             table("the numbers, at this tick", ["tick", ...triangleNames],
-              [[String(state.tick), ...triangleCorners.map(show)]]),
+              [[String(state.tick), ...triangleCorners.map(show)]], { notASum: true }),
             table("what moved", ["ticks so far", "numbers that changed"],
               [[String(state.tick), show(ZERO)]]),
           ],
@@ -588,7 +603,7 @@ export function chapterSteps(engine, draw) {
                 rows.map((row, index) => [
                   rows.length === 1 ? "now" : (index === 0 ? "then" : "now"),
                   ...row.map(show),
-                ])),
+                ]), { notASum: true }),
               table("can the rule write the next row", ["rows it has", "rows it needs"],
                 [[count(rows), count(run.history.slice(0, 2))]]),
             ],
@@ -613,13 +628,12 @@ export function chapterSteps(engine, draw) {
             }),
             tables: [
               table("what the rule read, and what it wrote",
-                ["which row", ...triangleNames],
+                ["which row", ...triangleNames, "added up"],
                 [
-                  ["then", ...run.history[from].map(show)],
-                  ["now", ...run.history[state.tick].map(show)],
-                ]),
-              table("the tick it ran at", ["tick", "added up"],
-                [[show(run.k), show(run.totals[state.tick])]]),
+                  ["then", ...run.history[from].map(show), show(run.totals[from])],
+                  ["now", ...run.history[state.tick].map(show), show(run.totals[state.tick])],
+                ], { total: triangleNames.length + 1 }),
+              table("the tick it ran at", ["tick"], [[show(run.k)]], { notASum: true }),
             ],
           };
         },
@@ -676,7 +690,8 @@ export function chapterSteps(engine, draw) {
               table("every tick", ["tick", ...triangleNames, "added up",
                 "can a napkin write this row"],
                 run.history.map((row, tick) => [String(tick), ...row.map(show),
-                  show(run.totals[tick]), writable(tick)])),
+                  show(run.totals[tick]), writable(tick)]),
+                { total: triangleNames.length + 1 }),
               printableRow(run.history, printable),
               table("does it come home", ["tick", "back where it started every"],
                 [[show(run.k), run.period === 0 ? "never" : String(run.period)]]),
@@ -786,7 +801,7 @@ export function chapterSteps(engine, draw) {
               runTable("every tick so far", run.history.slice(0, state.tick + 1),
                 run.totals, NAMES),
               table("how many lines from one dot to another", ["from", ...NAMES],
-                hops.map((row, index) => [NAMES[index], ...row.map(String)])),
+                hops.map((row, index) => [NAMES[index], ...row.map(String)]), { notASum: true }),
               table("how far away anything is",
                 ["the furthest apart two dots are", "dots that moved by this tick"],
                 [[String(R.no_room.diameter), String(moved.length)]]),
@@ -890,7 +905,8 @@ export function chapterSteps(engine, draw) {
             tables: [
               table("every tick so far", ["tick", ...MID, "added up"],
                 run.history.slice(0, state.tick + 1).map((row, tick) =>
-                  [String(tick), ...row.map(show), show(run.totals[tick])])),
+                  [String(tick), ...row.map(show), show(run.totals[tick])]),
+                { total: MID.length + 1 }),
               // What has happened, not what is going to. Printing "ticks to cross 2" beside a
               // drawing at tick 0 hands her the answer before she has walked to it.
               table("where the poke has got to",
@@ -912,9 +928,13 @@ export function chapterSteps(engine, draw) {
         // "face 0 of 8" reads as a face that does not exist. The counter counts what she has done.
         controls: [{ kind: "tick", count: cut.oct_faces, noun: "faces walked" }],
         render: (state) => {
-          const last = state.tick >= cut.oct_faces;
-          const face = last ? null : state.tick;
-          const walked = faceSum.face_numbers.slice(0, last ? cut.oct_faces : state.tick + 1);
+          // One count, and everything reads off it. The walker used to say "faces walked 0" beside
+          // a table listing one, all the way up to "7 of 8" beside a table listing eight — two
+          // counters of the same thing disagreeing at eight of nine states. The tick IS the number
+          // walked: none at the start, the last of them at the end.
+          const walked = faceSum.face_numbers.slice(0, state.tick);
+          const last = walked.length === cut.oct_faces;
+          const face = state.tick === 0 || last ? null : state.tick - 1;
           return {
             drawing: last
               ? draw.drawRing({
@@ -930,12 +950,17 @@ export function chapterSteps(engine, draw) {
                 walked.map((value, index) => [
                   cut.mid_faces[index].map((i) => MID[i]).join(" · "), signed(value),
                 ])),
+              // The terms and the total in one table, so the check can add them up. They were in
+              // two, which is the other way a proof-reader silenced this guard.
               table("all of them added up",
-                ["faces walked", "faces there are", "added up",
-                  "lines walked, each way once"],
+                ["the faces walked so far", "added up"],
+                [[walked.map(signed).join("  ") || "none yet",
+                  last ? show(faceSum.sum) : "not all walked yet"]], { total: 1 }),
+              table("how far round it has got",
+                ["faces walked", "faces there are", "lines walked, each way once"],
                 [[count(walked), String(cut.oct_faces),
-                  last ? show(faceSum.sum) : "not all walked yet",
-                  last ? String(faceSum.lines_walked_each_way) : "not all walked yet"]]),
+                  last ? String(faceSum.lines_walked_each_way) : "not all walked yet"]],
+                { notASum: true }),
               table("what is on each face now", ["faces looking at a tip", "faces still bare"],
                 [[count(atATip), count(stillBare)]]),
             ],
@@ -1004,14 +1029,14 @@ export function chapterSteps(engine, draw) {
           tables: [
             table("count it", ["dots", "lines", "tips", "middles"],
               [[String(stella.dots), String(stella.lines), String(stella.tips),
-                String(stella.middles)]]),
+                String(stella.middles)]], { notASum: true }),
             table("how many lines leave each kind of dot",
               ["out of a tip", "out of a middle"],
               [[String(stella.tip_degree), String(stella.middle_degree)]]),
             table("what the drawing put on the paper",
               ["lines drawn", "lines the engine has", "dots drawn", "dots the engine has"],
               [[count(draw.wireframe().edges), String(stella.lines),
-                count(draw.wireframe().points), String(stella.dots)]]),
+                count(draw.wireframe().points), String(stella.dots)]], { notASum: true }),
             table("no two tips are joined", ["lines that join one tip to another"],
               [[count(draw.wireframe().edges
                 .filter(([a, b]) => a >= stella.middles && b >= stella.middles))]]),
@@ -1107,7 +1132,7 @@ export function chapterSteps(engine, draw) {
               refusal.ceilings.map((ceiling) => [
                 String(ceiling.dots), show(ceiling.stiffest), show(refusal.tick),
                 show(ceiling.bound), ceiling.holds ? "yes" : "no",
-              ])),
+              ]), { notASum: true }),
             table("how long the search for a repeat ran",
               ["ticks searched", "ticks that came home"],
               [[String(runaway.repeat_search_ticks),

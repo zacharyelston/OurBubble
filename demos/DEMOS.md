@@ -83,19 +83,33 @@ projected to a point costs twelve. It opens at
 > line it does not end, and no edge lost.**
 
 Twenty is the floor of the **score**, and it is worth being exact about what that does and does not
-say, because the first version of this paragraph overstated it and a proof-reader caught it.
+say. Two drafts of this paragraph have now overstated it and a proof-reader has caught both, so what
+follows is only what has been measured, and each figure has been measured three ways: by
+`viewCost` itself, by the reader's own independent re-implementation, and by counting crossings
+straight off the rendered SVG's coordinates with code that shares nothing with either.
 
 A sweep of 180 directions in each angle — thirty-two thousand four hundred of them — finds **no view
 scoring under twenty**, and 1 344 that score exactly twenty. Every one of those cheapest views has
-the same shape: **20 crossings, no dot on a line, no edge lost.** The coarse 72×72 sweep the code
-actually runs finds that same floor.
+the same shape: **20 crossings, no dot on a line it does not end, no edge lost.** The coarse 72×72
+sweep the code actually runs finds that same floor and opens on a view from it.
 
-It does **not** say that twenty crossings is the fewest possible. There are views with fewer — one
-straight down an axis has **none at all** — and every one of them buys that by lying worse somewhere
-else: that axis view stacks nineteen dots on lines they do not end and collapses six edges to points.
-That is why the score has three terms, and it is the honest form of the argument for leaving the
-plane: *every flat drawing of this object is either full of crossings or full of joins that are not
-there.*
+It does **not** say that twenty crossings is the fewest possible. It is not: the sweep contains eight
+directions with **no crossings at all**. What each of them does instead is worse and unmeasurable by
+eye — sixteen to twenty-three dots sitting on lines they do not end, and six of the thirty-six edges
+projected onto a point, so they are not in the picture at all.
+
+And at such a view the crossing count stops being a fact about the object and becomes a fact about a
+tolerance. In the opening view, sixteen pairs of lines meet at a shared end and twenty cross; at a
+view down an axis, **two hundred and twenty-eight** pairs *touch* — pass exactly through one another's
+endpoints or lie along one another — and whether you call each of those a crossing is a decision
+about how many decimal places you are willing to trust. That is exactly the disagreement two
+independent counts of this drawing produced, and it is the reason not to quote a degenerate view's
+crossings at all.
+
+Which is the honest form of the argument for leaving the plane, and it does not need the strong
+claim: *every flat drawing of this object is either full of crossings, or full of joins that are not
+there.* The score has three terms because those are the two ways it can go wrong, and the opening
+view is the one that takes all of the first kind and none of the second.
 
 **The step before the wireframe shows the octahedron and four tips only** — the four faces that look
 at a tip of the tetrahedron we cut — and not the whole threaded pair, which is the second half of the
@@ -165,24 +179,40 @@ said?** Eight gates:
    string literal is refused**, in any quote style, with `${…}` cut out because that is code. The
    same rule is held over the pages' HTML: no digit in any text a reader sees, which is why the beat
    ranges on the pages are written by JavaScript at run time.
-4. **The drawing is the census.** **Every stroke** the wireframe emits — labelled or not — is an
-   edge the engine exported, and every dot one of its vertices: thirty-six and fourteen, both
-   directions checked, and checked **by where the ends of each stroke actually are** rather than by
-   what the stroke says about itself. Both halves of that were holes, and both were found rather
-   than foreseen. A drawing that names its lines correctly and points them all at the wrong dot is
-   the failure a reader is invited to catch by counting; and an unlabelled stroke joining nothing to
-   nothing rode into a commit while the labelled count stayed at thirty-six. A drawing does not get
-   to decide which of its own marks are up for checking. The ring is held to drawing its twelve lines
-   with none crossing another. And a drawing's `<title>` and `<desc>` carry **no digit at all**: they
-   are prose, and prose about this object counts in words.
+4. **The drawing is the census.** The wireframe may emit **only** `svg`, `title`, `desc`, `g`,
+   `line`, `circle` and `text` — a whitelist, not a search — and every `line` is an edge the engine
+   exported, every `circle` one of its vertices: thirty-six and fourteen, both directions checked,
+   and checked **by where the ends of each stroke actually are** rather than by what the stroke says
+   about itself. Every one of those clauses is a hole that was walked through rather than foreseen.
+   A drawing that names its lines correctly and points them all at the wrong dot is the failure a
+   reader is invited to catch by counting. An unlabelled stroke joining nothing to nothing rode into
+   a commit while the labelled count stayed at thirty-six. And when that was fixed by counting every
+   `<line>`, the same stroke came back as a `<path>`. A drawing does not get to decide which of its
+   own marks are up for checking — not by leaving off a label, and not by choosing an element name.
+   The ring is held separately to drawing its twelve lines with none crossing another. And a
+   drawing's `<title>` and `<desc>` carry **no digit at all**: they are prose, and prose about this
+   object counts in words.
 5. **The steps are the outline's**, as above.
 6. **The words are under budget**, printed either way.
-7. **A printed sum is a sum.** Any table with a column headed *added up* or *the whole way round*
-   has the numbers printed beside it added up — on the digits a reader sees, in exact arithmetic —
-   and the two must agree. 591 of them on every run. This is the one part of the hole below that a
-   machine *can* close, and it is here because the hole was not hypothetical: this pass shipped two
-   walks whose printed terms did not add to their printed total, and a fresh reader found both by
-   doing the arithmetic the page invites her to do.
+7. **A table says what its numbers mean, and a total is a total.** Every table whose rows carry
+   three or more numbers declares itself — `{ total: i }`, meaning column `i` is the sum of the
+   numbers before it, or `{ notASum: true }`, meaning they are simply several numbers. A declared
+   total is added up here, on the digits a reader sees, in exact arithmetic: **614 of them on every
+   run.** The declaration is by **column index**, and that is the whole point of its shape: the first
+   version of this gate read the column *headed* "added up", and a proof-reader switched it off by
+   renaming that column in the same edit that broke the arithmetic under it, then switched it off
+   again by moving the terms into a second table. Neither works now — a renamed heading changes
+   nothing, and a table that splits its terms away has rows of three numbers and must declare itself.
+   A heading that still reads like a total, with two or more printed numbers beside it, must *be* the
+   declared column.
+
+   What it does not reach: a total of numbers the table does not print (a run's total beside a tick,
+   say) has no terms on the page to add, so it is reported, not checked. And a declaration can still
+   be deleted — that is a line a reviewer sees removed, not a caption edit.
+
+   It is here because the hole was not hypothetical: this pass shipped two walks whose printed terms
+   did not add to their printed total, and a fresh reader found both by doing the arithmetic the page
+   invites her to do.
 8. **Every still stands on its own.** The still button is the reason the drawing code exists, and it
    is the one surface a reader reaches by downloading rather than by looking — a proof-reader could
    not exercise it at all. So every step, in every state, is rendered to its still, and the still is
@@ -212,7 +242,14 @@ section or claims one twice, a tampered `engine/napkin.json`: all red. **Two got
 closed** — a wrong count hidden in an SVG description, closed by the no-digit rule on `<title>` and
 `<desc>`; and a wireframe whose every line pointed at the wrong dot while its `data-edge` attribute
 stayed honest, closed by resolving each stroke's ends to the nearest drawn dot and holding *that*
-pair to the census. The paragraph above is what remains.
+pair to the census.
+
+A second read of the same branch got four more past: a printed total whose column had been renamed;
+a printed total whose terms had been moved to another table; a stray stroke drawn as a `<path>`
+rather than a `<line>`; and two counters of the same thing disagreeing on the face-walk. **Six in
+all, then, and every one of them closed** — three by making a guard read the drawing's geometry or a
+table's declaration instead of its own labelling, one by a whitelist, one by deleting a second
+counter, and one by the arithmetic gate above. The paragraph above is what remains.
 
 One more thing this file has to say, because it cost something: **a reviewer and an author must not
 share a working tree.** The proof-reader for this pass worked in the author's worktree and reverted

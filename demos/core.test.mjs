@@ -151,10 +151,19 @@ const view = draw.wireDefaultView();
     const distance = Math.hypot(dot.x - x, dot.y - y);
     return best === null || distance < best.distance ? { dot, distance } : best;
   }, null);
-  // EVERY stroke, labelled or not. The first version of this gate matched only lines carrying a
-  // `data-edge`, and an unlabelled stroke joining nothing to nothing rode into a commit through it
-  // while the count stayed at thirty-six. A drawing does not get to decide which of its own marks
-  // are up for checking.
+  // EVERY mark, of every kind. Two versions of this gate have now been walked past: the first
+  // matched only lines carrying a `data-edge`, so an unlabelled stroke joining nothing to nothing
+  // rode into a commit while the count stayed at thirty-six; the second matched only `<line>`, so
+  // the same stroke came back as a `<path>`. A drawing does not get to decide which of its own
+  // marks are up for checking, and it does not get to decide by choosing an element name either.
+  // So the wireframe is held to a **whitelist**: these tags and no others.
+  const WIRE_TAGS = ["svg", "title", "desc", "g", "line", "circle", "text"];
+  for (const found of drawn.matchAll(/<([a-zA-Z][\w-]*)/g)) {
+    if (!WIRE_TAGS.includes(found[1])) {
+      fail(`the wireframe drew a <${found[1]}>, and it may only draw `
+        + `${WIRE_TAGS.join(", ")} — every mark in it has to be a line of the census or a dot`);
+    }
+  }
   const strokes = [...drawn.matchAll(/<line\b[^>]*>/g)].map((found) => found[0]);
   if (strokes.length !== payload.stella.lines) {
     fail(`the wireframe drew ${strokes.length} strokes; the engine has ${payload.stella.lines} `
@@ -399,12 +408,47 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
             + `every value goes in the drawing's text or in a table, where it is held to the engine`);
         }
       }
-      // Gate 7: a printed sum adds up. The terms are the numeric columns between the row's own
-      // label and the total, or — when a row packs them into one cell — that cell split on spaces.
+      // Gate 7: a table says what its numbers mean, and if it says "total" the total is right.
+      //
+      // Keyed on the table's **declaration**, not on its headings. The first version read the
+      // column headed "added up", and a proof-reader turned it off by renaming that column to "the
+      // total" in the same edit that broke the arithmetic under it — and turned it off again by
+      // moving the terms into a separate table. So now: any row carrying three or more numbers must
+      // be declared, one way or the other, and a heading that reads like a total must sit on the
+      // declared column. A table cannot go quiet by being edited; it can only go quiet by having
+      // its declaration deleted, which is a line a reviewer sees removed.
       for (const table of rendered.tables) {
-        const at = table.head.findIndex((head) =>
-          head === "added up" || head === "the whole way round");
-        if (at < 1) continue;
+        const shape = table.shape || null;
+        const numericRun = (row) => row.slice(1).filter((cell) => exact(cell) !== null).length;
+        const carriesNumbers = table.rows.some((row) => numericRun(row) >= 3);
+        if (carriesNumbers && shape === null) {
+          fail(`${slug} ${step.label}: "${table.caption}" puts three or more numbers in a row and `
+            + `does not say whether the last is their total. Declare { total: i } or `
+            + `{ notASum: true }`);
+          continue;
+        }
+        // A heading that reads like a total has to BE the declared total — but only when there are
+        // at least two printed numbers beside it for it to be the total of. A lone reported figure
+        // ("the total, at this tick", over numbers the table does not print) is not a sum this check
+        // could do, and demanding a declaration for it would teach the habit of declaring things
+        // that are not true.
+        const looksLikeTotal = table.head.findIndex((head, index) =>
+          index > 0
+          && /\b(added up|the whole way round|total|altogether|sum|comes to)\b/i.test(String(head))
+          && table.rows.some((row) => {
+            const packed = String(row[index - 1]).trim().split(/\s+/);
+            const before = packed.length > 1 && packed.every((term) => exact(term) !== null)
+              ? packed.length
+              : row.slice(1, index).filter((cell) => exact(cell) !== null).length;
+            return before >= 2;
+          }));
+        if (looksLikeTotal >= 0 && (!shape || shape.total !== looksLikeTotal)) {
+          fail(`${slug} ${step.label}: "${table.caption}" has a column headed `
+            + `"${table.head[looksLikeTotal]}", which reads as a total, and the table does not `
+            + `declare it as one`);
+        }
+        if (!shape || shape.total === undefined) continue;
+        const at = shape.total;
         for (const row of table.rows) {
           const total = exact(row[at]);
           if (total === null) continue;
