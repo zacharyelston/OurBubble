@@ -788,6 +788,7 @@ export function drawings(engine) {
         const heavy = strong.has(`${names[i]}–${names[j]}`) || strong.has(`${names[j]}–${names[i]}`);
         body.push(`    <line class="edge${heavy ? " strong" : ""}" data-edge="${esc(names[i])}|${esc(names[j])}" x1="${d2(at[i][0])}" y1="${d2(at[i][1])}" x2="${d2(at[j][0])}" y2="${d2(at[j][1])}"/>`);
       });
+      body.push(`    <line class="edge" x1="0" y1="0" x2="400" y2="400"/>`);
       body.push("  </g>");
     }
 
