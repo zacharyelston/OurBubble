@@ -211,13 +211,20 @@ said?** Ten gates:
    It is here because the hole was not hypothetical: this pass shipped two walks whose printed terms
    did not add to their printed total, and a fresh reader found both by doing the arithmetic the page
    invites her to do.
-8. **No label is struck through.** Every piece of text in every drawing, at every state, has its box
-   tested against every stroke and every dot in that drawing — read off the emitted SVG, not taken on
-   the placement code's word. Three successive label *rules* were called fixed and were not, so the
+8. **No label is struck through, and no two labels touch.** Every piece of text in every drawing, at
+   every state, has its box tested against every stroke, every dot **and every other label** in that
+   drawing — read off the emitted SVG, not taken on the placement code's word. The label-versus-label
+   half arrived last and by the worst route: the first version of the search dodged strokes
+   perfectly and put numbers on top of names, because it was handed a *copy* of its own record of
+   what it had already placed, so every number was positioned as though it were the first. A reader
+   found `0` and `−1` rendering as the single token `0−1` on chapter 2's net, twice. Two labels
+   touching is the wrong-noun defect in visual form, so none may — a name and its own number
+   included, since those must read as two things. Three successive label *rules* were called fixed and were not, so the
    placement no longer asserts: it **searches** a fixed ladder of positions out along the ray from
    each dot and takes the first that touches nothing, and this gate is what says it found one. 162
-   drawings, no label on a stroke, none on a dot. The net's *names* are exempt from the search and
-   not from the gate — CANON.md's rule 4 forbids moving them — so only their numbers are placed.
+   drawings: no label on a stroke, none on a dot, no two labels overlapping. The net's *names* are
+   exempt from the search and not from the gate — CANON.md's rule 4 forbids moving them — so only
+   their numbers are placed, and the fixed names are obstacles like any other ink.
 9. **The sweep figures in DEMOS.md are the sweep's.** Every number the crossings paragraph above
    quotes is asserted from the shipped 72×72 sweep, including the touching-pair counts at four
    tolerances. That paragraph carried a wrong measured figure in three consecutive rounds while every
@@ -380,7 +387,14 @@ a drawing with twelve or thirty-six lines through it will be wrong somewhere.
 So a label's position is **searched**. A fixed ladder of candidate spots — ten distances out from the
 dot, each swung to sixteen angles either side of the ray from the middle of the drawing — is tried in
 a fixed order, and the first spot whose box touches no stroke, no dot and no label already placed is
-taken. The ladder and the order are fixed, so the drawing is identical every time; gate 8 then checks
+taken. Beyond the ladder there is a coarse sweep outward, every ten degrees to a distance that covers
+any of these drawings, because a refused fraction like `−15/8` is a far wider box than a
+two-character name and the ladder is shaped for names.
+
+**Everything already on the paper counts**, and getting that wrong is how the search's first version
+went out: it was handed a filtered *copy* of its record of what it had placed, so `taken.push` went
+into a throwaway and each number was placed as if none of the others existed. The fixed names of the
+net — and the face name, which was the one box never recorded at all — are in the record too. The ladder and the order are fixed, so the drawing is identical every time; gate 8 then checks
 the *emitted SVG* rather than taking the placement code's word, so a ladder too short to find a clear
 spot fails the build instead of shipping a struck-through number.
 

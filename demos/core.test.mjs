@@ -563,8 +563,12 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
               : row.slice(1, index).filter((cell) => exact(cell) !== null).length;
             return before >= 2;
           });
+          // The column BEFORE the total is where terms stood up in a column live; counting the
+          // total's own column instead found one number (the total) and never fired. A proof-reader
+          // walked the original defect past exactly that: one term per row, so no row held three
+          // numbers, and the total alone under an "added up" heading.
           const downTheColumn = table.rows
-            .filter((row) => exact(row[index]) !== null).length >= 2;
+            .filter((row) => exact(row[index - 1]) !== null).length >= 2;
           return acrossARow || downTheColumn;
         });
         if (looksLikeTotal >= 0 && (!shape || shape.total !== looksLikeTotal)) {
@@ -602,6 +606,7 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
           .map((found) => [[+found[1], +found[2]], [+found[3], +found[4]]]);
         const marks = [...svg.matchAll(/<circle[^>]*cx="([-\d.]+)" cy="([-\d.]+)"/g)]
           .map((found) => [+found[1], +found[2]]);
+        const boxes = [];
         for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
           const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
           const size = /font-size="([\d.]+)"/.exec(found[1]);
@@ -612,6 +617,25 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
           }
           if (marks.some(([x, y]) => x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1)) {
             fail(`${slug} ${step.label}: the label "${found[2]}" is drawn on top of a dot`);
+          }
+          boxes.push({ ...box, text: found[2] });
+        }
+
+        // And against **each other**, which is the half this gate did not have. A proof-reader found
+        // "0" and "−1" rendering as the single token "0−1" on chapter 2's net, twice: the numbers
+        // were dodging every stroke and landing on the names, because the names were never in the
+        // placement's record of what it had already put down. Two numbers touching is the
+        // wrong-noun defect in visual form — a reader cannot tell which belongs to which name — so
+        // no two labels may overlap at all, a name and its own number included. They have to read
+        // as two things.
+        for (let i = 0; i < boxes.length; i += 1) {
+          for (let j = i + 1; j < boxes.length; j += 1) {
+            const a = boxes[i];
+            const b = boxes[j];
+            if (a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1) {
+              fail(`${slug} ${step.label}: the labels "${a.text}" and "${b.text}" overlap — on the `
+                + `page they read as one token, and a reader cannot tell which is which`);
+            }
           }
         }
       }

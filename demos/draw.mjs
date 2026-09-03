@@ -144,6 +144,28 @@ function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
       return [x, y];
     }
   }
+
+  // Last resort: a ring-by-ring sweep outward from the anchor, every ten degrees, out to a distance
+  // that covers any of these drawings. A refused fraction like −15/8 is a much wider box than a
+  // two-character name, and the ladder above — which is shaped for names — could not seat one of
+  // them on chapter 1's triangle. The sweep is still deterministic and still ordered nearest-first,
+  // so the drawing does not move; it just has somewhere left to look.
+  for (let out = 90; out <= 260; out += 10) {
+    for (let step = 0; step < 36; step += 1) {
+      // Alternating either side of the ray, so the nearest-to-the-ray clear spot wins.
+      const swing = (step % 2 === 0 ? 1 : -1) * Math.ceil(step / 2) * (Math.PI / 18);
+      const theta = angle + swing;
+      const x = anchor[0] + Math.cos(theta) * out;
+      const y = anchor[1] + Math.sin(theta) * out;
+      const box = textBox(x, y, text, size);
+      if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
+      if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
+        && dy >= box.y0 && dy <= box.y1)) continue;
+      if (taken.some((other) => boxesOverlap(box, other))) continue;
+      taken.push(box);
+      return [x, y];
+    }
+  }
   return null;
 }
 
@@ -430,11 +452,20 @@ export function drawings(engine) {
         // Searched from the name, biased toward the middle of the panel the name belongs to, which
         // is where the paper is emptiest.
         const ray = [cx - x || 0.001, cy - y || 0.001];
-        const spot = placeValue(netAt(label.anchor || label.at), [x, y], ray, value, size * 0.85,
-          netObstacles, netTaken.filter((_, other) => other !== index));
+        // `netTaken` is passed as itself, not as a filtered copy. It used to be
+        // `netTaken.filter(…)`, which built a new array on every call — so `placeClear`'s record of
+        // what it had already placed went into a throwaway and every number was positioned as
+        // though it were the first. A proof-reader found "0−1" rendering as one token in two places
+        // on chapter 2's net, which is the wrong-noun defect in visual form.
+        //
+        // A number also avoids its OWN name's box, not just the others': the two have to read as
+        // two things.
+        const spot = placeValue(netAt(label.at), [x, y], ray, value, size * 0.85,
+          netObstacles, netTaken);
         const [vx, vy] = spot === null
           ? (label.kind === "dot" ? stepToward([x, y], [cx, cy], size * 0.95) : [x, y + size * 1.05])
           : spot;
+        if (spot === null) netTaken.push(textBox(vx, vy, value, size * 0.85));
         body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="${d2(size * 0.85)}" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     });
@@ -520,6 +551,14 @@ export function drawings(engine) {
       dots: used.map((point) => at(point)),
     };
     const triTaken = [];
+    if (dots >= 3 && showFace) {
+      const faceName = payload.tetrahedron.face_names[0];
+      const [fx, fy] = at(centroid(used));
+      triTaken.push(textBox(fx, fy - (values[faceName] === undefined ? 0 : 12), faceName, 28));
+      if (values[faceName] !== undefined) {
+        triTaken.push(textBox(fx, fy + 18, values[faceName], 26));
+      }
+    }
     const nameSpots = [];
     used.forEach((point, index) => {
       const [dx, dy] = at(point);
@@ -547,6 +586,7 @@ export function drawings(engine) {
         const ray = [mx - ax || 0.001, my - ay || 0.001];
         const spot = placeValue(at(point), [ax, ay], ray, value, 30, triObstacles, triTaken);
         const [vx, vy] = spot === null ? stepToward([ax, ay], at(middle), 32) : spot;
+        if (spot === null) triTaken.push(textBox(vx, vy, value, 30));
         body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="30" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     });
@@ -562,6 +602,7 @@ export function drawings(engine) {
           const ray = [mx - x || 0.001, my - y || 0.001];
           const spot = placeValue(at(midpoint), [x, y], ray, value, 24, triObstacles, triTaken);
           const [vx, vy] = spot === null ? [x, y + 26] : spot;
+          if (spot === null) triTaken.push(textBox(vx, vy, value, 24));
           body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="24" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
         }
       }
@@ -849,6 +890,7 @@ export function drawings(engine) {
       const text = value === undefined ? names[index] : `${names[index]} ${value}`;
       const spot = placeClear(dot, ray, text, 15, obstacles, taken);
       const [x, y] = spot === null ? [dot[0], dot[1] - 22] : spot;
+      if (spot === null) taken.push(textBox(x, y, text, 15));
       body.push(`    <text class="tip" x="${d2(x)}" y="${d2(y)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`);
     }
     body.push("  </g>");
@@ -966,6 +1008,7 @@ export function drawings(engine) {
       const [lx, ly] = spot === null
         ? [at[index][0] + ray[0] * 24, at[index][1] + ray[1] * 24]
         : spot;
+      if (spot === null) wireTaken.push(textBox(lx, ly, text, 15));
       body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} x="${d2(lx)}" y="${d2(ly)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(text)}</text>`);
     });
     body.push("  </g>");
