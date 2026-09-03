@@ -503,3 +503,12 @@ for the same reason — `demos/` and `engine/` are siblings in both trees — bu
 
 The pages are ES modules and they instantiate WebAssembly, so `file://` will not do; they need a
 server, any server.
+
+**One trap, which has now caught both a writer and a reader of this repository.** mdBook *copies*
+`demos/*.mjs` into `book/demos/`; they are not symlinks. So a server left running across a rebuild
+serves a page whose HTML looks current while the browser holds the previous modules from its cache,
+and a cache-busting query on the HTML does not help, because the page imports `./core.mjs` without
+one. A proof-reader reported a defect twice from a build like that, and the author took two
+screenshots of a fix that was not on screen. If a change does not appear: stop the server, rebuild,
+start it on a **new port**, and load the page fresh — or check the drawing by rendering it under
+node, which is what the checks do and what settled every measurement in this lane's last two rounds.
