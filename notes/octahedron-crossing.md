@@ -1,10 +1,18 @@
 > **Provenance note (2026-09-02).** Issue #28 chartered this file as *octahedron-timekeeper.md*; the
 > owner reframed the question mid-lane ("we don't have to call it time — it's information transfer")
-> and the file was renamed to *crossing* without the rename being recorded. Recorded here. The
-> verdicts below test ONE reading — the bare octahedron, 0-forms, a time-symmetric leapfrog — and say
-> nothing about the family's actual claim (a one-way screw on the chiral periodic mesh, 1-forms),
-> which remains open: see UniForge `lab/napkin/0002-octahedron-clock-review/review.md` (issue #356).
-> "Computed FALSE" is warranted only for *a tick is not a trip round the bare octahedron*.
+> and the file was renamed to *crossing* without the rename being recorded. Recorded here.
+>
+> **What is scoped how, because one scope was doing the work of two** (a proofreader, 2026-09-02).
+> The rows below fall into two kinds. **Rows 1, 2, 4 and 6 are counts and closures on the record's
+> own chiral periodic tiling** — the `6³` and `12³` meshes, the face pairing, the line census, the
+> line-visit comparison, the hull — and they stand as counts: they are what that mesh contains,
+> whatever a rule does on it. **Rows 3 and 5 are readings of the tick**, and they test ONE reading:
+> the bare octahedron, 0-forms, a time-symmetric leapfrog. They say nothing about the family's actual
+> claim — a one-way screw on the chiral periodic mesh, on 1-forms — which remains open: see UniForge
+> `lab/napkin/0002-octahedron-clock-review/review.md` (issue #356). So "computed FALSE" as a verdict
+> on *the octahedron and time* is warranted only for *a tick is not a trip round the bare
+> octahedron*; where FALSE appears in rows 2 and 6 it is a count that came out otherwise than the
+> proposal said, on the mesh the record builds.
 
 # The octahedron as the crossing between cells — what the numbers say
 
@@ -32,7 +40,7 @@ FIREWALL: this is arithmetic on a toy DEC lattice. Nothing here is a claim about
 | 2 | **THE CROSSING** — no tetrahedron shares a face with another, so every transfer between tetrahedra crosses an octahedron | **TRUE at the face level, FALSE at the line level** | 864 tetrahedron faces and 864 octahedron faces on the 6³ torus, a perfect 1:1 pairing — but two tetrahedra do share **lines**, and a transfer takes one step across one |
 | 3 | **TRANSFER COUNTS** — a step is "how long it takes to go round the octahedron" | **FALSE** | crossing the octahedron is **2** steps; spike → adjacent spike **2**, → opposite spike **3**; the octahedron's own return is **12** steps and moves when the step size does |
 | 4 | **EFFICIENCY** — gathering at the octahedron is cheaper than working tetrahedron by tetrahedron | **SAME-WORK** on the motif, **worse** on the tiling | 37 line-visits either way on the motif; 1404 vs 756 (**13/7×**) on the 6³ torus |
-| 5 | **"must complete its calculation before the cube is stable"** | **UNDEFINED** — there is no such ordering | the leapfrog is synchronous: one step reads only the previous step, so nothing completes before anything else |
+| 5 | **"must complete its calculation before the cube is stable"** | **UNDEFINED under the rule tested** — no such ordering | under the synchronous leapfrog on 0-forms one step reads only the previous step, so nothing completes before anything else; whether the screw introduces an ordering is the review's question |
 | 6 | **"8 tetrahedra + 1 octahedron = the stella octangula, hull a cube"** | **TRUE of the motif, FALSE as the tile** | the stella fills **1/2** of its own hull cube (volume 4 of 8); each tetrahedron sits in **4** stellae, so the stellae cover space **2×** over |
 
 ---
@@ -180,11 +188,12 @@ worse, and for a reason that is itself the interesting finding: **each octahedro
 octahedra**, so an octahedron-by-octahedron sweep picks 12 of every octahedron's 13 lines up twice.
 It does beat the naive per-dot gather (13/14×), but the napkin was never doing that.
 
-## 5 · "must complete its calculation before the cube is stable" — UNDEFINED
+## 5 · "must complete its calculation before the cube is stable" — UNDEFINED under the rule tested
 
-There is no ordering in the rule for this to be a statement about. One step of the leapfrog computes
-every dot's next number from the *previous* step's numbers alone; nothing inside a step waits for
-anything else inside that step, and nothing completes first. The nearest true statement is the
+Under the synchronous leapfrog on 0-forms there is no such ordering; whether the screw introduces
+one is the review's question. In the rule tested here there is no ordering for this to be a
+statement about at all. One step computes every dot's next number from the *previous* step's numbers
+alone; nothing inside a step waits for anything else inside that step, and nothing completes first. The nearest true statement is the
 transfer count in §3: a disturbance needs 2 steps to reach an adjacent spike and 3 to reach the
 opposite one, and every one of those paths spends its intermediate steps on octahedron dots. That is
 a distance, not a dependency.

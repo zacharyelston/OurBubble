@@ -223,6 +223,7 @@ def stella() -> Dict[str, Any]:
         "dots": group["dots"], "lines": group["lines"],
         "middles": group["middles"], "tips": group["tips"], "added": group["added"],
         "middle_degree": group["middle_degree"], "tip_degree": group["tip_degree"],
+        "apex_share": q(group["apex_share"]),
         "apex_names": list(group["apex_names"]),
         "names": list(group["names"]),
         "edges": cells(group["edges"]),

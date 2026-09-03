@@ -269,6 +269,14 @@ def shows_exactly(name: str, fragment: str, expected: Sequence[Fraction]) -> Non
 #: append a contradicting clause — "the pair never returns … though it comes home every four after
 #: that" — and every check stays green (a proofreader, tranche D round 2). A pin says the right
 #: words are present. This says the wrong ones are not.
+#:
+#: **Two things about its strength, both found by attacking it** (the same proofreader, round 3).
+#: The test normalises whitespace before it looks, because it did not, and a newline inside a
+#: refused phrase walked straight through while the browser rendered the phrase intact — Markdown
+#: collapses the break and the substring test did not. And it is a denylist, so a phrasing nobody
+#: listed still passes: "returns to its start every four after that" published beside "never
+#: returns". It raises the cost of a contradicting caption; it cannot be complete, and a token whose
+#: verdict matters should build that verdict from the data as well as refusing its opposite.
 REFUSED_IN_CAPTION: Dict[str, List[str]] = {}
 
 
@@ -297,9 +305,11 @@ def checked_block(name: str, body: str, what: str,
     carries(name, text, **values)
     if in_caption:
         carries(f"{name}'s caption", what, **in_caption)
-    lowered = what.casefold()
+    # Normalised, not merely lowered: a line break inside a refused phrase is invisible to a reader
+    # (Markdown collapses it) and was invisible to this test until it was attacked.
+    lowered = " ".join(what.casefold().split())
     for phrase in REFUSED_IN_CAPTION.get(name, []):
-        assert phrase.casefold() not in lowered, (
+        assert " ".join(phrase.casefold().split()) not in lowered, (
             f"{name}'s caption says {phrase!r}, which this token's own arithmetic refuses — see "
             f"napkin.REFUSED_IN_CAPTION"
         )
@@ -308,6 +318,11 @@ def checked_block(name: str, body: str, what: str,
 
 def carries(name: str, body: str, **values: str) -> str:
     """Assert the rendered text actually contains the values that were computed. Returns `body`.
+
+    **Registration is opt-in, so an unregistered number is an unchecked number** — pass every value
+    the sentence leans on, and pass it inside the phrase that says what it is a value OF: a bare
+    fraction is found wherever it appears in the block, so two of them can be swapped between their
+    nouns with every check still green (a proofreader, tranche D round 3).
 
     Why this exists, in the words of the attack that found it (a proofreader, 2026-09-02): the
     tokens "assert their *inputs* and render their *outputs*, and nothing checks that the rendered
@@ -1013,6 +1028,35 @@ def stella_counts() -> str:
     assert both["in_tetrahedra"] == Fraction(3, 2), (
         f"the pair came out {both['in_tetrahedra']} of the tetrahedron we cut"
     )
+    # The sum she is invited to do in her head, checked before she is invited to do it: the one
+    # tetrahedron she cut, plus the four she added at an eighth of it each.
+    assert both["in_tetrahedra"] == 1 + both["added"] * both["apex_share"], (
+        f"{both['in_tetrahedra']} is not one tetrahedron plus {both['added']} at "
+        f"{both['apex_share']} each — the arithmetic the block asks the reader to do does not close"
+    )
+    # R3-5 (proofread, tranche D round 3): a bare fraction is checked wherever it appears in the
+    # block, so swapping two of them between their nouns published "1/2 of the tetrahedron you cut"
+    # beside "3/2 of the cube" — a pair filling three halves of the box it fits in — and every check
+    # passed. Each share is built and asserted inside the phrase that says what it is a share OF.
+    share = f"{fraction_text(both['in_tetrahedra'])} of the tetrahedron you cut"
+    cube = f"{fraction_text(both['in_its_cube'])} of the cube whose eight corners the tips are"
+    added = f"the {word(both['added'])} you added at {fraction_words(both['apex_share'])} of it each"
+    # And the phrases are read back and held to what their own nouns mean, which is the only part of
+    # this that a rewritten builder cannot walk through: swapping the two values between the two
+    # nouns passed every other check (a proofreader, tranche D round 3), and a pair that is SMALLER
+    # than the tetrahedron it was cut from and added to, or BIGGER than the cube it sits inside, is
+    # refused here by arithmetic on the rendered characters rather than by the code that wrote them.
+    written_share = Fraction(share.split(" of ", 1)[0])
+    written_cube = Fraction(cube.split(" of ", 1)[0])
+    assert written_share > 1, (
+        f"the block says the pair is {written_share} of the tetrahedron it was cut from and added "
+        f"to — it cannot be smaller than that tetrahedron, so this share is against the wrong noun"
+    )
+    assert written_cube < 1, (
+        f"the block says the pair fills {written_cube} of the cube whose corners its tips are — it "
+        f"sits inside that cube, so this share is against the wrong noun"
+    )
+
     body = (
         "| | dots | lines |\n"
         "|---|---|---|\n"
@@ -1023,9 +1067,9 @@ def stella_counts() -> str:
         f"you started with and the four the second tetrahedron brought "
         f"({' · '.join(both['apex_names'])}). Every middle has {both['middle_degree']} lines and "
         f"every tip has {both['tip_degree']}, and **no two tips are joined at all**, so nothing "
-        f"gets from one tip to another without going through the middle. Together they take up "
-        f"{fraction_text(both['in_tetrahedra'])} of the tetrahedron you cut, and fill "
-        f"{fraction_text(both['in_its_cube'])} of the cube whose eight corners the tips are."
+        f"gets from one tip to another without going through the middle. Together they come to half "
+        f"again as much room as the tetrahedron you cut — {share}, which is that tetrahedron plus "
+        f"{added} — and they fill {cube}."
     )
     # Phrases, not bare digits: a "6" on its own is in the table too, so asserting the digit would
     # let a literal into the sentence beside it. The attack that found this typed "The 15 are…"
@@ -1041,8 +1085,7 @@ def stella_counts() -> str:
         middle_degree=f"Every middle has {both['middle_degree']} lines",
         tip_degree=f"every tip has {both['tip_degree']}",
         apexes=" · ".join(both["apex_names"]),
-        in_its_cube=fraction_text(both["in_its_cube"]),
-        in_tetrahedra=fraction_text(both["in_tetrahedra"]),
+        in_its_cube=cube, in_tetrahedra=share, added=added,
         in_caption={"middles": f"its own {word(both['middles'])} middles",
                     "tips": f"the {word(both['tips'])} tips"})
 
