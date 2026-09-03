@@ -82,34 +82,32 @@ projected to a point costs twelve. It opens at
 > **yaw 5.585, pitch −0.654 radians** (320° and −37.5°), with **20 crossings, no dot sitting on a
 > line it does not end, and no edge lost.**
 
-Twenty is the floor of the **score**, and it is worth being exact about what that does and does not
-say. Two drafts of this paragraph have now overstated it and a proof-reader has caught both, so what
-follows is only what has been measured, and each figure has been measured three ways: by
-`viewCost` itself, by the reader's own independent re-implementation, and by counting crossings
-straight off the rendered SVG's coordinates with code that shares nothing with either.
+Twenty is the floor of the **score**, and this paragraph is under a rule of its own, because it has
+been wrong three rounds running. Every figure in it is asserted by a gate — `SWEEP` in
+`core.test.mjs`, checked on every build — and **it may quote no figure that gate does not assert.**
+A number that turns out to be wrong here gets deleted rather than corrected. The sweep it describes
+is the 72×72 one the shipped code actually runs, the one that chooses the view a reader opens on.
 
-A sweep of 180 directions in each angle — thirty-two thousand four hundred of them — finds **no view
-scoring under twenty**, and 1 344 that score exactly twenty. Every one of those cheapest views has
-the same shape: **20 crossings, no dot on a line it does not end, no edge lost.** The coarse 72×72
-sweep the code actually runs finds that same floor and opens on a view from it.
+Over those **5 184 directions**: no view scores under **20**, **200** of them score exactly twenty,
+and every single one of those has the same shape — **20 crossings, no dot on a line it does not end,
+no edge lost.**
 
-It does **not** say that twenty crossings is the fewest possible. It is not: the sweep contains eight
-directions with **no crossings at all**. What each of them does instead is worse and unmeasurable by
-eye — sixteen to twenty-three dots sitting on lines they do not end, and six of the thirty-six edges
-projected onto a point, so they are not in the picture at all.
+It does **not** say twenty crossings is the fewest possible. **12** of the directions have no
+crossings at all, and every one of them projects **6** of the thirty-six edges onto a point, so those
+edges are not in the picture to be counted.
 
-And at such a view the crossing count stops being a fact about the object and becomes a fact about a
-tolerance. In the opening view, sixteen pairs of lines meet at a shared end and twenty cross; at a
-view down an axis, **two hundred and twenty-eight** pairs *touch* — pass exactly through one another's
-endpoints or lie along one another — and whether you call each of those a crossing is a decision
-about how many decimal places you are willing to trust. That is exactly the disagreement two
-independent counts of this drawing produced, and it is the reason not to quote a degenerate view's
-crossings at all.
+And at such a view the crossing count stops being a fact about the object. What separates a usable
+view from a degenerate one is how many pairs of lines *touch* — pass through one another's endpoints,
+or lie along one another — because for a touching pair, whether you call it a crossing is a decision
+about arithmetic tolerance rather than about the shape. At the opening view **48** unrelated pairs
+touch. Down an axis, **228** do. Both figures hold steady across four orders of magnitude of
+tolerance, which is exactly what the crossing count of a degenerate view does not do: two careful
+counts of the same axis view disagreed, 8 against 18, and both were honest.
 
-Which is the honest form of the argument for leaving the plane, and it does not need the strong
-claim: *every flat drawing of this object is either full of crossings, or full of joins that are not
-there.* The score has three terms because those are the two ways it can go wrong, and the opening
-view is the one that takes all of the first kind and none of the second.
+That is the argument for leaving the plane, and it does not need the strong claim: *every flat
+drawing of this object is either full of crossings, or full of joins that are not there.* The score
+has three terms because those are the two ways it can go wrong, and the opening view is the one that
+takes all of the first kind and none of the second.
 
 **The step before the wireframe shows the octahedron and four tips only** — the four faces that look
 at a tip of the tetrahedron we cut — and not the whole threaded pair, which is the second half of the
@@ -166,7 +164,7 @@ fact about the object rather than about a program. The pages themselves read `..
 
 It used to compare **two implementations** and it no longer can, because there is one. So
 [`core.test.mjs`](core.test.mjs) asks a different question: **does the page show what the engine
-said?** Eight gates:
+said?** Ten gates:
 
 1. **The engine is the engine.** The vendored wasm answers the census question with the vendored
    JSON's own bytes — byte for byte, not value for value.
@@ -213,7 +211,18 @@ said?** Eight gates:
    It is here because the hole was not hypothetical: this pass shipped two walks whose printed terms
    did not add to their printed total, and a fresh reader found both by doing the arithmetic the page
    invites her to do.
-8. **Every still stands on its own.** The still button is the reason the drawing code exists, and it
+8. **No label is struck through.** Every piece of text in every drawing, at every state, has its box
+   tested against every stroke and every dot in that drawing — read off the emitted SVG, not taken on
+   the placement code's word. Three successive label *rules* were called fixed and were not, so the
+   placement no longer asserts: it **searches** a fixed ladder of positions out along the ray from
+   each dot and takes the first that touches nothing, and this gate is what says it found one. 162
+   drawings, no label on a stroke, none on a dot. The net's *names* are exempt from the search and
+   not from the gate — CANON.md's rule 4 forbids moving them — so only their numbers are placed.
+9. **The sweep figures in DEMOS.md are the sweep's.** Every number the crossings paragraph above
+   quotes is asserted from the shipped 72×72 sweep, including the touching-pair counts at four
+   tolerances. That paragraph carried a wrong measured figure in three consecutive rounds while every
+   number on the pages was gated; this is the gate it was missing.
+10. **Every still stands on its own.** The still button is the reason the drawing code exists, and it
    is the one surface a reader reaches by downloading rather than by looking — a proof-reader could
    not exercise it at all. So every step, in every state, is rendered to its still, and the still is
    held to carrying its own stylesheet, its own title and description, and the firewall: 162 of them
@@ -360,6 +369,24 @@ else*. On a net, "the opposite dot" is two or three marks on the paper.
 
 Above. The charter's condition for leaving the plane was that 2-D genuinely could not show the step,
 and the crossings count is the evidence: twenty is the floor.
+
+### Where a label goes: searched, not ruled
+
+Three successive label *rules* were called fixed and were not — a fixed step outward, then a fixed
+step down, then a fixed step outward along the ray — and each time a proof-reader counted names and
+numbers struck through by the very line they belonged to. A rule that has to be right everywhere on
+a drawing with twelve or thirty-six lines through it will be wrong somewhere.
+
+So a label's position is **searched**. A fixed ladder of candidate spots — ten distances out from the
+dot, each swung to sixteen angles either side of the ray from the middle of the drawing — is tried in
+a fixed order, and the first spot whose box touches no stroke, no dot and no label already placed is
+taken. The ladder and the order are fixed, so the drawing is identical every time; gate 8 then checks
+the *emitted SVG* rather than taking the placement code's word, so a ladder too short to find a clear
+spot fails the build instead of shipping a struck-through number.
+
+**The net's names are exempt from the search and not from the gate.** `CANON.md`'s rule 4 forbids
+moving a label to wherever it fits, and the net's nineteen positions are the engine's, so they stay;
+what is searched there is only where a *number* sits beside a name, which was never CANON's to say.
 
 ### No colour means anything
 

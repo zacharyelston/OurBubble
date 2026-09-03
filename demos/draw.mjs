@@ -88,6 +88,65 @@ const TIP_DOT_CLEARANCE = 3;
 const TIP_OUTSIDE = RING_OUTER + 62;
 const TIP_ABOVE = RING_OUTER + 132;
 
+/**
+ * Does a piece of text's box touch a line, or a dot, or another piece of text?
+ *
+ * Exported because `core.test.mjs` re-runs it on the emitted SVG rather than trusting that this
+ * file ran it. A label is a rectangle roughly six tenths of its font size wide per character and one
+ * font size tall; that is generous, which is the direction to be generous in.
+ */
+export function textBox(x, y, text, size) {
+  const width = String(text).length * size * 0.62;
+  return { x0: x - width / 2, x1: x + width / 2, y0: y - size * 0.6, y1: y + size * 0.6 };
+}
+
+const boxesOverlap = (a, b) => a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+
+/** Does a box meet a segment? Corners in, or the segment crossing any of its four sides. */
+export function boxMeetsSegment(box, from, to) {
+  const inside = ([x, y]) => x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1;
+  if (inside(from) || inside(to)) return true;
+  const sides = [
+    [[box.x0, box.y0], [box.x1, box.y0]], [[box.x1, box.y0], [box.x1, box.y1]],
+    [[box.x1, box.y1], [box.x0, box.y1]], [[box.x0, box.y1], [box.x0, box.y0]],
+  ];
+  return sides.some(([a, b]) => segmentsCross(from, to, a, b));
+}
+
+/**
+ * Where a label goes: the first candidate place that touches nothing.
+ *
+ * The ring's labels used to be placed by a rule — outward from the centre by a fixed step, and the
+ * value straight under the name — and a proof-reader counted four of six values struck through by a
+ * stroke or sitting on their own dot across three rounds of "fixes". A rule that has to be right
+ * everywhere on a drawing with twelve lines through it is a rule that will be wrong somewhere.
+ *
+ * So the placement is searched instead of asserted: a fixed ladder of candidates out along the ray
+ * and swung to either side of it, tried in order, and the first that collides with no stroke, no
+ * dot and no label already placed is taken. The ladder is fixed and the order is fixed, so the
+ * drawing is the same every time — and `core.test.mjs` checks the result on the emitted SVG, so a
+ * ladder too short to find a clear spot fails rather than shipping a struck-through number.
+ */
+function placeClear(anchor, ray, text, size, obstacles, taken) {
+  const angle = Math.atan2(ray[1], ray[0]);
+  for (const out of [20, 25, 30, 36, 42, 50, 58, 68, 80, 94]) {
+    for (const swing of [0, 0.3, -0.3, 0.6, -0.6, 0.9, -0.9, 1.25, -1.25, 1.6, -1.6,
+      2.0, -2.0, 2.5, -2.5, Math.PI]) {
+      const theta = angle + swing;
+      const x = anchor[0] + Math.cos(theta) * out;
+      const y = anchor[1] + Math.sin(theta) * out;
+      const box = textBox(x, y, text, size);
+      if (obstacles.segments.some(([a, b]) => boxMeetsSegment(box, a, b))) continue;
+      if (obstacles.dots.some(([dx, dy]) => dx >= box.x0 && dx <= box.x1
+        && dy >= box.y0 && dy <= box.y1)) continue;
+      if (taken.some((other) => boxesOverlap(box, other))) continue;
+      taken.push(box);
+      return [x, y];
+    }
+  }
+  return null;
+}
+
 function incircle(points) {
   const [a, b, c] = points;
   const side = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1]);
@@ -330,8 +389,23 @@ export function drawings(engine) {
       body.push("  </g>");
     }
 
+    // **The names do not move.** CANON.md's rule 4 forbids putting a label wherever it fits, and
+    // the net's nineteen positions are the engine's. What is not CANON's is where a *number* goes
+    // beside a name, and that used to take a fixed step — into the panel for a dot, straight down
+    // for a line — which a proof-reader found sitting across a stroke two dozen times. So the names
+    // are fixed obstacles and the numbers are searched around them.
+    const netObstacles = {
+      segments: segments.map((segment) => [netAt(segment.from), netAt(segment.to)]),
+      dots: midpoints ? segments.map((segment) => netAt(mid(segment.from, segment.to))) : [],
+    };
+    const netTaken = labels.map((label) => {
+      const [x, y] = netAt(label.at);
+      const size = label.kind === "dot" ? 34 : (label.kind === "face" ? 28 : 24);
+      return textBox(x, y, label.text, size);
+    });
+
     body.push('  <g class="labels">');
-    for (const label of labels) {
+    labels.forEach((label, index) => {
       const [x, y] = netAt(label.at);
       const [cx, cy] = netAt(label.panelCentre);
       const size = label.kind === "dot" ? 34 : (label.kind === "face" ? 28 : 24);
@@ -340,16 +414,17 @@ export function drawings(engine) {
       const weight = label.kind === "dot" ? ' font-weight="700"' : "";
       body.push(`    <text${heavy}${weight} x="${d2(x)}" y="${d2(y)}" font-size="${size}" text-anchor="middle" dominant-baseline="central">${esc(label.text)}</text>`);
       if (value !== undefined) {
-        // A number takes a fixed step from its name — into the panel for a dot, straight down for a
-        // line or a face. Both obvious alternatives failed: moving the name and number inward
-        // together piles a panel's four labels onto its middle, and stepping a line's number
-        // sideways pushes it onto the next line's name across the fold.
-        const [vx, vy] = label.kind === "dot"
-          ? stepToward([x, y], [cx, cy], size * 0.95)
-          : [x, y + size * 1.05];
-        body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="${size * 0.85}" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+        // Searched from the name, biased toward the middle of the panel the name belongs to, which
+        // is where the paper is emptiest.
+        const ray = [cx - x || 0.001, cy - y || 0.001];
+        const spot = placeClear([x, y], ray, value, size * 0.85, netObstacles,
+          netTaken.filter((_, other) => other !== index));
+        const [vx, vy] = spot === null
+          ? (label.kind === "dot" ? stepToward([x, y], [cx, cy], size * 0.95) : [x, y + size * 1.05])
+          : spot;
+        body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="${d2(size * 0.85)}" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
-    }
+    });
     body.push("  </g>");
     body.push("</svg>");
     return body.join("\n");
@@ -424,16 +499,41 @@ export function drawings(engine) {
       body.push("  </g>");
     }
 
-    body.push('  <g class="labels">');
+    // The names keep the canonical inset; the numbers are searched around them, the same way the
+    // net's and the ring's are. Chapter 1 is where a reader learns to read a number off a picture,
+    // so a difference sitting across the line it belongs to is the worst place to have one.
+    const triObstacles = {
+      segments: pairs.map((pair) => [at(used[pair[0]]), at(used[pair[1]])]),
+      dots: used.map((point) => at(point)),
+    };
+    const triTaken = [];
+    const nameSpots = [];
     used.forEach((point, index) => {
-      const value = values[NAMES[index]];
       const [dx, dy] = at(point);
       const [ax, ay] = dots === 1
         ? [dx, dy - 34]
         : at(add(point, scale(sub(middle, point), VERTEX_INSET)));
+      nameSpots.push([ax, ay]);
+      triTaken.push(textBox(ax, ay, NAMES[index], 34));
+    });
+    if (showLine) {
+      for (const pair of pairs) {
+        const midpoint = mid(used[pair[0]], used[pair[1]]);
+        const [x, y] = at(add(midpoint, scale(sub(middle, midpoint), VERTEX_INSET)));
+        triTaken.push(textBox(x, y, lineName(pair), 24));
+      }
+    }
+
+    body.push('  <g class="labels">');
+    used.forEach((point, index) => {
+      const value = values[NAMES[index]];
+      const [ax, ay] = nameSpots[index];
       body.push(`    <text font-weight="700" x="${d2(ax)}" y="${d2(ay)}" font-size="34" text-anchor="middle" dominant-baseline="central">${esc(NAMES[index])}</text>`);
       if (value !== undefined) {
-        const [vx, vy] = dots === 1 ? [dx, dy + 36] : stepToward([ax, ay], at(middle), 32);
+        const [mx, my] = at(middle);
+        const ray = [mx - ax || 0.001, my - ay || 0.001];
+        const spot = placeClear([ax, ay], ray, value, 30, triObstacles, triTaken);
+        const [vx, vy] = spot === null ? stepToward([ax, ay], at(middle), 32) : spot;
         body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="30" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     });
@@ -445,7 +545,11 @@ export function drawings(engine) {
         const value = values[name];
         body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} x="${d2(x)}" y="${d2(y)}" font-size="24" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`);
         if (value !== undefined) {
-          body.push(`    <text class="value" x="${d2(x)}" y="${d2(y + 26)}" font-size="24" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+          const [mx, my] = at(middle);
+          const ray = [mx - x || 0.001, my - y || 0.001];
+          const spot = placeClear([x, y], ray, value, 24, triObstacles, triTaken);
+          const [vx, vy] = spot === null ? [x, y + 26] : spot;
+          body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="24" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
         }
       }
     }
@@ -613,10 +717,11 @@ export function drawings(engine) {
     const everything = [
       ...MID.flatMap((name) => {
         const away = Math.hypot(...at[name]) || 1;
-        const label = at[name].map((v) => v + (v / away) * 26);
-        return [at[name], label, [label[0], label[1] + 22], [label[0], label[1] - 22]];
+        // The widest the label search can reach, so the frame holds whatever it finds.
+        const label = at[name].map((v) => v + (v / away) * 110);
+        return [at[name], label, [label[0], label[1] + 24], [label[0], label[1] - 24]];
       }),
-      ...(wantTips ? places.map((place) => place.at) : []),
+      ...(wantTips ? places.map((entry) => entry.at) : []),
     ];
     const pad = 42;
     const xs = everything.map((point) => point[0]);
@@ -683,33 +788,56 @@ export function drawings(engine) {
     }
     body.push("  </g>");
 
+    // Everything a label must miss: every stroke actually drawn, and every dot.
+    const obstacles = {
+      segments: [
+        ...MID_LINES.map(([i, j]) => [place(at[MID[i]]), place(at[MID[j]])]),
+        // The three marks standing for an absence are faint, but they are ink on the paper and a
+        // number sitting across one still reads as struck through.
+        ...(absences ? OPPOSITE_PAIRS.map(([a, b]) => [place(at[a]), place(at[b])]) : []),
+        ...shown.flatMap((index) => MID_FACES[index]
+          .map((i) => [place(places[index].at), place(at[MID[i]])])),
+      ],
+      dots: [
+        ...MID.map((name) => place(at[name])),
+        ...shown.map((index) => place(places[index].at)),
+      ],
+    };
+    const taken = [];
+
     body.push('  <g class="labels">');
     for (const name of MID) {
-      const [x, y] = place(at[name]);
-      const away = 26;
-      const ux = at[name][0] === 0 ? 0 : Math.sign(at[name][0]);
-      const uy = at[name][1] === 0 ? 0 : Math.sign(at[name][1]);
-      const lx = x + ux * away * 0.9;
-      const ly = y + uy * away * 0.9 + (uy === 0 ? -away : 0);
-      const value = values[name];
+      const dot = place(at[name]);
+      // Out along the ray from the middle of the drawing, which is where the object's own centre is.
+      const ray = [at[name][0], at[name][1]];
+      const spot = placeClear(dot, ray, name, 19, obstacles, taken);
+      if (spot === null) throw new Error(`the ring found nowhere clear to put the name ${name}`);
+      const [lx, ly] = spot;
       body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} font-weight="700" x="${d2(lx)}" y="${d2(ly)}" font-size="19" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`);
+      const value = values[name];
       if (value !== undefined) {
-        // The number carries on outward past its own name, along the same ray, instead of dropping
-        // straight down onto whatever is under it. Dropping put four of the six values on a stroke
-        // or on their own dot; the halo made them legible and left them in the way.
-        const step = 20;
-        const [vx, vy] = ux === 0 && uy === 0
-          ? [lx, ly + step]
-          : [lx + ux * step * 0.75, ly + uy * step + (uy === 0 ? -step * 0.6 : 0)];
-        body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="17" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+        // The value gets its own search from the name outward, not a fixed step under it. Stepping
+        // it down put four of the six on a stroke or on their own dot, three rounds running.
+        const vspot = placeClear([lx, ly], ray, value, 17, obstacles, taken);
+        if (vspot === null) {
+          throw new Error(`the ring found nowhere clear to put ${name}'s number`);
+        }
+        body.push(`    <text class="value" x="${d2(vspot[0])}" y="${d2(vspot[1])}" font-size="17" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     }
     for (const index of shown) {
-      const [x, y] = place(places[index].at);
+      const dot = place(places[index].at);
+      const ray = places[index].at[0] === 0 && places[index].at[1] === 0
+        ? [0, -1]
+        : [places[index].at[0], places[index].at[1]];
+      const spot = placeClear(dot, ray, names[index], 15, obstacles, taken);
+      const [x, y] = spot === null ? [dot[0], dot[1] - 22] : spot;
       const value = values[names[index]];
-      body.push(`    <text class="tip" x="${d2(x)}" y="${d2(y + (index === outerFace ? -22 : 0))}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(names[index])}</text>`);
+      body.push(`    <text class="tip" x="${d2(x)}" y="${d2(y)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(names[index])}</text>`);
       if (value !== undefined) {
-        body.push(`    <text class="value" x="${d2(x)}" y="${d2(y + (index === outerFace ? -38 : 18))}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+        const vspot = placeClear([x, y], ray, value, 15, obstacles, taken);
+        const [vx, vy] = vspot === null ? [x, y + 18] : vspot;
+        body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     }
     body.push("  </g>");
@@ -806,20 +934,31 @@ export function drawings(engine) {
     });
     body.push("  </g>");
 
+    // Searched, like the ring's. A dot near the middle of the projection has almost no outward
+    // direction to be pushed along, so a fixed radial step put every one of the fourteen names
+    // across a stroke; the halo kept them legible and left them in the way.
+    const wireObstacles = {
+      segments: edges.filter((_, index) => wanted.includes(family[index]))
+        .map(([i, j]) => [at[i], at[j]]),
+      dots: [...drawnDots].map((index) => at[index]),
+    };
+    const wireTaken = [];
+
     body.push('  <g class="labels">');
     names.forEach((name, index) => {
       if (!drawnDots.has(index)) return;
-      const [x, y] = at[index];
       const away = Math.hypot(flat[index][0], flat[index][1]) || 1;
-      // Pushed a little further out than the dot's own radius, so a name is beside its dot rather
-      // than on it. A dot near the middle of the projection has almost no outward direction to be
-      // pushed along, which is why every label also carries a halo of the paper (see demo.css).
-      const lx = x + (flat[index][0] / away) * 24;
-      const ly = y + (flat[index][1] / away) * 24;
+      const ray = [flat[index][0] / away, flat[index][1] / away];
+      const spot = placeClear(at[index], ray, name, 15, wireObstacles, wireTaken);
+      const [lx, ly] = spot === null
+        ? [at[index][0] + ray[0] * 24, at[index][1] + ray[1] * 24]
+        : spot;
       const value = values[name];
       body.push(`    <text${strong.has(name) ? ' class="strong"' : ""} x="${d2(lx)}" y="${d2(ly)}" font-size="15" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`);
       if (value !== undefined) {
-        body.push(`    <text class="value" x="${d2(lx)}" y="${d2(ly + 16)}" font-size="14" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
+        const vspot = placeClear([lx, ly], ray, value, 14, wireObstacles, wireTaken);
+        const [vx, vy] = vspot === null ? [lx, ly + 16] : vspot;
+        body.push(`    <text class="value" x="${d2(vx)}" y="${d2(vy)}" font-size="14" text-anchor="middle" dominant-baseline="central">${esc(value)}</text>`);
       }
     });
     body.push("  </g>");

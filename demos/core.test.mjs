@@ -44,7 +44,18 @@
 //      *can* close, and the hole was not hypothetical: this pass shipped two walks whose printed
 //      terms did not add to their printed total, and a fresh reader found both by doing the
 //      arithmetic the page invites her to do.
-//   8. **every still stands on its own.** The still button is the reason the drawing code exists —
+//   8. **no label is struck through.** Every piece of text in every drawing, at every state, has
+//      its box tested against every stroke and every dot in that drawing — from the emitted SVG,
+//      not from the placement code's own opinion of where it put things. This one exists because
+//      three rounds of "fixed" label rules were not: a rule that has to be right everywhere on a
+//      drawing with twelve or thirty-six lines through it will be wrong somewhere, so the placement
+//      searches for a clear spot and this is what says it found one.
+//   9. **the numbers DEMOS.md quotes about the sweep are the sweep's.** The crossings paragraph is
+//      the only quantitative prose in this lane that no gate held, and it carried a wrong measured
+//      figure in three consecutive rounds. Every number it now quotes is asserted here, so the
+//      paragraph cannot drift from the code again — and the rule that came with it is that the
+//      paragraph quotes *only* numbers this gate asserts.
+//  10. **every still stands on its own.** The still button is the reason the drawing code exists —
 //      those files are the intended replacement for the chapters' illustration studies — and it is
 //      the one surface a reader reaches by downloading rather than by looking, so a proof-reader
 //      could not exercise it at all. Every step, in every state, is rendered to its still, and the
@@ -66,7 +77,8 @@ const ROOT = path.join(HERE, "..");
 const ENGINE_DIR = path.join(ROOT, "engine");
 
 const { Engine } = await import(pathToFileURL(path.join(HERE, "engine.mjs")).href);
-const { drawings } = await import(pathToFileURL(path.join(HERE, "draw.mjs")).href);
+const { drawings, viewCost, VIEW_GRID, project3d, textBox, boxMeetsSegment } = await import(
+  pathToFileURL(path.join(HERE, "draw.mjs")).href);
 const { chapterSteps } = await import(pathToFileURL(path.join(HERE, "steps.mjs")).href);
 const { joinSteps, statesOf, stillFrom } = await import(
   pathToFileURL(path.join(HERE, "core.mjs")).href);
@@ -210,6 +222,104 @@ const view = draw.wireDefaultView();
   for (const key of census) {
     if (!drawnKeys.has(key)) {
       fail(`the census has the edge ${key}, and the wireframe did not draw it`);
+    }
+  }
+}
+
+// ── 9 · the numbers DEMOS.md quotes about the sweep ───────────────────────────────────────────────
+//
+// This is the paragraph that has been wrong three rounds running: the crossings count of the
+// wireframe's opening view and what the sweep around it looks like. It is the only quantitative
+// prose in this lane that no gate held, and prose no gate holds is prose that drifts. So every
+// figure it is allowed to quote is asserted here, and the rule in DEMOS.md is the other half of the
+// arrangement: **the paragraph quotes only numbers this gate asserts, and any other figure is
+// deleted rather than corrected.**
+//
+// The sweep asserted is the 72×72 one the shipped code actually runs — the one that chooses the view
+// a reader opens on — not a finer one quoted for effect.
+
+const SWEEP = {
+  directions: 5184,       // VIEW_GRID squared
+  floor: 20,              // the lowest score any direction reaches
+  atFloor: 200,           // how many reach it
+  shape: "20/0/0",        // and every one of them has this shape: crossings / dots-on-lines / lost
+  noCrossings: 12,        // directions with no crossings at all
+  lostThere: 6,           // every one of which loses this many of the thirty-six edges
+  touchingDownAnAxis: 228,
+  touchingAtTheOpeningView: 48,
+};
+
+{
+  const { points, edges } = draw.wireframe();
+  if (VIEW_GRID * VIEW_GRID !== SWEEP.directions) {
+    fail(`the sweep is ${VIEW_GRID}×${VIEW_GRID} and DEMOS.md quotes ${SWEEP.directions} directions`);
+  }
+  let floor = Infinity;
+  let atFloor = 0;
+  const shapes = new Set();
+  let noCrossings = 0;
+  const lostThere = new Set();
+  for (let a = 0; a < VIEW_GRID; a += 1) {
+    for (let b = 0; b < VIEW_GRID; b += 1) {
+      const yaw = (a / VIEW_GRID) * Math.PI * 2;
+      const pitch = (b / VIEW_GRID) * Math.PI - Math.PI / 2;
+      const cost = viewCost(points, edges, yaw, pitch);
+      if (cost.lies < floor) { floor = cost.lies; atFloor = 0; shapes.clear(); }
+      if (cost.lies === floor) {
+        atFloor += 1;
+        shapes.add(`${cost.invented}/${cost.hidden}/${cost.flattened}`);
+      }
+      if (cost.invented === 0) { noCrossings += 1; lostThere.add(cost.flattened); }
+    }
+  }
+  if (floor !== SWEEP.floor) fail(`the sweep's score floor is ${floor}, and DEMOS.md says ${SWEEP.floor}`);
+  if (atFloor !== SWEEP.atFloor) {
+    fail(`${atFloor} directions reach the floor, and DEMOS.md says ${SWEEP.atFloor}`);
+  }
+  if (shapes.size !== 1 || !shapes.has(SWEEP.shape)) {
+    fail(`the cheapest views are ${[...shapes]}, and DEMOS.md says every one is ${SWEEP.shape}`);
+  }
+  if (noCrossings !== SWEEP.noCrossings) {
+    fail(`${noCrossings} directions have no crossings, and DEMOS.md says ${SWEEP.noCrossings}`);
+  }
+  if (lostThere.size !== 1 || !lostThere.has(SWEEP.lostThere)) {
+    fail(`the crossing-free views lose ${[...lostThere]} edges, and DEMOS.md says ${SWEEP.lostThere}`);
+  }
+
+  // And the touching pairs, which is the figure that tells a degenerate view from a usable one. It
+  // is asserted at a spread of tolerances, because the whole point of quoting it is that it does
+  // NOT move with the tolerance — unlike a degenerate view's crossing count, which does.
+  const touching = (yaw, pitch, epsilon) => {
+    const flat = points.map((point) => project3d(point, yaw, pitch));
+    const spread = Math.max(...flat.map(([x]) => x)) - Math.min(...flat.map(([x]) => x)) || 1;
+    const side = (p, q, r) => {
+      const area = (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
+      return Math.abs(area) / (spread * spread) < epsilon ? 0 : Math.sign(area);
+    };
+    let met = 0;
+    for (let i = 0; i < edges.length; i += 1) {
+      for (let j = i + 1; j < edges.length; j += 1) {
+        const [a, b] = edges[i];
+        const [c, d] = edges[j];
+        if (a === c || a === d || b === c || b === d) continue;
+        const turns = [side(flat[a], flat[b], flat[c]), side(flat[a], flat[b], flat[d]),
+          side(flat[c], flat[d], flat[a]), side(flat[c], flat[d], flat[b])];
+        if (turns.some((turn) => turn === 0)) met += 1;
+      }
+    }
+    return met;
+  };
+  const opening = draw.wireDefaultView();
+  for (const epsilon of [1e-12, 1e-9, 1e-6, 1e-4]) {
+    const axis = touching(0, 0, epsilon);
+    const best = touching(opening.yaw, opening.pitch, epsilon);
+    if (axis !== SWEEP.touchingDownAnAxis) {
+      fail(`down an axis ${axis} pairs of lines touch at tolerance ${epsilon}, and DEMOS.md says `
+        + `${SWEEP.touchingDownAnAxis}`);
+    }
+    if (best !== SWEEP.touchingAtTheOpeningView) {
+      fail(`at the opening view ${best} pairs touch at tolerance ${epsilon}, and DEMOS.md says `
+        + `${SWEEP.touchingAtTheOpeningView}`);
     }
   }
 }
@@ -438,16 +548,25 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         // ("the total, at this tick", over numbers the table does not print) is not a sum this check
         // could do, and demanding a declaration for it would teach the habit of declaring things
         // that are not true.
-        const looksLikeTotal = table.head.findIndex((head, index) =>
-          index > 0
-          && /\b(added up|the whole way round|total|altogether|sum|comes to)\b/i.test(String(head))
-          && table.rows.some((row) => {
+        // Per **column** as well as per row. A proof-reader got the original defect past the row
+        // version by spreading the four terms one to a row — so no row held three numbers — and
+        // leaving the total on its own row under an "added up" heading. Two or more numbers down a
+        // column under a total-shaped heading is the same claim standing up instead of lying down.
+        const looksLikeTotal = table.head.findIndex((head, index) => {
+          if (index < 1) return false;
+          if (!/\b(added up|the whole way round|total|altogether|sum|comes to)\b/i
+            .test(String(head))) return false;
+          const acrossARow = table.rows.some((row) => {
             const packed = String(row[index - 1]).trim().split(/\s+/);
             const before = packed.length > 1 && packed.every((term) => exact(term) !== null)
               ? packed.length
               : row.slice(1, index).filter((cell) => exact(cell) !== null).length;
             return before >= 2;
-          }));
+          });
+          const downTheColumn = table.rows
+            .filter((row) => exact(row[index]) !== null).length >= 2;
+          return acrossARow || downTheColumn;
+        });
         if (looksLikeTotal >= 0 && (!shape || shape.total !== looksLikeTotal)) {
           fail(`${slug} ${step.label}: "${table.caption}" has a column headed `
             + `"${table.head[looksLikeTotal]}", which reads as a total, and the table does not `
@@ -475,7 +594,29 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         }
       }
 
-      // Gate 8: the still of this exact state.
+      // Gate 8: nothing in the drawing is struck through. Read off the emitted SVG.
+      {
+        const svg = rendered.drawing;
+        const strokes = [...svg.matchAll(
+          /<line[^>]*x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/g)]
+          .map((found) => [[+found[1], +found[2]], [+found[3], +found[4]]]);
+        const marks = [...svg.matchAll(/<circle[^>]*cx="([-\d.]+)" cy="([-\d.]+)"/g)]
+          .map((found) => [+found[1], +found[2]]);
+        for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
+          const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
+          const size = /font-size="([\d.]+)"/.exec(found[1]);
+          if (!at || !size || !found[2].trim()) continue;
+          const box = textBox(+at[1], +at[2], found[2], +size[1]);
+          if (strokes.some(([a, b]) => boxMeetsSegment(box, a, b))) {
+            fail(`${slug} ${step.label}: the label "${found[2]}" is drawn across a stroke`);
+          }
+          if (marks.some(([x, y]) => x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1)) {
+            fail(`${slug} ${step.label}: the label "${found[2]}" is drawn on top of a dot`);
+          }
+        }
+      }
+
+      // Gate 10: the still of this exact state.
       const still = stillFrom(rendered.drawing, {
         chapter: slug, beat: step.beats.join("–"), title: `${chapter.title} — ${step.label}`,
       });
