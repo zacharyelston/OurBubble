@@ -7,19 +7,21 @@ as you read**, in exact arithmetic.
 > **Scope.** These pages compute a **toy**. Nothing they draw or print is a claim about nature.
 > [`FIREWALL.md`](../FIREWALL.md) is the long version.
 
-| page | chapter | beats (the outline's, since tranche D) | the page today |
+| page | chapter | beats (the outline's, since the front door) | the page today |
 |---|---|---|---|
-| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 9–18 | in step |
-| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 19–26 | in step |
-| [`make-it-move.html`](make-it-move.html) | Make it move | 27–38 | built to the old 27–35 |
-| [`the-shape-between.html`](the-shape-between.html) | The shape between | 39–43 | built to the old 36–46 |
-| *(none yet)* | Two worlds threaded | 44–49 | not built |
+| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 13–22 | in step |
+| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 23–30 | in step |
+| [`make-it-move.html`](make-it-move.html) | Make it move | 31–42 | built to the old 27–35 |
+| [`the-shape-between.html`](the-shape-between.html) | The shape between | 43–47 | built to the old 36–46 |
+| *(none yet)* | Two worlds threaded | 48–53 | not built |
 
 **These pages have not caught up with the outline, and are not meant to have yet.** Tranche D slowed
 the clock beats down, ran the rule on the triangle before the tetrahedron, and split the old chapter
-four in two, so every beat from the old 36 onwards moved by three and a new chapter appeared. The
-rebuild belongs to step three-B — the pass that replaces `core.mjs`'s arithmetic with calls into
-`engine/napkin.js` — and it renumbers these pages' steps and adds the fifth page in the same work.
+four in two, so every beat from the old 36 onwards moved by three and a new chapter appeared; the
+front door then added four beats at the very front, so every beat in the book moved by four again
+and every chapter's number went up by one. The rebuild belongs to step three-B — the pass that
+replaces `core.mjs`'s arithmetic with calls into `engine/napkin.js` — and it renumbers these pages'
+steps and adds the fifth page in the same work.
 Nothing under `demos/` was touched by the chapter rewrite, so no page shows a number the engine did
 not compute; what they show is an older set of beats.
 
@@ -106,7 +108,7 @@ Every displayed number is a rational over `BigInt`. There is no floating point i
 is asked to check, and `numberText` refuses anything it cannot write down exactly and briefly — the
 same rule, and the same list of denominators, as `napkin.number()`.
 
-The refusal is not a formatting fallback. It is chapter 4's finding: on the two tetrahedra threaded
+The refusal is not a formatting fallback. It is *Two worlds threaded*'s finding: on the two tetrahedra
 together, at the tick that has worked all along, the arithmetic leaves the napkin, and the page says
 so rather than rounding. Floats appear in one place only — SVG coordinates — and never in a number.
 
@@ -128,11 +130,11 @@ failed. Moving the name and the number inward together piles a panel's four labe
 stepping a line's number sideways pushes it onto the next line's name across the fold. `D` appears
 three times and carries the same number three times, because it is one dot.
 
-Chapter 1 draws its dots as dots, and the net does not. That is not an inconsistency to be tidied
-away: in the net a corner is where lines meet, and there is always a line. In beat 9 there is not —
+*Two dots, a line, and the first thing that closes* draws its dots as dots, and the net does not. That is not an inconsistency to be tidied
+away: in the net a corner is where lines meet, and there is always a line. In beat 13 there is not —
 the beat is *where could you put a number*, and its answer needs something to point at.
 
-Chapter 1's triangle is the net's central panel, framed to itself — same anchor, same orientation,
+That chapter's triangle is the net's central panel, framed to itself — same anchor, same orientation,
 `AB` horizontal with `A` on the left. Nothing is learned twice: when the fourth dot arrives, the
 triangle is already where the net puts `ABC`.
 
@@ -143,7 +145,7 @@ proposal. **Six dots on two concentric circles**: the middles of the three lines
 the outside, and the three no line joins them to on the inside, each placed on the same ray out of
 the centre as its partner and on the other side of it.
 
-So *opposite* is literally straight through the middle, which is what beats 38 and 39 need a reader
+So *opposite* is literally straight through the middle, which is what beats 45 and 46 need a reader
 to see — three pairs joined by nothing at all, and a poke that crosses to the far dot. The three
 joins that are **not** there are marked by a faint line through the centre, and that is the only mark
 in either drawing standing for an absence.
@@ -169,13 +171,13 @@ Two honest costs, both stated on the page:
 
 The obvious alternative was the octahedron's own unfolded net, which would have matched the
 tetrahedron's convention exactly. It was refused for one reason: a net puts a dot in more than one
-place, and the whole of beat 39 is *the poke crossed to the opposite dot and is nowhere else*. On a
+place, and the whole of beat 46 is *the poke crossed to the opposite dot and is nowhere else*. On a
 net, "the opposite dot" is two or three marks on the paper, and the reader has to reassemble the
 solid in her head before she can see the thing the beat is about. The ring shows it in one glance.
 
 ### 3-D
 
-Not used. Nothing in beats 9–46 needed it. If a later beat genuinely cannot be shown flat, the
+Not used. Nothing in beats 13–53 needed it. If a later beat genuinely cannot be shown flat, the
 standard to reach for is the simplest possible orthographic wireframe — no shading, no perspective
 camera, no library — and a note saying why 2-D would not do.
 

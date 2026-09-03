@@ -10,7 +10,7 @@ object again. So there is exactly one labeling and exactly one layout, and this 
 best on. Names are never permuted, rotated, or reassigned for aesthetics.
 
 This standard is **derived from [`tools/napkin.py`](tools/napkin.py)**, which already holds this
-object because chapters 1–3 count on it in front of the reader. The names, and the order they come
+object because the napkin chapters count on it in front of the reader. The names, and the order they come
 in, are the napkin's. That is not tidiness: it means a name in a drawing and a row in a napkin table
 cannot come apart, because there is one place either could come from.
 [`tools/canon.py`](tools/canon.py) is this file as data and as the drawing, and `make check` refuses
