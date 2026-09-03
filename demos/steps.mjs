@@ -208,7 +208,7 @@ export function chapterSteps(engine, draw) {
             tables: [
               table("what is on the paper", ["dots", "lines", "faces"],
                 [[count(rung(state.tick >= 2 ? 3 : 2, KINDS[0])), count(drawn),
-                  closed ? count(rung(3, KINDS[2])) : show(ZERO)]]),
+                  closed ? count(rung(3, KINDS[2])) : show(ZERO)]], { notASum: true }),
               table("its lines, in the one order", ["line", "drawn"],
                 triangleLines.map((name, index) =>
                   [name, index < state.tick ? "yes" : "not yet"])),
@@ -314,7 +314,6 @@ export function chapterSteps(engine, draw) {
           const values = state.pressed ? [...first.slice(0, 2), unprintable] : first;
           const { edges, loop } = differencesOf(values);
           const printed = values.map((value) => engine.print(value));
-          const edgePrints = edges.map((value) => engine.signed(value));
           return {
             drawing: draw.drawTriangle({
               dots: 3, showFace: true, values: netValues(values, edges),
@@ -324,11 +323,19 @@ export function chapterSteps(engine, draw) {
               table("the corners", ["dot", "number", "does a napkin print it"],
                 corners.map((name, index) =>
                   [name, printed[index].text, printed[index].refused ? "no" : "yes"])),
-              table("the differences", ["line", "difference", "does a napkin print it"],
-                triangleLines.map((name, index) =>
-                  [name, edgePrints[index].text, edgePrints[index].refused ? "no" : "yes"])),
-              table("what the whole walk comes to", ["added up", "exactly"],
-                [[show(loop), show(loop) === show(P.triangle.chapter.sum) ? "yes" : "no"]]),
+              // The terms the walk uses, not each line's own difference. A reader found the old
+              // version listing +3, −1, −4 and then "added up 0" — two tables making one wrong
+              // claim between them. Every table on these pages that prints a total now prints the
+              // terms of THAT total beside it.
+              table("the terms the walk uses",
+                ["line", "its term", "does a napkin print it"],
+                triangleLines.map((name, index) => {
+                  const term = engine.signed(walkTerms(edges)[index]);
+                  return [name, term.text, term.refused ? "no" : "yes"];
+                })),
+              table("what the whole walk comes to",
+                ["the three terms, as the walk uses them", "added up"],
+                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
             ],
           };
         },
@@ -354,8 +361,9 @@ export function chapterSteps(engine, draw) {
               table("what is still here", ["what", "how many"], censusRows(3)),
               table("what it has never had", ["a length", "a direction", "a clock"],
                 [["none", "none", "none"]]),
-              table("what the walk still comes to", ["added up"], [[show(loop)]],
-                { notASum: true }),
+              table("what the walk still comes to",
+                ["the three terms, as the walk uses them", "added up"],
+                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
             ],
           };
         },
@@ -408,6 +416,13 @@ export function chapterSteps(engine, draw) {
               // six differences are in the table immediately under the drawing; putting them here
               // as well made thirty-eight labels on one small frame, and a drawing nobody can read
               // is not more honest for carrying more.
+              //
+              // And the six line NAMES come off too, not just their numbers. A reader pointed out
+              // that leaving them made the drawing carry six empty slots exactly where a value
+              // would go, so it read as having lost its numbers rather than never having carried
+              // them — with the title promising six differences right above it. The table beneath
+              // names every line.
+              lines: false,
               values: Object.fromEntries([
                 ...NAMES.map((name, index) => [name, show(state.numbers[index])]),
                 ...FACES.map((name, index) => [name, show(loops.loops[index])]),
@@ -457,6 +472,7 @@ export function chapterSteps(engine, draw) {
           const inside = engine.loops("tetrahedron", loops.loops, 2);
           return {
             drawing: draw.drawNet({
+              lines: false,
               values: Object.fromEntries(
                 FACES.map((name, index) => [name, show(loops.loops[index])])),
               title: "The four face-numbers, walked round the inside",
@@ -719,7 +735,7 @@ export function chapterSteps(engine, draw) {
               table("is this tick inside the shape's ceiling",
                 ["tick", "the shape's stiffest", "the ceiling", "inside it"],
                 [[show(certificate.k), show(String(certificate.eigenvalue)),
-                  show(certificate.bound), certificate.holds ? "yes" : "no"]]),
+                  show(certificate.bound), certificate.holds ? "yes" : "no"]], { notASum: true }),
             ],
           };
         },
@@ -742,7 +758,7 @@ export function chapterSteps(engine, draw) {
             tables: [
               runTable("every tick", run.history, run.totals, NAMES),
               table("the total", ["at the start", "at this tick", "ticks apart"],
-                [[show(run.totals[0]), show(run.totals[state.tick]), String(state.tick)]]),
+                [[show(run.totals[0]), show(run.totals[state.tick]), String(state.tick)]], { notASum: true }),
             ],
           };
         },
@@ -855,10 +871,10 @@ export function chapterSteps(engine, draw) {
             : draw.drawNet({ midpoints: true, medials: true, title: "Where the blade goes" }),
           tables: state.pressed ? [
             table("what fell out", ["pieces at the tips", "shapes between them", "dots in all"],
-              [[String(cut.corners), String(cut.octahedra), String(cut.dots)]]),
+              [[String(cut.corners), String(cut.octahedra), String(cut.dots)]], { notASum: true }),
             table("and how much of the original each one is",
               ["each of the tips", "how many tips", "the shape between"],
-              [[show(cut.tip_share), String(cut.corners), show(cut.core_share)]]),
+              [[show(cut.tip_share), String(cut.corners), show(cut.core_share)]], { notASum: true }),
           ] : [
             // Nothing has fallen out yet, so nothing is counted yet. The first version printed the
             // answer above the button that produces it.
@@ -879,7 +895,7 @@ export function chapterSteps(engine, draw) {
           }),
           tables: [
             table("count it", ["dots", "lines", "faces"],
-              [[String(cut.oct_dots), String(cut.oct_lines), String(cut.oct_faces)]]),
+              [[String(cut.oct_dots), String(cut.oct_lines), String(cut.oct_faces)]], { notASum: true }),
             table("every dot's neighbours", ["dot", "lines out of it", "dots it is not joined to"],
               MID.map((name) => [name, String(cut.oct_degree),
                 count(cut.opposite_pairs.filter((pair) => pair.includes(name)))])),
@@ -918,7 +934,8 @@ export function chapterSteps(engine, draw) {
               table("is this tick inside the shape's ceiling",
                 ["tick", "the shape's stiffest", "the ceiling", "inside it"],
                 [[show(certificate.k), show(String(certificate.eigenvalue)),
-                  show(certificate.bound), certificate.holds ? "yes" : "no"]]),
+                  show(certificate.bound), certificate.holds ? "yes" : "no"]],
+                { notASum: true }),
             ],
           };
         },
@@ -1068,13 +1085,19 @@ export function chapterSteps(engine, draw) {
                 runaway.look.slice(0, state.tick + 1).map((entry, index) => [
                   String(entry.tick), engine.print(entry.biggest).text,
                   String(runaway.floors[index].floor),
-                ])),
-              table("at this tick", ["tick", "the poked dot", "added up"],
-                [[String(look.tick), engine.print(row[0]).text, show(run.totals[look.tick])]]),
+                ]), { notASum: true }),
+              // The total of all fourteen, at a tick, beside the one dot the poke started on.
+              // The fourteen are not printed here, so this is a figure reported rather than a sum
+              // the page shows — which the check is told, so that it neither adds two numbers that
+              // are not terms nor lets a real sum hide behind the same words.
+              table("at this tick", ["tick", "the poked dot", "everything, added up"],
+                [[String(look.tick), engine.print(row[0]).text, show(run.totals[look.tick])]],
+                { notASum: true }),
               table("is this tick inside the shape's ceiling",
                 ["tick", "the shape's stiffest", "the ceiling", "inside it"],
                 [[show(certificate.k), show(String(certificate.eigenvalue)),
-                  show(certificate.bound), certificate.holds ? "yes" : "no"]]),
+                  show(certificate.bound), certificate.holds ? "yes" : "no"]],
+                { notASum: true }),
               table("how far a napkin gets", ["rows it can write", "rows there are"],
                 [[String(run.printable_rows), count(run.history)]]),
               table("does it come back", ["ticks run", "back where it started every"],
@@ -1102,7 +1125,8 @@ export function chapterSteps(engine, draw) {
                 ["tick", "the ceiling", "inside it", "rows a napkin can write",
                   "back where it started every"],
                 [[show(tried.k), show(certificate.bound), certificate.holds ? "yes" : "no",
-                  String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]]),
+                  String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]],
+                { notASum: true }),
             ],
           };
         },

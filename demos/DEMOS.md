@@ -96,13 +96,10 @@ It does **not** say twenty crossings is the fewest possible. **12** of the direc
 crossings at all, and every one of them projects **6** of the thirty-six edges onto a point, so those
 edges are not in the picture to be counted.
 
-And at such a view the crossing count stops being a fact about the object. What separates a usable
-view from a degenerate one is how many pairs of lines *touch* — pass through one another's endpoints,
-or lie along one another — because for a touching pair, whether you call it a crossing is a decision
-about arithmetic tolerance rather than about the shape. At the opening view **48** unrelated pairs
-touch. Down an axis, **228** do. Both figures hold steady across four orders of magnitude of
-tolerance, which is exactly what the crossing count of a degenerate view does not do: two careful
-counts of the same axis view disagreed, 8 against 18, and both were honest.
+A previous draft went on to compare how many pairs of lines *touch* at a good view and at a
+degenerate one, with two figures. A reader established that those figures described something other
+than what the sentence claimed was being counted, and the paragraph's own rule then applies without
+argument: **they are deleted, not corrected.** Four figures remain, and the gate asserts all four.
 
 That is the argument for leaving the plane, and it does not need the strong claim: *every flat
 drawing of this object is either full of crossings, or full of joins that are not there.* The score
@@ -177,24 +174,31 @@ said?** Ten gates:
    string literal is refused**, in any quote style, with `${…}` cut out because that is code. The
    same rule is held over the pages' HTML: no digit in any text a reader sees, which is why the beat
    ranges on the pages are written by JavaScript at run time.
-4. **The drawing is the census.** The wireframe may emit **only** `svg`, `title`, `desc`, `g`,
-   `line`, `circle` and `text` — a whitelist, not a search — and every `line` is an edge the engine
-   exported, every `circle` one of its vertices: thirty-six and fourteen, both directions checked,
-   and checked **by where the ends of each stroke actually are** rather than by what the stroke says
-   about itself. Every one of those clauses is a hole that was walked through rather than foreseen.
+4. **Every drawing is its own census.** Each convention declares its kind, may emit **only** a
+   whitelisted set of element names, and every stroke and every dot in it **says what it is** —
+   `data-line`, `data-dot`, `data-absent`, `data-tip-line`, `data-edge` — with what it says held to
+   the engine's own data: the tetrahedron's four dots and six lines, the six middles and the twelve
+   lines between them, the threaded pair's fourteen and thirty-six. A mark that names nothing fails;
+   a mark naming something the census has not got fails; an element the drawing may not emit fails.
+   The wireframe's strokes are additionally checked **by where their ends actually are** rather than
+   by what they say about themselves. Every one of those clauses is a hole that was walked through rather than foreseen.
    A drawing that names its lines correctly and points them all at the wrong dot is the failure a
    reader is invited to catch by counting. An unlabelled stroke joining nothing to nothing rode into
    a commit while the labelled count stayed at thirty-six. And when that was fixed by counting every
-   `<line>`, the same stroke came back as a `<path>`. A drawing does not get to decide which of its
-   own marks are up for checking — not by leaving off a label, and not by choosing an element name.
+   `<line>`, the same stroke came back as a `<path>`; and when the whitelist closed that, the gate
+   still held **only the wireframe** — the one drawing a reader is invited to count — and trusted the
+   other three, which is the same mistake standing somewhere else. A drawing does not get to decide
+   which of its own marks are up for checking: not by leaving off a label, not by choosing an element
+   name, and not by being a different drawing.
    The ring is held separately to drawing its twelve lines with none crossing another. And a
    drawing's `<title>` and `<desc>` carry **no digit at all**: they are prose, and prose about this
    object counts in words.
 5. **The steps are the outline's**, as above.
 6. **The words are under budget**, printed either way.
 7. **A table says what its numbers mean, and a total is a total.** Every table whose rows carry
-   three or more numbers declares itself — `{ total: i }`, meaning column `i` is the sum of the
-   numbers before it, or `{ notASum: true }`, meaning they are simply several numbers. A declared
+   three or more numbers — counting a **packed** cell (`+3  +1  −4`) as its numbers, wherever it sits
+   — declares itself: `{ total: i }`, meaning column `i` is the sum of the numbers before it, or
+   `{ notASum: true }`, meaning they are simply several numbers. A declared
    total is added up here, on the digits a reader sees, in exact arithmetic: **614 of them on every
    run.** The declaration is by **column index**, and that is the whole point of its shape: the first
    version of this gate read the column *headed* "added up", and a proof-reader switched it off by
@@ -202,7 +206,10 @@ said?** Ten gates:
    again by moving the terms into a second table. Neither works now — a renamed heading changes
    nothing, and a table that splits its terms away has rows of three numbers and must declare itself.
    A heading that still reads like a total, with two or more printed numbers beside it, must *be* the
-   declared column.
+   declared column. Two further escapes closed on the fourth read: a packed terms cell **displaced**
+   from its total by an intervening column, which the scan had looked for only immediately before it;
+   and a total sitting in **column 0**, where the scan had begun at 1. A total in the first column is
+   refused outright now — a total goes after the numbers it is the total of.
 
    What it does not reach: a total of numbers the table does not print (a run's total beside a tick,
    say) has no terms on the page to add, so it is reported, not checked. And a declaration can still
@@ -428,6 +435,16 @@ to, and the six differences are in the table immediately below it, where they we
 
 Nothing is lost by that: **every number is in a table, on every step**, which is a rule a gate does
 hold. What the drawing chooses is which of them are worth ink.
+
+The line *names* came off with their numbers, which is a second reader's note and a sharper point
+than the first: six names with nothing under them sit exactly where a value would go, so the drawing
+reads as having *lost* its numbers rather than never having carried them — and the beat's title
+promises six differences directly above it. A drawing should not advertise a slot it is not filling.
+
+And the frame follows the content. Every drawing is emitted first, then every mark in it is measured
+and its `viewBox` fitted to the result plus one fixed margin. Sizing a frame beforehand meant sizing
+it for the widest the label search *could* reach rather than where it went, which left the figures
+floating in a box a third bigger than themselves.
 
 ### No colour means anything
 

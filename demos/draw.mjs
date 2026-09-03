@@ -27,6 +27,56 @@
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
+/** How much clear paper a drawing keeps outside everything it has drawn. */
+const MARGIN = 18;
+
+/**
+ * Refit a finished drawing's `viewBox` to what it actually contains, plus a fixed margin.
+ *
+ * The label search grew the canvas about a third, because each frame was sized for the widest the
+ * search *could* reach rather than where it went — so the figures ended up floating in a box far
+ * bigger than themselves. Rather than guess a frame before placing anything, the drawing is
+ * emitted, every mark in it is measured, and the box is fitted to the result. That way the frame is
+ * a fact about the drawing instead of a prediction about it.
+ *
+ * Only the marks are measured, never the `viewBox` itself, so this is idempotent.
+ */
+function refit(svg) {
+  const xs = [];
+  const ys = [];
+  const note = (x, y) => { xs.push(x); ys.push(y); };
+  for (const found of svg.matchAll(/<line[^>]*x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"/g)) {
+    note(+found[1], +found[2]);
+    note(+found[3], +found[4]);
+  }
+  for (const found of svg.matchAll(/<circle[^>]*cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)"/g)) {
+    const r = +found[3];
+    note(+found[1] - r, +found[2] - r);
+    note(+found[1] + r, +found[2] + r);
+  }
+  for (const found of svg.matchAll(/<polygon[^>]*points="([^"]+)"/g)) {
+    for (const pair of found[1].trim().split(/\s+/)) {
+      const [x, y] = pair.split(",").map(Number);
+      if (Number.isFinite(x) && Number.isFinite(y)) note(x, y);
+    }
+  }
+  for (const found of svg.matchAll(/<text([^>]*)>([^<]*)<\/text>/g)) {
+    const at = /x="([-\d.]+)" y="([-\d.]+)"/.exec(found[1]);
+    const size = /font-size="([\d.]+)"/.exec(found[1]);
+    if (!at || !size || !found[2].trim()) continue;
+    const box = textBox(+at[1], +at[2], found[2], +size[1]);
+    note(box.x0, box.y0);
+    note(box.x1, box.y1);
+  }
+  if (!xs.length) return svg;
+  const minX = Math.min(...xs) - MARGIN;
+  const minY = Math.min(...ys) - MARGIN;
+  const width = (Math.max(...xs) + MARGIN) - minX;
+  const height = (Math.max(...ys) + MARGIN) - minY;
+  return svg.replace(/viewBox="[^"]*"/,
+    `viewBox="${d2(minX)} ${d2(minY)} ${d2(width)} ${d2(height)}"`);
+}
+
 function esc(text) {
   return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -111,6 +161,16 @@ export function textBox(x, y, text, size) {
  */
 export const LABEL_GAP = 3;
 
+/**
+ * How much clear paper a label keeps from the dot it belongs to.
+ *
+ * The biggest dot any of these drawings puts down has a radius of thirteen, and a label that starts
+ * at twenty was sitting three pixels off it — legible, and reading as attached to the mark rather
+ * than beside it. This is the dot plus a little air; the ladder adds half the label's own height on
+ * top, because a label is measured from its middle.
+ */
+export const DOT_CLEARANCE = 17;
+
 const inflate = (box, by) => ({
   x0: box.x0 - by, x1: box.x1 + by, y0: box.y0 - by, y1: box.y1 + by,
 });
@@ -147,7 +207,10 @@ export function boxMeetsSegment(box, from, to) {
  */
 function placeClear(anchor, ray, text, size, obstacles, taken, from = 20) {
   const angle = Math.atan2(ray[1], ray[0]);
-  for (const out of [20, 25, 30, 36, 42, 50, 58, 68, 80, 94].filter((d) => d >= from)) {
+  // A name may not sit hard against the dot it names: the nearest rung of the ladder has to clear
+  // the dot's own mark and half the label's height, or the two touch even though nothing overlaps.
+  const clearance = Math.max(from, DOT_CLEARANCE + size * 0.6);
+  for (const out of [20, 25, 30, 36, 42, 50, 58, 68, 80, 94].filter((d) => d >= clearance)) {
     for (const swing of [0, 0.3, -0.3, 0.6, -0.6, 0.9, -0.9, 1.25, -1.25, 1.6, -1.6,
       2.0, -2.0, 2.5, -2.5, Math.PI]) {
       const theta = angle + swing;
@@ -397,7 +460,7 @@ export function drawings(engine) {
    * none spare.
    */
   function drawNet({ values = {}, emphasis = [], showPanels = true, midpoints = false,
-    medials = false, title = "The tetrahedron, unfolded flat", desc = "" } = {}) {
+    medials = false, lines = true, title = "The tetrahedron, unfolded flat", desc = "" } = {}) {
     const strong = new Set(emphasis);
     const body = [];
     body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${d2(NET_FRAME.width * NET_SCALE)} ${d2(NET_FRAME.height * NET_SCALE)}" role="img" class="net">`);
@@ -418,7 +481,7 @@ export function drawings(engine) {
       const [x1, y1] = netAt(segment.from);
       const [x2, y2] = netAt(segment.to);
       const heavy = strong.has(segment.line) ? ' class="strong"' : "";
-      body.push(`    <line${heavy} x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
+      body.push(`    <line${heavy} data-line="${esc(segment.line)}" data-panel="${esc(segment.panel)}" x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
     }
     if (medials) {
       // The cut, on the flat paper: each panel's medial triangle is where the blade goes, and the
@@ -437,7 +500,7 @@ export function drawings(engine) {
       body.push('  <g class="middle">');
       for (const segment of segments) {
         const [x, y] = netAt(mid(segment.from, segment.to));
-        body.push(`    <circle cx="${d2(x)}" cy="${d2(y)}" r="9"/>`);
+        body.push(`    <circle data-middle="${esc(segment.line)}" cx="${d2(x)}" cy="${d2(y)}" r="9"/>`);
       }
       body.push("  </g>");
     }
@@ -459,6 +522,9 @@ export function drawings(engine) {
 
     body.push('  <g class="labels">');
     labels.forEach((label, index) => {
+      // A step that carries no number on the lines carries no line names either: six names with
+      // nothing under them read as six numbers the drawing has lost.
+      if (!lines && label.kind === "line") return;
       const [x, y] = netAt(label.at);
       const [cx, cy] = netAt(label.panelCentre);
       const size = label.kind === "dot" ? 34 : (label.kind === "face" ? 28 : 24);
@@ -489,7 +555,7 @@ export function drawings(engine) {
     });
     body.push("  </g>");
     body.push("</svg>");
-    return body.join("\n");
+    return refit(body.join("\n"));
   }
 
   /**
@@ -528,7 +594,7 @@ export function drawings(engine) {
         const [x1, y1] = at(used[pair[0]]);
         const [x2, y2] = at(used[pair[1]]);
         const heavy = strong.has(lineName(pair)) ? ' class="strong"' : "";
-        body.push(`    <line${heavy} x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
+        body.push(`    <line${heavy} data-line="${esc(lineName(pair))}" x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
       }
     }
     body.push("  </g>");
@@ -538,10 +604,10 @@ export function drawings(engine) {
     // chapter's first beat there is not — the question is *where could you put a number*, and its
     // answer needs something to point at.
     body.push('  <g class="middle">');
-    for (const point of used) {
+    used.forEach((point, index) => {
       const [x, y] = at(point);
-      body.push(`    <circle cx="${d2(x)}" cy="${d2(y)}" r="10"/>`);
-    }
+      body.push(`    <circle data-dot="${esc(NAMES[index])}" cx="${d2(x)}" cy="${d2(y)}" r="10"/>`);
+    });
     body.push("  </g>");
 
     if (arrows.length) {
@@ -636,7 +702,7 @@ export function drawings(engine) {
     }
     body.push("  </g>");
     body.push("</svg>");
-    return body.join("\n");
+    return refit(body.join("\n"));
   }
 
   // ── the ring ────────────────────────────────────────────────────────────────────────────────────
@@ -827,13 +893,13 @@ export function drawings(engine) {
         || strong.has(`${a}–${b}`) || strong.has(`${b}–${a}`);
       const [x1, y1] = place(at[a]);
       const [x2, y2] = place(at[b]);
-      body.push(`    <line${heavy ? ' class="strong"' : ""} x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
+      body.push(`    <line${heavy ? ' class="strong"' : ""} data-line="${esc(a)}|${esc(b)}" x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
     }
     for (const index of shown) {
       const [tx, ty] = place(places[index].at);
       for (const i of MID_FACES[index]) {
         const [x, y] = place(at[MID[i]]);
-        body.push(`    <line class="tip-line" x1="${d2(tx)}" y1="${d2(ty)}" x2="${d2(x)}" y2="${d2(y)}"/>`);
+        body.push(`    <line class="tip-line" data-tip-line="${esc(names[index])}|${esc(MID[i])}" x1="${d2(tx)}" y1="${d2(ty)}" x2="${d2(x)}" y2="${d2(y)}"/>`);
       }
     }
     body.push("  </g>");
@@ -845,7 +911,7 @@ export function drawings(engine) {
     for (const [a, b] of (absences ? OPPOSITE_PAIRS : [])) {
       const [x1, y1] = place(at[a]);
       const [x2, y2] = place(at[b]);
-      body.push(`    <line x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
+      body.push(`    <line data-absent="${esc(a)}|${esc(b)}" x1="${d2(x1)}" y1="${d2(y1)}" x2="${d2(x2)}" y2="${d2(y2)}"/>`);
     }
     body.push("  </g>");
 
@@ -913,7 +979,7 @@ export function drawings(engine) {
     }
     body.push("  </g>");
     body.push("</svg>");
-    return body.join("\n");
+    return refit(body.join("\n"));
   }
 
   // ── the wireframe ───────────────────────────────────────────────────────────────────────────────
@@ -1031,7 +1097,7 @@ export function drawings(engine) {
     });
     body.push("  </g>");
     body.push("</svg>");
-    return body.join("\n");
+    return refit(body.join("\n"));
   }
 
   return {

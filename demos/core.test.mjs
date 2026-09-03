@@ -54,7 +54,8 @@
 //      the only quantitative prose in this lane that no gate held, and it carried a wrong measured
 //      figure in three consecutive rounds. Every number it now quotes is asserted here, so the
 //      paragraph cannot drift from the code again — and the rule that came with it is that the
-//      paragraph quotes *only* numbers this gate asserts.
+//      paragraph quotes *only* numbers this gate asserts — and a figure of its own found wrong is
+//      deleted rather than corrected, which is how two of them left it.
 //  10. **every still stands on its own.** The still button is the reason the drawing code exists —
 //      those files are the intended replacement for the chapters' illustration studies — and it is
 //      the one surface a reader reaches by downloading rather than by looking, so a proof-reader
@@ -85,6 +86,16 @@ const { joinSteps, statesOf, stillFrom } = await import(
 
 const failures = [];
 const fail = (message) => failures.push(message);
+
+// `LABEL_GAP` is imported from `draw.mjs` rather than chosen here, so that the placement and the
+// check cannot drift apart — but importing it means one edit to that constant would relax the
+// placement AND the check that enforces it, in the same line. A reader spotted that. So the check
+// keeps a floor of its own: the shared constant may be raised, never lowered.
+const GAP_FLOOR = 3;
+if (LABEL_GAP < GAP_FLOOR) {
+  fail(`draw.mjs sets LABEL_GAP to ${LABEL_GAP}, and this check will not go below ${GAP_FLOOR}: `
+    + `two labels that close read as one token, which is the whole reason the gap exists`);
+}
 
 // ── 1 · the engine is the engine ──────────────────────────────────────────────────────────────────
 
@@ -245,8 +256,6 @@ const SWEEP = {
   shape: "20/0/0",        // and every one of them has this shape: crossings / dots-on-lines / lost
   noCrossings: 12,        // directions with no crossings at all
   lostThere: 6,           // every one of which loses this many of the thirty-six edges
-  touchingDownAnAxis: 228,
-  touchingAtTheOpeningView: 48,
 };
 
 {
@@ -286,40 +295,91 @@ const SWEEP = {
     fail(`the crossing-free views lose ${[...lostThere]} edges, and DEMOS.md says ${SWEEP.lostThere}`);
   }
 
-  // And the touching pairs, which is the figure that tells a degenerate view from a usable one. It
-  // is asserted at a spread of tolerances, because the whole point of quoting it is that it does
-  // NOT move with the tolerance — unlike a degenerate view's crossing count, which does.
-  const touching = (yaw, pitch, epsilon) => {
-    const flat = points.map((point) => project3d(point, yaw, pitch));
-    const spread = Math.max(...flat.map(([x]) => x)) - Math.min(...flat.map(([x]) => x)) || 1;
-    const side = (p, q, r) => {
-      const area = (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
-      return Math.abs(area) / (spread * spread) < epsilon ? 0 : Math.sign(area);
-    };
-    let met = 0;
-    for (let i = 0; i < edges.length; i += 1) {
-      for (let j = i + 1; j < edges.length; j += 1) {
-        const [a, b] = edges[i];
-        const [c, d] = edges[j];
-        if (a === c || a === d || b === c || b === d) continue;
-        const turns = [side(flat[a], flat[b], flat[c]), side(flat[a], flat[b], flat[d]),
-          side(flat[c], flat[d], flat[a]), side(flat[c], flat[d], flat[b])];
-        if (turns.some((turn) => turn === 0)) met += 1;
-      }
-    }
-    return met;
+}
+
+// ── 4 · every drawing is its own census ───────────────────────────────────────────────────────────
+
+/**
+ * What each kind of drawing may emit, and what every mark in it must be.
+ *
+ * Built from the engine's own data, once, and consulted for every drawing of every step. The names
+ * are the engine's: the tetrahedron's four dots and six lines, the six middles and the twelve lines
+ * between them, the threaded pair's fourteen and thirty-six.
+ */
+const DRAWINGS = (() => {
+  const P = payload;
+  const NAMES = P.tetrahedron.names;
+  const MID = P.cut.mid_names;
+  const tetraLines = new Set(P.tetrahedron.line_names);
+  const midLines = new Set(P.cut.mid_lines
+    .map(([i, j]) => [MID[i], MID[j]].sort().join("|")));
+  const absences = new Set(P.cut.opposite_pairs.map((pair) => [...pair].sort().join("|")));
+  const tipNames = new Set(draw.tipNames());
+  const stellaNames = new Set(P.stella.names);
+  const stellaEdges = new Set(P.stella.edges
+    .map(([i, j]) => [P.stella.names[i], P.stella.names[j]].sort().join("|")));
+  const two = (attribute) => (value) => [...String(value).split("|")].sort().join("|");
+  void two;
+  return {
+    net: {
+      tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
+      line: (value) => tetraLines.has(value),
+      middle: (value) => tetraLines.has(value),
+      dot: (value) => NAMES.includes(value),
+    },
+    ring: {
+      tags: ["svg", "title", "desc", "g", "polygon", "line", "circle", "text"],
+      line: (value) => midLines.has(value.split("|").sort().join("|")),
+      absent: (value) => absences.has(value.split("|").sort().join("|")),
+      "tip-line": (value) => {
+        const [tip, middle] = value.split("|");
+        return tipNames.has(tip) && MID.includes(middle);
+      },
+      dot: (value) => MID.includes(value) || tipNames.has(value),
+    },
+    wire: {
+      tags: ["svg", "title", "desc", "g", "line", "circle", "text"],
+      edge: (value) => stellaEdges.has(value.split("|").sort().join("|")),
+      dot: (value) => stellaNames.has(value),
+    },
   };
-  const opening = draw.wireDefaultView();
-  for (const epsilon of [1e-12, 1e-9, 1e-6, 1e-4]) {
-    const axis = touching(0, 0, epsilon);
-    const best = touching(opening.yaw, opening.pitch, epsilon);
-    if (axis !== SWEEP.touchingDownAnAxis) {
-      fail(`down an axis ${axis} pairs of lines touch at tolerance ${epsilon}, and DEMOS.md says `
-        + `${SWEEP.touchingDownAnAxis}`);
+})();
+
+/** Hold one emitted drawing to its kind: its elements, and the identity of every mark in it. */
+function censusOf(svg, where) {
+  const kind = (/class="(net|ring|wire)"/.exec(svg) || [])[1];
+  if (!kind) {
+    fail(`${where}: the drawing does not say which convention it is drawn in`);
+    return;
+  }
+  const rules = DRAWINGS[kind];
+
+  for (const found of svg.matchAll(/<([a-zA-Z][\w-]*)/g)) {
+    if (!rules.tags.includes(found[1])) {
+      fail(`${where}: the ${kind} drawing emitted a <${found[1]}>, and it may only emit `
+        + `${rules.tags.join(", ")} — every mark in it has to be a piece of the object`);
     }
-    if (best !== SWEEP.touchingAtTheOpeningView) {
-      fail(`at the opening view ${best} pairs touch at tolerance ${epsilon}, and DEMOS.md says `
-        + `${SWEEP.touchingAtTheOpeningView}`);
+  }
+
+  // Every stroke and every dot names itself, and what it names is the engine's.
+  for (const [element, plural] of [["line", "stroke"], ["circle", "dot"]]) {
+    for (const found of svg.matchAll(new RegExp(`<${element}\\b[^>]*>`, "g"))) {
+      const mark = found[0];
+      const named = [...mark.matchAll(/data-([\w-]+)="([^"]*)"/g)]
+        .filter(([, , ], index) => true)
+        .map((m) => [m[1], m[2]])
+        .filter(([attribute]) => attribute in rules);
+      if (!named.length) {
+        fail(`${where}: the ${kind} drawing emitted a ${plural} that does not say what it is: `
+          + `${mark}`);
+        continue;
+      }
+      for (const [attribute, value] of named) {
+        if (!rules[attribute](value)) {
+          fail(`${where}: the ${kind} drawing's ${plural} claims to be the ${attribute} `
+            + `"${value}", which the engine's census has not got`);
+        }
+      }
     }
   }
 }
@@ -524,67 +584,82 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
             + `every value goes in the drawing's text or in a table, where it is held to the engine`);
         }
       }
-      // Gate 7: a table says what its numbers mean, and if it says "total" the total is right.
+      // Gate 7: a table says what its numbers mean, and a total is a total.
       //
-      // Keyed on the table's **declaration**, not on its headings. The first version read the
-      // column headed "added up", and a proof-reader turned it off by renaming that column to "the
-      // total" in the same edit that broke the arithmetic under it — and turned it off again by
-      // moving the terms into a separate table. So now: any row carrying three or more numbers must
-      // be declared, one way or the other, and a heading that reads like a total must sit on the
-      // declared column. A table cannot go quiet by being edited; it can only go quiet by having
-      // its declaration deleted, which is a line a reviewer sees removed.
+      // Three versions of this gate have been walked past, each by a narrower trick than the last:
+      // reading the column *headed* "added up" (renaming it silenced it); counting numbers across a
+      // row (one term per row silenced it); counting numbers down the total's own column (which
+      // holds one number, the total). What defeats all three is to stop looking for a shape and
+      // insist the table **say** what it is — by column index, which no caption edit reaches.
+      //
+      // Two things this version adds, both from a reader's findings. A **packed** cell — several
+      // numbers in one string, "+3  +1  −4" — counts as its numbers, wherever it sits, so moving
+      // terms into one cell escapes nothing. And **every** column is considered, including the
+      // first, because a total was found sitting in column 0 where the old scan began at 1.
       for (const table of rendered.tables) {
         const shape = table.shape || null;
-        const numericRun = (row) => row.slice(1).filter((cell) => exact(cell) !== null).length;
-        const carriesNumbers = table.rows.some((row) => numericRun(row) >= 3);
+        const numbersIn = (cell) => {
+          const packed = String(cell).trim().split(/\s+/).filter((part) => part !== "");
+          const parsed = packed.map(exact);
+          return parsed.every((value) => value !== null) && parsed.length > 0 ? parsed : [];
+        };
+        const rowNumbers = (row) => row.flatMap((cell) => numbersIn(cell));
+        const carriesNumbers = table.rows.some((row) => rowNumbers(row).length >= 3);
         if (carriesNumbers && shape === null) {
           fail(`${slug} ${step.label}: "${table.caption}" puts three or more numbers in a row and `
             + `does not say whether the last is their total. Declare { total: i } or `
             + `{ notASum: true }`);
           continue;
         }
-        // A heading that reads like a total has to BE the declared total — but only when there are
-        // at least two printed numbers beside it for it to be the total of. A lone reported figure
-        // ("the total, at this tick", over numbers the table does not print) is not a sum this check
-        // could do, and demanding a declaration for it would teach the habit of declaring things
-        // that are not true.
-        // Per **column** as well as per row. A proof-reader got the original defect past the row
-        // version by spreading the four terms one to a row — so no row held three numbers — and
-        // leaving the total on its own row under an "added up" heading. Two or more numbers down a
-        // column under a total-shaped heading is the same claim standing up instead of lying down.
-        const looksLikeTotal = table.head.findIndex((head, index) => {
-          if (index < 1) return false;
-          if (!/\b(added up|the whole way round|total|altogether|sum|comes to)\b/i
-            .test(String(head))) return false;
-          const acrossARow = table.rows.some((row) => {
-            const packed = String(row[index - 1]).trim().split(/\s+/);
-            const before = packed.length > 1 && packed.every((term) => exact(term) !== null)
-              ? packed.length
-              : row.slice(1, index).filter((cell) => exact(cell) !== null).length;
-            return before >= 2;
-          });
-          // The column BEFORE the total is where terms stood up in a column live; counting the
-          // total's own column instead found one number (the total) and never fired. A proof-reader
-          // walked the original defect past exactly that: one term per row, so no row held three
-          // numbers, and the total alone under an "added up" heading.
-          const downTheColumn = table.rows
-            .filter((row) => exact(row[index - 1]) !== null).length >= 2;
-          return acrossARow || downTheColumn;
+
+        // A heading that reads like a total must BE the declared total — checked over every column,
+        // with packed cells counted as their numbers, and with a total in the first column refused
+        // outright because it has no terms in front of it to be the total of.
+        const totalish = (head) =>
+          /\b(added up|the whole way round|total|altogether|sum|comes to)\b/i.test(String(head));
+        table.head.forEach((head, index) => {
+          if (!totalish(head)) return;
+          if (index === 0) {
+            fail(`${slug} ${step.label}: "${table.caption}" puts a column headed "${head}" first, `
+              + `where nothing precedes it. A total goes after the numbers it is the total of`);
+            return;
+          }
+          const before = table.rows.some((row) =>
+            row.slice(0, index).some((cell) => numbersIn(cell).length >= 2));
+          const down = table.rows
+            .filter((row) => row.slice(0, index).some((cell) => numbersIn(cell).length >= 1))
+            .length >= 2;
+          if (!(before || down)) return;
+          if (!shape || shape.total !== index) {
+            fail(`${slug} ${step.label}: "${table.caption}" has a column headed "${head}", which `
+              + `reads as a total of the numbers beside it, and the table does not declare it as one`);
+          }
         });
-        if (looksLikeTotal >= 0 && (!shape || shape.total !== looksLikeTotal)) {
-          fail(`${slug} ${step.label}: "${table.caption}" has a column headed `
-            + `"${table.head[looksLikeTotal]}", which reads as a total, and the table does not `
-            + `declare it as one`);
-        }
+
         if (!shape || shape.total === undefined) continue;
         const at = shape.total;
+        if (at === 0) {
+          fail(`${slug} ${step.label}: "${table.caption}" declares column 0 as its total, and a `
+            + `total goes after the numbers it is the total of`);
+          continue;
+        }
         for (const row of table.rows) {
           const total = exact(row[at]);
           if (total === null) continue;
-          const packed = String(row[at - 1]).trim().split(/\s+/);
-          const terms = packed.length > 1 && packed.every((term) => exact(term) !== null)
-            ? packed.map(exact)
-            : row.slice(1, at).map(exact).filter((term) => term !== null);
+          // The terms. **Any** cell before the total that holds several numbers is a packed terms
+          // cell, wherever it sits — the nearest such cell to the total wins — and column 0 is
+          // included, because a reader put the terms there with a note in between and the first
+          // version of this scan, which looked only at the cell immediately before, saw nothing.
+          // Failing that, the cells between the row's own label and the total, which is where an
+          // ordinary run table keeps them; column 0 is excluded from *that* case because there it
+          // holds the row's label — a tick number, not a term.
+          const packedAt = row.slice(0, at)
+            .map((cell, index) => ({ index, numbers: numbersIn(cell) }))
+            .filter((cell) => cell.numbers.length > 1)
+            .pop();
+          const terms = packedAt
+            ? packedAt.numbers
+            : row.slice(1, at).flatMap((cell) => numbersIn(cell));
           if (terms.length < 2) continue;
           sums += 1;
           let running = [0n, 1n];
@@ -597,6 +672,17 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
           }
         }
       }
+
+      // Gate 4, for EVERY drawing. It used to hold the wireframe alone — the drawing a reader was
+      // invited to count off — and left the other three to be trusted, which is the same mistake in
+      // a different place: the triangle, the net and the ring all put strokes and dots on paper that
+      // are supposed to be the object's and nothing else.
+      //
+      // So every drawing declares its own kind, every mark in it says what it is, and both are held
+      // to the engine: an element the drawing may not emit, a stroke that names nothing, or a stroke
+      // naming something the engine's census has not got, all fail. What each kind is allowed is
+      // `DRAWINGS` below.
+      censusOf(rendered.drawing, `${slug} ${step.label}`);
 
       // Gate 8: nothing in the drawing is struck through. Read off the emitted SVG.
       {
