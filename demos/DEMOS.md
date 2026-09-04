@@ -50,7 +50,7 @@ stale:
 `two-dots-and-a-line.9+10`, `one-tetrahedron-is-a-whole-world.1+2`,
 `one-tetrahedron-is-a-whole-world.7+8`, `make-it-move.1+2`, `make-it-move.4+5`,
 `make-it-move.11+12`, `two-worlds-threaded.5+6`. A folded step keeps the question of the beat
-whose action it performs — the later one in the first pair, the earlier one in the other six — and it
+whose action it performs — the later one in the first pair, the earlier one in the rest — and it
 covers both sections' anchors, which the check holds it to. The counts are the page table's, above,
 where they are checked against `steps.json` — this sentence used to repeat them, and a reviewer
 changed the repeat to "Ninety-nine beats, two steps." with tier 0 green.

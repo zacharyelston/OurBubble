@@ -42,9 +42,11 @@ scope rule, mechanically. `tools/beat_coverage.py` enforces the cap, the numberi
 **No book-wide beat number in any file the guard reads.** It was the numbering that went stale
 three times in two weeks, so the old form — the word followed by a number, or by the schema letter a
 drafter would copy — is refused in every file `tools/beat_coverage.py` lists as scanned: the
-contract, the ledger, this standard, the README, `demos/DEMOS.md`, the working note, the reviewer's
-skill, the five modules whose comments carried beat references, and every chapter. The guard files
-that must quote the old form in order to refuse it are named there as the exception. An id that
+contract, the ledger, this standard, the canon, the art direction, the README, the demos' document
+and modules, the working note, the reviewer's skill, the modules whose comments name a beat, and
+every chapter. Three guard files quote the old form in order to refuse it and are named there as the
+exception; every other file in the repository is unscanned rather than clean, `record/` — derived
+and never edited — most of all. An id that
 resolves to nothing — a chapter the book has not got, or a beat past the end of one it has — is
 refused in the same pass. Tooling and review notes name a beat `slug.n`; **chapter prose
 names it by what it is**, which is rule 4's own logic applied to counting: a page that counts its own
