@@ -43,6 +43,14 @@ Rules of the ledger:
   a verdict on the wider claim, and the wider claim's review is named where the negative is written
   down. The readings currently under review are the octahedron-and-time group (issue #51; the note's
   own provenance banner and UniForge `lab/napkin/0002` carry the scope).
+- **A beat is named `slug.n`, and a chapter holds at most twelve** (2026-09-04, issue #77). A beat's
+  id is its chapter's slug and its place inside that chapter — `make-it-move.3` — so inserting a
+  beat renumbers only that chapter and moving a chapter renumbers nothing. `OUTLINE.md` numbers each
+  chapter's beats from 1 under its heading; the reading order lives in `chapters/SUMMARY.md`. A
+  book-wide beat number is nobody's name any more and is refused in this file, in `OUTLINE.md`, in
+  `demos/DEMOS.md` and in every chapter — the numbering went stale three times in two weeks, which
+  is what ended it. The rows below keep the numbers they were written with as counts, for the same
+  reason the chapter-number rule below gives.
 - **A chapter number in this file is as of the row that wrote it.** The lanes below record what was
   merged when it merged, and chapter positions move: the front door (issue #56) put a chapter 0 at
   the head of the reading order, so every position named in a completed row is one lower than the

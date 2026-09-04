@@ -105,6 +105,13 @@ the wrongness.
    tier 0 stays green, so the finding names the hole and not just the instance. Preferred fix: take
    the count off the page unless it is a token. (Caught 2026-09-02, Our Bubble preface.)
 
+    **A beat is cited as `slug.n`** — `make-it-move.3`, the chapter's slug and the beat's place
+    inside that chapter — in findings, in tables and in review comments. A book-wide beat number is
+    nobody's name any more (issue #77), and a chapter is capped at twelve beats, so a finding that
+    a chapter is over the cap is a finding about the *scope rule*, not about numbering. In the
+    prose itself a beat is still named by what it is; a number in a chapter's own words is a mode 13
+    finding whatever form it takes.
+
 ## 3 · Render the comments
 
 - **Verdict line first** (house style): HOLD or CLEAR, then the persona and the count —

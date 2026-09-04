@@ -25,6 +25,26 @@ hand-drawn result graphics are out of scope.
 
 The epilogue closes the sequence and therefore does not need a `Next` hand-off.
 
+## A beat's name, and how many a chapter may have
+
+Every `##` section carries one `<!-- beat slug.n -->` marker: the chapter's own slug, and the beat's
+place inside that chapter counted from 1. `OUTLINE.md` numbers each chapter's beats from 1 under its
+heading, and the chapters' order lives in `chapters/SUMMARY.md` and those headings — never inside a
+beat's id. So inserting a beat renumbers that chapter and nothing else, and moving a chapter
+renumbers nothing at all. A chapter's opening prose carries a marker only when it is the prose that
+answers a beat; `tools/beat_coverage.py` reads one there as a declared excusal.
+
+**A chapter is capped at twelve beats**, which is today's largest (*Make it move*) and what the
+100–200-word grain implies about a chapter's length. A chapter that wants a thirteenth splits — the
+scope rule, mechanically. `tools/beat_coverage.py` enforces the cap, the numbering and the ids;
+`tools/attacks_beats.py` holds it to each of those with the mutation that proves it bites.
+
+**No book-wide beat number, anywhere.** It was the numbering that went stale three times in two
+weeks, so the old form (`beat 35`, `beats 44–49`) is refused in `OUTLINE.md`, `CONTINUUM.md`,
+`demos/DEMOS.md` and every chapter. Tooling and review notes name a beat `slug.n`; **chapter prose
+names it by what it is**, which is rule 4's own logic applied to counting: a page that counts its own
+parts is a count nothing guards.
+
 ## Illustration contract
 
 Every chapter begins with one editorial illustration study. **The front door is the one page that
