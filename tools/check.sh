@@ -18,7 +18,7 @@
 #        · the demos, in three lines: `demos/data/napkin.json` is what the napkin now exports;
 #          `demos/steps.json` is what OUTLINE.md and the chapters' beat markers now derive, so a
 #          renumber the demos have not caught up with is red rather than a page quoting last week's
-#          numbering; and every number the demo pages RENDER, on every surface, at every state of
+#          ids; and every number the demo pages RENDER, on every surface, at every state of
 #          every step, is one the vendored engine produced. That last check changed its meaning when
 #          the engine was vendored: there is one implementation now, so it no longer compares two —
 #          it holds the page to the engine. It needs node; without it that line reads "unverified"
@@ -38,10 +38,16 @@
 #          how a refactor says an attack has stopped testing anything. The suite refuses to run on
 #          a dirty demos/ or engine/ and that line then reads "unverified" rather than failing. See
 #          demos/DEMOS.md and demos/attacks.mjs.
+#        · and the BEAT CONTRACT's attacks (`tools/attacks_beats.py`), the same arrangement in
+#          Python for `tools/beat_coverage.py`: a beat claimed twice apart, a gap, a marker in the
+#          wrong chapter's file, a thirteenth beat, and a book-wide beat number left in the outline,
+#          in CONTINUUM.md, in DEMOS.md's prose or in a chapter — each applied to a private copy and
+#          required to go red by name. The Python checks had no mutations at all until this.
 #   3. the three guards the edition check does not reach — `tools/engine_check.py` (the Python
 #      oracle recomputes the whole payload and must reproduce the vendored engine's bytes exactly),
 #      `tools/octahedron.py`'s own assertions (the geometry the octahedron chapter's appendix note
-#      rests on) and `tools/beat_coverage.py` (the prose against OUTLINE.md's beats).
+#      rests on) and `tools/beat_coverage.py` (the prose against OUTLINE.md's beats, chapter by
+#      chapter, capped at twelve, with no book-wide beat number left anywhere it scans).
 #   4. build the book — which regenerates the appendix from the record
 #   5. check the built pages, including that every record link resolves and that the built site
 #      actually carries demos/ — the one piece of wiring nothing else would notice breaking
@@ -96,7 +102,7 @@ step "3/5 · the three guards the edition check does not reach"
 python3 -B tools/engine_check.py
 python3 -B tools/octahedron.py > /dev/null
 python3 -B tools/beat_coverage.py > /dev/null
-echo "octahedron.py: every audit asserted · beat_coverage.py: every beat claimed, in order"
+echo "octahedron.py: every audit asserted · beat_coverage.py: every beat claimed by a marker in its own chapter, ascending from 1, none past the twelfth"
 
 step "4/5 · build the book"
 command -v mdbook >/dev/null 2>&1 || {
