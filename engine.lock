@@ -41,15 +41,28 @@
 # All five land in ONE commit, for the record's reason: a bump that updates the pin without
 # re-vendoring would leave the book computing with one commit and citing another.
 #
+# A PIN THAT IS NOT YET ON `main` IS A PIN THAT MUST MOVE.
+#
+# `ref` names the branch the `sha` below is expected to be reachable from, and `tools/build_engine.sh`
+# checks exactly that whenever `UNIFORGE_SRC` is present: if the pinned commit is not an ancestor of
+# `origin/main` in that checkout, it says so, loudly, by name. It does not refuse — a pre-merge
+# vendoring is how a UniForge change is *reviewed* against this book, and refusing would make that
+# impossible — but it is a debt with a due date, and the due date is the merge.
+#
+#   2026-09-04 · pinned to UniForge `napkin/engine` at f8f07eb, the head of UniForge PR #362
+#   (lab/napkin/0003 — the five engine gaps). The pin moved to UniForge main on 2026-09-04 (#362 merged
+#   at ee6114e, lint fix #363 at aab98a9); this note is the record that it was once ahead of main.
+#
 # Format: `key = value`, one per line; `#` comments; repeated keys accumulate. `record.lock`'s.
 
 version       = 1
 repo          = github.com/zacharyelston/UniForge
 ref           = main
-sha           = 96692121467b5d4f103aa8d7cad6db88ad85b909
+sha           = aab98a96ba7f5197a25e7a94c7c36f1046d011b0
 crate         = napkin
 crate_version = 0.1.2
 register      = lab/napkin/0001-napkin-engine-register
+register      = lab/napkin/0003-engine-gaps
 
 # The toolchain. UniForge pins rustc and the wasm target in its own `core/rust-toolchain.toml`, so
 # `cargo` run inside that checkout uses exactly this channel and `tools/build_engine.sh` only
@@ -65,7 +78,7 @@ wasm_bindgen  = wasm-bindgen 0.2.127
 # the executable form of these four lines and is what anyone should actually run.
 
 build = cd $UNIFORGE_SRC/core && cargo run --release -p napkin --bin napkin-export > engine/napkin.json
-build = cd tools/engine_emit && cargo run --release > engine/rows.json   # R07 R10 R19
+build = cd tools/engine_emit && cargo run --release > engine/rows.json   # R07 R10 R19 + G01–G05
 build = cd $UNIFORGE_SRC/core && cargo build --release -p napkin --lib --features wasm --target wasm32-unknown-unknown
 build = wasm-bindgen --target web --out-dir engine/ $UNIFORGE_SRC/core/target/wasm32-unknown-unknown/release/napkin.wasm
 
@@ -75,9 +88,9 @@ build = wasm-bindgen --target web --out-dir engine/ $UNIFORGE_SRC/core/target/wa
 # satisfied by deleting the rest. `check_edition.py` compares this block against the
 # directory in both directions on every run.
 
-sha256 = c29f1aa2f384698600b1038cfc1b8c5b7cc401361a51fdb86a605a2d4734a387  engine/napkin.d.ts
-sha256 = 59f5733e33a2c985ee56dc239c95336f5cf2f806b52e4a63cca70d7aeb88ca44  engine/napkin.js
+sha256 = 65455d8f54a7dfe0a49bfb1cad515b09aea6c44602bbc35b3912984b618b2364  engine/napkin.d.ts
+sha256 = db7817a7dc46767f180c6427b55c501279a7614ebc8dd0a43a54bf63e6d59880  engine/napkin.js
 sha256 = a770f4c4d1b08e8858ad21ef39e5276996ad482126f92b0dc8932722470be007  engine/napkin.json
-sha256 = d62b67ee349edfed60ca298b85545d2417415750368f4e1dd01f1784e2335713  engine/napkin_bg.wasm
-sha256 = 7cdc57c25071a49eaf9df1553062f30f13d618419a405bb485de118616f8e2db  engine/napkin_bg.wasm.d.ts
-sha256 = 472624b08b9b3a14ecb60cf0281186e8fe6c031c1e1543f94f8765dfba9f8afe  engine/rows.json
+sha256 = 34c75747f725c148423a26f56c52206cc29a421e03cb9a0686c100f42b206951  engine/napkin_bg.wasm
+sha256 = 351ef2e2c0f40350085f1321e3dfd1a4e70d70502af308d5b100e51d8e752466  engine/napkin_bg.wasm.d.ts
+sha256 = 981997afe19a618b583e771aff6637e8910f5431b409d19e64bedabede073b18  engine/rows.json

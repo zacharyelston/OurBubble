@@ -84,8 +84,100 @@ fn no_room() -> Json {
     ])
 }
 
+/// The five gaps the demos found, registered and implemented as `lab/napkin/0003`.
+///
+/// They are here for the same reason R07, R10 and R19 are: `napkin.json`'s shape is pinned byte for
+/// byte to `tools/napkin_export.py` and nothing may be added to it. The demos will reach these
+/// through the WebAssembly module (`slosh_weighted_json`, `face_sum_json`, `walk_json`, and the two
+/// answers `loops_json`/`certificate_json` now give); vendoring them as data as well is what lets
+/// `tools/engine_check.py` recompute them in Python and demand the same bytes.
+///
+/// Every value is the engine's own — `napkin::apply` and the crate's own payload builders. Nothing
+/// here is worked out by hand: the triangle's differences and the tetrahedron's face numbers are
+/// asked for rather than written down, so a literal in this file cannot become a second arithmetic.
+fn gaps() -> Json {
+    let corners: Vec<Q> = [2, 5, 1, 4].iter().map(|&v| Q::int(v)).collect();
+    let mut dialed_weights = vec![Q::int(1); 6];
+    dialed_weights[0] = Q::int(2); // AB, counted double — beat 33's dial
+
+    let oct_arrows: Vec<Q> = [3, 1, 4, 1, 5, 2, 6, 5, 3, 5, 8, 9]
+        .iter()
+        .map(|&v| Q::int(v))
+        .collect();
+    let tetra_arrows: Vec<Q> = [3, 1, 1, 2, 1, 1].iter().map(|&v| Q::int(v)).collect();
+
+    let two = Complex::complete(&[0, 1]).expect("two dots and a line are a complex");
+    let two_values = [Q::int(2), Q::int(5)];
+    let two_differences = napkin::apply(&two.coboundary(0), &two_values);
+
+    let triangle = Complex::complete(&[0, 1, 2]).expect("the triangle is a complex");
+    let triangle_corners = [Q::int(2), Q::int(5), Q::int(1)];
+    let triangle_differences = napkin::apply(&triangle.coboundary(0), &triangle_corners);
+
+    let tetra = Complex::complete(&[0, 1, 2, 3]).expect("the tetrahedron is a complex");
+    let tetra_faces = napkin::apply(&tetra.coboundary(1), &tetra_arrows);
+
+    Json::object(vec![
+        // G01 — the dial: the same run as `napkin.json`'s `motion.dialed`, asked for as a question
+        // rather than baked in, with the weights echoed so the page can show what was turned.
+        (
+            "dial",
+            napkin::emit::slosh_weighted_payload(
+                "tetrahedron",
+                &corners,
+                &dialed_weights,
+                Q::new(1, 2),
+                10,
+            ),
+        ),
+        // G02 — the outward eight-face sum, per face, with the cycles the walk used.
+        (
+            "outward_face_sum",
+            napkin::emit::outward_face_sum_payload("octahedron", &oct_arrows),
+        ),
+        // G03 — two dots and a line: no closed walk exists, at either degree, as data.
+        (
+            "two_dots",
+            Json::object(vec![
+                ("degree_0", napkin::emit::loops_payload("two-dots", &two_values, 0)),
+                ("degree_1", napkin::emit::loops_payload("two-dots", &two_differences, 1)),
+            ]),
+        ),
+        // G04 — the triangle's ceiling: λ = 3, bound 4/3, and the strictness at exactly 4/3.
+        (
+            "triangle_certificate",
+            Json::object(vec![
+                (
+                    "at_the_book_tick",
+                    napkin::emit::certificate_payload("triangle", Q::new(1, 2)),
+                ),
+                ("at_the_bound", napkin::emit::certificate_payload("triangle", Q::new(4, 3))),
+            ]),
+        ),
+        // G05 — three walks, each with its sum building term by term.
+        (
+            "walks",
+            Json::object(vec![
+                (
+                    "triangle_face",
+                    napkin::emit::walk_payload("triangle", 1, 0, &triangle_differences),
+                ),
+                (
+                    "tetrahedron_face",
+                    napkin::emit::walk_payload("tetrahedron", 1, 0, &tetra_arrows),
+                ),
+                (
+                    "tetrahedron_inside",
+                    napkin::emit::walk_payload("tetrahedron", 2, 0, &tetra_faces),
+                ),
+            ]),
+        ),
+    ])
+}
+
 fn main() -> std::io::Result<()> {
     let payload = Json::object(vec![
+        ("gaps", gaps()),
         ("no_room", no_room()),
         ("triangle_motion", triangle_motion()),
         ("world", world()),

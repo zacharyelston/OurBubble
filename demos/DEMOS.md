@@ -445,6 +445,21 @@ make check                            # tier 0, which runs both
 
 ## Gaps in the engine
 
+> **Five of these are closed in the engine, and none of them is closed here yet.** UniForge
+> [#362](https://github.com/zacharyelston/UniForge/pull/362) (`lab/napkin/0003`) implemented the
+> dial, the outward eight-face sum per face, the two-dot complex, the triangle's tick certificate
+> and a walk's running partial sums, and the 2026-09-04 engine bump vendored them: the module now
+> exports `slosh_weighted_json`, `face_sum_json` and `walk_json`, `loops_json` answers for
+> `"two-dots"` and carries `closed_walks`, and `certificate_json("triangle", …)` answers instead of
+> panicking. **The steps below still do what this section says they do** — rewiring them to ask the
+> new questions is a separate pass, so that the engine change and the reader-facing change can be
+> reviewed one at a time. `TOKENS.md`'s "The five the demos asked for" lists the entry points.
+>
+> The one exception is the tick-to-tick difference, which was deliberately **not** registered: it is
+> a subtraction of two rows the engine already emits, so it is a page's reading rather than a
+> computation the engine owes. If a step wants it as data, that is an argument to make, not a field
+> to add quietly.
+
 **Four** things a step wanted and the engine's browser surface does not expose, and a fifth noted
 rather than wanted. **None of them is computed in JavaScript**; each is either taken from the
 vendored payload — where the engine did compute it, for one fixed set of inputs — or the interaction

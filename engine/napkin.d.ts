@@ -17,6 +17,11 @@ export function certificate_json(object: string, k: string): string;
 export function cut_json(): string;
 
 /**
+ * The eight faces of a closed surface, walked from outside, per face.
+ */
+export function face_sum_json(object: string, arrows: string[]): string;
+
+/**
  * The loop sums of one object from one set of numbers.
  */
 export function loops_json(object: string, values: string[], degree: number): string;
@@ -31,6 +36,16 @@ export function number_json(value: string): string;
  */
 export function slosh_json(object: string, initial: string[], k: string, ticks: number): string;
 
+/**
+ * A run of the one rule with a weight per line — the dial.
+ */
+export function slosh_weighted_json(object: string, initial: string[], weights: string[], k: string, ticks: number): string;
+
+/**
+ * One walk, with the sum building term by term.
+ */
+export function walk_json(object: string, degree: number, index: number, values: string[]): string;
+
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
@@ -38,9 +53,12 @@ export interface InitOutput {
     readonly census_json: (a: number) => [number, number];
     readonly certificate_json: (a: number, b: number, c: number, d: number) => [number, number];
     readonly cut_json: () => [number, number];
+    readonly face_sum_json: (a: number, b: number, c: number, d: number) => [number, number];
     readonly loops_json: (a: number, b: number, c: number, d: number, e: number) => [number, number];
     readonly number_json: (a: number, b: number) => [number, number];
     readonly slosh_json: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number];
+    readonly slosh_weighted_json: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number];
+    readonly walk_json: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number];
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
     readonly __wbindgen_externrefs: WebAssembly.Table;

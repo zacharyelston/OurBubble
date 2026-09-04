@@ -74,6 +74,25 @@ if [ -n "$(git -C "$SRC" status --porcelain -- core/napkin core/geom)" ]; then
   exit 1
 fi
 
+# Is the pin on UniForge's `main` yet? A pre-merge vendoring is how a UniForge change gets reviewed
+# against this book, so this does not refuse — but a pin that no branch anyone else will ever fetch
+# can reach is a book computing with a commit that does not exist for its readers, and that has to be
+# said out loud every time rather than remembered.
+if git -C "$SRC" rev-parse --verify --quiet origin/main >/dev/null; then
+  if git -C "$SRC" merge-base --is-ancestor "$PINNED_SHA" origin/main; then
+    echo "engine pin: ${PINNED_SHA:0:7} is on UniForge main"
+  else
+    echo "" >&2
+    echo "engine pin: ${PINNED_SHA:0:7} is NOT reachable from UniForge origin/main." >&2
+    echo "            engine.lock names ref '$(lock_value ref)'. This is a PRE-MERGE vendoring:" >&2
+    echo "            the pin must move to the merge commit, and ref back to main, before the" >&2
+    echo "            book ships. See engine.lock's header." >&2
+    echo "" >&2
+  fi
+else
+  echo "engine pin: $SRC has no origin/main to check the pin against — unverified." >&2
+fi
+
 RUSTC="$(cd "$SRC/core" && rustc --version)"
 BINDGEN="$(wasm-bindgen --version)"
 [ "$RUSTC" = "$PINNED_TOOLCHAIN" ] || {
