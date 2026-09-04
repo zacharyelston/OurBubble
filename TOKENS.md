@@ -5,7 +5,9 @@
 > about nature. [`FIREWALL.md`](FIREWALL.md) is the long version.
 
 There is one engine: UniForge's `napkin` crate, vendored under [`engine/`](engine/PROVENANCE.md) and
-pinned by [`engine.lock`](engine.lock). It computes **23 registered rows** (`lab/napkin/0001`).
+pinned by [`engine.lock`](engine.lock). It computes **23 registered rows** (`lab/napkin/0001`) and,
+since the 2026-09-04 bump, **five more** the demos asked for (`lab/napkin/0003` — see the section
+below; no chapter renders those yet).
 **Twenty-one of them are vendored as data**, and the two that are not — R22 and R23 — are not data
 at all: they are properties of the engine (it refuses a non-complex; its output is canonical JSON,
 byte for byte), and they are checked rather than shown. The chapters currently render **sixteen**.
@@ -76,6 +78,39 @@ the named accessors beside it return the same values as `Fraction`s and tuples.
 `engine/napkin.json` carries eighteen of the twenty-one; `engine/rows.json` carries the other three
 (R07, R10, R19), because the payload's shape is pinned byte for byte to the Python oracle's output
 and nothing may be added to it.
+
+## The five the demos asked for — `lab/napkin/0003`
+
+Writing the demos (PR #60) found five places the engine's browser surface could not be asked a
+question the page wanted, and each demo did the honest thing: it narrowed the interaction to what the
+engine *had* computed and wrote the gap down. UniForge #362 closed all five, and this engine bump
+brings them in. **No token renders any of them yet** — that is the next pass, and it is a Structure
+decision against `OUTLINE.md`'s beats, not an engine one.
+
+The demos will reach these through the WebAssembly module, where they are *questions* rather than one
+fixed answer: `slosh_weighted_json`, `face_sum_json` and `walk_json` are new entry points, and
+`loops_json` and `certificate_json` now answer where they used to have nothing to say. They are
+vendored as data as well, under `rows.json` → `gaps`, so that `tools/engine_check.py` recomputes all
+five in Python and demands the same bytes.
+
+| row | what it computes | vendored under | asked in the browser by |
+|---|---|---|---|
+| G01 | **the dial** — a run of the one rule with a weight per line (`AB` counted double) | `rows.json` → `gaps.dial` | `slosh_weighted_json(object, initial, weights, k, ticks)` |
+| G02 | **the outward eight-face sum**, per face, with the cycles the walk used and the sum building face by face | `gaps.outward_face_sum` | `face_sum_json(object, arrows)` |
+| G03 | **two dots and a line** — no closed walk exists, at either degree, as a count rather than an error | `gaps.two_dots` | `loops_json("two-dots", values, degree)`, and every answer's new `closed_walks` |
+| G04 | **the triangle's tick ceiling** — `λ = 3`, integer eigenvector `(−1, 1, 0)`, bound `4/3` | `gaps.triangle_certificate` | `certificate_json("triangle", k)` |
+| G05 | **a walk's running partial sums** — the sum building line by line, in the order a reader takes it | `gaps.walks` | `walk_json(object, degree, index, values)` |
+
+Two properties of the whole surface came with them and are not data:
+
+* **no entry point panics.** An unknown object, a value that is not an exact rational, a walk index
+  that does not exist — each comes back as `{"object": …, "refused": …}`. On
+  `wasm32-unknown-unknown` a panic is an unrecoverable trap: the page would not get an error, it
+  would lose the engine.
+* **the existing answers' bytes did not move.** `napkin.json` is byte-identical across this bump
+  (`sha256 = a770f4c4…`, unchanged), and across every browser entry point the only difference is one
+  *added* key, `closed_walks`. UniForge's `lab/napkin/0003-engine-gaps/data/byte-compatibility.txt`
+  is the measured diff.
 
 Beside the rows, the payload also carries `net` — `CANON.md`'s flat unfolded net, four panels, nine
 segments and nineteen labels — which is what the demos draw so that a picture in a demo is the

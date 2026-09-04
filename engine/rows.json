@@ -1,4 +1,418 @@
 {
+  "gaps": {
+    "dial": {
+      "history": [
+        [
+          "2",
+          "5",
+          "1",
+          "4"
+        ],
+        [
+          "11/2",
+          "-1/2",
+          "5",
+          "2"
+        ],
+        [
+          "1",
+          "4",
+          "5",
+          "2"
+        ],
+        [
+          "2",
+          "5",
+          "1",
+          "4"
+        ],
+        [
+          "13/2",
+          "1/2",
+          "1",
+          "4"
+        ],
+        [
+          "1",
+          "4",
+          "5",
+          "2"
+        ],
+        [
+          "1",
+          "4",
+          "5",
+          "2"
+        ],
+        [
+          "13/2",
+          "1/2",
+          "1",
+          "4"
+        ],
+        [
+          "2",
+          "5",
+          "1",
+          "4"
+        ],
+        [
+          "1",
+          "4",
+          "5",
+          "2"
+        ],
+        [
+          "11/2",
+          "-1/2",
+          "5",
+          "2"
+        ]
+      ],
+      "k": "1/2",
+      "object": "tetrahedron",
+      "period": 0,
+      "printable_rows": 11,
+      "ticks": 10,
+      "totals": [
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12",
+        "12"
+      ],
+      "weights": [
+        "2",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    "outward_face_sum": {
+      "arrows": [
+        "3",
+        "1",
+        "4",
+        "1",
+        "5",
+        "2",
+        "6",
+        "5",
+        "3",
+        "5",
+        "8",
+        "9"
+      ],
+      "cycle_names": [
+        [
+          "AB",
+          "AC",
+          "AD"
+        ],
+        [
+          "AB",
+          "BC",
+          "AC"
+        ],
+        [
+          "AB",
+          "AD",
+          "BD"
+        ],
+        [
+          "AB",
+          "BD",
+          "BC"
+        ],
+        [
+          "AC",
+          "CD",
+          "AD"
+        ],
+        [
+          "AC",
+          "BC",
+          "CD"
+        ],
+        [
+          "AD",
+          "CD",
+          "BD"
+        ],
+        [
+          "BC",
+          "BD",
+          "CD"
+        ]
+      ],
+      "cycles": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          0,
+          3,
+          1
+        ],
+        [
+          0,
+          2,
+          4
+        ],
+        [
+          0,
+          4,
+          3
+        ],
+        [
+          1,
+          5,
+          2
+        ],
+        [
+          1,
+          3,
+          5
+        ],
+        [
+          2,
+          5,
+          4
+        ],
+        [
+          3,
+          4,
+          5
+        ]
+      ],
+      "face_numbers": [
+        "7",
+        "-1",
+        "5",
+        "-8",
+        "-2",
+        "4",
+        "-11",
+        "6"
+      ],
+      "lines_walked_each_way": 12,
+      "object": "octahedron",
+      "orientation": "outward",
+      "running": [
+        "7",
+        "6",
+        "11",
+        "3",
+        "1",
+        "5",
+        "-6",
+        "0"
+      ],
+      "sum": "0"
+    },
+    "triangle_certificate": {
+      "at_the_book_tick": {
+        "bound": "4/3",
+        "eigenvalue": 3,
+        "eigenvector": [
+          -1,
+          1,
+          0
+        ],
+        "holds": true,
+        "k": "1/2",
+        "object": "triangle"
+      },
+      "at_the_bound": {
+        "bound": "4/3",
+        "eigenvalue": 3,
+        "eigenvector": [
+          -1,
+          1,
+          0
+        ],
+        "holds": false,
+        "k": "4/3",
+        "object": "triangle"
+      }
+    },
+    "two_dots": {
+      "degree_0": {
+        "closed_walks": 0,
+        "degree": 0,
+        "loops": [
+          "3"
+        ],
+        "object": "two-dots",
+        "sum": "3",
+        "values": [
+          "2",
+          "5"
+        ]
+      },
+      "degree_1": {
+        "closed_walks": 0,
+        "degree": 1,
+        "loops": [],
+        "object": "two-dots",
+        "sum": "0",
+        "values": [
+          "3"
+        ]
+      }
+    },
+    "walks": {
+      "tetrahedron_face": {
+        "cell": "ABC",
+        "cell_dots": [
+          0,
+          1,
+          2
+        ],
+        "degree": 1,
+        "index": 0,
+        "object": "tetrahedron",
+        "order": "cycle",
+        "running": [
+          "3",
+          "5",
+          "4"
+        ],
+        "signs": [
+          1,
+          1,
+          -1
+        ],
+        "step_cells": [
+          0,
+          3,
+          1
+        ],
+        "steps": [
+          "AB",
+          "BC",
+          "AC"
+        ],
+        "sum": "4",
+        "terms": [
+          "3",
+          "2",
+          "-1"
+        ],
+        "values": [
+          "3",
+          "1",
+          "1",
+          "2",
+          "1",
+          "1"
+        ]
+      },
+      "tetrahedron_inside": {
+        "cell": "ABCD",
+        "cell_dots": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "degree": 2,
+        "index": 0,
+        "object": "tetrahedron",
+        "order": "incidence",
+        "running": [
+          "-4",
+          "-1",
+          "-2",
+          "0"
+        ],
+        "signs": [
+          -1,
+          1,
+          -1,
+          1
+        ],
+        "step_cells": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "steps": [
+          "ABC",
+          "ABD",
+          "ACD",
+          "BCD"
+        ],
+        "sum": "0",
+        "terms": [
+          "-4",
+          "3",
+          "-1",
+          "2"
+        ],
+        "values": [
+          "4",
+          "3",
+          "1",
+          "2"
+        ]
+      },
+      "triangle_face": {
+        "cell": "ABC",
+        "cell_dots": [
+          0,
+          1,
+          2
+        ],
+        "degree": 1,
+        "index": 0,
+        "object": "triangle",
+        "order": "cycle",
+        "running": [
+          "3",
+          "-1",
+          "0"
+        ],
+        "signs": [
+          1,
+          1,
+          -1
+        ],
+        "step_cells": [
+          0,
+          2,
+          1
+        ],
+        "steps": [
+          "AB",
+          "BC",
+          "AC"
+        ],
+        "sum": "0",
+        "terms": [
+          "3",
+          "-4",
+          "1"
+        ],
+        "values": [
+          "3",
+          "-1",
+          "-4"
+        ]
+      }
+    }
+  },
   "no_room": {
     "diameter": 1,
     "dots": 4,

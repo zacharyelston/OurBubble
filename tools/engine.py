@@ -294,11 +294,29 @@ def triangle_motion() -> Dict[str, Any]:
             "at_the_book_tick": run(group["at_the_book_tick"])}
 
 
+def gaps() -> Dict[str, Any]:
+    """Register rows G01–G05 (`lab/napkin/0003`) — the five gaps the demos found, as data.
+
+    The demos will reach these through the WebAssembly module, where they are questions rather than
+    a fixed answer (`slosh_weighted_json`, `face_sum_json`, `walk_json`, and the two answers
+    `loops_json` and `certificate_json` now give). They are vendored here as well so that
+    `tools/engine_check.py` can recompute all five in Python and demand the same bytes — the same
+    reason R07, R10 and R19 are vendored.
+
+    **No token renders any of this yet**, so this returns the group as the engine wrote it rather
+    than guessing which parts a renderer will want as `Fraction`s. When a chapter or a demo does need
+    one, the accessor for it grows here, and it still computes nothing.
+    """
+    return rows_payload()["gaps"]
+
+
 # ── what is available, and what is not yet used ──────────────────────────────────────────────────
 
 #: Every group the vendored engine carries, and the register rows it covers. `TOKENS.md` is the
-#: reader-facing form of this table; it lives here so the two cannot drift, and `check_edition.py`
-#: holds `TOKENS.md` to it.
+#: reader-facing form of this table, and it lives here so a group cannot be added to the payload
+#: without a line saying what it is. Nothing mechanical compares the two yet — keeping them together
+#: is a habit, not a gate, and calling it a gate would be the lie this repository is most careful
+#: about.
 GROUPS: Dict[str, Tuple[str, str]] = {
     "complexes": ("R01 R02", "the ascending census on 1, 2, 3 and 4 dots, and the coboundaries"),
     "triangle": ("R03", "the first thing that closes: three differences and their loop sum"),
@@ -313,6 +331,8 @@ GROUPS: Dict[str, Tuple[str, str]] = {
     "triangle_motion": ("R07", "the one rule on the triangle, at 2/3 and at the book's 1/2"),
     "no_room": ("R10", "hops from every dot of the tetrahedron, and its diameter of one"),
     "world": ("R19", "how many kinds of place there are on a wrapped world, and its control"),
+    "gaps": ("G01–G05", "the five the demos found: the dial, the outward eight-face sum, the "
+                        "two-dot complex, the triangle's ceiling, and a walk's running sums"),
 }
 
 

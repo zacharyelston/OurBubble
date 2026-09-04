@@ -14,9 +14,9 @@ commit [`../engine.lock`](../engine.lock) pins, and every byte of it is hashed t
 | | |
 |---|---|
 | source | `github.com/zacharyelston/UniForge` — **private** |
-| commit | `96692121467b5d4f103aa8d7cad6db88ad85b909` |
+| commit | `f8f07ebb79c21aa60407c47b4bb9d7cc4a8729c9` — UniForge `napkin/engine`, the head of PR #362. **Not yet on UniForge `main`**: see `../engine.lock`'s header, and the pin must move to that PR's merge commit. |
 | crate | `core/napkin` v0.1.2 — UniForge Layer 3 |
-| register | `lab/napkin/0001-napkin-engine-register` — 23 registered computations, all implemented |
+| register | `lab/napkin/0001-napkin-engine-register` — 23 registered computations, all implemented; and `lab/napkin/0003-engine-gaps` — five more (G01–G05), all implemented |
 | toolchain | rustc 1.97.1, `wasm32-unknown-unknown`, wasm-bindgen 0.2.127 |
 
 The crate is the engine for the book **and** its demos (owner's decision, 2026-09-02). Python and
@@ -27,9 +27,9 @@ JavaScript are renderers of what it computes; they no longer compute it.
 | file | what it is |
 |---|---|
 | `napkin.json` | the canonical payload — every token's underlying data, and none of its prose. **Byte-identical** to `tools/napkin_export.py`'s output, which is the bar the build script refuses to vendor without. |
-| `rows.json` | register rows **R07**, **R10** and **R19** — the rule on the triangle at a tick no float represents, the tetrahedron's want of room, and how many kinds of place there are on a `6³` wrapped world with the control beside it. Emitted separately because `napkin.json`'s shape is pinned to the Python oracle's and nothing may be added to it. |
+| `rows.json` | register rows **R07**, **R10** and **R19** — the rule on the triangle at a tick no float represents, the tetrahedron's want of room, and how many kinds of place there are on a `6³` wrapped world with the control beside it — and, under `gaps`, **G01–G05**, the five the demos asked for. Emitted separately because `napkin.json`'s shape is pinned to the Python oracle's and nothing may be added to it. |
 | `napkin_bg.wasm` | the engine compiled for the browser — the reader's own copy of the arithmetic |
-| `napkin.js` | the wasm-bindgen glue: six entry points, strings in and strings out, so no rational type and no float crosses the boundary |
+| `napkin.js` | the wasm-bindgen glue: nine entry points, strings in and strings out, so no rational type and no float crosses the boundary. None of them panics — an unknown object, a value that is not an exact rational, a walk that does not exist all come back as a refusal object, because a panic here is an unrecoverable trap that would take the page with it. |
 | `napkin.d.ts`, `napkin_bg.wasm.d.ts` | the types wasm-bindgen wrote beside them |
 
 ## Why it is committed
