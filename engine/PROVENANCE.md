@@ -14,7 +14,7 @@ commit [`../engine.lock`](../engine.lock) pins, and every byte of it is hashed t
 | | |
 |---|---|
 | source | `github.com/zacharyelston/UniForge` — **private** |
-| commit | `f8f07ebb79c21aa60407c47b4bb9d7cc4a8729c9` — UniForge `napkin/engine`, the head of PR #362. **Not yet on UniForge `main`**: see `../engine.lock`'s header, and the pin must move to that PR's merge commit. |
+| commit | `aab98a96ba7f5197a25e7a94c7c36f1046d011b0` — UniForge `main` (PR #362 merged at ee6114e; the R10 lint fix #363 is the pinned merge). Vendored first from the PR head `f8f07eb` on 2026-09-04 and re-pinned to main the same day; the bytes are identical. |
 | crate | `core/napkin` v0.1.2 — UniForge Layer 3 |
 | register | `lab/napkin/0001-napkin-engine-register` — 23 registered computations, all implemented; and `lab/napkin/0003-engine-gaps` — five more (G01–G05), all implemented |
 | toolchain | rustc 1.97.1, `wasm32-unknown-unknown`, wasm-bindgen 0.2.127 |

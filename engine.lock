@@ -50,16 +50,15 @@
 # impossible — but it is a debt with a due date, and the due date is the merge.
 #
 #   2026-09-04 · pinned to UniForge `napkin/engine` at f8f07eb, the head of UniForge PR #362
-#   (lab/napkin/0003 — the five engine gaps). **The pin MUST move to that PR's merge commit,
-#   and `ref` back to `main`, before this book ships.** Until then every `make check` prints the
-#   warning above, which is the reminder.
+#   (lab/napkin/0003 — the five engine gaps). The pin moved to UniForge main on 2026-09-04 (#362 merged
+#   at ee6114e, lint fix #363 at aab98a9); this note is the record that it was once ahead of main.
 #
 # Format: `key = value`, one per line; `#` comments; repeated keys accumulate. `record.lock`'s.
 
 version       = 1
 repo          = github.com/zacharyelston/UniForge
-ref           = napkin/engine
-sha           = f8f07ebb79c21aa60407c47b4bb9d7cc4a8729c9
+ref           = main
+sha           = aab98a96ba7f5197a25e7a94c7c36f1046d011b0
 crate         = napkin
 crate_version = 0.1.2
 register      = lab/napkin/0001-napkin-engine-register
