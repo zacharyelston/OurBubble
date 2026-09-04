@@ -150,9 +150,10 @@ pinned by [`engine.lock`](../engine.lock).
 class in `demos/` any more, no `BigInt`, no second implementation of anything. Every number a page
 shows arrives through [`engine.mjs`](engine.mjs), from one of exactly two places:
 
-* the compiled engine, `../engine/napkin.js` — six entry points, strings in and strings out, so no
-  rational type and no float crosses the boundary: `census_json`, `cut_json`, `loops_json`,
-  `slosh_json`, `certificate_json`, `number_json`;
+* the compiled engine, `../engine/napkin.js` — the entry points `engine.mjs` lists, strings in and
+  strings out, so no rational type and no float crosses the boundary: `census_json`, `cut_json`,
+  `loops_json`, `slosh_json`, `certificate_json`, `number_json`, and the three the engine gained
+  for these pages, `slosh_weighted_json`, `face_sum_json` and `walk_json`;
 * the vendored data, `../engine/napkin.json` and `../engine/rows.json`, whose every rational is an
   exact `"n/d"` string.
 
@@ -287,6 +288,23 @@ is one more figure to go stale:
    not exercise it at all. So every step, in every state, is rendered to its still, and the still is
    held to carrying its own stylesheet, its own title and description, and the firewall — and the
    check prints how many it rendered.
+11. **The five the engine answers now are asked, and the answers are the ones on the page.** Every
+   one of the five defects this gate exists for is a page that looks right: a dialled run vendored
+   as one fixed answer, a walk's running column read off its own terms, a certificate borrowed from
+   another shape, a "no closed walk" nobody computed. None prints a number the engine did not
+   produce, so gate 2 sees none of them — this is the part of *right value, wrong place* that can be
+   closed, because for these five the question is known. Three ways, each a different lie: **the
+   question was asked at all** (each driven step is rebuilt against an engine door of its own,
+   rendered in every state, and the questions that door was put are the questions that step asked —
+   a shared door lets one step coast on another's question and answers the second time out of its
+   cache); **the answer on the page answers the question on the page** (the dialled run is re-asked
+   with the weights the reader can see, the certificate re-asked for the shape the step is about and
+   the tick in its own row, both on a second engine door so that the check's own questions never
+   enter the set gate 2 holds the page to); and **the running column is the sum building** — every
+   table declaring `{ runs: [terms, running] }` has that column added up here, in exact arithmetic,
+   on the digits a reader sees. A step names the tables this gate reads by a `tag` nobody is shown,
+   so a caption may be rewritten freely and losing the tag is a failure rather than a quiet
+   exemption.
 
 ### No guard lands without the mutation that proves it bites
 
@@ -443,51 +461,27 @@ node demos/core.test.mjs              # the cross-check on its own
 make check                            # tier 0, which runs both
 ```
 
-## Gaps in the engine
+## The gaps in the engine, and what closed them
 
-> **Five of these are closed in the engine, and none of them is closed here yet.** UniForge
-> [#362](https://github.com/zacharyelston/UniForge/pull/362) (`lab/napkin/0003`) implemented the
-> dial, the outward eight-face sum per face, the two-dot complex, the triangle's tick certificate
-> and a walk's running partial sums, and the 2026-09-04 engine bump vendored them: the module now
-> exports `slosh_weighted_json`, `face_sum_json` and `walk_json`, `loops_json` answers for
-> `"two-dots"` and carries `closed_walks`, and `certificate_json("triangle", …)` answers instead of
-> panicking. **The steps below still do what this section says they do** — rewiring them to ask the
-> new questions is a separate pass, so that the engine change and the reader-facing change can be
-> reviewed one at a time. `TOKENS.md`'s "The five the demos asked for" lists the entry points.
->
-> The one exception is the tick-to-tick difference, which was deliberately **not** registered: it is
-> a subtraction of two rows the engine already emits, so it is a page's reading rather than a
-> computation the engine owes. If a step wants it as data, that is an argument to make, not a field
-> to add quietly.
+**Five of these are closed in the engine and driven here; the sixth is not closed and is not
+wanted.** UniForge [#362](https://github.com/zacharyelston/UniForge/pull/362)
+(`lab/napkin/0003`) implemented the five, the 2026-09-04 engine bump vendored them, and this pass
+rewired the steps to ask them. `TOKENS.md`'s "The five the demos asked for" lists the rows; gate 11
+above is what holds each step to asking.
 
-**Four** things a step wanted and the engine's browser surface does not expose, and a fifth noted
-rather than wanted. **None of them is computed in JavaScript**; each is either taken from the
-vendored payload — where the engine did compute it, for one fixed set of inputs — or the interaction
-is narrowed to what the engine can answer. They are the register rows to ask UniForge for.
-
-| what a step wanted | what it does instead |
+| what a step wanted | what asks it now |
 |---|---|
-| **the rule with the dial turned** — `slosh_json` runs with every line counted the same, so the reader cannot turn the dial and re-run | the dial step offers the two positions the engine computed a
-nd vendored (`motion.plain`, `motion.dialed`, `AB` counted double), as a choice rather than a dial |
-| **the outward-oriented eight-face sum** — `loops_json` walks the octahedron's faces in the complex's own orientation, which does not sum to zero; the vendored `face_sum` is the outward walk, and it does | the eight-face walk uses the eight faces
- of the vendored arrow set; the reader steps through the faces rather than changing an arrow |
-| **a tick-to-tick difference** — `slosh_json` returns the history and no diff, so "which dots moved this tick" cannot be asked | the poke on the tetrahedron prints *other dots not at nothing*
-, which is what the number is, rather than a difference computed in JavaScript |
-| **the two-dot complex** — `loops_json` answers for the book's four objects, and two dots and a line is not one of them | the second step of chapter one asks the triangle for the difference on `AB`
- and reads `AB` alone. It is the same line and the same coboundary either way |
+| **the rule with the dial turned** — `slosh_json` ran with every line counted the same, so the dial step could only offer the two positions the engine had computed and vendored | the dial step takes a **weight per line** from the reader and runs `slosh_weighted_json`; the total is the same number at every tick and the rhythm is not, both off that run |
+| **the outward-oriented eight-face sum** — the vendored `face_sum` carried the eight numbers and their total and nothing else | the eight-face walk asks `face_sum_json`, which answers per face: the three lines each one walks, the orientation it walked them in, and the sum building face by face |
+| **the two-dot complex** — `loops_json` answered for the book's four objects, and two dots and a line was not one of them | both of chapter one's two-dot beats ask `loops_json` about `"two-dots"`: the difference on its one line, and its own count of closed walks, which is none — the reason nothing comes home yet |
+| **the triangle's ceiling** — `certificate_json` panicked on `"triangle"` rather than answering, so the beat where the tick belongs to the shape could only show two runs | that step asks `certificate_json("triangle", k)` for whichever tick she picks, prints the stiffest number, the integer eigenvector and the ceiling, and offers the ceiling itself as a third tick — where the certificate does not hold, and the refusal is the engine's |
+| **running partial sums along a walk** — `loops_json` gave a walk's total and no way to watch it being made, so the terms were got one at a time and the sum was simply printed | every walk table's running column is `walk_json`'s (`face_sum_json`'s on the ring): the engine's partial sums, in the order a reader takes the walk. `Engine.contribution` — the one-slot trick that got the terms before — is gone |
 
-The fourth: `certificate_json` panics on `"triangle"` rather than answering, so the step where the tick belongs to the shape shows the
-
-triangle's two ticks through their runs — which rows a napkin can write, and whether it comes home —
-rather than through a ceiling.
-
-The fifth, noted rather than wanted: `loops_json` gives no **running partial sums** along a walk, so
-the walk step shows each step's own contribution
- and the engine's total rather than a running tally. What
-it *does* give is each line's contribution on its own — ask it about one line with every other set to
-nothing, and what comes back is that line's term in the walk, with the orientation the object gives
-it. That is how the walk's terms are got (`Engine.contribution`), and it is why **the page never
-flips a sign**.
+**The sixth stays a page's reading, as it was recorded.** A tick-to-tick difference is a subtraction
+of two rows the engine already emits, so `lab/napkin/0003` deliberately did not register it: it
+would put a rendering convenience inside the arithmetic. The poke step therefore still prints *other
+dots not at nothing*, which is what that number is. If a step ever wants the difference as data,
+that is an argument to make in a register row, not a field to add quietly.
 
 ## The drawings: three conventions, and one mark that is not a convention
 

@@ -41,8 +41,18 @@
  * proof-reader silenced the first version of that check by renaming a column from "added up" to
  * "the total" in the same edit that broke the arithmetic under it. A guard a caption can switch off
  * is not a guard.
+ *
+ * A walk's table adds `{ runs: [terms, running] }` — column `terms` holds each step's own number and
+ * column `running` holds the engine's sum after that step, so the check can hold the second to the
+ * first down the rows. Both come off `walk_json`; neither is added up here.
+ *
+ * And `tag` is the name the cross-check knows a table by. It is not shown to anybody: it is how the
+ * gate that says *this step's numbers are this entry point's answer* finds the table it is written
+ * against, so that renaming a caption moves nothing and deleting the tag is a failure rather than a
+ * quiet exemption.
  */
-const table = (caption, head, rows, shape = null) => ({ caption, head, rows, shape });
+const table = (caption, head, rows, shape = null, tag = null) =>
+  ({ caption, head, rows, shape, tag });
 
 /** The chapters, in the book's order, each a list of steps. */
 export function chapterSteps(engine, draw) {
@@ -78,6 +88,8 @@ export function chapterSteps(engine, draw) {
   // ── 1 · Two dots, a line, and the first thing that closes ─────────────────────────────────────
 
   const chapterOne = () => {
+    // The world of the second and third beats, by the name the engine answers to for it.
+    const TWO_DOTS = "two-dots";
     const first = P.triangle.chapter.values;
     const second = P.triangle.another.values;
     const corners = NAMES.slice(0, count(first));
@@ -86,23 +98,19 @@ export function chapterSteps(engine, draw) {
     const atBook = R.triangle_motion.at_the_book_tick;
     const unprintable = atBook.history[atBook.printable_rows][0];
 
-    /** The three differences the object works out from three corner numbers, and their loop. */
+    /** The three differences the object works out from three corner numbers, and their walk. */
     const differencesOf = (values) => {
       const edges = engine.loops("triangle", values, 0).loops;
-      const loop = engine.loops("triangle", edges, 1);
-      return { edges, loop: loop.loops[0] };
+      // The walk round the face, from the engine: which lines it takes and in which order, what
+      // each step costs, the sum after each step, and the total. A proof-reader caught the first
+      // version printing each line's own difference in the walk column, so that three terms were
+      // shown adding to a total they visibly did not make: +3, −1, −4 under "added up: 0". The
+      // walk uses AC the other way and its term is +1 — the engine's answer, not a sign flipped
+      // here, and now its running column as well, so the total is watched being made.
+      return { edges, walk: engine.walk("triangle", 1, 0, edges) };
     };
 
     const triangleLines = LINES.filter((name) => !name.includes(NAMES[3]));
-
-    // What each line contributes to the walk round the face — the engine's answer, one line at a
-    // time, not a sign flipped here. A proof-reader caught the first version printing each line's
-    // own difference in this column, so that three terms were shown adding to a total they visibly
-    // did not make: +3, −1, −4 under the heading "added up: 0". The walk uses AC the other way, and
-    // its contribution is +1. The engine is asked for that rather than the page working it out.
-    const walkTerms = (edges) =>
-      triangleLines.map((name, index) =>
-        engine.contribution("triangle", edges, 1, index)[0]);
 
     const cornerTable = (values) => table("the corners", ["dot", "number"],
       corners.map((name, index) => [name, show(values[index])]));
@@ -140,19 +148,19 @@ export function chapterSteps(engine, draw) {
         act: "Put a number on the other dot.",
         controls: [{ kind: "numbers", names: corners.slice(0, 2), initial: first.slice(0, 2) }],
         render: (state) => {
-          // The difference on `AB` is asked of the triangle, and read off `AB` alone. The engine's
-          // browser surface answers for the book's objects, and two dots and a line is not one of
-          // them — a gap listed on the PR. It is the same line and the same coboundary either way:
-          // `AB`'s difference does not depend on what else the complex contains.
-          const values = [...state.numbers, ZERO];
-          const edges = engine.loops("triangle", values, 0).loops;
+          // Two dots and a line is a world the engine answers for in its own right now, so the
+          // difference on `AB` is asked of THAT world rather than read off a triangle with the
+          // third corner set to nothing. It is the same line and the same coboundary either way —
+          // and asking the world she is looking at is what the engine could not do before.
+          const values = state.numbers;
+          const held = engine.loops(TWO_DOTS, values, 0);
           const name = triangleLines[0];
           return {
             drawing: draw.drawTriangle({
               dots: 2, emphasis: [name],
               values: {
                 [corners[0]]: show(values[0]), [corners[1]]: show(values[1]),
-                [name]: signed(edges[0]),
+                [name]: signed(held.loops[0]),
               },
               title: "Two dots, and the change between them",
             }),
@@ -160,7 +168,8 @@ export function chapterSteps(engine, draw) {
               table("the two numbers", ["dot", "number"],
                 corners.slice(0, 2).map((dot, index) => [dot, show(values[index])])),
               table("what the line holds", ["line", "from these two", "difference"],
-                [[name, `${show(values[1])} − ${show(values[0])}`, signed(edges[0])]]),
+                [[name, `${show(values[1])} − ${show(values[0])}`, signed(held.loops[0])]],
+                null, "two-dots-difference"),
             ],
           };
         },
@@ -172,6 +181,10 @@ export function chapterSteps(engine, draw) {
         render: (state) => {
           const walked = corners.slice(0, Math.min(state.tick + 1, 2));
           const stuck = state.tick >= 2;
+          // Why nothing comes home, from the world itself: the engine counts the closed walks two
+          // dots and a line has, and the count is none. This used to be a sentence the page was
+          // trusted on, because the browser surface had no such world to ask.
+          const closed = engine.loops(TWO_DOTS, [ZERO], 1);
           return {
             drawing: draw.drawTriangle({
               dots: 2, arrows: state.tick >= 1 ? [[0, 1]] : [],
@@ -186,6 +199,10 @@ export function chapterSteps(engine, draw) {
                   state.tick === 0 ? "yes" : "no"]]),
               table("its one line", ["line"],
                 rung(2, KINDS[1]).map((_, index) => [triangleLines[index]])),
+              table("what closes here", ["walks that close", "so does anything come home"],
+                [[closed.closed_walks === 0 ? "none" : String(closed.closed_walks),
+                  closed.closed_walks === 0 ? "no" : "yes"]],
+                null, "two-dots-closed"),
             ],
           };
         },
@@ -242,10 +259,13 @@ export function chapterSteps(engine, draw) {
           { kind: "tick", count: 3, noun: "step" },
         ],
         render: (state) => {
-          const { edges, loop } = differencesOf(state.numbers);
-          const walk = [[0, 1], [1, 2], [2, 0]];
-          const taken = walk.slice(0, state.tick);
-          const home = state.tick >= walk.length;
+          const { edges, walk } = differencesOf(state.numbers);
+          // The cycle is the engine's too: the dots of the face it walks, in the order it walks
+          // them, so the arrows on the drawing and the steps in the table are one list.
+          const cycle = walk.cell_dots.map((from, index) =>
+            [from, walk.cell_dots[(index + 1) % walk.cell_dots.length]]);
+          const taken = cycle.slice(0, state.tick);
+          const home = state.tick >= cycle.length;
           return {
             drawing: draw.drawTriangle({
               dots: 3, showFace: true, arrows: taken,
@@ -253,26 +273,23 @@ export function chapterSteps(engine, draw) {
               title: home ? "Home, and holding nothing" : "The walk round the triangle",
             }),
             tables: [
-              // The difference on a line is the engine's, in the line's own direction, and the
-              // walk is told which way it is going rather than being handed a negated copy. Nothing
-              // on this page changes the sign of anything: the walk's own total is asked of the
-              // engine one rung up, and it is the zero the beat is about.
+              // Every column here is the engine's answer to one question. Which line each step
+              // takes and which way round it goes are the walk's own `steps` and `signs` — the page
+              // does not work out that AC is walked against itself, and it does not flip a sign to
+              // suit. What the step costs is that term. And the sum so far is the walk's running
+              // column, so a reader watches the total being made instead of being handed it: the
+              // engine had no such column until now, and the page may not add up.
               table("the walk, step by step",
-                ["step", "line", "walked", "what it costs you"],
-                taken.map(([from, to]) => {
-                  const name = [corners[from], corners[to]].sort().join("");
-                  const index = triangleLines.indexOf(name);
-                  return [
-                    `${corners[from]} → ${corners[to]}`, name,
-                    name[0] === corners[from] ? "the way it points" : "the other way",
-                    signed(walkTerms(edges)[index]),
-                  ];
-                })),
+                ["step", "line", "walked", "what it costs you", "what you are holding"],
+                taken.map(([from, to], index) => [
+                  `${corners[from]} → ${corners[to]}`, walk.steps[index],
+                  walk.signs[index] > 0 ? "the way it points" : "the other way",
+                  signed(walk.terms[index]), show(walk.running[index]),
+                ]), { runs: [3, 4] }, "walk-running"),
               table("what the whole walk comes to",
                 ["what the steps so far cost you", "the whole way round"],
-                [[taken.map(([from, to]) => signed(walkTerms(edges)[
-                  triangleLines.indexOf([corners[from], corners[to]].sort().join(""))]))
-                  .join("  ") || "nothing yet", home ? show(loop) : "not home yet"]],
+                [[walk.terms.slice(0, state.tick).map(signed).join("  ") || "nothing yet",
+                  home ? show(walk.sum) : "not home yet"]],
                 { total: 1 }),
             ],
           };
@@ -290,7 +307,7 @@ export function chapterSteps(engine, draw) {
         }],
         render: (state) => {
           const values = state.choice.value;
-          const { edges, loop } = differencesOf(values);
+          const { edges, walk } = differencesOf(values);
           return {
             drawing: draw.drawTriangle({
               dots: 3, showFace: true, values: netValues(values, edges),
@@ -302,11 +319,14 @@ export function chapterSteps(engine, draw) {
               // step already printed
               // these; here the two tables sat side by side — AC as −1 in one and +1 in the packed
               // row of the other — with nothing on the page reconciling the sign.
-              table("the terms the walk uses", ["line", "its term"],
-                triangleLines.map((name, index) => [name, signed(walkTerms(edges)[index])])),
+              table("the terms the walk uses, and what it holds on the way",
+                ["line", "its term", "what you are holding"],
+                walk.steps.map((name, index) =>
+                  [name, signed(walk.terms[index]), show(walk.running[index])]),
+                { runs: [1, 2] }, "walk-running"),
               table("what the whole walk comes to", ["the three terms, as the walk uses them",
                 "added up"],
-                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
+                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),
             ],
           };
         },
@@ -317,7 +337,7 @@ export function chapterSteps(engine, draw) {
         controls: [{ kind: "press", label: "swap it in" }],
         render: (state) => {
           const values = state.pressed ? [...first.slice(0, 2), unprintable] : first;
-          const { edges, loop } = differencesOf(values);
+          const { edges, walk } = differencesOf(values);
           const printed = values.map((value) => engine.print(value));
           return {
             drawing: draw.drawTriangle({
@@ -332,15 +352,16 @@ export function chapterSteps(engine, draw) {
               // version listing +3, −1, −4 and then "added up 0" — two tables making one wrong
               // claim between them. Every table on these pages that prints a total now prints the
               // terms of THAT total beside it.
-              table("the terms the walk uses",
-                ["line", "its term", "does a napkin print it"],
-                triangleLines.map((name, index) => {
-                  const term = engine.signed(walkTerms(edges)[index]);
-                  return [name, term.text, term.refused ? "no" : "yes"];
-                })),
+              table("the terms the walk uses, and what it holds on the way",
+                ["line", "its term", "does a napkin print it", "what you are holding"],
+                walk.steps.map((name, index) => {
+                  const term = engine.signed(walk.terms[index]);
+                  return [name, term.text, term.refused ? "no" : "yes",
+                    show(walk.running[index])];
+                }), { runs: [1, 3] }, "walk-running"),
               table("what the whole walk comes to",
                 ["the three terms, as the walk uses them", "added up"],
-                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
+                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),
             ],
           };
         },
@@ -356,7 +377,7 @@ export function chapterSteps(engine, draw) {
         controls: [{ kind: "press", label: "clear" }],
         render: (state) => {
           const values = state.pressed ? corners.map(() => ZERO) : first;
-          const { edges, loop } = differencesOf(values);
+          const { edges, walk } = differencesOf(values);
           return {
             drawing: draw.drawTriangle({
               dots: 3, showFace: true,
@@ -378,7 +399,7 @@ export function chapterSteps(engine, draw) {
                 [["none", "none", "none"]]),
               table("what the walk comes to",
                 ["the three terms, as the walk uses them", "added up"],
-                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),
+                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),
             ],
           };
         },
@@ -484,7 +505,10 @@ export function chapterSteps(engine, draw) {
         controls: [{ kind: "numbers", names: LINES, initial: arrows }],
         render: (state) => {
           const loops = faceLoopsOf(state.numbers);
-          const inside = engine.loops("tetrahedron", loops.loops, 2);
+          // The walk round the inside, from the engine: the four faces in the order it takes them,
+          // what each one costs, and the sum after each — the coming-home built in front of her
+          // rather than announced under four numbers.
+          const inside = engine.walk("tetrahedron", 2, 0, loops.loops);
           return {
             drawing: draw.drawNet({
               lines: false,
@@ -498,12 +522,16 @@ export function chapterSteps(engine, draw) {
               // The same fix as chapter 1's walk, one rung up: the walk round the inside uses each
               // face in a direction, and two of the four the other way. The terms it actually adds
               // are asked of the engine, so that four numbers and their total are one arithmetic a
-              // reader can do herself.
+              // reader can do herself — and the sum is shown building, face by face, which is the
+              // running column the engine had nothing to answer with before.
+              table("the inside, face by face",
+                ["face", "its term", "what you are holding"],
+                inside.steps.map((name, index) =>
+                  [name, signed(inside.terms[index]), show(inside.running[index])]),
+                { runs: [1, 2] }, "walk-running"),
               table("the inside, walked round",
                 ["the four terms, as the walk uses them", "added up"],
-                [[FACES.map((name, index) =>
-                  signed(engine.contribution("tetrahedron", loops.loops, 2, index)[0])).join("  "),
-                  show(inside.loops[0])]], { total: 1 }),
+                [[inside.terms.map(signed).join("  "), show(inside.sum)]], { total: 1 }),
             ],
           };
         },
@@ -578,14 +606,21 @@ export function chapterSteps(engine, draw) {
     const tetraCorners = P.tetrahedron.corners;
     const k = P.motion.k;
     const ticks = P.motion.ticks;
-    const dialed = P.motion.dialed_line;
+    // Where the dial starts: the weights the register ran the dialled row at, one line counted for
+    // more than the rest. Plain is what every other line is worth, and what turning one back to
+    // gives the run with no dial in it at all.
+    const dialWeights = R.gaps.dial.weights;
+    const plainWeight = ONE;
+    // The triangle's own ceiling, asked of the engine rather than written down here — it is the
+    // third tick the reader can try, and the one the certificate refuses.
+    const triangleCeiling = engine.certificate("triangle", k).bound;
     const triangleNames = NAMES.slice(0, count(triangleCorners));
     const hops = R.no_room.hops;
 
-    const runTable = (caption, history, totals, names) =>
+    const runTable = (caption, history, totals, names, tag = null) =>
       table(caption, ["tick", ...names, "added up"],
         history.map((row, tick) => [String(tick), ...row.map(show), show(totals[tick])]),
-        { total: names.length + 1 });
+        { total: names.length + 1 }, tag);
 
     const printableRow = (history, printable) => table("how far a napkin gets",
       ["rows it can write", "rows there are"], [[String(printable), count(history)]]);
@@ -694,16 +729,23 @@ export function chapterSteps(engine, draw) {
       },
       {
         anchors: ["the-tick-belongs-to-the-shape"],
-        act: "Run it at the other tick.",
+        act: "Run it at another tick.",
         controls: [{
           kind: "choose",
-          // The two ticks label themselves, in the engine's own printing of them. A word here would
-          // be a word explaining what the number already says.
-          options: [atShape, atBook].map((run) => ({ label: show(run.k), value: run })),
+          // The ticks label themselves, in the engine's own printing of them. A word here would be
+          // a word explaining what the number already says. The third of them is the triangle's own
+          // ceiling, which the engine now answers for this shape: at it, the certificate does not
+          // hold, and the refusal she gets is the engine's rather than a sentence about one.
+          options: [atShape.k, atBook.k, triangleCeiling].map((tick) =>
+            ({ label: show(tick), value: tick })),
         }],
         render: (state) => {
           const chosen = state.choice.value;
-          const run = engine.slosh("triangle", triangleCorners, chosen.k, ticks);
+          const run = engine.slosh("triangle", triangleCorners, chosen, ticks);
+          // The certificate for THIS shape at THIS tick. `certificate_json` used to panic on the
+          // triangle rather than answer, so the beat where the ceiling belongs to the shape could
+          // only show the two runs and let a reader infer the ceiling from them.
+          const certificate = engine.certificate("triangle", chosen);
           const printable = run.printable_rows;
           // Marked row by row, rather than announced in a summary above a table that then writes
           // every row anyway. A reader who is told "rows it can write: 3" over eleven written rows
@@ -727,6 +769,16 @@ export function chapterSteps(engine, draw) {
               printableRow(run.history, printable),
               table("does it come home", ["tick", "back where it started every"],
                 [[show(run.k), run.period === 0 ? "never" : String(run.period)]]),
+              // The ceiling, and the two integers that certify it: the shape's stiffest number and
+              // the eigenvector a reader can multiply out on the napkin herself. No eigensolver and
+              // no floating point anywhere in it.
+              table("is this tick inside the shape's ceiling",
+                ["tick", "the shape's stiffest", "the numbers it is stiffest on", "the ceiling",
+                  "inside it"],
+                [[show(certificate.k), show(String(certificate.eigenvalue)),
+                  certificate.eigenvector.map((value) => show(String(value))).join("  "),
+                  show(certificate.bound), certificate.holds ? "yes" : "no"]],
+                { notASum: true }, "triangle-certificate"),
             ],
           };
         },
@@ -784,32 +836,35 @@ export function chapterSteps(engine, draw) {
       },
       {
         anchors: ["turn-the-dial"],
-        act: `Count ${dialed} double.`,
+        act: "Turn a line's dial.",
         controls: [
-          {
-            kind: "choose",
-            options: [
-              { label: "every line the same", value: P.motion.plain },
-              { label: `${dialed} counted double`, value: P.motion.dialed },
-            ],
-          },
+          { kind: "numbers", names: LINES, initial: dialWeights },
           { kind: "tick", count: ticks, noun: "tick" },
         ],
         render: (state) => {
-          // The dial is the one place these pages cannot ask the engine a fresh question: its
-          // browser surface runs the rule with every line counted the same, so the dialled run is
-          // the one the engine computed and vendored. A gap listed on the PR.
-          const run = state.choice.value;
-          const turned = state.choice.index === 1;
+          // The dial is a question now, not two answers. It used to offer the two runs the engine
+          // had computed and vendored — every line the same, and AB counted double — because the
+          // browser surface ran the rule with one weight for every line and could not be asked
+          // anything else. It can: she sets a weight per line and the run is re-run from them.
+          const run = engine.sloshWeighted("tetrahedron", tetraCorners, state.numbers, k, ticks);
+          const turned = LINES.filter((name, index) => state.numbers[index] !== plainWeight);
           return {
             drawing: draw.drawNet({
-              emphasis: turned ? [dialed] : [],
+              emphasis: turned,
               values: Object.fromEntries(NAMES.map((name, index) =>
                 [name, show(run.history[state.tick][index])])),
-              title: turned ? `${dialed}, counted double` : "Every line, counted the same",
+              title: turned.length === 0
+                ? "Every line, counted the same"
+                : "A line counted for more than the others",
             }),
             tables: [
-              runTable("every tick", run.history, run.totals, NAMES),
+              // What the dial is set to, which is what the run below was asked with.
+              table("what each line is worth", ["line", "worth"],
+                LINES.map((name, index) => [name, show(state.numbers[index])]),
+                null, "dial-weights"),
+              runTable("every tick", run.history, run.totals, NAMES, "dial-run"),
+              // The two things the dial does and does not change, both off the same run: the total
+              // is the same number it was at the start, and the rhythm is the engine's period.
               table("what the dial changed", ["back where it started every", "the total"],
                 [[run.period === 0 ? "never" : String(run.period), show(run.totals[state.tick])]]),
             ],
@@ -858,7 +913,8 @@ export function chapterSteps(engine, draw) {
   const chapterFour = () => {
     const cut = P.cut;
     const poke = P.poke;
-    const faceSum = P.face_sum;
+    // The arrow set the outward walk is asked about, from the engine's own payload.
+    const faceArrows = P.face_sum.arrows;
     const tipNames = draw.tipNames();
     const atATip = tipNames
       .map((name, index) => ({ name, index }))
@@ -981,11 +1037,17 @@ export function chapterSteps(engine, draw) {
         // "face 0 of 8" reads as a face that does not exist. The counter counts what she has done.
         controls: [{ kind: "tick", count: cut.oct_faces, noun: "faces walked" }],
         render: (state) => {
+          // The outward walk, asked of the engine. The vendored `face_sum` carried the eight
+          // numbers and their total and nothing else, so the page could show which faces had been
+          // walked and not what the walk was doing: `face_sum_json` answers per face — the cycle of
+          // lines each one takes, the orientation it took them in, and the sum building face by
+          // face — which is what this beat is about.
+          const fs = engine.faceSum("octahedron", faceArrows);
           // One count, and everything reads off it. The walker used to say "faces walked 0" beside
           // a table listing one, all the way up to "7 of 8" beside a table listing eight — two
           // counters of the same thing disagreeing at eight of nine states. The tick IS the number
           // walked: none at the start, the last of them at the end.
-          const walked = faceSum.face_numbers.slice(0, state.tick);
+          const walked = fs.face_numbers.slice(0, state.tick);
           const last = walked.length === cut.oct_faces;
           const face = state.tick === 0 || last ? null : state.tick - 1;
           return {
@@ -1007,24 +1069,31 @@ export function chapterSteps(engine, draw) {
             tables: [
               table("the arrows on the lines", ["line", "arrow"],
                 cut.mid_lines.map(([a, b], index) =>
-                  [`${MID[a]} → ${MID[b]}`, signed(faceSum.arrows[index])])),
-              table("each face, walked the outward way", ["face", "what goes round it"],
+                  [`${MID[a]} → ${MID[b]}`, signed(fs.arrows[index])])),
+              // Each face named by the walk that goes round it — the engine's own cycle, in the
+              // order it takes the three dots, which is what "outward" means on this face. Then
+              // what that face comes to and the sum after it. All three are the same answer.
+              table("each face, walked",
+                ["face, in the order it is walked", "what goes round it", "what you are holding"],
                 walked.length === 0
-                  ? [["none yet", "none yet"]]
+                  ? [["none yet", "none yet", "none yet"]]
                   : walked.map((value, index) => [
-                    cut.mid_faces[index].map((i) => MID[i]).join(" · "), signed(value),
-                  ])),
+                    fs.cycle_names[index].join(" → "),
+                    signed(value), show(fs.running[index]),
+                  ]), { runs: [1, 2] }, "face-walk"),
 
               // The terms and the total in one table, so the check can add them up. They were in
               // two, which is the other way a proof-reader silenced this guard.
               table("all of them added up",
                 ["the faces walked so far", "added up"],
                 [[walked.map(signed).join("  ") || "none yet",
-                  last ? show(faceSum.sum) : "not all walked yet"]], { total: 1 }),
+                  last ? show(fs.sum) : "not all walked yet"]], { total: 1 }),
               table("how far round it has got",
-                ["faces walked", "faces there are", "lines walked, each way once"],
+                ["faces walked", "faces there are", "lines walked, each way once",
+                  "which way each face is walked"],
                 [[count(walked), String(cut.oct_faces),
-                  last ? String(faceSum.lines_walked_each_way) : "not all walked yet"]],
+                  last ? String(fs.lines_walked_each_way) : "not all walked yet",
+                  fs.orientation]],
                 { notASum: true }),
               table("what is on each face now", ["faces looking at a tip", "faces still bare"],
                 [[count(atATip), count(stillBare)]]),

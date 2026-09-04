@@ -234,14 +234,16 @@ export const ATTACKS = [
   { guard: "gate 7 · a total that is not its terms", file: "steps.mjs",
     from: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     to: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[edges.map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[edges.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     expect: "and they do not" },
   { guard: "gate 7 · a wrong total reachable only by typing", file: "steps.mjs",
-    from: "                  show(inside.loops[0])]], { total: 1 }),",
-    to: "                  show(state.numbers[3] === arrows[3] ? inside.loops[0] : loops.loops[0])]],\n                { total: 1 }),",
+    from: '                [[inside.terms.map(signed).join("  "), show(inside.sum)]], { total: 1 }),',
+    to: '                [[inside.terms.map(signed).join("  "),\n'
+      + '                  show(state.numbers[3] === arrows[3] ? inside.sum : loops.loops[0])]],\n'
+      + '                { total: 1 }),',
     expect: "and they do not" },
   { guard: "gate 7 · a total-shaped caption over a column", file: "steps.mjs",
     from: 'const cornerTable = (values) => table("the corners", ["dot", "number"],',
@@ -255,18 +257,18 @@ export const ATTACKS = [
   { guard: "gate 7 · a table of several numbers that declares nothing", file: "steps.mjs",
     from: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     to: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]]),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]]),',
     expect: "does not say whether the last is their total" },
   { guard: "gate 7 · a table declaring its first column the total", file: "steps.mjs",
     from: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     to: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 0 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 0 }),',
     expect: "declares column 0 as its total" },
 
   // ── gate 8: nothing is struck through, nothing touches ───────────────────────────────────────
@@ -477,6 +479,48 @@ ${WIRE_CIRCLE}`,
   { guard: "gate 4 · a net middle drawn twice over", file: "draw.mjs",
     from: MID_CIRCLE, to: `${MID_CIRCLE}\n${MID_CIRCLE}`,
     expect: "time(s), and the engine puts it in" },
+
+  // ── gate 11: the five the engine answers now, asked rather than remembered ───────────────────
+  //
+  // Every one of these is a page that looks right. None of them prints a number the engine did not
+  // produce, so gate 2 sees nothing; none of them types a digit, so gate 3 sees nothing. They are
+  // the shapes the five gaps take once the engine can answer them, and they are why gate 11 exists.
+  { guard: "gate 11 · a wrong weight silently accepted by the dial", file: "steps.mjs",
+    from: "          const run = engine.sloshWeighted(\"tetrahedron\", tetraCorners, state.numbers, k, ticks);",
+    to: "          const run = engine.sloshWeighted(\"tetrahedron\", tetraCorners,\n"
+      + "            LINES.map(() => plainWeight), k, ticks);",
+    expect: "two different dials" },
+  { guard: "gate 11 · a running sum read off the terms instead of the engine", file: "steps.mjs",
+    from: "                  signed(walk.terms[index]), show(walk.running[index]),",
+    to: "                  signed(walk.terms[index]), show(walk.terms[index]),",
+    expect: "and the terms above it come to something else" },
+  { guard: "gate 11 · a walk table that does not say which column is its running sum",
+    file: "steps.mjs",
+    from: '                ]), { runs: [3, 4] }, "walk-running"),',
+    to: '                ]), null, "walk-running"),',
+    expect: "does not say which of its columns is the walk" },
+  { guard: "gate 11 · the tetrahedron's certificate under the triangle's title", file: "steps.mjs",
+    from: '          const certificate = engine.certificate("triangle", chosen);',
+    to: '          const certificate = engine.certificate("tetrahedron", chosen);',
+    expect: "is not the engine's for the triangle" },
+  { guard: "gate 11 · a driven step's table with its tag taken off", file: "steps.mjs",
+    from: '              runTable("every tick", run.history, run.totals, NAMES, "dial-run"),',
+    to: '              runTable("every tick", run.history, run.totals, NAMES),',
+    expect: "no table tagged" },
+  { guard: "gate 11 · a driven step's anchor renamed out from under the gate", file: "steps.mjs",
+    from: '        anchors: ["coming-home-on-eight-faces"],',
+    to: '        anchors: ["coming-home-on-eight-face"],',
+    expect: "is one of the five the engine was extended for" },
+  { guard: "gate 11 · the two-dot answer hard-coded instead of asked", file: "steps.mjs",
+    from: "          const closed = engine.loops(TWO_DOTS, [ZERO], 1);",
+    to: "          const closed = { closed_walks: 0 };",
+    expect: "never asked loops_json about the two-dots" },
+  { guard: "gate 11 · the eight-face walk taken from the payload instead of asked", file: "steps.mjs",
+    from: '          const fs = engine.faceSum("octahedron", faceArrows);',
+    to: "          const fs = { ...P.face_sum, cycle_names: R.gaps.outward_face_sum.cycle_names,\n"
+      + "            running: R.gaps.outward_face_sum.running,\n"
+      + "            orientation: R.gaps.outward_face_sum.orientation };",
+    expect: "never asked face_sum_json about the octahedron" },
 
   // ── the engine itself ────────────────────────────────────────────────────────────────────────
   // The engine's hashes are `check_edition.py`'s business, not this file's. What THIS check owns is

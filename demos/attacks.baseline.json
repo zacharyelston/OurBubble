@@ -1,7 +1,7 @@
 {
   "note": "Which of core.test.mjs's fail sites the mutations in attacks.mjs reach. Regenerate with `node demos/attacks.mjs --baseline`, in the same commit as the guard or the mutation that changed it. A run that reaches fewer of them than this fails.",
-  "sites": 93,
-  "floor": 93,
+  "sites": 100,
+  "floor": 100,
   "reached": [
     "fail(`draw.mjs sets LABEL_GAP to ${LABEL_GAP}, and this check will not go below ${GAP_FLOOR}: `",
     "fail(`draw.mjs sets DOT_CLEARANCE to ${DOT_CLEARANCE}, and this check will not go below `",
@@ -75,6 +75,10 @@
     "fail(`${where}: the ${kind} drawing's ${stroke.source.slice(0, 50)}… ends at `",
     "fail(`steps.mjs types a digit into the string ${JSON.stringify(literal)} — every number on `",
     "fail(`${name} has a digit in its own text — the beat numbers and every count come from the `",
+    "fail(`${where}: no table tagged \"${tag}\". That tag is how this gate finds the table whose `",
+    "fail(`${where}: the table tagged \"${tag}\" does not say which of its columns is the walk's `",
+    "fail(`${where}: the dialled run printed is not what the engine answers for the weights `",
+    "fail(`${where}: the certificate on the page is not the engine's for the ${spec.certificate} `",
     "if (!build) { fail(`there is no demo for the chapter ${slug}`); continue; }",
     "fail(`${slug}: ${failure.message}`);",
     "fail(`${slug}: the steps claim beats ${claimed.join(\", \")} and the chapter's markers say `",
@@ -88,6 +92,7 @@
     "fail(`${slug} ${step.label}: \"${table.caption}\" has a column headed \"${head}\", which `",
     "fail(`${slug} ${step.label}: \"${table.caption}\" declares column 0 as its total, and a `",
     "fail(`${slug} ${step.label}: \"${table.caption}\" prints ${terms.length} numbers and says `",
+    "fail(`${slug} ${step.label}: \"${table.caption}\" says the walk is holding ${row[runningAt]} `",
     "fail(`${slug} ${step.label}: the label \"${found[2]}\" is drawn across a stroke`);",
     "fail(`${slug} ${step.label}: the label \"${found[2]}\" overlaps the ink of a dot`);",
     "fail(`${slug} ${step.label}: the labels \"${a.text}\" and \"${b.text}\" are within `",
@@ -95,6 +100,8 @@
     "fail(`${slug} ${step.label}: the drawing emits class \"${name}\" and the still's `",
     "fail(`${slug} ${step.label}: a step with no table — every number has to be readable as text`);",
     "fail(`${slug} ${step.label}: a step with no drawing`);",
+    "fail(`no step covers \"${anchor}\", and it is one of the five the engine was extended for`);",
+    "fail(`the step for \"${anchor}\" never asked ${spec.asks[0]} about the ${spec.asks[1]}, and `",
     "fail(`${line.slug}: ${line.words} reader-facing words, and the budget is ${BUDGET}`);"
   ],
   "uncovered": []
