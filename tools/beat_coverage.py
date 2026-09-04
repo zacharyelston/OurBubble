@@ -51,10 +51,18 @@ untouched at 35/13 and tier 0 green.
 So the excusal is now **declared**: a chapter whose opening prose carries a beat says so with a
 marker there, and `expected` is always every beat in range. A count can no longer buy leniency.
 
-**And no global beat number survives anywhere.** A number that used to be a beat's name is now
-nobody's name, so `OUTLINE.md`, `CONTINUUM.md`, `demos/DEMOS.md` and the chapters are scanned for
-the old form — `beat 35`, `beats 12 and 41` — and it is refused. Prose names a beat by what it is;
-tooling and review notes name it `slug.n`.
+**And no book-wide beat number survives in any file this scans.** A number that used to be a beat's
+name is now nobody's name, so the old form — `beat 35`, `beats 12 and 41`, and the schema `beat N`
+a drafter would copy — is refused in every file listed in `SCANNED` below. That list is what the
+pass line claims and all it claims: three files are deliberately **not** in it (this one,
+`tools/attacks_beats.py` and `tools/migrate_beat_ids.py`), because a guard that refuses a form has
+to quote it. Prose names a beat by what it is; tooling and review notes name it `slug.n`.
+
+**And an id that names nothing is refused too.** `make-it-move.99` and `no-such-chapter.3` were
+possible in the first draft of this: `renumber_beats.py` is chapter-local by design and never edits
+the sixteen cross-references the migration wrote, so a later insertion would strand them exactly the
+way the book-wide numbering stranded everything. Every `slug.n` in a scanned file is resolved
+against the outline.
 
 It also prints the grain, because the word counts had been argued over with two counters two or three
 words apart (K75). There is one counter now and it is the edition checker's own, so the number here
@@ -82,13 +90,53 @@ CAP = 12
 # A marker on its own line. The trailing run is `[ \t]*`, never `\s*`: `\s` matches a newline, and a
 # pattern that ate the blank line after the marker would report a different file from the one on
 # disk.
-MARKER = re.compile(r"^<!--[ \t]*beat[ \t]+([a-z0-9][a-z0-9-]*)\.(\d+)[ \t]*-->[ \t]*$", re.M)
+# The number carries no leading zero, so `the-shape-between.03` is refused rather than read as 3.
+MARKER = re.compile(
+    r"^<!--[ \t]*beat[ \t]+([a-z0-9][a-z0-9-]*)\.([1-9]\d*)[ \t]*-->[ \t]*$", re.M)
 
-# Anything still calling a beat by a book-wide number. `beat 35`, `Beats 12`, `beats 44–49`.
-GLOBAL_FORM = re.compile(r"\b[Bb]eats?\s+\d+")
+# Anything still calling a beat by a book-wide number: `beat 35`, `Beats 12`, `beats 44–49`, and the
+# schema `beat N` a drafter would copy out of a docstring. Matched over the WHOLE file, never line by
+# line — a reviewer wrapped one sentence so that `…is beat` ended a line and `35` began the next, and
+# a line-by-line scan passed it green in four files at once. This repository hard-wraps prose, so
+# that is the likely shape rather than an exotic one.
+#
+# **The shape of the denylist, because a denylist's limit is only a limit if it is written down.**
+# What it catches: any case of `beat`/`beats`, any run of spaces, a newline between the word and the
+# number, and the literal `N`. What it does **not** catch, and a reader is the only guard on:
+# `BEAT 35` in full capitals, `beat #35`, `beat number 35`, and a number written in words.
+GLOBAL_FORM = re.compile(r"\b[Bb]eats?\s+(?:\d+|N\b)")
 
-# What the scan reads. The chapters are added to it at run time; these are the contract files.
-SCANNED = ("OUTLINE.md", "CONTINUUM.md", "demos/DEMOS.md")
+# A beat id written in prose or in a comment. The hyphen is what tells it from a version string:
+# every chapter slug has one, `python3.11` does not. A heuristic, and named as one — an id whose
+# slug happens to be a single word is not resolved. The lookbehind stops a match starting inside a
+# longer id, where `make-it-move.3` would otherwise also read as `it-move.3`.
+ID_IN_PROSE = re.compile(r"(?<![\w-])([a-z][a-z0-9]*(?:-[a-z0-9]+)+)\.(\d+)\b")
+
+# What the scan reads, beside every `chapters/*.md`: the contract, the ledger, the standard, the
+# reader-facing README, the demos' own document, the working note, the reviewer's skill, and the
+# five modules whose comments the migration rewrote.
+#
+# **Three files are deliberately absent**, and this is the whole of the exception: `beat_coverage.py`
+# itself, `tools/attacks_beats.py` and `tools/migrate_beat_ids.py` all have to quote the book-wide
+# form in order to refuse it or to migrate it. The pass line says "no file scanned", not "no file".
+SCANNED = (
+    "OUTLINE.md",
+    "CONTINUUM.md",
+    "EDITION_STANDARD.md",
+    "README.md",
+    "demos/DEMOS.md",
+    "notes/octahedron-crossing.md",
+    ".claude/skills/proof-reader/SKILL.md",
+    "gen_appendix.py",
+    "preprocessor.py",
+    "check_edition.py",
+    "tools/octahedron.py",
+    "tools/oracle.py",
+    "tools/napkin_export.py",
+    "tools/demo_steps.py",
+    "tools/renumber_beats.py",
+    "tools/reader_note.py",
+)
 
 
 def outline_chapters() -> list[tuple[int, str, list[int]]]:
@@ -137,28 +185,68 @@ def reading_order() -> list[str]:
     return [m.group(1)[:-3] for m in re.finditer(r"^- \[[^\]]+\]\(([^)]+\.md)\)\s*$", text, re.M)]
 
 
-def global_form_problems() -> list[str]:
-    """Nothing reader-facing, and nothing in the contract, still calls a beat by a number.
+def scanned_paths() -> list:
+    return [ROOT / name for name in SCANNED] + sorted((ROOT / "chapters").glob("*.md"))
 
-    Refusing rather than checking (EDITION_STANDARD rule 4): the question is not whether the right
-    id is present somewhere, it is whether the wrong form is absent everywhere.
+
+def line_of(text: str, offset: int) -> int:
+    return text.count("\n", 0, offset) + 1
+
+
+def stale_form_problems(text: str, where: str) -> list[str]:
+    """The book-wide form, anywhere in one file's text. **Pure.**
+
+    Over the whole text rather than line by line, and that is the point: a space pattern matches a
+    newline too, so
+    a sentence hard-wrapped between the word and its number reads as `beat 35` to any human and read
+    as nothing at all to the first version of this. Refusing rather than checking (EDITION_STANDARD
+    rule 4): the question is not whether the right id is present somewhere, it is whether the wrong
+    form is absent.
+    """
+    return [
+        f"{where}:{line_of(text, found.start())}: writes "
+        f"{' '.join(found.group(0).split())!r} — a book-wide beat number, which is nobody's name "
+        f"any more. A beat is `slug.n` (make-it-move.3); prose names it by what it is"
+        for found in GLOBAL_FORM.finditer(text)
+    ]
+
+
+def unresolved_id_problems(text: str, where: str, sizes: dict[str, int]) -> list[str]:
+    """Every `slug.n` in one file's text names a chapter the book has, and a beat that chapter has.
+
+    The migration wrote sixteen cross-references into files `renumber_beats.py` is designed never to
+    touch, so without this an insertion in *Make it move* would strand `make-it-move.9` in a comment
+    silently — the failure #77 exists to end, moved from every file to sixteen. **Pure.**
     """
     problems = []
-    paths = [ROOT / name for name in SCANNED]
-    paths += sorted((ROOT / "chapters").glob("*.md"))
-    for path in paths:
+    for found in ID_IN_PROSE.finditer(text):
+        slug, number = found.group(1), int(found.group(2))
+        if slug not in sizes:
+            problems.append(
+                f"{where}:{line_of(text, found.start())}: names {found.group(0)}, and "
+                f"chapters/SUMMARY.md has no chapter {slug}"
+            )
+        elif not 1 <= number <= sizes[slug]:
+            problems.append(
+                f"{where}:{line_of(text, found.start())}: names {found.group(0)}, and {slug} has "
+                f"{sizes[slug]} beat(s)"
+            )
+    return problems
+
+
+def global_form_problems(sizes: dict[str, int]) -> list[str]:
+    """Both scans, over every file in `SCANNED` and every chapter. See the docstring on the three
+    files that are not in it."""
+    problems = []
+    for path in scanned_paths():
+        where = str(path.relative_to(ROOT))
         if not path.exists():
-            problems.append(f"{path.name}: missing, and it is one of the files scanned for stale "
-                            f"beat numbers")
+            problems.append(f"{where}: missing, and it is one of the files scanned for stale beat "
+                            f"numbers and unresolvable ids")
             continue
-        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
-            found = GLOBAL_FORM.search(line)
-            if found:
-                problems.append(
-                    f"{path.relative_to(ROOT)}:{number}: writes {found.group(0).strip()!r} — a "
-                    f"book-wide beat number, which is nobody's name any more. A beat is "
-                    f"`slug.n` (make-it-move.3); prose names it by what it is"
-                )
+        text = path.read_text(encoding="utf-8")
+        problems += stale_form_problems(text, where)
+        problems += unresolved_id_problems(text, where, sizes)
     return problems
 
 
@@ -308,14 +396,32 @@ def self_test() -> list[str]:
     if not numbering_problems(list(range(1, CAP + 2)), "x"):
         failures.append(f"self-test: a chapter of {CAP + 1} beats was not reported as over the cap")
 
-    # the stale-number scan: the old form refused, the new one accepted
-    for stale in ("Beats 12 and 41 print counts", "the outline moved beats 44–49", "beat 35"):
-        if not GLOBAL_FORM.search(stale):
+    # the stale-number scan: the old form refused, the new one accepted. The wrapped case is the
+    # reviewer's (2026-09-04): the first version scanned line by line and passed it green.
+    for stale in ("Beats 12 and 41 print counts", "the outline moved beats 44–49", "beat 35",
+                  "a `<!-- beat N -->` marker", "the sentence ends in beat\n35 of the book",
+                  "beat  35"):
+        if not stale_form_problems(stale, "x"):
             failures.append(f"self-test: the scan accepts the book-wide form {stale!r}")
     for fine in ("<!-- beat make-it-move.3 -->", "beat make-it-move.3 is the poke step",
-                 "the poke step", "beats named by what they are"):
-        if GLOBAL_FORM.search(fine):
+                 "the poke step", "beats named by what they are", "beats, and steps.json derives"):
+        if stale_form_problems(fine, "x"):
             failures.append(f"self-test: the scan refuses {fine!r}, which is the form it wants")
+
+    # the id resolver, on a book of one chapter with four beats
+    sizes = {"make-it-move": 4}
+    if unresolved_id_problems("see make-it-move.3 and make-it-move.4", "x", sizes):
+        failures.append("self-test: the resolver refuses an id the chapter has")
+    for bad in ("make-it-move.9", "no-such-chapter.1"):
+        if not unresolved_id_problems(f"see {bad}", "x", sizes):
+            failures.append(f"self-test: the resolver accepts {bad!r}, which names nothing")
+    for fine in ("python3.11", "mdbook 0.4.35", "make-it-move.md"):
+        if unresolved_id_problems(fine, "x", sizes):
+            failures.append(f"self-test: the resolver reads {fine!r} as a beat id")
+    # and it does not start a match inside a longer id
+    found = unresolved_id_problems("beat%20make-it-move.3", "x", sizes)
+    if found:
+        failures.append(f"self-test: the resolver split an encoded id: {found}")
 
     return failures
 
@@ -325,12 +431,29 @@ def main() -> int:
     order, grain, n_beats = reading_order(), [], 0
     # The guard is tested before it is trusted, on every run.
     problems = self_test()
-    problems += global_form_problems()
 
     # The contract's own numbering, over the WHOLE outline whatever range was asked for: a chapter
     # with a hole or a thirteenth beat is a broken contract wherever it sits.
-    for number, title, beats in outline_chapters():
+    chapters = outline_chapters()
+    for number, title, beats in chapters:
         problems += numbering_problems(beats, f"chapter {number} ({title})")
+
+    # How many beats each chapter has, by slug — what an id in prose is resolved against.
+    sizes = {order[number]: len(beats) for number, _, beats in chapters if number < len(order)}
+    problems += global_form_problems(sizes)
+
+    # A chapter listed in the reading order with no block in the outline is never audited below,
+    # and that is exactly the half-finished state of adding one: the file and the SUMMARY line
+    # first, the outline block second. A reviewer walked a whole extra chapter, markers and all,
+    # past the first version of this.
+    numbered = {number for number, _, _ in chapters}
+    for index, slug in enumerate(order):
+        if slug == Path(ce.APPENDIX_FILE).stem:
+            continue
+        if index not in numbered:
+            problems.append(f"chapters/{slug}.md is chapter {index} in chapters/SUMMARY.md and "
+                            f"OUTLINE.md has no `## {index} · ` block for it, so its beats are "
+                            f"checked by nothing")
 
     for number, title, beats in outline_chapters():
         if not (lo <= number <= hi):
@@ -400,9 +523,13 @@ def main() -> int:
     print(f"\n{n_beats} beats in range. Every outline beat under a chapter's heading is claimed by "
           f"a marker in that chapter's own file, carrying that chapter's slug; the ids ascend from "
           f"1 with no gap and none is past {CAP}; a beat carried by two sections is named as a "
-          f"split above and its sections are adjacent; and no file scanned still calls a beat by a "
-          f"book-wide number. A section moved and relabelled together still ascends, so this is not "
-          f"a statement about order — see the docstring.")
+          f"split above and its sections are adjacent; every chapter in chapters/SUMMARY.md has an "
+          f"outline block; and across the {len(scanned_paths())} file(s) scanned — every chapter plus "
+          f"the {len(SCANNED)} named at SCANNED, which also names the three files it leaves out "
+          f"and why — no beat is called by a book-wide number and every `slug.n` resolves to a "
+          f"beat the outline has. A "
+          f"section moved and relabelled together still ascends, so this is not a statement about "
+          f"order — see the docstring.")
     return 0
 
 

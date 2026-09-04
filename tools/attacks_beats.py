@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The mutations for the beat-id contract — one per rule `tools/beat_coverage.py` enforces.
+"""The mutations for the beat-id contract — one for each rule that can be broken by an edit.
 
 FIREWALL: this is tooling for a book about a toy DEC lattice. Nothing here is a claim about nature.
 
@@ -16,6 +16,12 @@ needle that occurs more than once, because an ambiguous needle mutates whichever
 which is not a test of anything in particular.
 
     python3 tools/attacks_beats.py
+
+**And the count of the guard's complaint sites is pinned**, the way `demos/attacks.baseline.json`
+pins the demos'. A rule added to `beat_coverage.py` moves that number, and the suite then fails
+asking for the mutation — which is the standing rule mechanised on this side too, rather than
+remembered. Two sites have no mutation and are named in `UNCOVERED` with the reason: both need a
+file to be *deleted*, and a mutation here is a substitution.
 
 Exit 0 and every mutation went red by name; exit 1 and one of them did not, which means the check
 would have let it through.
@@ -35,7 +41,21 @@ ROOT = Path(__file__).resolve().parent.parent
 # What a copy needs to run the coverage tool: the contract, the prose, the tools and the checker it
 # imports its word counter from. Not `book/`, `record/` or `engine/` — none of them is read.
 COPIED = ("OUTLINE.md", "CONTINUUM.md", "chapters", "tools", "check_edition.py", "gen_appendix.py",
-          "demos/DEMOS.md", "edition.json", "book.toml", "README.md")
+          "preprocessor.py", "demos/DEMOS.md", "edition.json", "book.toml", "README.md",
+          "EDITION_STANDARD.md", "notes", ".claude")
+
+# Every place `tools/beat_coverage.py` can complain, counted from its own source. Pinned, so a rule
+# that lands without a mutation moves the number and this suite says so.
+SITES = 18
+COMPLAINT = re.compile(r'^\s*(?:problems\.append\(|return \[f")', re.M)
+
+# The sites with no mutation, and why. Both want a file deleted, and every mutation here is a
+# substitution on a copy — a suite that started deleting files from a tree it also verifies it did
+# not touch would be trading one guarantee for another.
+UNCOVERED = (
+    "a chapter heading in OUTLINE.md with no beat lines under it at all",
+    "one of the SCANNED files missing from the tree",
+)
 
 
 class Attack(NamedTuple):
@@ -122,6 +142,63 @@ ATTACKS: tuple[Attack, ...] = (
         "Adding is not the only way to get something bigger. See beat 43.",
         "chapters/the-shape-between.md",
     ),
+    Attack(
+        # A reviewer's (2026-09-04): the first version of the scan read the file line by line, and
+        # a space pattern matches a newline, so this shape went green in four files at once.
+        "a book-wide number hard-wrapped away from its own word",
+        "chapters/the-shape-between.md", "Adding is not the only way to get something bigger.",
+        "Adding is not the only way to get something bigger. It is beat\n43 of the book.",
+        "writes 'beat 43'",
+    ),
+    Attack(
+        "the marker schema `beat N` copied into a chapter's prose",
+        "chapters/the-shape-between.md", "Adding is not the only way to get something bigger.",
+        "Adding is not the only way to get something bigger. Write a beat N marker.",
+        "writes 'beat N'",
+    ),
+    # ── an id that names nothing ─────────────────────────────────────────────────────────────────
+    Attack(
+        "a cross-reference to a beat its chapter has not got",
+        "tools/oracle.py", "This is beat two-dots-and-a-line.10's move",
+        "This is beat two-dots-and-a-line.87's move",
+        "names two-dots-and-a-line.87, and two-dots-and-a-line has 10 beat(s)",
+    ),
+    Attack(
+        "a cross-reference to a chapter the book has not got",
+        "tools/oracle.py", "This is beat two-dots-and-a-line.10's move",
+        "This is beat no-such-chapter.1's move",
+        "chapters/SUMMARY.md has no chapter no-such-chapter",
+    ),
+    # ── the pairing of the reading order and the outline ─────────────────────────────────────────
+    Attack(
+        # The half-finished state of adding a chapter: the file and the SUMMARY line first. A
+        # reviewer walked a whole extra chapter, markers and all, past the first version.
+        "a chapter in the reading order with no block in the outline",
+        "OUTLINE.md", "## 5 · The shape between", "## 55 · The shape between",
+        "OUTLINE.md has no `## 5 · ` block for it",
+    ),
+    Attack(
+        "a reading-order entry whose chapter file does not exist",
+        "chapters/SUMMARY.md", "(the-shape-between.md)", "(the-shape-betwen.md)",
+        "the-shape-betwen.md does not exist",
+    ),
+    # ── the markers' own order and grain ─────────────────────────────────────────────────────────
+    Attack(
+        "markers that stop ascending",
+        "chapters/the-shape-between.md", SHAPE_2, "<!-- beat the-shape-between.5 -->",
+        "which does not ascend",
+    ),
+    Attack(
+        "a marker numbered with a leading zero",
+        "chapters/the-shape-between.md", SHAPE_3, "<!-- beat the-shape-between.03 -->",
+        "carry no `<!-- beat the-shape-between.n -->` marker",
+    ),
+    Attack(
+        "a section grown past the hard ceiling",
+        "chapters/the-shape-between.md", "Adding is not the only way to get something bigger.",
+        "Adding is not the only way to get something bigger. " + ("word " * 240),
+        "over the 220-word hard ceiling",
+    ),
 )
 
 
@@ -166,9 +243,21 @@ def tree_state() -> str:
     ).stdout.strip()
 
 
+def site_problems() -> List[str]:
+    """The guard's complaint sites, counted from its source against the pin. **Reads one file.**"""
+    source = (ROOT / "tools" / "beat_coverage.py").read_text(encoding="utf-8")
+    found = len(COMPLAINT.findall(source))
+    if found == SITES:
+        return []
+    return [f"tools/beat_coverage.py has {found} place(s) that can complain and this suite is "
+            f"pinned to {SITES}. A rule lands with the mutation that proves it bites, and with this "
+            f"number, in the same commit — or, if it genuinely cannot be mutated, with a line in "
+            f"UNCOVERED saying which and why"]
+
+
 def main() -> int:
     before = tree_state()
-    problems: List[str] = []
+    problems: List[str] = site_problems()
 
     # The unmutated tree first: an attack suite that cannot tell red from red proves nothing.
     with tempfile.TemporaryDirectory(prefix="ourbubble-beats-") as scratch:
@@ -210,8 +299,10 @@ def main() -> int:
     if problems:
         print("\n" + "\n".join("PROBLEM: " + p for p in problems))
         return 1
-    print(f"\nbeat attacks: {len(ATTACKS)} mutation(s), every one refused by name, and the working "
-          f"tree untouched.")
+    print(f"\nbeat attacks: {len(ATTACKS)} mutation(s), every one refused by name; "
+          f"tools/beat_coverage.py's {SITES} complaint site(s) counted from its own source, "
+          f"{len(UNCOVERED)} of them named as having no mutation and why; and the working tree "
+          f"untouched.")
     return 0
 
 

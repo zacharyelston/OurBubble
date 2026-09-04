@@ -32,6 +32,13 @@ of, `OUTLINE.md`, and a tree that has already been migrated is detected and left
 chapter's beats already start at 1, which cannot be true of a book-wide numbering with more than one
 chapter in it. Run it twice and the second run writes nothing.
 
+**A run that writes nothing says only that.** The first version printed "every beat already carries
+a chapter-scoped id" whenever its plan came out empty — which a reviewer showed is a different
+statement: revert one chapter's markers to the book-wide form and the outline still reads as
+migrated, so the plan is empty and sixteen book-wide markers are left standing. The surviving
+markers are now counted before anything is claimed, and a mixed tree is an error rather than a
+reassuring line.
+
     tools/migrate_beat_ids.py --dry-run     # print the unified diff and write nothing
     tools/migrate_beat_ids.py --apply       # write the files
 
@@ -99,6 +106,16 @@ LITERAL: Tuple[Tuple[str, str, str], ...] = (
         "it is `tetra_inside_sum` — the tetrahedron chapter's first beat — run four times and",
     ),
 )
+
+
+def surviving_book_wide_markers() -> List[Tuple[str, int]]:
+    """Which chapter files still carry a book-wide marker, and how many. Read, not assumed."""
+    out = []
+    for path in sorted(CHAPTERS.glob("*.md")):
+        count = len(MARKER.findall(path.read_text(encoding="utf-8")))
+        if count:
+            out.append((f"chapters/{path.name}", count))
+    return out
 
 
 def read(name: str) -> str:
@@ -236,8 +253,16 @@ def main(argv: List[str]) -> int:
         parser.error("pass exactly one of --dry-run and --apply")
 
     changed = migrate()
+    surviving = surviving_book_wide_markers()
     if not changed:
-        print("migrate: every beat already carries a chapter-scoped id — nothing to do.")
+        if surviving:
+            print("migrate: no file changed, and yet "
+                  + ", ".join(f"{name} carries {count} `<!-- beat N -->` marker(s)"
+                              for name, count in surviving)
+                  + ". OUTLINE.md reads as already migrated, so the map this needs no longer "
+                  + "exists: restore those markers from git, or write their ids by hand.")
+            return 1
+        print("migrate: no file changed, and no `<!-- beat N -->` marker survives in chapters/.")
         return 0
 
     for name in sorted(changed):
