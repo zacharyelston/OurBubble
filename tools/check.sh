@@ -101,8 +101,11 @@ step "3/5 · the three guards the edition check does not reach"
 # 22 969 bytes, is what makes a number on a page a fact about the object rather than about a program.
 python3 -B tools/engine_check.py
 python3 -B tools/octahedron.py > /dev/null
-python3 -B tools/beat_coverage.py > /dev/null
-echo "octahedron.py: every audit asserted · beat_coverage.py: every beat claimed by a marker in its own chapter, ascending from 1, none past the twelfth"
+# The guard's own last line, printed rather than restated: a hardcoded echo beside a discarded
+# pass line is a status nobody verified, and this one named the cap and the ordering while omitting
+# the two halves the beat contract is actually about (a reviewer, 2026-09-04).
+echo "octahedron.py: every audit asserted"
+python3 -B tools/beat_coverage.py | tail -1
 
 step "4/5 · build the book"
 command -v mdbook >/dev/null 2>&1 || {

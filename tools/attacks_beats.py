@@ -28,7 +28,6 @@ would have let it through.
 """
 from __future__ import annotations
 
-import re
 import shutil
 import subprocess
 import sys
@@ -41,17 +40,50 @@ ROOT = Path(__file__).resolve().parent.parent
 # What a copy needs to run the coverage tool: the contract, the prose, the tools and the checker it
 # imports its word counter from. Not `book/`, `record/` or `engine/` — none of them is read.
 COPIED = ("OUTLINE.md", "CONTINUUM.md", "chapters", "tools", "check_edition.py", "gen_appendix.py",
-          "preprocessor.py", "demos/DEMOS.md", "edition.json", "book.toml", "README.md",
-          "EDITION_STANDARD.md", "notes", ".claude")
+          "preprocessor.py", "demos/DEMOS.md", "demos/core.mjs", "demos/steps.mjs", "edition.json",
+          "book.toml", "README.md", "EDITION_STANDARD.md", "CANON.md", "ART_DIRECTION.md",
+          "notes", ".claude")
 
-# Every place `tools/beat_coverage.py` can complain, counted from its own source. Pinned, so a rule
-# that lands without a mutation moves the number and this suite says so.
-SITES = 18
-COMPLAINT = re.compile(r'^\s*(?:problems\.append\(|return \[f")', re.M)
+# Every place `tools/beat_coverage.py` can complain, counted from its own **parsed** source. Pinned,
+# so a rule that lands without a mutation moves the number and this suite says so.
+#
+# It is an AST walk rather than a regex because a reviewer walked three new rules past the regex
+# version in a row (2026-09-04): a one-line `if cond: problems.append(...)`, a `problems += [f"…"]`
+# — a form this file already used — and a rule reported through an existing site by widening a
+# pattern. The last of those is the one nothing can count, and it is why the number is a **prompt**
+# rather than a proof: what this asserts is that the places a complaint is produced have not
+# changed in number, not that every rule has a mutation. The mutations are the evidence for that;
+# they are 21, they are listed above, and each is required to go red by name.
+SITES = 21
 
 # The sites with no mutation, and why. Both want a file deleted, and every mutation here is a
 # substitution on a copy — a suite that started deleting files from a tree it also verifies it did
 # not touch would be trading one guarantee for another.
+# What `beat_coverage.py` promises to read, pinned by name. See `site_problems()`.
+SCANNED_PIN = (
+    "OUTLINE.md",
+    "CONTINUUM.md",
+    "EDITION_STANDARD.md",
+    "README.md",
+    "CANON.md",
+    "ART_DIRECTION.md",
+    "demos/DEMOS.md",
+    "demos/core.mjs",
+    "demos/steps.mjs",
+    "tools/canon.py",
+    "notes/octahedron-crossing.md",
+    ".claude/skills/proof-reader/SKILL.md",
+    "gen_appendix.py",
+    "preprocessor.py",
+    "check_edition.py",
+    "tools/octahedron.py",
+    "tools/oracle.py",
+    "tools/napkin_export.py",
+    "tools/demo_steps.py",
+    "tools/renumber_beats.py",
+    "tools/reader_note.py",
+)
+
 UNCOVERED = (
     "a chapter heading in OUTLINE.md with no beat lines under it at all",
     "one of the SCANNED files missing from the tree",
@@ -194,6 +226,17 @@ ATTACKS: tuple[Attack, ...] = (
         "carry no `<!-- beat the-shape-between.n -->` marker",
     ),
     Attack(
+        "an id hard-wrapped across a line break",
+        "tools/oracle.py", "This is beat two-dots-and-a-line.10's move",
+        "This is beat two-dots-and-a-\nline.87's move",
+        "names two-dots-and-a-line.87",
+    ),
+    Attack(
+        "a chapter slug with no hyphen, which the id scan finds an id by",
+        "chapters/SUMMARY.md", "(the-shadow.md)", "(shadow.md)",
+        "whose slug(s) carry no hyphen",
+    ),
+    Attack(
         "a section grown past the hard ceiling",
         "chapters/the-shape-between.md", "Adding is not the only way to get something bigger.",
         "Adding is not the only way to get something bigger. " + ("word " * 240),
@@ -243,16 +286,56 @@ def tree_state() -> str:
     ).stdout.strip()
 
 
+def complaint_sites(source: str) -> int:
+    """Every expression that puts a message into a problem list, wherever it is written. **Pure.**
+
+    Counted from the parse tree, so the shape of the statement cannot hide one: `problems.append(…)`
+    and `problems.extend(…)` as calls, `problems += […]` as an augmented assignment, and a bare
+    `return [f"…"]` inside a function whose job is to return problems.
+    """
+    import ast
+
+    def is_list(node) -> bool:
+        return isinstance(node, (ast.List, ast.ListComp)) or (
+            isinstance(node, ast.IfExp) and (is_list(node.body) or is_list(node.orelse)))
+
+    total = 0
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) \
+                and node.func.attr in {"append", "extend"} \
+                and isinstance(node.func.value, ast.Name) and node.func.value.id == "problems":
+            total += 1
+        elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) \
+                and node.target.id == "problems" and is_list(node.value):
+            total += 1
+        elif isinstance(node, ast.Return) and is_list(node.value):
+            total += 1
+    return total
+
+
 def site_problems() -> List[str]:
-    """The guard's complaint sites, counted from its source against the pin. **Reads one file.**"""
+    """The guard's complaint sites, counted from its parsed source against the pin."""
     source = (ROOT / "tools" / "beat_coverage.py").read_text(encoding="utf-8")
-    found = len(COMPLAINT.findall(source))
-    if found == SITES:
-        return []
-    return [f"tools/beat_coverage.py has {found} place(s) that can complain and this suite is "
-            f"pinned to {SITES}. A rule lands with the mutation that proves it bites, and with this "
-            f"number, in the same commit — or, if it genuinely cannot be mutated, with a line in "
-            f"UNCOVERED saying which and why"]
+    found = complaint_sites(source)
+    problems = []
+    if found != SITES:
+        problems.append(
+            f"tools/beat_coverage.py has {found} place(s) that produce a complaint and this suite "
+            f"is pinned to {SITES}. A rule lands with the mutation that proves it bites, and with "
+            f"this number, in the same commit — or, if it genuinely cannot be mutated, with a line "
+            f"in UNCOVERED saying which and why")
+
+    # And the guard's coverage itself, which is a list a hand can shorten: a reviewer deleted
+    # README.md from SCANNED and every check stayed green while the pass line quietly recounted
+    # itself. The list is pinned here, by name, so shrinking it is a diff in two files.
+    sys.path.insert(0, str(ROOT / "tools"))
+    import beat_coverage  # noqa: E402  (needs the path above)
+    if list(beat_coverage.SCANNED) != list(SCANNED_PIN):
+        problems.append(
+            f"tools/beat_coverage.py scans {list(beat_coverage.SCANNED)} and this suite is pinned "
+            f"to {list(SCANNED_PIN)}. Dropping a file from that list shrinks what the pass line "
+            f"means without changing a word of it, so it is a change in both files or neither")
+    return problems
 
 
 def main() -> int:
@@ -300,9 +383,11 @@ def main() -> int:
         print("\n" + "\n".join("PROBLEM: " + p for p in problems))
         return 1
     print(f"\nbeat attacks: {len(ATTACKS)} mutation(s), every one refused by name; "
-          f"tools/beat_coverage.py's {SITES} complaint site(s) counted from its own source, "
-          f"{len(UNCOVERED)} of them named as having no mutation and why; and the working tree "
-          f"untouched.")
+          f"tools/beat_coverage.py's {SITES} complaint site(s) counted from its parsed source and "
+          f"its {len(SCANNED_PIN)} scanned files pinned by name here, with {len(UNCOVERED)} sites "
+          f"named as having no mutation and why; and the working tree untouched. The count is a "
+          f"prompt for the next rule's mutation, not a proof that every rule has one — the "
+          f"mutations are that, and they are the list above.")
     return 0
 
 

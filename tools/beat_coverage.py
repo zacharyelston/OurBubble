@@ -54,9 +54,8 @@ marker there, and `expected` is always every beat in range. A count can no longe
 **And no book-wide beat number survives in any file this scans.** A number that used to be a beat's
 name is now nobody's name, so the old form — `beat 35`, `beats 12 and 41`, and the schema `beat N`
 a drafter would copy — is refused in every file listed in `SCANNED` below. That list is what the
-pass line claims and all it claims: three files are deliberately **not** in it (this one,
-`tools/attacks_beats.py` and `tools/migrate_beat_ids.py`), because a guard that refuses a form has
-to quote it. Prose names a beat by what it is; tooling and review notes name it `slug.n`.
+pass line claims and all it claims: three files quote the old form deliberately and are left out
+for that reason, and every other file outside the list is unscanned rather than clean. Prose names a beat by what it is; tooling and review notes name it `slug.n`.
 
 **And an id that names nothing is refused too.** `make-it-move.99` and `no-such-chapter.3` were
 possible in the first draft of this: `renumber_beats.py` is chapter-local by design and never edits
@@ -107,24 +106,42 @@ MARKER = re.compile(
 GLOBAL_FORM = re.compile(r"\b[Bb]eats?\s+(?:\d+|N\b)")
 
 # A beat id written in prose or in a comment. The hyphen is what tells it from a version string:
-# every chapter slug has one, `python3.11` does not. A heuristic, and named as one — an id whose
-# slug happens to be a single word is not resolved. The lookbehind stops a match starting inside a
-# longer id, where `make-it-move.3` would otherwise also read as `it-move.3`.
+# every chapter slug has one, `python3.11` does not — and `slugs_are_hyphenated()` asserts that the
+# first half of that stays true, because the day a chapter's slug has no hyphen every reference to
+# it becomes invisible to this while the pass line still says it resolved.
+#
+# The lookbehind stops a match starting inside a longer id, where `make-it-move.3` would otherwise
+# also read as `it-move.3`. An id hard-wrapped across a line break is joined before the scan runs
+# (`unwrapped()`), the way the stale-form scan reads its whole file.
+#
+# **What it does not see, stated because a heuristic's limit is only a limit when it is written
+# down:** an id whose slug is a single word; `Make-It-Move.9` in capitals; and `make-it-move.099`,
+# which resolves as 99 — where `MARKER` refuses a leading zero outright.
 ID_IN_PROSE = re.compile(r"(?<![\w-])([a-z][a-z0-9]*(?:-[a-z0-9]+)+)\.(\d+)\b")
 
 # What the scan reads, beside every `chapters/*.md`: the contract, the ledger, the standard, the
-# reader-facing README, the demos' own document, the working note, the reviewer's skill, and the
-# five modules whose comments the migration rewrote.
+# canon, the art direction, the reader-facing README, the demos' own document and modules, the
+# working note, the reviewer's skill, and the modules whose comments name a beat. No count of it is
+# written down here — the pass line prints the length, and a count in a comment is one more number
+# nothing guards.
 #
-# **Three files are deliberately absent**, and this is the whole of the exception: `beat_coverage.py`
-# itself, `tools/attacks_beats.py` and `tools/migrate_beat_ids.py` all have to quote the book-wide
-# form in order to refuse it or to migrate it. The pass line says "no file scanned", not "no file".
+# **Three files quote the book-wide form deliberately** and are left out for that reason:
+# `beat_coverage.py` itself, `tools/attacks_beats.py` and `tools/migrate_beat_ids.py` all have to
+# write the form down in order to refuse it or to migrate it. Every *other* file outside this list
+# is simply unscanned — `record/`, which is a frozen copy of the engine and is derived rather than
+# edited, most of all. The pass line says "no file scanned", not "no file", and that is the whole
+# of what it claims.
 SCANNED = (
     "OUTLINE.md",
     "CONTINUUM.md",
     "EDITION_STANDARD.md",
     "README.md",
+    "CANON.md",
+    "ART_DIRECTION.md",
     "demos/DEMOS.md",
+    "demos/core.mjs",
+    "demos/steps.mjs",
+    "tools/canon.py",
     "notes/octahedron-crossing.md",
     ".claude/skills/proof-reader/SKILL.md",
     "gen_appendix.py",
@@ -211,6 +228,24 @@ def stale_form_problems(text: str, where: str) -> list[str]:
     ]
 
 
+def unwrapped(text: str) -> str:
+    """A hyphen at the end of a line joined to the next, so a wrapped id reads as one id.
+
+    The line numbers below are derived from this string, which is the source text with a `-\n` (or
+    `-\r\n`) closed up — every other character is where it was, so a number counted from an offset
+    is still the source's own line.
+    """
+    return re.sub(r"-\r?\n[ \t]*", "-", text)
+
+
+def slugs_are_hyphenated(order: list[str]) -> list[str]:
+    """`ID_IN_PROSE` finds an id by its slug's hyphen. This is that assumption, asserted."""
+    bare = [slug for slug in order if "-" not in slug]
+    return [f"chapters/SUMMARY.md lists {bare}, whose slug(s) carry no hyphen — every reference to "
+            f"them in prose would be invisible to the id scan, which finds an id by exactly that "
+            f"hyphen. Rename the chapter, or widen ID_IN_PROSE and its stated limits"] if bare else []
+
+
 def unresolved_id_problems(text: str, where: str, sizes: dict[str, int]) -> list[str]:
     """Every `slug.n` in one file's text names a chapter the book has, and a beat that chapter has.
 
@@ -219,6 +254,7 @@ def unresolved_id_problems(text: str, where: str, sizes: dict[str, int]) -> list
     silently — the failure #77 exists to end, moved from every file to sixteen. **Pure.**
     """
     problems = []
+    text = unwrapped(text)
     for found in ID_IN_PROSE.finditer(text):
         slug, number = found.group(1), int(found.group(2))
         if slug not in sizes:
@@ -440,6 +476,7 @@ def main() -> int:
 
     # How many beats each chapter has, by slug — what an id in prose is resolved against.
     sizes = {order[number]: len(beats) for number, _, beats in chapters if number < len(order)}
+    problems += slugs_are_hyphenated(order)
     problems += global_form_problems(sizes)
 
     # A chapter listed in the reading order with no block in the outline is never audited below,
@@ -524,10 +561,11 @@ def main() -> int:
           f"a marker in that chapter's own file, carrying that chapter's slug; the ids ascend from "
           f"1 with no gap and none is past {CAP}; a beat carried by two sections is named as a "
           f"split above and its sections are adjacent; every chapter in chapters/SUMMARY.md has an "
-          f"outline block; and across the {len(scanned_paths())} file(s) scanned — every chapter plus "
-          f"the {len(SCANNED)} named at SCANNED, which also names the three files it leaves out "
-          f"and why — no beat is called by a book-wide number and every `slug.n` resolves to a "
-          f"beat the outline has. A "
+          f"outline block; every chapter slug carries the hyphen the id scan finds an id by; and "
+          f"across the {len(scanned_paths())} file(s) scanned — every chapter, plus the files "
+          f"named at SCANNED, which also names the three it leaves out and why, and says that "
+          f"every other file in the repository is unscanned rather than clean — no beat is called "
+          f"by a book-wide number and every `slug.n` resolves to a beat the outline has. A "
           f"section moved and relabelled together still ascends, so this is not a statement about "
           f"order — see the docstring.")
     return 0
