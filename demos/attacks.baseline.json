@@ -1,7 +1,7 @@
 {
   "note": "Which of core.test.mjs's fail sites the mutations in attacks.mjs reach. Regenerate with `node demos/attacks.mjs --baseline`, in the same commit as the guard or the mutation that changed it. A run that reaches fewer of them than this fails.",
-  "sites": 96,
-  "floor": 96,
+  "sites": 98,
+  "floor": 98,
   "reached": [
     "fail(`draw.mjs sets LABEL_GAP to ${LABEL_GAP}, and this check will not go below ${GAP_FLOOR}: `",
     "fail(`draw.mjs sets DOT_CLEARANCE to ${DOT_CLEARANCE}, and this check will not go below `",
@@ -40,7 +40,8 @@
     "fail(`DEMOS.md has no page-table row for ${slug}`);",
     "fail(`DEMOS.md's row for ${slug} states no beat count and step count`);",
     "fail(`DEMOS.md says ${slug} has ${found[1]} beats, and steps.json derives `",
-    "fail(`DEMOS.md writes \"${found[0]}\" outside its page table. A book-wide beat number is `",
+    "fail(`DEMOS.md:${lineOf(found.index)} writes \"${found[0].replace(/\\s+/g, \" \")}\" outside its `",
+    "fail(`DEMOS.md names ${slug}.${n}, and steps.json says ${slug} has ${chapter.beats} beats`);",
     "fail(`${where}: the drawing does not say which convention it is drawn in`);",
     "fail(`${where}: the ${kind} drawing emitted a <${found[1]}>, and it may only emit `",
     "fail(`${where}: the ${kind} drawing emitted a <${element}> that does not say what it is: `",
@@ -98,6 +99,7 @@
     "fail(`${slug} ${step.label}: the drawing emits class \"${name}\" and the still's `",
     "fail(`${slug} ${step.label}: a step with no table — every number has to be readable as text`);",
     "fail(`${slug} ${step.label}: a step with no drawing`);",
+    "fail(`DEMOS.md lists the folded pairs as [${listed}] and the pages fold [${actual}]`);",
     "fail(`${line.slug}: ${line.words} reader-facing words, and the budget is ${BUDGET}`);"
   ],
   "uncovered": []
