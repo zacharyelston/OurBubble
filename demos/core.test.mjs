@@ -524,13 +524,17 @@ const sweptPitch = (b) => PITCH_FROM + (b / VIEW_GRID) * PITCH_SPAN;
 // preface's renumber proved it: every beat in the book moved by four, and nine hand-written "beat
 // N" references in DEMOS.md went silently wrong while the pages themselves were fine.
 //
-// Two rules, and between them the family cannot come back. The page table's **counts** must be
+// Four rules, and between them the family cannot come back. The page table's **counts** must be
 // `steps.json`'s — how many beats a chapter has and how many steps its page walks them in — so they
 // are checked rather than remembered. The ranges that column used to carry are gone with the
-// book-wide numbering they were written in (issue #77). And everywhere else a beat is named by
-// **what it is** — the poke step, the walk step, the dial step — because a name does not need
-// renumbering.
+// book-wide numbering they were written in (issue #77). Every `slug.n` written anywhere in the file
+// must be a beat `steps.json` carries, and the folded pairs it lists must be **the** folds, because
+// the first version of that list was a hand-written list of numbers and went stale exactly as the
+// prose did — a reviewer replaced one pair with a beat that does not exist and this file stayed
+// green. And everywhere else a beat is named by **what it is** — the poke step, the walk step, the
+// dial step — because a name does not need renumbering.
 const tableSteps = new Map();
+const docFolds = [];
 {
   const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
   // The rows the loop below actually checks, and nothing else, are what the prose scan skips. It
@@ -557,15 +561,33 @@ const tableSteps = new Map();
       tableSteps.set(slug, Number(found[2]));
     }
   }
-  for (const line of doc.split("\n")) {
-    if (tableRows.has(line)) continue;             // the page-table rows, checked above
-    const found = /\bbeats?\s+\d+/.exec(line);
-    if (found) {
-      fail(`DEMOS.md writes "${found[0]}" outside its page table. A book-wide beat number is `
-        + `nobody's name any more — a beat is slug.n, like make-it-move.3 — and in prose it goes `
-        + `stale the next time the chapter is renumbered. Name the beat by what it is instead: the `
-        + `poke step, the walk step`);
+  // The stale-number scan runs over the WHOLE text, with the page-table rows blanked out — not
+  // line by line. `\s` matches a newline, so a sentence hard-wrapped between the word and its
+  // number reads as a beat number to any reader and as nothing at all to a line-by-line scan; a
+  // reviewer wrapped one and it went green (2026-09-04). The rows are blanked rather than skipped
+  // so the line numbers still count.
+  const lines = doc.split("\n");
+  const scanned = lines.map((line) => (tableRows.has(line) ? "" : line)).join("\n");
+  const lineOf = (offset) => scanned.slice(0, offset).split("\n").length;
+  for (const found of scanned.matchAll(/\b[Bb]eats?\s+(?:\d+|N\b)/g)) {
+    fail(`DEMOS.md:${lineOf(found.index)} writes "${found[0].replace(/\s+/g, " ")}" outside its `
+      + `page table. A book-wide beat number is nobody's name any more — a beat is slug.n, like `
+      + `make-it-move.3 — and in prose it goes stale the next time the chapter is renumbered. Name `
+      + `the beat by what it is instead: the poke step, the walk step`);
+  }
+
+  // Every beat id the file writes down, resolved against steps.json — including the folded pairs,
+  // which are collected here and compared against the steps themselves further down.
+  for (const found of doc.matchAll(/(?<![\w-])([a-z][a-z0-9]*(?:-[a-z0-9]+)+)\.(\d+)(?:\+(\d+))?/g)) {
+    const [, slug, first, second] = found;
+    const chapter = scaffold.chapters[slug];
+    if (!chapter) continue;              // not a demo chapter: nothing here to check it against
+    for (const n of second === undefined ? [first] : [first, second]) {
+      if (Number(n) < 1 || Number(n) > chapter.beats) {
+        fail(`DEMOS.md names ${slug}.${n}, and steps.json says ${slug} has ${chapter.beats} beats`);
+      }
     }
+    if (second !== undefined) docFolds.push(`${slug}.${first}+${second}`);
   }
 }
 
@@ -1442,6 +1464,8 @@ let tightest = Infinity;
 let tightestAt = "";
 let sums = 0;
 let stills = 0;
+// The folded pairs the pages actually have, against the list DEMOS.md prints — see gate 9b.
+const actualFolds = [];
 for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
   const build = definitions[slug];
   if (!build) { fail(`there is no demo for the chapter ${slug}`); continue; }
@@ -1477,6 +1501,12 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         + `"${wanted}". A step's label counts this page's steps and nothing outside the page`);
     }
   });
+  for (const step of joined.steps) {
+    if (step.beats.length > 1) {
+      actualFolds.push(step.beats.map((beat, index) => (index ? beat.split(".")[1] : beat))
+        .join("+"));
+    }
+  }
   if (tableSteps.has(slug) && tableSteps.get(slug) !== joined.steps.length) {
     fail(`DEMOS.md says ${slug}'s page walks ${tableSteps.get(slug)} steps and it walks `
       + `${joined.steps.length}`);
@@ -1785,6 +1815,16 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
   }
   const count = [...words].reduce((total, text) => total + wordsOf(text), 0);
   report.push({ slug, steps: joined.steps.length, beats: chapter.sections.length, words: count });
+}
+
+// ── 9b (part) · DEMOS.md's folded pairs are the folds ─────────────────────────────────────────────
+
+{
+  const listed = [...docFolds].sort().join(", ");
+  const actual = [...actualFolds].sort().join(", ");
+  if (listed !== actual) {
+    fail(`DEMOS.md lists the folded pairs as [${listed}] and the pages fold [${actual}]`);
+  }
 }
 
 // ── 6 · the budget ────────────────────────────────────────────────────────────────────────────────

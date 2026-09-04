@@ -175,6 +175,21 @@ def chapter_sections(slug: str) -> List[dict]:
 
 def derive() -> dict:
     beats = outline_beats()
+    book = reading_order()
+    missing = [slug for slug in DEMO_CHAPTERS if slug not in book]
+    if missing:
+        raise SystemExit(f"demo steps: {missing} are demo chapters and chapters/SUMMARY.md has no "
+                         f"such chapter — the reading order is the only place a chapter's place in "
+                         f"the book is written down")
+    # The pages' order is READ from the reading order, never from the tuple above. A reviewer
+    # pointed out that the tuple's own index was being written into steps.json as "the book's
+    # order", so reordering chapters/SUMMARY.md — the file this contract makes the sole authority
+    # on that — would have left the demo index sorted the old way with nothing objecting.
+    listed = sorted(DEMO_CHAPTERS, key=book.index)
+    if listed != list(DEMO_CHAPTERS):
+        raise SystemExit(f"demo steps: DEMO_CHAPTERS is {list(DEMO_CHAPTERS)} and the reading order "
+                         f"puts those chapters {listed}. Adding or moving a demo page is a decision "
+                         f"made here and reviewed, so this is a refusal rather than a re-sort")
     chapters = {}
     for order, slug in enumerate(DEMO_CHAPTERS):
         markdown = (CHAPTERS / f"{slug}.md").read_text(encoding="utf-8")
@@ -203,8 +218,10 @@ def derive() -> dict:
                 f"capped at {CAP}"
             )
         chapters[slug] = {
-            # The book's order, written down because the file is sorted by key and a chapter's
-            # place in the book is not alphabetical — and is not a beat number any more either.
+            # This page's place among the demo pages, in the reading order's own sequence —
+            # written down because the file is sorted by key, and because a chapter's place is
+            # neither alphabetical nor a beat number any more. It is not the chapter's number in
+            # the book: the demos cover five of sixteen chapters.
             "order": order,
             "title": chapter_title(markdown, slug),
             "beats": len(numbers),

@@ -44,11 +44,16 @@ the page beside it — and did nothing in between.
 The step definitions have **no field for prose**. A step that wanted to explain itself would have to
 add one, which is a thing a reviewer can see in a diff.
 
-**A beat with nothing to do is not a step**, so seven pairs are folded into one step each:
-`two-dots-and-a-line.9–10`, `one-tetrahedron-is-a-whole-world.1–2` and `.7–8`, `make-it-move.1–2`,
-`.4–5` and `.11–12`, and `two-worlds-threaded.5–6`. A folded step keeps the question of the beat
+**A beat with nothing to do is not a step**, so a pair of beats is folded into one step wherever
+that happens. The folds, checked against the steps themselves because the last list like this went
+stale:
+`two-dots-and-a-line.9+10`, `one-tetrahedron-is-a-whole-world.1+2`,
+`one-tetrahedron-is-a-whole-world.7+8`, `make-it-move.1+2`, `make-it-move.4+5`,
+`make-it-move.11+12`, `two-worlds-threaded.5+6`. A folded step keeps the question of the beat
 whose action it performs — the later one in the first pair, the earlier one in the other six — and it
-covers both sections' anchors, which the check holds it to. Forty-one beats, thirty-four steps.
+covers both sections' anchors, which the check holds it to. The counts are the page table's, above,
+where they are checked against `steps.json` — this sentence used to repeat them, and a reviewer
+changed the repeat to "Ninety-nine beats, two steps." with tier 0 green.
 
 **The budget.** All the reader-facing text on a page — the masthead, the scope box, the footer, every
 step's title and instruction, every control's label — is **under 250 words**, and `check_edition.py`
@@ -379,12 +384,13 @@ did not notice, which is what the generated scaffolding is for: `steps.json` was
 else did.
 
 **This document did notice, and it had not extended the discipline to itself.** Nine hand-written
-"beat N" references in the prose here went silently wrong — the poke step, the walk step, the dial
+beat references in the prose here went silently wrong — the poke step, the walk step, the dial
 step, all named by a number that had moved. A file whose whole argument is *no beat number is ever
 typed into a demo* had typed nine.
 
-Both halves are now guarded rather than remembered. The page table's ranges are checked against
-`steps.json`, so a renumber that skips them fails. The prose scan skips **only the page-table rows
+Both halves are now guarded rather than remembered. The page table's two counts are checked against
+`steps.json` and against the pages' own steps, so a renumber that skips them fails, and so is every
+`slug.n` written anywhere in this file. The prose scan skips **only the page-table rows
 it just checked**: it used to skip any line containing `.html`, which let a sentence naming a page
 and a beat in the same breath — the likeliest such sentence anyone would write — straight through.
 And **everywhere else a beat is named by what it is** — the poke step, the walk step, chapter one's opening step — because a name needs no

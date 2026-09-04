@@ -372,6 +372,26 @@ export const ATTACKS = [
   { guard: "gate 9b · a beat named by a book-wide number in the prose", file: "DEMOS.md",
     from: "the poke step's table still said", to: "beat 42's table still said",
     expect: "outside its page table" },
+  // The wrapped one. `\s` matches a newline, so a sentence broken between the word and its number
+  // reads as a beat number to a reader and as nothing at all to a line-by-line scan — which is
+  // what the first version of this gate was (a reviewer, 2026-09-04).
+  { guard: "gate 9b · a book-wide number hard-wrapped away from its word", file: "DEMOS.md",
+    from: "**The words belong to the book. The demo is the sim.**",
+    to: "**The words belong to the book. The demo is the sim.** The poke step is beat\n35 of it.",
+    expect: "outside its page table" },
+  { guard: "gate 9b · the marker schema `beat N` copied into the prose", file: "DEMOS.md",
+    from: "**The words belong to the book. The demo is the sim.**",
+    to: "**The words belong to the book. The demo is the sim.** Write a beat N marker.",
+    expect: "outside its page table" },
+  { guard: "gate 9b · a beat id in the prose that the chapter has not got", file: "DEMOS.md",
+    from: "`two-worlds-threaded.5+6`", to: "`two-worlds-threaded.5+9`",
+    expect: "and steps.json says two-worlds-threaded has" },
+  { guard: "gate 9b · a folded pair the pages do not fold", file: "DEMOS.md",
+    from: "`make-it-move.4+5`,\n", to: "`make-it-move.3+4`,\n",
+    expect: "lists the folded pairs as" },
+  { guard: "gate 9b · a folded pair left out of the list", file: "DEMOS.md",
+    from: "`two-dots-and-a-line.9+10`, ", to: "",
+    expect: "lists the folded pairs as" },
   // A beat number in a sentence that also names a page. The scan used to skip **any** line
   // containing ".html" — the page table's own shape — so the likeliest sentence anyone would write
   // was the one it could not see.
