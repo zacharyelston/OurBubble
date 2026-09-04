@@ -39,9 +39,14 @@ answers a beat; `tools/beat_coverage.py` reads one there as a declared excusal.
 scope rule, mechanically. `tools/beat_coverage.py` enforces the cap, the numbering and the ids;
 `tools/attacks_beats.py` holds it to each of those with the mutation that proves it bites.
 
-**No book-wide beat number, anywhere.** It was the numbering that went stale three times in two
-weeks, so the old form (`beat 35`, `beats 44–49`) is refused in `OUTLINE.md`, `CONTINUUM.md`,
-`demos/DEMOS.md` and every chapter. Tooling and review notes name a beat `slug.n`; **chapter prose
+**No book-wide beat number in any file the guard reads.** It was the numbering that went stale
+three times in two weeks, so the old form — the word followed by a number, or by the schema letter a
+drafter would copy — is refused in every file `tools/beat_coverage.py` lists as scanned: the
+contract, the ledger, this standard, the README, `demos/DEMOS.md`, the working note, the reviewer's
+skill, the five modules whose comments carried beat references, and every chapter. The guard files
+that must quote the old form in order to refuse it are named there as the exception. An id that
+resolves to nothing — a chapter the book has not got, or a beat past the end of one it has — is
+refused in the same pass. Tooling and review notes name a beat `slug.n`; **chapter prose
 names it by what it is**, which is rule 4's own logic applied to counting: a page that counts its own
 parts is a count nothing guards.
 

@@ -1024,8 +1024,8 @@ def check_demo_steps(errors: List[str]) -> str:
     """The demos' step scaffolding is what `OUTLINE.md` and the chapters' markers now derive.
 
     No beat number is typed into a demo. `tools/demo_steps.py` reads the questions off `OUTLINE.md`
-    and the numbers off each chapter's `<!-- beat N -->` markers, keyed by section anchor, and writes
-    `demos/steps.json`; the pages render their titles and beat labels from that. So the file has to
+    and the ids off each chapter's `<!-- beat slug.n -->` markers, keyed by section anchor, and
+    writes `demos/steps.json`; the pages render their titles from that. So the file has to
     be in step with the contract, and this is where a renumber that has not been regenerated becomes
     a red check rather than a page quoting last week's numbering. The preface being drafted will move
     every beat in the book, which is precisely the event this is here for.

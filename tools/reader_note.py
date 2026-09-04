@@ -58,7 +58,7 @@ LABEL = "reader-note"
 # guess what a glyph beside a heading would do.
 LINK_TEXT = "Leave a note on this section"
 
-# `chapter · heading · beat N` and `note · chapter · heading`. The separator is a middle dot with
+# `chapter · heading · beat slug.n` and `note · chapter · heading`. The separator is a middle dot with
 # spaces, which is the book's own; a heading containing one would make `parse()` fail loudly rather
 # than silently mis-split, and a failed build is the outcome we want from that.
 SEP = " · "

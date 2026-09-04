@@ -149,7 +149,7 @@ artifact and the hashes together. `engine.lock`'s header is the long version.
 
 ## The demos
 
-Chapters 2–5 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
+Chapters 2–6 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
 numbers in the reader's browser** and walks her through the chapter's beats one at a time. Their
 beat ranges moved twice — when the outline gained *Two worlds threaded*, and again when it gained
 the front door — which is why a beat's id is now its own chapter's (`make-it-move.3`) and a demo
