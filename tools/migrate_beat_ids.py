@@ -54,7 +54,9 @@ CHAPTERS = ROOT / "chapters"
 
 OUTLINE_CHAPTER = re.compile(r"^##\s+(\d+)\s+·\s+(.*)$")
 OUTLINE_BEAT = re.compile(r"^(\d+)\.\s")
-MARKER = re.compile(r"^<!--\s*beat\s+(\d+)\s*-->\s*$", re.M)
+# A marker on its own line. The trailing run is `[ \t]*`, never `\s*`: `\s` matches a newline,
+# so a `\s*$` here would eat the blank line after the marker and glue the comment to the prose.
+MARKER = re.compile(r"^<!--[ \t]*beat[ \t]+(\d+)[ \t]*-->[ \t]*$", re.M)
 
 # `beat 22`, `Beat 4`, `beat 22's`, `beats 109-110`, `beats 35 and 47`. The number is what is
 # replaced; the word, the possessive and the joiner are kept exactly as they were written.
