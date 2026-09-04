@@ -10,7 +10,7 @@ anywhere in here that asks you to sign up for something. A few minutes, and then
 
 ## What this is about
 
-<!-- beat 1 -->
+<!-- beat what-you-will-have.1 -->
 
 There is something people have been doing for a very long time, and it is smaller than its
 reputation. Push a stick into the ground. Mark where its shadow falls. Come back later and mark it
@@ -30,7 +30,7 @@ exterior calculus* — and you may put it straight back down. You will not need 
 
 ## What you get
 
-<!-- beat 2 -->
+<!-- beat what-you-will-have.2 -->
 
 By the last page you will have the ideas themselves, not a rumour of them: a world you can hold in
 your head and count; the one rule everything here is made of; why the tick a world runs on belongs
@@ -49,7 +49,7 @@ physics word names a feature of it.
 
 ## The road
 
-<!-- beat 3 -->
+<!-- beat what-you-will-have.3 -->
 
 After the shadow, a run of chapters happens on a napkin. Two dots and a line, then a triangle, then
 the smallest solid there is — and that small thing turns out to be a whole world: every kind of
@@ -67,7 +67,7 @@ machine that can only agree with you is not an instrument.
 
 ## How to read it
 
-<!-- beat 4 -->
+<!-- beat what-you-will-have.4 -->
 
 This is for someone curious who is not a physicist. There is nothing you have to *do* beyond adding
 and taking away. Numbers a machine worked out go past you; you are never asked to reproduce one by

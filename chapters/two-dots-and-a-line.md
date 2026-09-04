@@ -16,7 +16,7 @@ Here is the first thing you need, and it is smaller than you would expect.
 
 ## Somewhere to put a number
 
-<!-- beat 13 -->
+<!-- beat two-dots-and-a-line.1 -->
 
 You need somewhere a number can sit. Call it a dot.
 
@@ -34,7 +34,7 @@ So where does change live?
 
 ## Change lives between
 
-<!-- beat 14 -->
+<!-- beat two-dots-and-a-line.2 -->
 
 Not at a dot — and this is the piece most people carry a wrong picture of.
 
@@ -58,7 +58,7 @@ dots and a line?
 
 ## Nothing closes yet
 
-<!-- beat 15 -->
+<!-- beat two-dots-and-a-line.3 -->
 
 Try to go somewhere and come back.
 
@@ -75,7 +75,7 @@ So add a third dot. What is the smallest thing that closes?
 
 ## The triangle
 
-<!-- beat 16 -->
+<!-- beat two-dots-and-a-line.4 -->
 
 Three dots. Join each to both of the others: three lines. And the moment you draw the third line,
 something appears that was not there before and that you did not ask for.
@@ -91,7 +91,7 @@ Put a number on each corner. How many differences do you now have?
 
 ## Three corners, three differences
 
-<!-- beat 17 -->
+<!-- beat two-dots-and-a-line.5 -->
 
 Three. One per line, and no more, because a difference belongs to a pair and there are exactly three
 pairs.
@@ -108,7 +108,7 @@ What do you get?
 
 ## Walk it and add
 
-<!-- beat 18 -->
+<!-- beat two-dots-and-a-line.6 -->
 
 Do it with real numbers rather than in the abstract.
 
@@ -124,7 +124,7 @@ But is that special to those three numbers?
 
 ## Any three numbers at all
 
-<!-- beat 19 -->
+<!-- beat two-dots-and-a-line.7 -->
 
 No. Try it with any three. Try it with numbers you pick to be awkward — enormous ones, negative
 ones, the same one three times. It comes back zero every time, and it is not luck.
@@ -142,7 +142,7 @@ Why exactly zero, and not nearly?
 
 ## Why it is exact and not approximate
 
-<!-- beat 20 -->
+<!-- beat two-dots-and-a-line.8 -->
 
 Because nothing was measured, and nothing was rounded.
 
@@ -159,7 +159,7 @@ Which raises a question you may already have asked: what did you never use?
 
 ## What you never used
 
-<!-- beat 21 -->
+<!-- beat two-dots-and-a-line.9 -->
 
 Length.
 
@@ -180,7 +180,7 @@ So what have you actually assumed, all told?
 
 ## Nothing at all
 
-<!-- beat 22 -->
+<!-- beat two-dots-and-a-line.10 -->
 
 Take the inventory. It is short.
 

@@ -9,7 +9,7 @@
   <figcaption><strong>Analogy — not data.</strong> A shadow is not evidence of its source — it is an invitation to build a test. That move, not the shadow, is what this book is about.</figcaption>
 </figure>
 
-<!-- beat 5 -->
+<!-- beat the-shadow.1 -->
 
 A child stands in a yard at noon and her shadow is a stub around her feet. She comes back after
 dinner and it is longer than she is, stretched across the grass toward the fence.
@@ -22,7 +22,7 @@ But suppose she does. What is the smallest next thing she could possibly do?
 
 ## Two marks in the ground
 
-<!-- beat 6 -->
+<!-- beat the-shadow.2 -->
 
 She pushes a stick into the ground and scratches a line in the dirt where its shadow ends. An hour
 later she comes back and scratches another.
@@ -38,7 +38,7 @@ So she has a number. Does she have an answer?
 
 ## A number is not yet an answer
 
-<!-- beat 7 -->
+<!-- beat the-shadow.3 -->
 
 No. And it is worth being exact about why, because this is the gap the rest of the book lives in.
 
@@ -54,7 +54,7 @@ Did he have to be a genius?
 
 ## What Eratosthenes did next
 
-<!-- beat 8 -->
+<!-- beat the-shadow.4 -->
 
 Around 240 BCE a man in Alexandria did the next thing, starting from almost exactly this.
 
@@ -67,7 +67,7 @@ What he had was a discrepancy he could not explain.
 
 ## Two posts, one shadow
 
-<!-- beat 9 -->
+<!-- beat the-shadow.5 -->
 
 The discrepancy was a story about a well. At Syene, far to the south, at noon on the longest day of
 the year, sunlight was said to fall straight down a deep well and light the water at the bottom.
@@ -86,7 +86,7 @@ The ground between the two towns is therefore not flat. It curves. But by how mu
 
 ## How much it curves
 
-<!-- beat 10 -->
+<!-- beat the-shadow.6 -->
 
 Here is where he turned a shape into a number, and the number is what made the shape able to be
 wrong.
@@ -108,7 +108,7 @@ He was close. That is not the interesting part.
 
 ## The order he did things in
 
-<!-- beat 11 -->
+<!-- beat the-shadow.7 -->
 
 Notice what he did *not* do. He did not begin with a beautiful idea about spheres and then go
 hunting for shadows that fitted it. He began with something he could not explain, proposed the
@@ -131,7 +131,7 @@ missing.
 
 ## Back to the child
 
-<!-- beat 12 -->
+<!-- beat the-shadow.8 -->
 
 Go back to her, and to the two marks in the ground.
 
