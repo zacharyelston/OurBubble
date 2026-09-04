@@ -4,16 +4,18 @@
 FIREWALL: this writes the scaffolding for pages that compute a toy DEC lattice. Nothing here is a
 claim about nature. See ../FIREWALL.md.
 
-**No beat number is ever typed into a demo.** The preface being drafted will insert beats at the
-front of `OUTLINE.md` and shift every number in the book again, and it has happened twice already:
-tranche C added a chapter and moved every beat from 36 on, tranche D moved every beat from 36 on by
-three more. Each time, anything holding a beat number in its own source went stale silently.
+**No beat number is ever typed into a demo, and there is no book-wide one left to type.** Beats used
+to be numbered across the whole book, so inserting one moved every later number; it happened three
+times in two weeks, and each time anything holding a number in its own source went stale silently. A
+beat's id is now `<chapter-slug>.<n>`, counted from 1 inside its own chapter (issue #77), and an
+insertion moves only that chapter's later beats.
 
 So the demos hold **no** numbers. A demo step declares which of its chapter's `##` sections it
 covers, by that section's **anchor** — a string a renumber cannot touch — and this script reads the
-beat number off the `<!-- beat N -->` marker in the chapter, and the beat's question off
-`OUTLINE.md`. The pages then render titles and beat labels from what it writes. A renumber changes
-`OUTLINE.md` and the chapters, this file's output follows, and no demo source is edited at all.
+beat's id off the `<!-- beat slug.n -->` marker in the chapter, and the beat's question off
+`OUTLINE.md`, whose beat lines are numbered from 1 under each chapter's heading. The pages render
+their titles from what it writes, and label a step **step n of N** on its own page: a reader is
+walking this page's steps, and no number she is shown counts anything outside it.
 
 Run it:
 
@@ -48,9 +50,21 @@ DEMO_CHAPTERS = (
     "two-worlds-threaded",
 )
 
-BEAT_MARKER = re.compile(r"<!--\s*beat\s+(\d+)\s*-->")
+BEAT_MARKER = re.compile(r"<!--[ \t]*beat[ \t]+([a-z0-9][a-z0-9-]*)\.(\d+)[ \t]*-->")
+
+# A chapter is capped at twelve beats; `tools/beat_coverage.py` is where that is enforced, and this
+# is here so a scaffolding built from a chapter over the cap cannot be written either.
+CAP = 12
 HEADING = re.compile(r"^##\s+(.+?)\s*$")
 OUTLINE_BEAT = re.compile(r"^(\d+)\.\s+(.+?)\s*$")
+OUTLINE_CHAPTER = re.compile(r"^##\s+(\d+)\s+·\s+(.*)$")
+
+
+def reading_order() -> List[str]:
+    """The chapters' slugs, in the book's own order — the only place that order is written down."""
+    text = (CHAPTERS / "SUMMARY.md").read_text(encoding="utf-8")
+    return [m.group(1)[:-3]
+            for m in re.finditer(r"^- \[[^\]]+\]\(([^)]+\.md)\)\s*$", text, re.M)]
 
 
 def strip_emphasis(text: str) -> str:
@@ -74,24 +88,33 @@ def anchor_for(heading: str) -> str:
     return slug.strip("-")
 
 
-def outline_beats() -> Dict[int, str]:
-    """Every beat's question, by number, with the drafters' bracketed note cut off.
+def outline_beats() -> Dict[str, str]:
+    """Every beat's question, by id, with the drafters' bracketed note cut off.
 
     The parenthetical italics in the outline say what the reader is supposed to *see*, and the whole
     point of this pass is that a demo shows it rather than telling her. So the answer is dropped
     here, at the boundary, where it cannot be reintroduced by an editing hand.
     """
     text = OUTLINE.read_text(encoding="utf-8")
-    beats: Dict[int, str] = {}
+    order = reading_order()
+    beats: Dict[str, str] = {}
+    slug = None
     for line in text.splitlines():
-        found = OUTLINE_BEAT.match(line)
-        if not found:
+        chapter = OUTLINE_CHAPTER.match(line)
+        if chapter:
+            number = int(chapter.group(1))
+            if number >= len(order):
+                raise SystemExit(f"demo steps: OUTLINE.md chapter {number} has no slug in "
+                                 f"chapters/SUMMARY.md")
+            slug = order[number]
             continue
-        number = int(found.group(1))
+        found = OUTLINE_BEAT.match(line)
+        if not found or slug is None:
+            continue
         question = found.group(2)
         question = re.split(r"\s*\*\(", question)[0]
         question = re.sub(r"\s*\[[^\]]*\]\s*$", "", question)
-        beats[number] = strip_emphasis(question).strip()
+        beats[f"{slug}.{int(found.group(1))}"] = strip_emphasis(question).strip()
     if not beats:
         raise SystemExit("demo steps: OUTLINE.md has no numbered beats — has its format changed?")
     return beats
@@ -132,10 +155,17 @@ def chapter_sections(slug: str) -> List[dict]:
                 f"heading above it. The demos key their steps on a section anchor, so a beat "
                 f"answered by a chapter's opening prose has nothing for a step to hold on to."
             )
+        if found_beat.group(1) != slug:
+            raise SystemExit(
+                f"demo steps: chapters/{slug}.md:{number} carries the marker "
+                f"{found_beat.group(0)}, which names another chapter. A beat's id carries the slug "
+                f"of the file it is in."
+            )
         sections.append({
             "anchor": anchor_for(heading),
             "heading": strip_emphasis(heading),
-            "beat": int(found_beat.group(1)),
+            "beat": f"{slug}.{int(found_beat.group(2))}",
+            "n": int(found_beat.group(2)),
         })
         heading = None
     if not sections:
@@ -146,28 +176,38 @@ def chapter_sections(slug: str) -> List[dict]:
 def derive() -> dict:
     beats = outline_beats()
     chapters = {}
-    for slug in DEMO_CHAPTERS:
+    for order, slug in enumerate(DEMO_CHAPTERS):
         markdown = (CHAPTERS / f"{slug}.md").read_text(encoding="utf-8")
         sections = chapter_sections(slug)
         for section in sections:
-            number = section["beat"]
-            if number not in beats:
+            if section["beat"] not in beats:
                 raise SystemExit(
-                    f"demo steps: chapters/{slug}.md claims beat {number}, which OUTLINE.md does "
-                    f"not have. One of the two was renumbered without the other."
+                    f"demo steps: chapters/{slug}.md claims beat {section['beat']}, which "
+                    f"OUTLINE.md does not have. One of the two was renumbered without the other."
                 )
-            section["question"] = beats[number]
-        numbers = [section["beat"] for section in sections]
+            section["question"] = beats[section["beat"]]
+        numbers = [section["n"] for section in sections]
         if numbers != sorted(numbers):
             raise SystemExit(
                 f"demo steps: chapters/{slug}.md's beats are out of order: {numbers}"
             )
         if len(set(numbers)) != len(numbers):
             raise SystemExit(f"demo steps: chapters/{slug}.md claims a beat twice: {numbers}")
+        if numbers != list(range(1, len(numbers) + 1)):
+            raise SystemExit(
+                f"demo steps: chapters/{slug}.md's beats do not run from 1 with no gap: {numbers}"
+            )
+        if len(numbers) > CAP:
+            raise SystemExit(
+                f"demo steps: chapters/{slug}.md carries {len(numbers)} beats, and a chapter is "
+                f"capped at {CAP}"
+            )
         chapters[slug] = {
+            # The book's order, written down because the file is sorted by key and a chapter's
+            # place in the book is not alphabetical — and is not a beat number any more either.
+            "order": order,
             "title": chapter_title(markdown, slug),
-            "first": numbers[0],
-            "last": numbers[-1],
+            "beats": len(numbers),
             "sections": sections,
         }
     return {

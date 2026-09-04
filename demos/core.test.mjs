@@ -33,7 +33,9 @@
 //      itself. The ring is held separately to drawing its twelve lines with none crossing another.
 //      And a drawing's own sentences — its `<title>` and `<desc>` — carry no digit at all.
 //   5. **the steps are the outline's.** Every step maps onto exactly one marked chapter section,
-//      every marked section is covered, and the beat numbers and questions are `steps.json`'s.
+//      every marked section is covered, and the beat ids and questions are `steps.json`'s. A beat's
+//      id is its own chapter's — `make-it-move.3` — and a step is labelled by its place on this
+//      page, "step 3 of 9", so no number a reader meets here counts anything outside her page.
 //   6. **the words are under budget.** Every reader-facing word on each page is counted and held
 //      under the owner's limit, and the count is printed whether or not it passes.
 //   7. **a table says what its numbers mean, and a total is a total.** Every table whose rows carry
@@ -522,10 +524,13 @@ const sweptPitch = (b) => PITCH_FROM + (b / VIEW_GRID) * PITCH_SPAN;
 // preface's renumber proved it: every beat in the book moved by four, and nine hand-written "beat
 // N" references in DEMOS.md went silently wrong while the pages themselves were fine.
 //
-// Two rules, and between them the family cannot come back. The page table's ranges must be
-// `steps.json`'s, so they are checked rather than remembered. And everywhere else a beat is named by
+// Two rules, and between them the family cannot come back. The page table's **counts** must be
+// `steps.json`'s — how many beats a chapter has and how many steps its page walks them in — so they
+// are checked rather than remembered. The ranges that column used to carry are gone with the
+// book-wide numbering they were written in (issue #77). And everywhere else a beat is named by
 // **what it is** — the poke step, the walk step, the dial step — because a name does not need
 // renumbering.
+const tableSteps = new Map();
 {
   const doc = readFileSync(path.join(HERE, "DEMOS.md"), "utf8");
   // The rows the loop below actually checks, and nothing else, are what the prose scan skips. It
@@ -533,6 +538,8 @@ const sweptPitch = (b) => PITCH_FROM + (b / VIEW_GRID) * PITCH_SPAN;
   // sentence naming a page and a beat in the same breath — the likeliest sentence to write — went
   // straight through. A reader found it by writing one.
   const tableRows = new Set();
+  // The step counts the table states, read here and held to the steps themselves further down,
+  // where the chapters are joined — this block has the scaffolding but not the step definitions.
   for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
     const row = doc.split("\n").find((line) => line.includes(`${slug}.html`));
     if (row) tableRows.add(row);
@@ -540,21 +547,24 @@ const sweptPitch = (b) => PITCH_FROM + (b / VIEW_GRID) * PITCH_SPAN;
       fail(`DEMOS.md has no page-table row for ${slug}`);
       continue;
     }
-    const found = /\|\s*(\d+)[–-](\d+)\s*\|/.exec(row);
+    const found = /\|\s*(\d+)\s*\|\s*(\d+)\s*\|\s*$/.exec(row);
     if (!found) {
-      fail(`DEMOS.md's row for ${slug} states no beat range`);
-    } else if (Number(found[1]) !== chapter.first || Number(found[2]) !== chapter.last) {
-      fail(`DEMOS.md says ${slug} is beats ${found[1]}–${found[2]}, and steps.json derives `
-        + `${chapter.first}–${chapter.last} from OUTLINE.md and the chapter's markers`);
+      fail(`DEMOS.md's row for ${slug} states no beat count and step count`);
+    } else if (Number(found[1]) !== chapter.beats) {
+      fail(`DEMOS.md says ${slug} has ${found[1]} beats, and steps.json derives `
+        + `${chapter.beats} from OUTLINE.md and the chapter's markers`);
+    } else {
+      tableSteps.set(slug, Number(found[2]));
     }
   }
   for (const line of doc.split("\n")) {
     if (tableRows.has(line)) continue;             // the page-table rows, checked above
     const found = /\bbeats?\s+\d+/.exec(line);
     if (found) {
-      fail(`DEMOS.md writes "${found[0]}" outside its page table. A beat number in prose goes stale `
-        + `the next time the book is renumbered — the preface moved every beat by four and stranded `
-        + `nine of them. Name the beat by what it is instead: the poke step, the walk step`);
+      fail(`DEMOS.md writes "${found[0]}" outside its page table. A book-wide beat number is `
+        + `nobody's name any more — a beat is slug.n, like make-it-move.3 — and in prose it goes `
+        + `stale the next time the chapter is renumbered. Name the beat by what it is instead: the `
+        + `poke step, the walk step`);
     }
   }
 }
@@ -1450,6 +1460,27 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
     fail(`${slug}: the steps claim beats ${claimed.join(", ")} and the chapter's markers say `
       + `${marked.join(", ")}`);
   }
+  // Every id is its own chapter's, and it says which chapter it is — the one thing that makes a
+  // beat's name survive a chapter moving.
+  for (const beat of marked) {
+    if (!new RegExp(`^${slug}\\.\\d+$`).test(String(beat))) {
+      fail(`${slug}: the beat id "${beat}" is not this chapter's slug and a number. A beat is `
+        + `slug.n — a book-wide number is nobody's name`);
+    }
+  }
+  // And a step is labelled by its place on THIS page. A label carrying a beat number is the defect
+  // that stranded nine references the last time the book was renumbered.
+  joined.steps.forEach((step, index) => {
+    const wanted = `step ${index + 1} of ${joined.steps.length}`;
+    if (step.label !== wanted) {
+      fail(`${slug}: step ${index + 1} is labelled "${step.label}" and this page's own count says `
+        + `"${wanted}". A step's label counts this page's steps and nothing outside the page`);
+    }
+  });
+  if (tableSteps.has(slug) && tableSteps.get(slug) !== joined.steps.length) {
+    fail(`DEMOS.md says ${slug}'s page walks ${tableSteps.get(slug)} steps and it walks `
+      + `${joined.steps.length}`);
+  }
   for (const step of joined.steps) {
     for (const section of step.sections) {
       const found = chapter.sections.find((entry) => entry.anchor === section.anchor);
@@ -1470,7 +1501,11 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
   for (const step of joined.steps) {
     words.add(step.title);
     words.add(step.act);
-    words.add(step.label);
+    // The label is one phrase — "step n of N" — with this page's own counter in it, so it is
+    // counted once for the page rather than once per step. DEMOS.md's own counting rule: a button
+    // labelled the same way on nine steps is one label, not nine. Under the book-wide numbering
+    // every label was a different text and was counted nine times.
+    words.add(step.label.replace(/\d+/g, "n"));
     for (const control of step.controls) {
       if (control.noun) words.add(control.noun);
       if (control.label) words.add(control.label);
@@ -1485,11 +1520,9 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         fail(`${slug} ${step.label}: rendering threw — ${failure.message}`);
         continue;
       }
-      // The step's own label — a beat number, or a range where a pair is folded — is the one place
-      // a number on the page is
-
-      // not the engine's, and it is not typed either: it is `steps.json`'s, derived from the
-      // chapter's markers, and gate 5 above holds it to them. Everything else is scanned.
+      // The step's own label — "step 3 of 9" — is the one place a number on the page is not the
+      // engine's, and it is not typed either: it counts the steps this page joined, and gate 5
+      // above holds it to that count exactly. Everything else is scanned.
       const surfacesHere = [
         step.title, step.act,
         ...step.controls.flatMap((control) => [
