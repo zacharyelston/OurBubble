@@ -74,12 +74,12 @@ This is for someone curious who is not a physicist. There is nothing you have to
 and taking away. Numbers a machine worked out go past you; you are never asked to reproduce one,
 only to see what it was compared against — though the last chapter hands you the commands.
 
-Read it in order: each chapter earns the next one's question. And do the ✎ moments — from partway in,
-every chapter that runs an experiment stops just before the answer and asks you to write your guess
+Read it in order: each chapter earns the next one's question. And do the ✎ moments — from partway
+in, every chapter that runs an experiment stops before the answer and asks you to write your guess
 down. That pause is the method, performed instead of described, and it works only if you commit.
 
 Sticks and light, dots and lines. That is what we have had since the first shadows on a cave wall,
-all this book uses, and enough for everything in here.
+is all this book uses, and is enough for everything in here.
 
 We start closer to hand than a shadow: an egg on a table, and a claim about where measuring gets
 done — worth holding lightly until you have done it yourself.

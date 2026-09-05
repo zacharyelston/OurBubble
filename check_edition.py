@@ -82,11 +82,12 @@ def forbidden_hits(
     Matching only the raw file is defeated by one emphasis marker inside the phrase — `The world is
     **made of** boundaries.` renders as the declared probe word for word and returned nothing at all
     (a proofreader, round 3, as a blocker), which is the same defect `flattened()` was written for
-    on the retired-phrasing guard. `unmarked()` keeps the full stops, so a pattern's own
-    `[^.\\n]{0,40}` window still ends where its sentence does.
+    on the retired-phrasing guard. The markup-blind read is done one sentence at a time
+    (`sentences()`), so a pattern's own `[^.\\n]{0,40}` window cannot reach past the sentence it
+    started in, and cannot be cut short by a stop that ended nothing.
     """
     lowered = text.casefold()
-    stripped = unmarked(text)
+    pieces = sentences(text)
     flat = flattened(text)
     hits: List[str] = []
     for phrase in phrases:
@@ -101,8 +102,11 @@ def forbidden_hits(
             hits.append(f"unsupported legacy phrase present: {phrase!r}")
     for rule in patterns:
         pattern = str(rule["pattern"])
-        found = (re.search(pattern, lowered, flags=re.IGNORECASE)
-                 or re.search(pattern, stripped, flags=re.IGNORECASE))
+        found = re.search(pattern, lowered, flags=re.IGNORECASE)
+        for piece in pieces:
+            if found:
+                break
+            found = re.search(pattern, piece, flags=re.IGNORECASE)
         if found:
             hits.append(
                 f"unsupported legacy claim present ({rule.get('why', 'excluded')}): "
@@ -165,8 +169,21 @@ NOT_WORD_OR_STOP = re.compile("[^0-9a-z_/απ⁵\u0000]+")
 # survives: one followed by a capital letter or by the end of the text, closing quotes and brackets
 # allowed in between. `ch. 4` is followed by a digit, `etc. —` by a dash, `of ... boundaries` by a
 # lowercase word; none of them is a sentence end, and none of them shortens the window any more.
-SENTENCE_STOP = re.compile(r"[.!?]+(?=[\s\"')\]]*(?:[A-Z]|$))")
-STOP_MARK = "\u0000"
+# A block ends a sentence whatever its punctuation: a blank line, a heading, a list item, a table
+# row, or a line that opens with an emphasis marker. Round 5 found 304 sentence ends in `chapters/`
+# that no full stop rule would recognise, and two of them put halves of different sentences inside
+# one pattern window — a guard refusing honest prose, which is how a guard gets weakened.
+BLOCK_BREAK = re.compile(r"\n\s*\n|\n\s*(?:[-*+>#|]|\d+[.)])|\n\s*\*")
+# A candidate sentence end: stops, then any closing quotes or brackets, then whitespace or the end.
+CANDIDATE_END = re.compile(r"[.!?]+[\"'\u201d\u2019)\]]*(?=\s|$)")
+# …and the words that carry a full stop without ending anything. A single letter is an initial
+# (`F. W. Bessel`); the rest are the abbreviations this repository writes. Round 5 walked three
+# declared claims past the guard with `cf. Chapter 4`, `e.g. Light` and `see Fig. 2`, because each
+# one is a stop followed by a capital.
+ABBREVIATIONS = frozenset("""
+    cf ch chs chap chapt e g eg i ie etc fig figs no nos pp vs vol vols ed eds approx ca
+    st mr mrs ms dr prof jr sr al inc ltd
+""".split())
 
 
 def flattened(text: str) -> str:
@@ -191,25 +208,45 @@ def flattened(text: str) -> str:
     return NOT_WORD.sub(" ", INVISIBLE.sub(" ", LINK_TARGET.sub("", text)).casefold()).strip()
 
 
-def unmarked(text: str) -> str:
-    """`flattened()`, but the *sentence* ends survive as full stops.
+def sentences(text: str) -> List[str]:
+    """The page as its sentences, each one flattened the way `flattened()` flattens a phrase.
 
-    What the reader is shown, in lowercase words separated by single spaces, with one full stop
-    wherever a sentence actually ended — so a pattern that says "within forty characters and not
-    past the end of this sentence" still means that. Everything `flattened()` removes — link
-    targets, HTML comments and tags, footnote markers, zero-width characters — is removed here too,
-    and so is every mark that is not a letter, a digit or one of the few symbols the patterns
-    themselves name.
+    One sentence per item, in lowercase words separated by single spaces, with the markup gone —
+    link targets, HTML comments and tags, footnote markers, zero-width characters, and every mark
+    that is not a letter, a digit or one of the few symbols the patterns themselves name.
 
-    Sentence ends are found before the case is folded away, because a full stop is a sentence end
-    only when what follows it is a new sentence. `(see ch. 4)`, `etc. —` and `made of ...
-    boundaries` are not, and each of them walked a declared claim straight past this guard while
-    every stop counted (a proofreader, round 4). **Pure.**
+    **Why sentences and not characters.** A pattern here says "within forty characters, and not
+    past the end of this sentence", and it used to enforce the second half with `[^.\n]`. A full
+    stop is a poor proxy for a sentence end in both directions, and a proofreader found it failing
+    each way in consecutive rounds: `(see ch. 4)` and an ellipsis ended a window in mid-sentence and
+    let a declared claim through (round 4); then `cf. Chapter 4` did the same to the rule written to
+    fix it, while a stop before a bullet or a bold lead-in was *not* recognised and two innocent
+    halves were read as one claim (round 5). Cutting the page up once, here, on the raw text where
+    the capitals and the block markers still exist, ends both.
+
+    A sentence ends where a block ends, or at a stop that is followed by a capital and is not part
+    of an abbreviation or an initial. **Pure.**
     """
     body = INVISIBLE.sub(" ", LINK_TARGET.sub("", text))
-    body = SENTENCE_STOP.sub(STOP_MARK, body)
-    words_only = NOT_WORD_OR_STOP.sub(" ", body.casefold())
-    return words_only.replace(STOP_MARK, " . ").strip()
+    out: List[str] = []
+    for block in BLOCK_BREAK.split(body):
+        start = 0
+        for found in CANDIDATE_END.finditer(block):
+            after = block[found.end():].lstrip()
+            if after and not after[0].isupper():
+                continue                      # an ellipsis, or a stop inside a sentence
+            before = block[:found.start()].split()
+            word = "".join(c for c in before[-1] if c.isalpha()).casefold() if before else ""
+            if word in ABBREVIATIONS:
+                continue                      # `cf. Chapter 4`, `e.g. Light`, `F. W. Bessel`
+            out.append(block[start:found.end()])
+            start = found.end()
+        out.append(block[start:])
+    # Not `flattened()`: that throws away π and the superscript, and a pattern that hunts
+    # `7π⁵` cannot hunt it in a text that has thrown π away. NOT_WORD_OR_STOP is the same
+    # normalisation with the handful of symbols the patterns name left in.
+    return [piece for piece in
+            (NOT_WORD_OR_STOP.sub(" ", part.casefold()).strip() for part in out) if piece]
 
 
 def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:

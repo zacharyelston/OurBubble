@@ -33,8 +33,9 @@ where the middle turns up in your notebook, and it is the one you are going to b
 That sounds too convenient, and you should hold it lightly until you have done it yourself. But it
 is the promise this book keeps as literally as it can: with a pencil, on a napkin. You will draw a
 small shape, walk once round its rim adding up the differences you meet on the way, and come home to
-zero. Then you will add up the faces that close around an inside, and get zero again — every time,
-whatever numbers you started from. Both sums close, and both times what you walked was the edge.
+zero. Then you will add up the numbers the faces give you, all the way round an inside, and get zero
+again — every time, whatever numbers you started from. Both sums close, and both times what you
+walked was the edge.
 
 ## Where the observer is standing
 
@@ -43,14 +44,14 @@ whatever numbers you started from. Both sums close, and both times what you walk
 Notice where that leaves you. Whenever you measure, you are at a boundary — the thing's or your
 instrument's, and usually both at once.
 
-Several of the chapters ahead are somebody reading an edge. A wall put up to cut one piece of a
-small world off from the rest, and the question of what still gets past it. The narrow gap between
-two such walls, and what stops fitting in there. A push shaped into one region, and where the bill
-for it turns out to be charged.
+The nearest of them is the chapter on why sharper shadows took two thousand years, and it reads an
+edge in another sense entirely — a limit rather than a place: the finest difference an instrument
+can still tell apart, which is what separates being wrong from not being able to see yet.
 
-And soon after this, a chapter on why sharper shadows took two thousand years reads an edge in
-another sense entirely — a limit rather than a place: the finest difference an instrument can still
-tell apart, which is what separates being wrong from not being able to see yet.
+Several of the chapters after that are somebody reading an edge in the ordinary sense. A wall put up
+to cut one piece of a small world off from the rest, and the question of what still gets past it.
+The narrow gap between two walls of another kind, and what stops fitting in there. A push shaped
+into one region, and where the bill for it turns out to be charged.
 
 What each of those returned is that chapter's to tell, and some of the answers are noes. The point
 here is smaller, and it is about where somebody was standing rather than about what came back. In
@@ -82,7 +83,7 @@ moves while you watch.
 A shadow is an edge. Not a thing in its own right — a place where the light stops, with lit ground on
 one side of the line and unlit ground on the other. Nobody has ever gone to inspect the Sun, and
 nobody needed to. Something crosses the gap, meets an obstacle, and leaves a line on the ground.
-Anything anyone has ever got out of a shadow, they got from where that line falls.
+Read where that line falls, and you have read the shadow.
 
 Somebody is about to notice one, in a yard.
 

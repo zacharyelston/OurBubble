@@ -583,7 +583,7 @@
       "why": "the tetrahedron as fundamental spacetime"
     },
     {
-      "pattern": "\\b(the\\s+world|the\\s+universe|reality|nature|everything)\\b[^.]{0,40}\\b(made\\s+(of|out\\s+of)|built\\s+(of|from|out\\s+of)|nothing\\s+but)\\s+(boundar(y|ies)|edges?|surfaces?)\\b",
+      "pattern": "\\b(the\\s+world|the\\s+universe|reality|nature|everything)\\b[^.\\n]{0,40}\\b(made|built|composed|consists?|nothing\\s+but)\\b[^.\\n]{0,25}\\b(boundar(y|ies)|edges?|surfaces?)\\b",
       "why": "the world as made of boundaries — a claim about nature, where the book has a claim about where an account is kept"
     },
     {
@@ -629,6 +629,22 @@
     {
       "pattern": "\\bno\\s+way\\b[^.\\n]{0,40}\\b(to|into|out\\s+of|past|through)\\b[^.\\n]{0,40}\\b(inside|middle|edge|boundary|surface)\\b",
       "why": "the necessity register without a verb — no way to the inside but through the edge"
+    },
+    {
+      "pattern": "\\b(nothing|anything|everything|whatever|information|the\\s+inside|the\\s+middle)\\b[^.\\n]{0,60}\\b(only|solely|exclusively|except|nowhere\\s+else|and\\s+nowhere|no\\s+where\\s+else)\\b[^.\\n]{0,40}\\b(edge|edges|boundary|boundaries|surface|surfaces)\\b",
+      "why": "the necessity register with no modal at all — an exclusivity claim about the world, which is the shape the modal patterns were blind to"
+    },
+    {
+      "pattern": "\\b(only|solely|exclusively|nowhere\\s+else)\\b[^.\\n]{0,40}\\b(at|on|across|through|by\\s+way\\s+of)\\s+(the|its|their)\\s+(edge|edges|boundary|boundaries|surface|surfaces)\\b",
+      "why": "the same exclusivity the other way round — only at the edge"
+    },
+    {
+      "pattern": "\\b(impossible|no\\s+such\\s+thing)\\b[^.\\n]{0,60}\\b(without|other\\s+than|but\\s+by)\\b[^.\\n]{0,40}\\b(cross|crossing|the\\s+edge|the\\s+boundary|the\\s+surface)\\b",
+      "why": "the necessity register as an impossibility written with an adjective rather than a modal"
+    },
+    {
+      "pattern": "\\b(edge|edges|boundary|boundaries|surface|surfaces)\\b[^.\\n]{0,30}\\band\\s+(nowhere|nothing|no\\s+other|no\\s+one)\\s+else\\b",
+      "why": "the same exclusivity with the boundary named first — at the edge and nowhere else"
     }
   ],
   "forbidden_probe_texts": [
@@ -666,7 +682,16 @@
     "The world is made of ... boundaries.",
     "Nature keeps its accounts — light, warmth, etc. — at the edge.",
     "There is no other way (cf. ch. 2) out of it.",
-    "The value is **7**π⁵ minus 306."
+    "The value is **7**π⁵ minus 306.",
+    "Nature keeps its accounts — cf. Chapter 4 — at the edge.",
+    "Nature keeps its accounts, e.g. Light and warmth, at the edge.",
+    "The world is made, see Fig. 2, of boundaries.",
+    "As F. W. Bessel put it, the world is made of boundaries.",
+    "Nothing gets in or out except at the edge.",
+    "The inside reaches you only across its edge.",
+    "Information leaves a region exclusively through its boundary.",
+    "Whatever the inside has to say, it says at the edge and nowhere else.",
+    "It is impossible for anything to reach you without crossing the edge."
   ],
   "retired_phrasings": [
     {
