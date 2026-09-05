@@ -67,7 +67,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 **The chapter.** [where-the-inside-shows.md](where-the-inside-shows.md)
 
-**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and what it promises the reader will do with a pencil — walk a shape's rim and come home to zero, add the faces that close around an inside and get zero — is kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.
+**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and what it promises the reader will do with a pencil — walk a shape's rim and come home to zero, add the numbers a shape's faces give her all the way round an inside and get zero — is kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.
 
 
 **Standards and record this section rests on.**

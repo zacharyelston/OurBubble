@@ -43,11 +43,11 @@ reader every time instead of explained to her once.
 
 ## 1 · Where the inside shows
 
-1. What can I actually see of a thing?  *(not its inside — the place where it stops is the whole of what is on offer to look at. An edge is not the leftover part of an object; it is the part I am in contact with, and where the work of measuring gets done)*
-2. Then where should I measure, and why there?  *(at the edge, because that is where the inside gets written down. Standing outside a region, what she can write down is what crosses its boundary — and the account of those crossings is where the middle turns up in her notebook. Promised, not proved: on a napkin she will walk once round a shape adding the differences and come home to zero, and add up the faces that close around an inside and get zero again — both sums close, and both times what she walked was the edge)*
-3. So where am I standing when I measure?  *(at a boundary, always — the thing's or the instrument's, usually both. Several of the chapters ahead are somebody reading an edge: a wall and what still gets past it, the narrow gap between two walls and what stops fitting there, a shaped push and where its bill is charged. The chapter on why sharper shadows took two thousand years reads an edge in a different sense of the word — a limit rather than a place — the finest difference an instrument can still tell apart. The point is where somebody was standing, not what came back: in every one of them, somebody is at an edge reading it)*
+1. What can I actually see of a thing?  *(not its inside — the place where it stops is where I am going to be reading it. Light, warmth, a sound, a smell, a crack in the shell: every one of those reached me by crossing. An edge is not the leftover part of an object; it is the part I am in contact with, and where the work of measuring gets done)*
+2. Then where should I measure, and why there?  *(at the edge, because that is where the inside gets written down. Standing outside a region, what she can write down is what crosses its boundary — and the account of those crossings is where the middle turns up in her notebook. Promised, not proved: on a napkin she will walk once round a shape adding the differences and come home to zero, and add up the numbers the faces give her, all the way round an inside, and get zero again — both sums close, and both times what she walked was the edge)*
+3. So where am I standing when I measure?  *(at a boundary, always — the thing's or the instrument's, usually both. Several of the chapters ahead are somebody reading an edge: a wall and what still gets past it, the narrow gap between two walls of another kind and what stops fitting there, a shaped push and where its bill is charged. The chapter on why sharper shadows took two thousand years reads an edge in a different sense of the word — a limit rather than a place — the finest difference an instrument can still tell apart. The point is where somebody was standing, not what came back: in every one of them, somebody is at an edge reading it)*
 4. Is looking all a boundary is good for?  *(no — it is also a seam. Whatever leaves one piece of a world across an edge arrives in its neighbour: one quantity, written twice, with opposite signs. In an account kept at the seams a departure and its arrival are the same entry made twice, once with each sign, so wherever the books are added up the two cancel. Said once and left there; a later chapter does the sum in front of her on a shape she can count)*
-5. Where do we start, then?  *(the oldest boundary anyone measured: a shadow is not a thing but a place where the light stops, and everything anyone ever got out of one came from where that line falls)*
+5. Where do we start, then?  *(the oldest boundary anyone measured: a shadow is not a thing but a place where the light stops, and everything anyone has got out of one came from where that line falls)*
 
 ## 2 · The shadow
 
@@ -296,7 +296,14 @@ the world has to do, cannot do, or has no other way of doing. The three retired 
 refused by name in `edition.json`, and the boundary-shaped nature claims this chapter's subject
 invites — the world made of boundaries, everything a boundary, nature keeping its accounts at the
 edge — are refused as patterns with their own probes, because until round 2 mutated one onto this
-page nothing in the edition would have stopped it.*
+page nothing in the edition would have stopped it. **The register is refused by grammar, not by
+keyword**: rounds 3 and 4 each found the claim again in a shape the last pattern did not cover — the
+modal deleted and the universal left standing ("Whatever reached you got to you by crossing"), then
+an exclusivity claim written in synonyms ("the whole of what is on offer to look at"). Both are
+retired by name now, and the patterns look for a universal subject or an exclusion beside a crossing
+and a boundary rather than for the words the last round happened to use. That is four consecutive
+rounds on one register: if a fifth finds it, the finding is about how this chapter is written, not
+about the sentence it found.*
 
 *Drafter's note on chapters 4–8: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the

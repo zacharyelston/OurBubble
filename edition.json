@@ -114,7 +114,7 @@
       },
       "where-the-inside-shows": {
         "title": "Where the inside shows — why we measure at an edge, and no experiment",
-        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and what it promises the reader will do with a pencil — walk a shape's rim and come home to zero, add the faces that close around an inside and get zero — is kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
+        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and what it promises the reader will do with a pencil — walk a shape's rim and come home to zero, add the numbers a shape's faces give her all the way round an inside and get zero — is kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
         "standards": [
           "book/LESSON_STANDARD.md",
           "FIREWALL.md"
@@ -603,7 +603,7 @@
       "why": "everything living on the boundary — the holographic paraphrase of the same claim"
     },
     {
-      "pattern": "\\b(no\\s+other|the\\s+only)\\s+(way|route|path|road)\\s+(out|in|across|through|around)\\b",
+      "pattern": "\\b(no\\s+other|the\\s+only)\\s+(way|route|path|road)\\b[^.\\n]{0,30}\\b(out|in|across|through|around)\\b",
       "why": "the necessity register — no other way out, where the book has only where an account is kept"
     },
     {
@@ -611,8 +611,24 @@
       "why": "the necessity register, spelled out — the only way anything leaves a middle"
     },
     {
-      "pattern": "\\b(cannot|can\\s?not|can't|could\\s+not|couldn't)\\b[^.]{0,60}\\b(any\\s+other|no\\s+other)\\s+(way|route|path|road)\\b",
+      "pattern": "\\b(cannot|can\\s?not|can't|could\\s+not|couldn't|never)\\b[^.]{0,60}\\b(any\\s+other|no\\s+other)\\s+(way|route|path|road)\\b",
       "why": "the necessity register, negated — the same claim as an impossibility"
+    },
+    {
+      "pattern": "\\b(anything|everything|whatever|nothing|all\\s+that)\\b[^.\\n]{0,50}\\b(has\\s+to|have\\s+to|must|can|cannot|can\\s?not|can't|could)\\b[^.\\n]{0,30}\\b(cross|crosses|leave|leaves|escape|escapes|reach|reaches|be\\s+reached|get\\s+out|gets\\s+out|come\\s+out|comes\\s+out|learn|learned)\\b",
+      "why": "the necessity register with a universal subject — anything you learn has to come out through there"
+    },
+    {
+      "pattern": "\\b(cannot|can\\s?not|can't|could\\s+not|must|has\\s+to|have\\s+to|never)\\b[^.\\n]{0,50}\\b(cross|crosses|leave|leaves|escape|escapes|reach|reached|be\\s+reached|get\\s+out|gets\\s+out|come\\s+out|comes\\s+out)\\b[^.\\n]{0,40}\\b(except|only|but\\s+through|but\\s+across|other\\s+than)\\b",
+      "why": "the necessity register as an exclusion — cannot be reached except at its edge"
+    },
+    {
+      "pattern": "\\b(must|has\\s+to|have\\s+to)\\b[^.\\n]{0,20}\\b(cross|pass|go)\\b[^.\\n]{0,20}\\b(the|its|that)\\s+(edge|boundary|surface)\\b",
+      "why": "the necessity register as an obligation on the world — it must cross the boundary to reach you"
+    },
+    {
+      "pattern": "\\bno\\s+way\\b[^.\\n]{0,40}\\b(to|into|out\\s+of|past|through)\\b[^.\\n]{0,40}\\b(inside|middle|edge|boundary|surface)\\b",
+      "why": "the necessity register without a verb — no way to the inside but through the edge"
     }
   ],
   "forbidden_probe_texts": [
@@ -638,7 +654,19 @@
     "The world is made <!-- NOTE(reader): does this land? --> of *boundaries*.",
     "The only way anything ever leaves the middle is across the edge.",
     "It cannot reach you any other way.",
-    "There is no other route out of it."
+    "There is no other route out of it.",
+    "Anything you ever learn about what is inside has to come out through there.",
+    "Whatever reaches you has to cross the edge.",
+    "It must cross the boundary to reach you.",
+    "Nothing can reach you except across that edge.",
+    "The inside cannot be reached except at its edge.",
+    "There is no way to the inside but through the edge.",
+    "It never gets out any other way.",
+    "Nature keeps its accounts (see ch. 4) at the edge.",
+    "The world is made of ... boundaries.",
+    "Nature keeps its accounts — light, warmth, etc. — at the edge.",
+    "There is no other way (cf. ch. 2) out of it.",
+    "The value is **7**π⁵ minus 306."
   ],
   "retired_phrasings": [
     {
@@ -685,6 +713,16 @@
       "phrase": "Whatever leaves the middle leaves by that route",
       "why": "the same necessity register one sentence on — the half of the thesis that survived the first rewrite of it",
       "probe": "second-best substitute for reaching the middle. *Whatever leaves the middle leaves by\nthat route*, and the account is where it lands."
+    },
+    {
+      "phrase": "Whatever reached you got to you by crossing",
+      "why": "the necessity register with the modal deleted — a universal about everything that has ever reached anyone, and the sentence three sweeps of the chapter walked past because it names no impossibility (a proofreader, round 4)",
+      "probe": "a smell, a crack running down the shell. **Whatever reached you** got to you by\ncrossing."
+    },
+    {
+      "phrase": "that is the whole of what is on offer to look at",
+      "why": "an exclusivity claim in synonyms, written by the round that was removing the exclusivity claims: what the world will let anyone see, rather than where the reading is done",
+      "probe": "the place where the egg stops and the room begins, and that is the *whole* of what is\non offer to look at."
     }
   ]
 }

@@ -151,10 +151,22 @@ LINK_TARGET = re.compile(r"\]\([^)]*\)")
 # identically and is a shape the book actually writes.
 INVISIBLE = re.compile(r"<!--.*?-->|<[^>\n]{0,200}>|\[\^[^\]]*\]|[\u00ad\u200b\ufeff]", re.S)
 NOT_WORD = re.compile(r"[^0-9a-z]+")
-# The same, with the full stop spared. `forbidden_hits`' patterns bound themselves to one sentence
-# with `[^.\n]{0,40}`, so flattening the stops away would let a pattern reach across a paragraph
-# and refuse a page for two halves of a claim nobody made in one breath.
-NOT_WORD_OR_STOP = re.compile(r"[^0-9a-z.]+")
+# The same, with the sentence stop spared — and the handful of symbols the patterns themselves name,
+# because a pattern that hunts `7π⁵` cannot hunt it in a text that has thrown π away — which is how
+# one bold marker walked that phrase past both layers (a proofreader, round 4). `forbidden_hits`'
+# patterns bound themselves to one sentence with `[^.\n]{0,40}`, so flattening the stops away would
+# let a pattern reach across a paragraph and refuse a page for two halves of a claim nobody made in
+# one breath.
+NOT_WORD_OR_STOP = re.compile("[^0-9a-z_/απ⁵\u0000]+")
+# **Which stops, though.** Keeping every `.` was the first try, and a proofreader walked four
+# declared claims straight past the guard with punctuation this repository writes constantly — an
+# ellipsis, `(see ch. 4)`, `etc.`, `cf.` — because each of those stops ended a pattern's window in
+# the middle of the sentence it was reading (round 4). So only a stop that *ends a sentence*
+# survives: one followed by a capital letter or by the end of the text, closing quotes and brackets
+# allowed in between. `ch. 4` is followed by a digit, `etc. —` by a dash, `of ... boundaries` by a
+# lowercase word; none of them is a sentence end, and none of them shortens the window any more.
+SENTENCE_STOP = re.compile(r"[.!?]+(?=[\s\"')\]]*(?:[A-Z]|$))")
+STOP_MARK = "\u0000"
 
 
 def flattened(text: str) -> str:
@@ -180,17 +192,24 @@ def flattened(text: str) -> str:
 
 
 def unmarked(text: str) -> str:
-    """`flattened()`, but the sentence stops survive.
+    """`flattened()`, but the *sentence* ends survive as full stops.
 
-    What the reader is shown, in lowercase words separated by single spaces, with the full stops
-    left in so a pattern that says "within forty characters and not past the end of this sentence"
-    still means that. Everything `flattened()` removes — link targets, HTML comments and tags,
-    footnote markers, zero-width characters, and every other mark that is not a letter or a digit —
-    is removed here too. **Pure.**
+    What the reader is shown, in lowercase words separated by single spaces, with one full stop
+    wherever a sentence actually ended — so a pattern that says "within forty characters and not
+    past the end of this sentence" still means that. Everything `flattened()` removes — link
+    targets, HTML comments and tags, footnote markers, zero-width characters — is removed here too,
+    and so is every mark that is not a letter, a digit or one of the few symbols the patterns
+    themselves name.
+
+    Sentence ends are found before the case is folded away, because a full stop is a sentence end
+    only when what follows it is a new sentence. `(see ch. 4)`, `etc. —` and `made of ...
+    boundaries` are not, and each of them walked a declared claim straight past this guard while
+    every stop counted (a proofreader, round 4). **Pure.**
     """
-    return NOT_WORD_OR_STOP.sub(
-        " ", INVISIBLE.sub(" ", LINK_TARGET.sub("", text)).casefold()
-    ).strip()
+    body = INVISIBLE.sub(" ", LINK_TARGET.sub("", text))
+    body = SENTENCE_STOP.sub(STOP_MARK, body)
+    words_only = NOT_WORD_OR_STOP.sub(" ", body.casefold())
+    return words_only.replace(STOP_MARK, " . ").strip()
 
 
 def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:
