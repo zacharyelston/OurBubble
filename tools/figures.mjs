@@ -122,13 +122,32 @@ function render(figure) {
  * this removes a sentence, it does not author one, and what is left is byte-checked like the rest.
  */
 function withoutTheInvitation(drawing) {
-  return drawing.replace(/\s*Drag it,[^.]*\.(?=<\/desc>)/, "");
+  const out = drawing.replace(/\s*Drag it,[^.]*\./, "");
+  // A strip that has quietly become a no-op is invisible: the sentence comes back, the committed
+  // bytes are regenerated to match, and the check is green over a file that lies to the one reader
+  // it is written for. So the removal is required to remove something whenever there is something
+  // to remove. Found by a reviewer, who moved the sentence off the end of the description.
+  if (out === drawing && /Drag it,/.test(drawing)) {
+    throw new Error("the drawing still invites an interaction and the strip did not fire");
+  }
+  return out;
 }
 
-/** What is on disk, or nothing at all. */
+/**
+ * What is on disk, or nothing at all — and a count of how often this file was actually opened.
+ *
+ * The count is the honest half. A reviewer changed one token at the comparison's call site so that
+ * the emitted bytes were compared with themselves, and the run printed "byte-for-byte what demos/
+ * draws" over a hand-painted SVG with every counter adding up. A counter that counts iterations
+ * counts nothing. This one counts reads, and the pass below refuses to print unless there is one
+ * per figure.
+ */
+let readsFromDisk = 0;
 function committed(file) {
   try {
-    return readFileSync(path.join(ASSETS, file), "utf8");
+    const bytes = readFileSync(path.join(ASSETS, file), "utf8");
+    readsFromDisk += 1;
+    return bytes;
   } catch {
     return null;
   }
@@ -145,13 +164,38 @@ function shownByTheChapters() {
   const dir = path.join(ROOT, "chapters");
   for (const name of readdirSync(dir).filter((file) => file.endsWith(".md"))) {
     const markdown = readFileSync(path.join(dir, name), "utf8");
-    for (const block of markdown.matchAll(/<figure class="chapter-figure">([\s\S]*?)<\/figure>/g)) {
-      for (const image of block[1].matchAll(/<img[^>]*\bsrc="assets\/([^"]+)"/g)) {
-        shown.set(image[1], name);
+    for (const block of markdown.matchAll(/<figure\b([^>]*)>([\s\S]*?)<\/figure>/g)) {
+      if (!classesOf(block[1]).includes("chapter-figure")) continue;
+      for (const image of block[2].matchAll(/<img\b[^>]*>/g)) {
+        const source = attribute(image[0], "src");
+        if (source === null) continue;
+        const asset = /^\.?\/?assets\/(.+)$/.exec(source);
+        if (asset) shown.set(asset[1], name);
       }
     }
   }
   return shown;
+}
+
+/**
+ * One attribute of one tag, in either quote style.
+ *
+ * The first version of the two functions above matched `class="chapter-figure"` and `src="assets/`
+ * as literal strings. A reviewer walked past all of it three ways without changing a pixel of the
+ * page: `class="chapter-figure wide"` (the stylesheet still matches), `src="./assets/…"`, and
+ * `src='assets/…'` — and shipped a hand-painted SVG into the built book with every check green.
+ * An attribute is a thing with a shape; matching the shape is the fix, and the same reading is what
+ * lets `classesOf` treat the class as the token list it is.
+ */
+function attribute(tag, name) {
+  const found = new RegExp(`\\b${name}\\s*=\\s*("([^"]*)"|'([^']*)')`).exec(tag);
+  if (!found) return null;
+  return found[2] !== undefined ? found[2] : found[3];
+}
+
+/** The class attribute of a tag, as the list of names it is. */
+function classesOf(tag) {
+  return (attribute(`<x ${tag}>`, "class") || "").trim().split(/\s+/).filter(Boolean);
 }
 
 /**
@@ -176,23 +220,38 @@ function drift(file, emitted, onDisk) {
 
 const rendered = FIGURES.map((figure) => ({ file: figure.file, bytes: render(figure) }));
 
-if (process.argv.includes("--check")) {
+/**
+ * Compare every figure against what `read` hands back — the one place a figure is ever compared.
+ *
+ * The seam is the point. Both self-attacks below run through this function rather than calling
+ * `drift` beside it, so an attack has to break the path the real run takes; the previous version
+ * called `drift` directly and stayed green while the loop it was standing in for compared the
+ * emitted bytes with themselves.
+ */
+function compareAll(read) {
   const problems = [];
-  // Every check below records what it actually did, and the pass line at the end is built from
-  // these counters and from nothing else. A headline a check writes about itself can be true while
-  // the check is switched off — `check_edition.py`'s `status()` exists for the same reason.
-  let compared = 0;
-  let matchedToChapters = 0;
-  const refused = [];
-
-  for (const { file, bytes } of rendered) {
-    const found = drift(file, bytes, committed(file));
+  let matched = 0;
+  let bytes = 0;
+  for (const figure of rendered) {
+    const onDisk = read(figure.file);
+    const found = drift(figure.file, figure.bytes, onDisk);
     if (found) problems.push(found);
-    else compared += 1;
+    else { matched += 1; bytes += onDisk.length; }
   }
+  return { problems, matched, bytes };
+}
+
+if (process.argv.includes("--check")) {
+  // Every check below records what it actually did, and the pass line at the end is built from
+  // these and from nothing else. A headline a check writes about itself can be true while the check
+  // is switched off — `check_edition.py`'s `status()` exists for the same reason.
+  const real = compareAll(committed);
+  const problems = [...real.problems];
+  const refused = [];
 
   const shown = shownByTheChapters();
   const drawn = new Set(FIGURES.map((figure) => figure.file));
+  let matchedToChapters = 0;
   for (const [file, chapter] of shown) {
     if (drawn.has(file)) matchedToChapters += 1;
     else {
@@ -218,24 +277,25 @@ if (process.argv.includes("--check")) {
 
   // ── the mutations, on this run ─────────────────────────────────────────────────────────────────
   //
-  // Two, because one was not enough. A reviewer switched the comparison off by making `render()`
-  // return the committed file instead of drawing it, and the byte-flip below stayed red while the
-  // check as a whole went green on a hand-painted SVG.
+  // Both go through `compareAll`, which is the path the real run above took.
   const [first] = rendered;
 
-  // 1 · the comparison sees an altered byte.
-  if (drift(first.file, `${first.bytes.slice(0, -1)} `, first.bytes) === null) {
+  // 1 · a changed byte in a committed file is seen. The reader is the real one, wrapped.
+  const flipped = compareAll(
+    (file) => (file === first.file ? `${committed(file).slice(0, -1)} ` : committed(file)),
+  );
+  if (!flipped.problems.some((problem) => problem.startsWith(first.file))) {
     process.stderr.write(
-      "figures: the byte-identity check passed a figure it had just altered — the guard is not "
-      + "guarding, and no number of green runs would have said so\n",
+      "figures: the comparison passed a figure whose committed bytes had just been altered — the "
+      + "guard is not guarding, and no number of green runs would have said so\n",
     );
     process.exit(1);
   }
-  refused.push("a figure with one byte changed");
+  refused.push("a figure whose committed bytes were altered");
 
-  // 2 · what is being compared really came out of the drawing code. A second figure's step is
-  // rendered under the first one's name, and it has to come out different. If `render()` has been
-  // made to read the committed file, the two are identical and this says so.
+  // 2 · what is compared really came out of the drawing code. A second figure's step is rendered
+  // under the first one's name, and it has to come out different. If `render()` has been made to
+  // read the committed file, the two are identical and this says so.
   const other = FIGURES.find((figure) => figure.file !== first.file);
   if (render({ ...other, file: first.file }) === first.bytes) {
     process.stderr.write(
@@ -246,18 +306,23 @@ if (process.argv.includes("--check")) {
   }
   refused.push("bytes that did not come from the drawing code");
 
-  if (compared !== FIGURES.length || matchedToChapters !== shown.size || refused.length !== 2) {
+  // The pass line is refused unless the run did what it would have claimed: one comparison per
+  // figure, one file opened per comparison in each of the two passes, every figure a chapter shows
+  // accounted for, and both attacks refused.
+  const expectedReads = rendered.length * 2;
+  if (real.matched !== FIGURES.length || matchedToChapters !== shown.size
+    || readsFromDisk !== expectedReads || refused.length !== 2) {
     process.stderr.write(
-      `figures: the run did not do what the pass line would have claimed — ${compared} compared, `
-      + `${matchedToChapters} matched to a chapter, ${refused.length} attack(s) refused\n`,
+      `figures: the run did not do what the pass line would have claimed — ${real.matched} `
+      + `compared, ${matchedToChapters} matched to a chapter, ${readsFromDisk} file(s) opened `
+      + `against ${expectedReads} expected, ${refused.length} attack(s) refused\n`,
     );
     process.exit(1);
   }
-  const total = rendered.reduce((sum, one) => sum + one.bytes.length, 0);
   process.stdout.write(
-    `figures.mjs: ${compared} chapter figure(s), ${total} bytes, byte-for-byte what demos/ draws; `
-    + `${matchedToChapters} of them shown by a chapter and nothing else shown as one; and this run `
-    + `refused ${refused.join(" and ")}\n`,
+    `figures.mjs: ${real.matched} chapter figure(s), ${real.bytes} bytes read off disk and `
+    + `byte-for-byte what demos/ draws; ${matchedToChapters} of them shown by a chapter and `
+    + `nothing else shown as one; and this run refused ${refused.join(" and ")}\n`,
   );
 } else {
   for (const { file, bytes } of rendered) {
