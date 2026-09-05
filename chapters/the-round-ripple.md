@@ -27,7 +27,7 @@ Time you have. Ticks, all the same size, and you can count them — that is what
 
 Distance you do not have. Not because it is hard to measure, but because nothing in the object has
 ever been given a length. The dial exists; you met it on one tetrahedron, six lines and six
-settings, and two chapters ago you turned one of them and watched the rhythm change. But nobody has
+settings, and you have already turned one of them and watched the rhythm change. But nobody has
 ever set it from anything real. It has been a knob with no reading on it.
 
 So before the world can be asked how fast, somebody has to say how far.
@@ -156,10 +156,10 @@ Could a picture be lopsided because of the instrument itself?
 It could, and it was — on a page of ours anyone could open. A detour, then, before the chapter
 closes, because it is the child in the yard with the stick turned around on us.
 
-There is a public demonstration page: a ripple through two gaps, making the fringes you would
-expect. It ran that way for months. The scene is mirror-symmetric by construction — two identical
-gaps, one centred source, nothing in it that prefers a side — so the halves of the picture should
-have matched. One came out **3.8×** brighter than the other.
+There is a public demonstration page: a ripple through two gaps, making bands on the far side. It
+ran that way for months. The scene is mirror-symmetric by construction — two identical gaps, one
+centred source, nothing in it that prefers a side — so the halves of the picture should have
+matched. One came out **3.8×** brighter than the other.
 
 That is a mark, in the sense her two scratches in the dirt were marks: a number nobody chose, that
 the thing itself put there. And like hers it is mute. Two readings fit it equally well. Either what
@@ -172,24 +172,24 @@ Which one? The readings differ, so a test can tell them apart.
 
 <!-- beat the-round-ripple.8 -->
 
-Cutting a square region into triangles means choosing which way the diagonals lean. Lean them all
-the same way, then flip the scene about the axis through the source and between the gaps: the scene
-lands on itself and the mesh does not. Second reading, confirmed: the mesh had been asserting a
-left-right difference nothing in the question asserted.
+Cutting a square into triangles means choosing which way the diagonals lean. Lean them all the same
+way, then flip the scene about the axis through the source and between the gaps: the scene lands on
+itself and the mesh does not. So the mesh is the suspect: it had been asserting a left-right
+difference nothing in the question asserted.
 
-Note what this is *not*: not the three-way grain of the object itself, which comes with a symmetry
-carrying each kind of place onto the others. This was a drawing choice in one demo that broke a mirror
-the experiment needed.
+Note what this is *not*: not the object's own three-way grain, whose symmetry carries each kind of
+place onto the others. This was a drawing choice in one demo that broke a mirror the experiment
+needed.
 
-The correction is as small as the fault: alternate the diagonals, so mirroring the mesh lands it on
-itself. Same scene, same solver, nothing else touched. The imbalance falls to
-**5×10⁻¹⁵** — numerical noise, the machine's way of saying nothing is left.
+The correction is as small as the suspicion: alternate the diagonals, so mirroring the mesh lands on
+itself. Same scene, same solver, nothing else touched. The two halves now disagree by **5×10⁻¹⁵** of
+themselves — numerical noise. Suspect confirmed, by a run and not a story.
 
 **[Open the data-true mesh-repair figure](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)**
-· **[open the demo and turn it on and off yourself](record/viz/doubleslit.html)**
+— the same scene on both meshes, measured, side by side.
 
-The switch between the two meshes is still on the page: you can make the shadow come and go. Which
-is why roundness and symmetry are checked before anything measured here is interpreted.
+The switch between the two meshes was left in [the demo page](record/viz/doubleslit.html) rather
+than quietly removed. Which is why roundness and mirrors get tested before later results are read.
 
 So what did the chapter settle?
 
