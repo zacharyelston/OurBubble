@@ -72,10 +72,10 @@ against that file. That column is the boundary. The history section below carrie
 outside it deliberately, because they are not ours to check — they are checkable against the historical
 record instead, which is a different and in some ways better guarantee.
 
-Three sections cite no experiment of ours at all — the front door, the opening on method, and the
+Some sections cite no experiment of ours at all — the front door, the opening on method, and the
 history chapter — and they say so rather than being left out, because a reader should be able to
-tell *no evidence was cited* from *no evidence exists*. A fourth, the closing chapter, rests on
-commands you run yourself.
+tell *no evidence was cited* from *no evidence exists*. The closing chapter rests on commands you
+run yourself.
 
 One section per chapter, in reading order, **numbered from `00`** to match the order in
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what
@@ -96,24 +96,26 @@ that asks you for no email address and loads nothing onto the page you are readi
         if s.get('note'):
             L.append(s['note']+"\n")
         if s.get('history'):
-            # N8 (proofread, tranche B round 2): this said "no rung, no gate and no figure
-            # corresponds to any of it", which stopped being true when the outline moved the two
-            # self-corrections into this chapter's beats when-the-expected-law-fails.5-when-the-expected-law-fails.6. The history is still not ours; the
-            # chapter's last two beats are, and they carry rungs, so the sentence now says which
-            # half is which instead of denying the second half exists.
-            L.append("**What this chapter recounts.** Two things, and they are checkable in different "
-                     "places. The measurement history below is not work of ours — no rung, gate or "
-                     "figure here corresponds to any of it, and it is listed so a reader can check the "
-                     "chapter against the historical record rather than against us, in the order the "
-                     "chapter tells it. The chapter's last beats are ours, and the rungs, entries and "
-                     "gates below are theirs.\n")
+            # This sentence has been rewritten twice by the chapter moving under it, so it says only
+            # what is true of whatever is in the section. N8 (proofread, tranche B round 2) removed
+            # "no rung, no gate and no figure corresponds to any of it" when the chapter briefly
+            # carried the record's two self-corrections in its own last beats. Tranche E (issue #70)
+            # moved the chapter to second in the book and left those beats behind in the chapter that
+            # owns the misses, so the section is history and nothing else again — and the claim is
+            # asserted from the section rather than typed, because that is the half that kept going
+            # stale.
+            ours = [key for key in ("rungs", "entries", "gates", "figures", "record_quotes")
+                    if s.get(key)]
+            L.append("**What this chapter recounts.** Measurement history, and none of it is work of "
+                     "ours" + (": " + ", ".join(ours) + " below are" if ours else " — no rung, gate, "
+                     "figure or quoted number here corresponds to any of it") + ". It is listed in "
+                     "the order the chapter tells it, so a reader can check the chapter against the "
+                     "historical record rather than against us.\n")
             L+=[f"- {h}" for h in s['history']]; L.append("")
-            # M16 (proofread, tranche B): this pointed at chapter 9 for the self-correction, which
-            # the outline moved into this chapter's own beats when-the-expected-law-fails.5-when-the-expected-law-fails.6. It now points at nothing,
-            # because the thing it pointed at is on the same page.
             L.append("What the book carries forward is the **method** — measure, state your resolution, let "
-                     "a finer instrument overturn you — never the discoveries. This chapter's own last "
-                     "beats put the record's two self-corrections against that history.\n")
+                     "a finer instrument overturn you — never the discoveries. The record's own two "
+                     "self-corrections are set against that history much later, in the chapter that "
+                     "published the misses.\n")
         for key,label in (('entries',"**Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.\n"),
                           ('gates',"**Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.\n"),
                           ('figures',"**Data-true figures.** Rendered from the run's own committed output — no analogy art.\n"),

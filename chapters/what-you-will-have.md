@@ -51,18 +51,18 @@ physics word names a feature of it.
 
 <!-- beat what-you-will-have.3 -->
 
-After the shadow, a run of chapters happens on a napkin. Two dots and a line, then a triangle, then
-the smallest solid there is — and that small thing turns out to be a whole world: every kind of
-number it can hold, and one setting that decides how much each line counts. Then we make it move.
-You can do all of that by hand, and you should.
+After the shadow, what everyone else did with one: the same method for a few thousand years, no
+cleverer and a great deal sharper. Then a run of chapters on a napkin. Two dots and a line, then a
+triangle, then the smallest solid there is — and that turns out to be a whole world: every kind of
+number it can hold, and one setting for what each line counts. Then we make it move, by hand.
 
-Then the napkin visibly runs out. The smallest world with any room in it needs arithmetic no hand can
-do, so the same rule, unchanged, goes to a machine — on a world with no edge at all.
+Then the napkin runs out. The smallest world with any room in it needs arithmetic no hand can
+do, so the same rule, unchanged, goes to a machine — on a world with no edge.
 
 The rest is what came back. A ripple lopsided until one setting fixed it. What it costs to push on a
 piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement with
-its answer key taken away, a law that came back refused, and a published miss that turned out to be
-our own bookkeeping. The noes are kept on purpose and given the same room as the yeses, because a
+its answer key taken away, a law that came back refused, and misses that turned out to be our own
+bookkeeping. The noes are kept on purpose and given the same room as the yeses, because a
 machine that can only agree with you is not an instrument.
 
 ## How to read it

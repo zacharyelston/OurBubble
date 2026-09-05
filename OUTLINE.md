@@ -26,10 +26,10 @@ a declared excusal and otherwise skips the preamble, so nothing is ever inferred
 that is the only kind of "too fast" there is. And mark any beat whose question you would not
 actually ask — that is a chapter narrating us instead of her.
 
-**The ritual.** From chapter 8 on, every chapter that runs an experiment has one beat marked ✎ *Before
-we look*: the reader writes her guess. (Chapters 0–7 run no registered experiment — their numbers are
-worked out on the page, or in the front door's case not written down at all — and the history
-chapter, 14, runs none either: no ✎ in any of them, by design.) Then the look, then the comparison. The book's whole method, performed by the
+**The ritual.** From chapter 9 on, every chapter that runs an experiment has one beat marked ✎ *Before
+we look*: the reader writes her guess. (Chapters 0–8 run no registered experiment — their numbers are
+worked out on the page, in the front door's case not written down at all, and in the history
+chapter's case not ours to produce: no ✎ in any of them, by design.) Then the look, then the comparison. The book's whole method, performed by the
 reader every time instead of explained to her once.
 
 ---
@@ -52,7 +52,15 @@ reader every time instead of explained to her once.
 7. What was the order he did things in — and which step do people skip?  *(notice · smallest shape · say what would prove it wrong · check, keep the no)*
 8. Back to her two marks: what is she still missing?  *(a reason to expect one answer rather than another — the hard part, and the book)*
 
-## 2 · Two dots, a line, and the first thing that closes
+## 2 · A few thousand years of sharper shadows
+
+1. Eratosthenes sized the Earth — why did the Sun take two thousand more years?  *(not for lack of the idea)*
+2. Aristarchus had the right triangle — how could the right method give the wrong answer?  *(87° read for 89.85°: the resolution, not the man)*  [picture: the knife-edge angle]
+3. What is the difference between being wrong and being unable to see yet?
+4. When nobody could see the stars shift, what were the two readings — and which one held for a thousand years?  *(the null read as absence, not as a bound)*
+5. What finally changed — the idea, or the instrument?  *(Rømer, the transit of Venus, Bessel's third of an arcsecond)*
+
+## 3 · Two dots, a line, and the first thing that closes
 
 1. Where could you put a number?  *(a dot)*
 2. Where does *change* live — is it at a place?  *(between two places: a line)*
@@ -65,7 +73,7 @@ reader every time instead of explained to her once.
 9. What did I never use?  *(length — no line has one. And giving the lines lengths later will not disturb the zero: it comes from coming home, not from size)*
 10. What have I assumed so far?  *(nothing: no distance, no direction, no time — a complete little world, not a sketch of a better one)*
 
-## 3 · One tetrahedron is a whole world
+## 4 · One tetrahedron is a whole world
 
 1. What is the triangle's shape one dimension up?  *(the tetrahedron: four dots, six lines, four triangles, one inside)*
 2. Count everything on it — can I hold the whole thing in my head?  *(4 · 6 · 4 · 1 — yes)*
@@ -76,7 +84,7 @@ reader every time instead of explained to her once.
 7. Still nothing has a length. Now give the six lines lengths — is a long line worth the same as a short one?  *(a choice, not a fact: how much each line counts. The dial, in miniature, on six lines you can see)*
 8. Is this really a complete world?  *(every kind of number, both coming-home facts, and one dial — on a napkin)*
 
-## 4 · Make it move
+## 5 · Make it move
 
 1. What is still missing before anything can happen?  *(a clock)*
 2. What is the least a clock needs?  *(ticks, all the same)*
@@ -91,7 +99,7 @@ reader every time instead of explained to her once.
 11. Now poke one dot hard and watch. Is there a ring?  *(no — every dot is one line from every other, so nothing is further away than anything else: there is no room, and no direction)*  [napkin token `no_room`, R10]
 12. So what question can I *not* ask in this world?  *(the stopwatch question: how fast, and is it the same every way)*
 
-## 5 · The shape between
+## 6 · The shape between
 
 1. Before I go and fetch more tetrahedra — is there any room inside the one I already have?  *(divide it instead of adding to it: mark the middle of each of its six lines, and cut)*
 2. Cut at those six middles — what falls out?  *(four half-size tetrahedra, one at each tip, and one new shape between them, with eight faces. Nothing was added: the four tips are an eighth each and the new shape is exactly half)*  [napkin token `octa_cut`, computed at build — not a record quotation]
@@ -99,7 +107,7 @@ reader every time instead of explained to her once.
 4. Same rule, same tick, one dot poked: what happens?  *(the whole poke crosses to the opposite dot in two ticks and is home in three. A here and a there at last — and the total still never moves)*  [napkin token `octa_poke_table`]
 5. Put an arrow on each of its twelve lines and walk its eight outside faces: what do they add to?  *(zero, always, whatever the arrows — every line is walked twice, once each way. The same coming-home she proved on four faces, now on eight, and still no length anywhere in it — and four of the eight are still bare, which is the question this chapter closes on rather than answers)*  [napkin token `octa_face_sum`]
 
-## 6 · Two worlds threaded
+## 7 · Two worlds threaded
 
 1. Four of the eight faces look at a tip; the other four lie flat in the faces of the tetrahedron I cut. What fits on those?  *(one tetrahedron each, the same size as the tips — and their four new corners are the old four pushed through the middle and out the other side)*
 2. So what have I got now?  *(two tetrahedra of the same size threaded through one another, sharing the shape between them: fourteen dots, thirty-six lines, and no two tips joined, so nothing crosses from tip to tip without going through the middle)*  [napkin token `stella_counts`]
@@ -108,7 +116,7 @@ reader every time instead of explained to her once.
 5. So what is the surprise?  *(the smallest world with room in it is already too big for a napkin. Two shapes and one rule, and arithmetic no hand can do — which is why everything after this runs on a machine)*
 6. What do I hand the machine, and what comes back?  *(a rule for where the next shape goes — that is the next chapter. What comes back is this world's shadow, and it is not ours to invent: we point a test at it and keep whatever it says)*
 
-## 7 · Room, and a world with no edge
+## 8 · Room, and a world with no edge
 
 1. Many of them, then — do tetrahedra fill space the way triangles fill a floor?  *(no — Aristotle said yes and was wrong for eighteen centuries; five leave a wedge)*  [picture: the wedge]
 2. Why tetrahedra at all — what can a square do that a triangle cannot?  *(flex: pin its corners and it still leans; the triangle is finished)*
@@ -119,7 +127,7 @@ reader every time instead of explained to her once.
 7. Now that the world has no edge — is any dot special?  *(none is singled out — but the rule for cutting the holes twists as it goes, so there are three kinds of place. They are copies of one another: turn one a third of the way round and step it over, and it lands exactly on the next kind. Counted while the page was built: three kinds, in exact thirds. The world has a grain — remember that when a ripple comes out lopsided, because a grain is one place lopsidedness can hide)*  [anchor: napkin token `vertex_classes`, computed at build — not a record quotation]
 8. Can I ask the stopwatch question now?  *(yes — and this is the object: everything from here is this one thing, asked a different question)*
 
-## 8 · Is it round?
+## 9 · Is it round?
 
 1. Speed is distance over time — which half do I still not have?  *(distance: the dial has not been set)*
 2. Doesn't counting steps give me distance?  *(a step along a cube's edge and a step across its diagonal are both "one step" — until the dial says otherwise)*
@@ -131,7 +139,7 @@ reader every time instead of explained to her once.
 8. Did we ever get this wrong in public?  *(the demo lopsided 3.8× for months — the mesh, not the optics; the switch is still on the page)*  [demo]
 9. What did this chapter actually settle?  *(one dial decides whether the world behaves the same every way; and we can tell coarse from broken)*
 
-## 9 · What does pushing on it cost?
+## 10 · What does pushing on it cost?
 
 1. Now that it behaves evenly — what would it cost to move a *piece* of it, contents and all?  *(the bubble)*
 2. ✎ *Before we look:* what should moving the *whole* world cost?  *(nothing — it is just renaming positions)*
@@ -142,7 +150,7 @@ reader every time instead of explained to her once.
 7. What does "negative" mean here — and what does it *not* mean?  *(below a baseline because of how the shape twists; not a reservoir)*
 8. Could ordinary fields supply that sign?  *(no — they never go below the floor; the barrier, and where it sits in our own machinery)*
 
-## 10 · Can you wall a piece off?
+## 11 · Can you wall a piece off?
 
 1. If fields can't supply the sign — is the other half of the problem softer? Is resistance to being pushed a private property, or a relationship?  *(Mach's question)*
 2. ✎ *Before we look:* if I cut a region off from everything else, will what's inside get easier to push?
@@ -153,7 +161,7 @@ reader every time instead of explained to her once.
 7. What is that no worth?  *(under standard physics, cutting the information does not cut the inertia — a bound, not a shrug)*
 8. One more way at the same barrier: can aimed fields *empty* a volume?  *(no — energies add; a point yes, a surface yes, a volume never)*  [picture: the null]
 
-## 11 · Can a gap be emptier than empty?
+## 12 · Can a gap be emptier than empty?
 
 1. Three noes at one barrier — is there anywhere established physics puts a real negative difference?  *(not in the fields: in what is left when you take them away)*
 2. What does "empty" contain?  *(every shape a field could vibrate in, each carrying a little; the sum is the baseline)*
@@ -165,7 +173,7 @@ reader every time instead of explained to her once.
 8. Did the machine find them without being told?  *(−0.9997 vs −1; −0.13099 vs −π/24; nobody typed π)*
 9. What quietly changed in this chapter?  *(the machine swept and fitted — the exponent free, the coefficient never assumed — and reported; a person only checked afterwards. The instrument that picks a law from a written menu is the ripple's, not this one's)*
 
-## 12 · Can it tell me something I didn't tell it?
+## 13 · Can it tell me something I didn't tell it?
 
 1. There is a way to make a toy look profound — what is it, and why does it never mean anything?  *(formulas hunting a known constant)*
 2. What would count instead?  *(a number the method wasn't built to know, no dial to tune, checkable only after committing)*
@@ -177,7 +185,7 @@ reader every time instead of explained to her once.
 8. Did it miss anything — and had it said so first?  *(one quantity, too high, in exactly the direction registered in advance)*  [no figure in the record for this one (0503 has none) — the band and the miss are stated in the appendix]
 9. What is left for an instrument to prove?  *(that it can tell us we were wrong)*
 
-## 13 · When the world you built says no
+## 14 · When the world you built says no
 
 1. What is the simplest kind of prediction to get wrong?  *(a law you are sure of)*
 2. Put a denser lump in a resonating cavity — the pitch drops; by how much, as it gets denser?
@@ -185,16 +193,8 @@ reader every time instead of explained to her once.
 4. What came back?  *(p = −0.2753 — not a near miss; the law is refused)*  [picture: the two slopes]
 5. Why — and why is the explanation written as a *new* prediction rather than an excuse?  *(the lump is a fraction of the volume; if that is the reason, a bigger lump moves p toward −½ — a new commitment)*
 6. What does a refusal tell us, coming from the same kind of instrument — a fitter told nothing — that found the ripple's law, the vacuum's coefficient and the class numbers?  *(that its yeses meant something. Not the same code each time; the same discipline: no answer supplied)*
-
-## 14 · A few thousand years of sharper shadows
-
-1. Eratosthenes sized the Earth — why did the Sun take two thousand more years?  *(not for lack of the idea)*
-2. Aristarchus had the right triangle — how could the right method give the wrong answer?  *(87° read for 89.85°: the resolution, not the man)*  [picture: the knife-edge angle]
-3. What is the difference between being wrong and being unable to see yet?
-4. When nobody could see the stars shift, what were the two readings — and which one held for a thousand years?  *(the null read as absence, not as a bound)*
-5. What finally changed — the idea, or the instrument?  *(Rømer, the transit of Venus, Bessel's third of an arcsecond)*
-6. Now look back at our two "failures" — what did they turn out to be?  *(the locator's own margin, never carried through; both landed inside their bands once it was; nothing re-run, nothing in the world changed)*
-7. Why is that the star that was never fixed — and why is it the rarest thing an instrument can do?  *(find that a published miss was its own bookkeeping, and say so on the record)*
+7. Now look back at the two results this record had published as misses — what did they turn out to be?  *(the locator's own margin, never carried through; both inside their bands once it was; one took arithmetic already on the page, the other an estimator that had to be written)*
+8. Why is that the rarest thing an instrument can do — and how is it different from an honest null?  *(find that a published miss was its own bookkeeping, and say so on the record; Ptolemy left nothing unused, and we did)*
 
 ## 15 · Cast your own shadow
 
@@ -262,14 +262,14 @@ work". Its four beats were inserted at the front on 2026-09-02, and every later 
 moved by one pass of `tools/renumber_beats.py`; the 2026-09-03 revision kept the beat count at four
 and needed no renumbering.*
 
-*Drafter's note on chapters 2–6: every number there is finger-countable, so the book computes them
+*Drafter's note on chapters 3–7: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the
 octahedron's crossing and the threaded pair's refusal) the way the synthesis page recomputes its
 own — "computed while this page was built" — rather than quoting them. They are registered rungs in
 the engine now: UniForge's `napkin` crate, `lab/napkin/0001`, vendored here under `engine/` and
 pinned by `engine.lock`. `TOKENS.md` says which rows the chapters render and which are available.*
 
-*Drafter's note on chapters 4–6 (owner, 2026-09-02, tranche D). Three decisions, and the beats are
+*Drafter's note on chapters 5–7 (owner, 2026-09-02, tranche D). Three decisions, and the beats are
 written to what the engine can build and show. **Time is two rows** — "time is a vector; time is
 then and now" — which is literally the engine: its stepper takes the pair `(now, then)` and cannot
 write a next row from one row, so the clock beats put the pair before the rule. **The change of a
@@ -291,3 +291,16 @@ mesh with a screw and 1-forms, is under review in the engine. So the chapters ne
 report a verdict on it, and the guard in `napkin.REFUSED_IN_PROSE` that keeps those phrasings out of
 the prose stays where it is. What the chapters do carry about time is *two rows*, which rests on the
 rule the tables are produced by and on nothing about any shape.*
+
+*Drafter's note on the history, moved forward (owner, 2026-09-03; issue #70). *A few thousand years
+of sharper shadows* was the last chapter before the epilogue, where it read as a retrospective. It is
+chapter 2 now, immediately after *The shadow*, and it is doing a different job: the reader has met
+one shadow and one measurement, and the history is what happens next to that habit — a good method
+failing because its mark is too small to read, and a null taken for an absence when it was a bound.
+Its five history beats travel unchanged; its opening no longer presumes an instrument refusing a law,
+because at this point in the book nothing has been run, and its last beat now hands her to the blank
+page rather than to the record. **The two beats that looked back at the record's own dissolved misses
+did not move with it** — they need the experiments, so they are the last two beats of *When the world
+you built says no*, the chapter that owns those misses, with the comparison against Ptolemy
+back-referenced to here. No beat id changed anywhere: an id is `slug.n` (issue #77), so a chapter
+that moves renumbers nothing.*

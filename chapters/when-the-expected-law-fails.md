@@ -113,11 +113,84 @@ to in writing — so when it agrees, the agreement is information.
 
 That is what the four steps in [the shadow](the-shadow.md) were for.
 
+And it leaves one loose end, from earlier in the record.
+
+## The miss that was already answered
+
+<!-- beat when-the-expected-law-fails.7 -->
+
+Two of the measurements behind these chapters had been recorded as misses — quantities outside their
+registered bands. They sat in the record as failures for a long time, and this book would have
+reported them so.
+
+Both were later dissolved. Both are measured *from* a critical point — where the little world
+changes character — and that point is only located to within a margin. Neither miss was a fact about
+the little world; both were that margin, never carried into the number depending on it. What differs
+is what it took to carry it through.
+
+The first needed nothing new. The rung that recorded it had published its own locator margin, and
+had measured how far the quantity swings when the location moves. Multiply the two, and at all three
+candidate locations the miss falls inside the margin the rung had registered to judge it by. That is
+what *dissolves* means here, and the rung says so of itself: the miss is no longer significant, not
+the value confirmed.
+
+No new estimator, no new run — two numbers already on the page, multiplied by somebody who thought
+to.
+
+## The one that needed a better instrument
+
+<!-- beat when-the-expected-law-fails.7 -->
+
+The second was not like that, and calling it the same would be flattering ourselves.
+
+Its own published numbers do not dissolve it. Closing it took a *new* estimator — written for the
+next rung, for another purpose — and an error bar that did not exist until the re-analysis added it.
+With those the miss closes to within one standard deviation; without them it stands at about five.
+
+And notice what it did *not* take: no new measurement. The curves it re-read were the failing rung's
+own. The observation had been sufficient all along; what nobody had written down was the way to read
+it.
+
+It still rests on a choice. There are two defensible ways to aggregate the curves it fits, and
+**they give opposite verdicts**. What licenses the choice is a case where the answer is
+independently known — a real argument, and not the same as not having to choose. The next rung says
+outright that it does not generalise.
+
+## Not Ptolemy, and not each other
+
+<!-- beat when-the-expected-law-fails.8 -->
+
+Put those two against the null that
+[opened this book's history](a-few-thousand-years-of-sharper-shadows.md): Ptolemy looked for a
+stellar shift with the instrument he had, recorded honestly that there was nothing to see, and left
+nothing available to him unused. **He could not have done better.**
+
+**Our first is the opposite, and the uncomfortable one.** The number that dissolved it was already
+in the record, correct, and never multiplied through. The resolution was there and we had not used
+it.
+
+**Our second is neither.** The measurement was good enough; the way to read it had not been written.
+Not a telescope we lacked, not arithmetic we skipped — a method nobody had invented, applied
+afterwards to data that had been waiting.
+
+## Why the rows stay
+
+<!-- beat when-the-expected-law-fails.8 -->
+
+Which is why the original rows are still there, not deleted and rewritten, carrying a note of what
+later work found — so the miss is still there to read. Both re-analyses are rungs of their own,
+named in the appendix.
+
+And it is why this is the rarest thing an instrument can do. Recovering a known answer is
+calibration; an unknown one is a result; refusing a law you proposed is discipline. Going back to a
+published failure and finding it was the reading rather than the world — the number unused, or the
+method unwritten — cannot be arranged in advance.
+
 We have followed the chain from an object, through a ripple, a cost, a wall, a vacuum, a prediction,
-and a refusal. One step is left, and it does not belong to us.
+a refusal, and two corrections to ourselves. One step is left, and it does not belong to us.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-when-the-expected-law-fails).*
 
-**Next:** [A few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md)—two
-thousand years of the same method, and what our own two failures turned out to be.
+**Next:** [Cast your own shadow](cast-your-own-shadow.md)—the part where you stop reading and check
+one of these results yourself.

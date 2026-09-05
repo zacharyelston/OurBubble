@@ -206,8 +206,8 @@ ATTACKS: tuple[Attack, ...] = (
         # The half-finished state of adding a chapter: the file and the SUMMARY line first. A
         # reviewer walked a whole extra chapter, markers and all, past the first version.
         "a chapter in the reading order with no block in the outline",
-        "OUTLINE.md", "## 5 · The shape between", "## 55 · The shape between",
-        "OUTLINE.md has no `## 5 · ` block for it",
+        "OUTLINE.md", "## 6 · The shape between", "## 66 · The shape between",
+        "OUTLINE.md has no `## 6 · ` block for it",
     ),
     Attack(
         "a reading-order entry whose chapter file does not exist",

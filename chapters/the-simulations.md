@@ -26,10 +26,10 @@ against that file. That column is the boundary. The history section below carrie
 outside it deliberately, because they are not ours to check — they are checkable against the historical
 record instead, which is a different and in some ways better guarantee.
 
-Three sections cite no experiment of ours at all — the front door, the opening on method, and the
+Some sections cite no experiment of ours at all — the front door, the opening on method, and the
 history chapter — and they say so rather than being left out, because a reader should be able to
-tell *no evidence was cited* from *no evidence exists*. A fourth, the closing chapter, rests on
-commands you run yourself.
+tell *no evidence was cited* from *no evidence exists*. The closing chapter rests on commands you
+run yourself.
 
 One section per chapter, in reading order, **numbered from `00`** to match the order in
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what
@@ -77,9 +77,32 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 ---
 
+<a id="s-a-few-thousand-years-of-sharper-shadows"></a>
+
+## §02 · A few thousand years of sharper shadows — history, and none of it ours
+
+**The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
+
+**What this chapter recounts.** Measurement history, and none of it is work of ours — no rung, gate, figure or quoted number here corresponds to any of it. It is listed in the order the chapter tells it, so a reader can check the chapter against the historical record rather than against us.
+
+- ~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.
+- ~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.
+- ~150 BCE · Hipparchus of Nicaea — the Moon's distance, from the Earth's shadow on it during an eclipse. Very nearly right, because that geometry does not amplify a small angular error.
+- Aristotle, *On the Heavens* II.14 (~350 BCE) — argues from the absence of any stellar shift that the Earth does not move. The null was real; the inference from it was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars. ~150 CE · Claudius Ptolemy's *Almagest* comes down on the same side, and that is the version that carried for over a thousand years.
+- 1676 · Ole Rømer — that light takes time to travel, from Jupiter's moon Io slipping out of schedule with the Earth's distance. Rømer put the slippage at ~22 minutes across the width of Earth's orbit; the modern figure is ~17. Rømer gave the delay; Christiaan Huygens turned it into a speed, ~25% low because the delay was long.
+- 1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.
+- 1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.
+- 1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could.
+
+What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. The record's own two self-corrections are set against that history much later, in the chapter that published the misses.
+
+**Numbers.** None declared, and none checked here. The dates and angles in the list above are historical: they are checkable against the historical record rather than against this repository, which is the one guarantee this book cannot give you itself.
+
+---
+
 <a id="s-two-dots-and-a-line"></a>
 
-## §02 · Two dots, a line, and the first thing that closes — the object, from nothing
+## §03 · Two dots, a line, and the first thing that closes — the object, from nothing
 
 **The chapter.** [two-dots-and-a-line.md](two-dots-and-a-line.md)
 
@@ -94,7 +117,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 <a id="s-one-tetrahedron-is-a-whole-world"></a>
 
-## §03 · One tetrahedron is a whole world — every kind of number, on a napkin
+## §04 · One tetrahedron is a whole world — every kind of number, on a napkin
 
 **The chapter.** [one-tetrahedron-is-a-whole-world.md](one-tetrahedron-is-a-whole-world.md)
 
@@ -109,7 +132,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 <a id="s-make-it-move"></a>
 
-## §04 · Make it move — the one rule, and what one tick does
+## §05 · Make it move — the one rule, and what one tick does
 
 **The chapter.** [make-it-move.md](make-it-move.md)
 
@@ -124,7 +147,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 <a id="s-the-shape-between"></a>
 
-## §05 · The shape between — one tetrahedron, cut open
+## §06 · The shape between — one tetrahedron, cut open
 
 **The chapter.** [the-shape-between.md](the-shape-between.md)
 
@@ -139,7 +162,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 <a id="s-two-worlds-threaded"></a>
 
-## §06 · Two worlds threaded — the last object that fits on a napkin, and the first that does not
+## §07 · Two worlds threaded — the last object that fits on a napkin, and the first that does not
 
 **The chapter.** [two-worlds-threaded.md](two-worlds-threaded.md)
 
@@ -162,7 +185,7 @@ Both come from the vendored engine, rendered by `stella_refusal` — register ro
 
 <a id="s-room-and-a-world-with-no-edge"></a>
 
-## §07 · Room, and a world with no edge — why tetrahedra need a compromise
+## §08 · Room, and a world with no edge — why tetrahedra need a compromise
 
 **The chapter.** [room-and-a-world-with-no-edge.md](room-and-a-world-with-no-edge.md)
 
@@ -199,7 +222,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 <a id="s-the-round-ripple"></a>
 
-## §08 · Is it round? — the dial, set twice
+## §09 · Is it round? — the dial, set twice
 
 **The chapter.** [the-round-ripple.md](the-round-ripple.md)
 
@@ -253,7 +276,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 <a id="s-the-bubble-and-its-bill"></a>
 
-## §09 · What does pushing on it cost? — the shaped push and its bill
+## §10 · What does pushing on it cost? — the shaped push and its bill
 
 **The chapter.** [the-bubble-and-its-bill.md](the-bubble-and-its-bill.md)
 
@@ -293,7 +316,7 @@ cargo run  --release -p viz     --bin gen_energy
 
 <a id="s-the-wall-that-worked-and-didnt"></a>
 
-## §10 · Can you wall a piece off? — one experiment, one yes and one no
+## §11 · Can you wall a piece off? — one experiment, one yes and one no
 
 **The chapter.** [the-wall-that-worked-and-didnt.md](the-wall-that-worked-and-didnt.md)
 
@@ -338,7 +361,7 @@ cargo run  --release -p viz     --bin gen_null
 
 <a id="s-where-negative-energy-appears"></a>
 
-## §11 · Can a gap be emptier than empty? — the one place the sign is real
+## §12 · Can a gap be emptier than empty? — the one place the sign is real
 
 **The chapter.** [where-negative-energy-appears.md](where-negative-energy-appears.md)
 
@@ -385,7 +408,7 @@ cargo run  --release -p viz     --bin gen_casimir
 
 <a id="s-a-number-without-the-answer-key"></a>
 
-## §12 · Can it tell me something I didn't tell it? — the answer key taken away
+## §13 · Can it tell me something I didn't tell it? — the answer key taken away
 
 **The chapter.** [a-number-without-the-answer-key.md](a-number-without-the-answer-key.md)
 
@@ -443,23 +466,32 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §13 · When the world you built says no — the obvious answer, refused
+## §14 · When the world you built says no — the obvious answer refused, and two published misses dissolved
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 
 **Registered rungs.**
 
 - dna-thz 6.1 — the permittivity shift law, and the falsified square root
+- warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator
+- warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published
 
 The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.
+
+**The last two beats are a coda about the record, not about this experiment.** They look back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above with the refusal: the chapter that owns a miss owns its correction. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.
+
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
 - [`lab/dna-thz/0001-dna-permittivity-shift-law`](record/lab/dna-thz/0001-dna-permittivity-shift-law)
+- [`lab/warp-5-universality/0509-bond-locator-reprocess`](record/lab/warp-5-universality/0509-bond-locator-reprocess)
+- [`lab/warp-5-universality/0510-site-locator-reprocess`](record/lab/warp-5-universality/0510-site-locator-reprocess)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
 - [`core/uniforge/tests/uf6_1_thz_shift_law_gate.rs`](record/core/uniforge/tests/uf6_1_thz_shift_law_gate.html)
+- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html)
+- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -480,44 +512,6 @@ cd core
 cargo test --release -p uniforge --test uf6_1_thz_shift_law_gate -- --nocapture
 cargo run  --release -p viz     --bin gen_shift_law
 ```
-
----
-
-<a id="s-a-few-thousand-years-of-sharper-shadows"></a>
-
-## §14 · A few thousand years of sharper shadows — history, and our own two misses
-
-**The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
-
-**Registered rungs.**
-
-- warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator
-- warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published
-
-**What this chapter recounts.** Two things, and they are checkable in different places. The measurement history below is not work of ours — no rung, gate or figure here corresponds to any of it, and it is listed so a reader can check the chapter against the historical record rather than against us, in the order the chapter tells it. The chapter's last beats are ours, and the rungs, entries and gates below are theirs.
-
-- ~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.
-- ~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.
-- ~150 BCE · Hipparchus of Nicaea — the Moon's distance, from the Earth's shadow on it during an eclipse. Very nearly right, because that geometry does not amplify a small angular error.
-- Aristotle, *On the Heavens* II.14 (~350 BCE) — argues from the absence of any stellar shift that the Earth does not move. The null was real; the inference from it was not. Archimedes records Aristarchus's opposite reading — an enormous sphere of fixed stars. ~150 CE · Claudius Ptolemy's *Almagest* comes down on the same side, and that is the version that carried for over a thousand years.
-- 1676 · Ole Rømer — that light takes time to travel, from Jupiter's moon Io slipping out of schedule with the Earth's distance. Rømer put the slippage at ~22 minutes across the width of Earth's orbit; the modern figure is ~17. Rømer gave the delay; Christiaan Huygens turned it into a speed, ~25% low because the delay was long.
-- 1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.
-- 1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.
-- 1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could.
-
-What the book carries forward is the **method** — measure, state your resolution, let a finer instrument overturn you — never the discoveries. This chapter's own last beats put the record's two self-corrections against that history.
-
-**Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
-
-- [`lab/warp-5-universality/0509-bond-locator-reprocess`](record/lab/warp-5-universality/0509-bond-locator-reprocess)
-- [`lab/warp-5-universality/0510-site-locator-reprocess`](record/lab/warp-5-universality/0510-site-locator-reprocess)
-
-**Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
-
-- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html)
-- [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html)
-
-**Numbers.** None declared, and none checked here. The dates and angles in the list above are historical: they are checkable against the historical record rather than against this repository, which is the one guarantee this book cannot give you itself.
 
 ---
 

@@ -143,7 +143,8 @@ That is the hard part — and it is where she hands the book over. She got you t
 from the blank page.
 
 What the rest of this does is build a small world a little at a time, say what it should do before
-it does it, and let it answer. Starting with nothing at all, and how little it turns out you need.
+it does it, and let it answer. Before that, one chapter on what happened to everyone else who
+started from a shadow — because the hard part turns out not to be the reasoning.
 
 *Every chapter ends with a line like this one: which files back up the chapter's claims, and which
 parts nothing backs up. The last chapter is about going and looking yourself.*
@@ -151,5 +152,5 @@ parts nothing backs up. The last chapter is about going and looking yourself.*
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-the-shadow).*
 
-**Next:** [Two dots, a line, and the first thing that closes](two-dots-and-a-line.md)—where you
-could put a number, and the smallest thing that comes back to where it started.
+**Next:** [A few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md)—the
+same method, sharper and sharper, and the two thousand years it took to read one angle.

@@ -115,7 +115,7 @@
         ]
       },
       "a-few-thousand-years-of-sharper-shadows": {
-        "title": "A few thousand years of sharper shadows — history, and our own two misses",
+        "title": "A few thousand years of sharper shadows — history, and none of it ours",
         "history": [
           "~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.",
           "~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.",
@@ -125,18 +125,6 @@
           "1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.",
           "1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.",
           "1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could."
-        ],
-        "rungs": [
-          "warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator",
-          "warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published"
-        ],
-        "entries": [
-          "lab/warp-5-universality/0509-bond-locator-reprocess",
-          "lab/warp-5-universality/0510-site-locator-reprocess"
-        ],
-        "gates": [
-          "core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs",
-          "core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs"
         ]
       },
       "the-round-ripple": {
@@ -391,15 +379,21 @@
         ]
       },
       "when-the-expected-law-fails": {
-        "title": "When the world you built says no — the obvious answer, refused",
+        "title": "When the world you built says no — the obvious answer refused, and two published misses dissolved",
         "rungs": [
-          "dna-thz 6.1 — the permittivity shift law, and the falsified square root"
+          "dna-thz 6.1 — the permittivity shift law, and the falsified square root",
+          "warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator",
+          "warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published"
         ],
         "entries": [
-          "lab/dna-thz/0001-dna-permittivity-shift-law"
+          "lab/dna-thz/0001-dna-permittivity-shift-law",
+          "lab/warp-5-universality/0509-bond-locator-reprocess",
+          "lab/warp-5-universality/0510-site-locator-reprocess"
         ],
         "gates": [
-          "core/uniforge/tests/uf6_1_thz_shift_law_gate.rs"
+          "core/uniforge/tests/uf6_1_thz_shift_law_gate.rs",
+          "core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs",
+          "core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs"
         ],
         "figures": [
           "lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html"
@@ -422,7 +416,7 @@
             "source": "book/chapters/06-dna-thz/chapter.md"
           }
         ],
-        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got."
+        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.\n\n**The last two beats are a coda about the record, not about this experiment.** They look back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above with the refusal: the chapter that owns a miss owns its correction. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.\n"
       },
       "cast-your-own-shadow": {
         "title": "Cast your own shadow — the reproduce path",
