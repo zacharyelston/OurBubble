@@ -1515,6 +1515,11 @@ function certificateCells(object, k, at) {
   return at.map((field) => (field === null ? null : say[field]()));
 }
 
+/** The engine's own answer for one walk, which every column of a walk table comes off. */
+function walkAnswer(object, degree, index, values) {
+  return oracle.walk(object, degree, index, values);
+}
+
 /** One walk's terms and its running column, as the engine gives them for these inputs. */
 function walkNumbers(object, degree, index, values, take) {
   const walk = oracle.walk(object, degree, index, values);
@@ -1570,23 +1575,66 @@ const DRIVEN = {
     asks: ["walk_json", "triangle", 1, 0],
     walk: { tag: "walk-running",
       of: (state) => walkNumbers("triangle", 1, 0, triangleEdges(state.numbers), state.tick) },
+    // Every OTHER column too. The walk leg speaks for the two columns a table declares, and a
+    // reviewer reversed the line names beside honest terms — a row naming the wrong line for the
+    // number on it, which is this lane's oldest defect wearing a new hat.
+    tables: {
+      "walk-running": (state) => {
+        const walk = walkAnswer("triangle", 1, 0, triangleEdges(state.numbers));
+        return walk.cell_dots.slice(0, state.tick).map((from, index) => [
+          `${CORNER_NAMES[from]} → ${CORNER_NAMES[walk.cell_dots[(index + 1)
+            % walk.cell_dots.length]]}`,
+          walk.steps[index],
+          walk.signs[index] > 0 ? "the way it points" : "the other way",
+          signedText(walk.terms[index]), printed(walk.running[index]),
+        ]);
+      },
+    },
   },
   "any-three-numbers-at-all": {
     asks: ["walk_json", "triangle", 1, 0],
     walk: { tag: "walk-running",
       of: (state) => walkNumbers("triangle", 1, 0, triangleEdges(state.choice.value), null) },
+    tables: {
+      "walk-running": (state) => {
+        const walk = walkAnswer("triangle", 1, 0, triangleEdges(state.choice.value));
+        return walk.steps.map((name, index) =>
+          [name, signedText(walk.terms[index]), printed(walk.running[index])]);
+      },
+    },
   },
   "why-it-is-exact-and-not-approximate": {
     asks: ["walk_json", "triangle", 1, 0],
     walk: { tag: "walk-running",
       of: (state) => walkNumbers("triangle", 1, 0, triangleEdges(state.pressed
         ? [...FIRST_THREE.slice(0, 2), UNPRINTABLE] : FIRST_THREE), null) },
+    tables: {
+      // Including "does a napkin print it", which a reviewer inverted on the beat whose whole
+      // subject is which numbers a napkin can write: the refusal is the engine's own, not a
+      // reading of the digits beside it.
+      "walk-running": (state) => {
+        const walk = walkAnswer("triangle", 1, 0, triangleEdges(state.pressed
+          ? [...FIRST_THREE.slice(0, 2), UNPRINTABLE] : FIRST_THREE));
+        return walk.steps.map((name, index) => {
+          const term = oracle.signed(walk.terms[index]);
+          return [name, term.text, term.refused ? "no" : "yes", printed(walk.running[index])];
+        });
+      },
+    },
   },
   "round-the-inside": {
     asks: ["walk_json", "tetrahedron", 2, 0],
     walk: { tag: "walk-running",
       of: (state) => walkNumbers("tetrahedron", 2, 0,
         oracle.loops("tetrahedron", state.numbers, 1).loops, null) },
+    tables: {
+      "walk-running": (state) => {
+        const walk = walkAnswer("tetrahedron", 2, 0,
+          oracle.loops("tetrahedron", state.numbers, 1).loops);
+        return walk.steps.map((name, index) =>
+          [name, signedText(walk.terms[index]), printed(walk.running[index])]);
+      },
+    },
   },
 
   // The dial, run at the weights the reader has left it at.
@@ -1627,6 +1675,17 @@ const DRIVEN = {
           running: answer.running.slice(0, state.tick).map(printed),
         };
       } },
+    tables: {
+      // The cycle each face is walked in is the answer's own, and it is what makes the orientation
+      // visible: reversed, every row names a face walked the other way beside an outward number.
+      "face-walk": (state) => {
+        const answer = oracle.faceSum("octahedron", payload.face_sum.arrows);
+        if (state.tick === 0) return [["none yet", "none yet", "none yet"]];
+        return answer.face_numbers.slice(0, state.tick).map((value, index) => [
+          answer.cycle_names[index].join(" → "), signedText(value), printed(answer.running[index]),
+        ]);
+      },
+    },
     counter: { tag: "face-count", column: 0, of: "face-walk" },
   },
 
@@ -1698,6 +1757,19 @@ const DRIVEN = {
       { change: (answer) => ({ ...answer, holds: !answer.holds }),
         tag: "stella-tried", cells: [[0, 2]] },
     ],
+    // The last two columns come off a vendored row rather than an answer, and "never" is the same
+    // word in every state a reader can pick — so a probe over the payload, on the same principle:
+    // change what the row says and the cells that come off it must say something else.
+    readsPayload: [
+      { change: (vendored) => {
+        const copy = JSON.parse(JSON.stringify(vendored));
+        for (const tried of copy.refusal.runaway.stable_tried) {
+          tried.period = tried.printable;
+          tried.printable += 1;
+        }
+        return copy;
+      }, tag: "stella-tried", cells: [[0, 3], [0, 4]] },
+    ],
     tables: {
       // The last two columns are the run's rather than the certificate's, and a reviewer swapped
       // them — `never · 1` where the page means `1 · never` — with every other gate silent. So they
@@ -1713,6 +1785,26 @@ const DRIVEN = {
   },
 };
 
+// How many cells the probes above speak for, counted here and stated as a number.
+//
+// A probe entry, or one cell inside one, can be deleted without any leg going quiet: the leg it
+// belongs to still fires on the entries that remain, and nothing else in this file knows how many
+// there were. A reviewer deleted one of each and both levels stayed green — the mutation suite
+// included, because a mutation only says a guard bites, never that the guard is still pointed at
+// as much as it was. This is the count, and lowering it is a one-line diff in a commit saying which
+// cell stopped being spoken for and why.
+const PROBED_CELLS = 22;
+{
+  const counted = Object.values(DRIVEN).reduce((total, spec) => total
+    + [...(spec.reads || []), ...(spec.readsPayload || [])]
+      .reduce((cells, probe) => cells + probe.cells.length, 0), 0);
+  if (counted !== PROBED_CELLS) {
+    fail(`gate 11's probes name ${counted} cells and this file says ${PROBED_CELLS}. A cell that `
+      + `stops being probed is a cell that can be typed: every value that is the same in every `
+      + `state needs one, so the number goes down only in a commit that says which and why`);
+  }
+}
+
 /** Every leg that must fire at least once, and how often it did. */
 const legsRan = new Map();
 const ran = (anchor, leg) => legsRan.set(`${anchor} · ${leg}`,
@@ -1723,6 +1815,7 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
   if (spec.counter) legsRan.set(`${anchor} · ${spec.counter.tag}`, 0);
   if (spec.turned) legsRan.set(`${anchor} · a dial turned off the plain`, 0);
   if (spec.reads) legsRan.set(`${anchor} · the answer is read, not agreed with`, 0);
+  if (spec.readsPayload) legsRan.set(`${anchor} · the vendored row is read, not agreed with`, 0);
 }
 
 /** Which entry points, with which pinned arguments, one engine door has actually been asked. */
@@ -2285,14 +2378,22 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
   // a door that answers differently, and the tables this gate names must say something else. A
   // reviewer typed the two-dot answer into the cell with the engine call left above it, and every
   // other leg of this gate passed it.
-  for (const probe of spec.reads || []) {
-    const deaf = new Engine(glue, payload, rows);
+  for (const probe of [...(spec.reads || []), ...(spec.readsPayload || [])]) {
+    const overPayload = (spec.readsPayload || []).includes(probe);
+    // Over the payload, the door is built on a changed copy of the vendored data; over an answer,
+    // the door is built on the real one and its answers to the pinned entry point are changed on
+    // the way out. The rest of this is the same probe either way.
+    const deaf = overPayload
+      ? new Engine(glue, probe.change(payload), rows)
+      : new Engine(glue, payload, rows);
     const honest = new Engine(glue, payload, rows);
-    const ask = deaf.ask.bind(deaf);
-    deaf.ask = (entry, ...args) => {
-      const answer = ask(entry, ...args);
-      return entry === spec.asks[0] ? probe.change(answer) : answer;
-    };
+    if (!overPayload) {
+      const ask = deaf.ask.bind(deaf);
+      deaf.ask = (entry, ...args) => {
+        const answer = ask(entry, ...args);
+        return entry === spec.asks[0] ? probe.change(answer) : answer;
+      };
+    }
     const stepOf = (which) => {
       for (const build of Object.values(chapterSteps(which, draw))) {
         for (const step of build()) if (step.anchors.includes(anchor)) return step;
@@ -2313,22 +2414,32 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
     // whole-table version of this passed a typed verdict word sitting beside an honest neighbour,
     // because the neighbour moved and the table with it.
     const moved = probe.cells.map(() => false);
-    for (const state of statesOf(honestStep, view)) {
-      if (moved.every(Boolean)) break;                        // every named cell has moved already
+    // Each step is driven into ITS OWN states, paired by position. A control's opening values come
+    // off the payload the step was built against, so handing the changed door the honest door's
+    // state would hand it the honest row back and the probe would report a page that reads nothing.
+    const honestStates = statesOf(honestStep, view);
+    const deafStates = statesOf(deafStep, view);
+    honestStates.forEach((state, index) => {
+      if (moved.every(Boolean)) return;                       // every named cell has moved already
       const one = cellsOf(honestStep, state);
-      const other = cellsOf(deafStep, state);
-      if (one === null || other === null) continue;
-      one.forEach((cell, index) => { if (cell !== other[index]) moved[index] = true; });
-    }
+      const other = cellsOf(deafStep, deafStates[index] || state);
+      if (one === null || other === null) return;
+      one.forEach((cell, at) => { if (cell !== other[at]) moved[at] = true; });
+    });
     moved.forEach((noticed, index) => {
       if (noticed) return;
       const [row, at] = probe.cells[index];
       fail(`the step for "${anchor}" prints the same cell at row ${row}, column ${at} of `
-        + `"${probe.tag}" in every state whether or not ${spec.asks[0]} answers differently. The `
-        + `engine may be being asked and that cell written to agree with it: a value that is the `
-        + `same in every state cannot be told from a typed one any other way`);
+        + `"${probe.tag}" in every state whether or not `
+        + `${overPayload ? "the vendored row it comes off" : spec.asks[0]} says something else. `
+        + `The engine may be being asked and that cell written to agree with it: a value that is `
+        + `the same in every state cannot be told from a typed one any other way`);
     });
-    if (moved.every(Boolean)) ran(anchor, "the answer is read, not agreed with");
+    if (moved.every(Boolean)) {
+      ran(anchor, overPayload
+        ? "the vendored row is read, not agreed with"
+        : "the answer is read, not agreed with");
+    }
   }
 
   if (!wasAsked(questionsAsked(door), spec.asks)) {

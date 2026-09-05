@@ -616,7 +616,7 @@ ${WIRE_CIRCLE}`,
       + '                  fs.orientation]],',
     to: '                  last ? String(fs.lines_walked_each_way) : "not all walked yet",\n'
       + '                  "outward"]],',
-    expect: "whether or not face_sum_json answers differently" },
+    expect: "whether or not face_sum_json says something else" },
   { guard: "gate 11 · a certificate's verdict typed beside its honest ceiling",
     file: "steps.mjs",
     from: '                [[show(certificate.k), show(String(certificate.eigenvalue)),\n'
@@ -625,7 +625,7 @@ ${WIRE_CIRCLE}`,
     to: '                [[show(certificate.k), show(String(certificate.eigenvalue)),\n'
       + '                  show(certificate.bound), "yes"]],\n'
       + '                { notASum: true }, "tetrahedron-certificate"),',
-    expect: "whether or not certificate_json answers differently" },
+    expect: "whether or not certificate_json says something else" },
   // Two columns of a driven row that nothing spoke for, swapped: `never · 1` for `1 · never`.
   { guard: "gate 11 · a driven row's unspoken-for columns swapped", file: "steps.mjs",
     from: '                  String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]],',
@@ -639,12 +639,39 @@ ${WIRE_CIRCLE}`,
     to: '                  fs.orientation]].slice(1),\n'
       + '                { notASum: true }, "face-count"),',
     expect: "has no rows at all" },
+  // The columns of a driven walk table that the running-sum leg does not speak for. A reviewer
+  // reversed the face names beside honest terms, reversed the ring's cycles, and inverted the
+  // napkin's own refusal column on the beat about exactness — all three green until now.
+  { guard: "gate 11 · a walk's face names reversed beside its honest terms", file: "steps.mjs",
+    from: '                inside.steps.map((name, index) =>\n'
+      + '                  [name, signed(inside.terms[index]), show(inside.running[index])]),',
+    to: '                [...inside.steps].reverse().map((name, index) =>\n'
+      + '                  [name, signed(inside.terms[index]), show(inside.running[index])]),',
+    expect: "where the engine answers" },
+  { guard: "gate 11 · the eight faces' cycles reversed", file: "steps.mjs",
+    from: '                    fs.cycle_names[index].join(" → "),',
+    to: '                    [...fs.cycle_names[index]].reverse().join(" → "),',
+    expect: "where the engine answers" },
+  { guard: "gate 11 · the napkin's refusal column inverted on the walk", file: "steps.mjs",
+    from: '                  return [name, term.text, term.refused ? "no" : "yes",',
+    to: '                  return [name, term.text, term.refused ? "yes" : "no",',
+    expect: "where the engine answers" },
+  // A vendored word typed into a driven row: the same defect as a typed verdict, one step out.
+  { guard: "gate 11 · a vendored never typed into the tried-tick row", file: "steps.mjs",
+    from: '                  String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]],',
+    to: '                  String(tried.printable), "never"]],',
+    expect: "whether or not the vendored row it comes off says something else" },
+  // And the census of what the probes speak for, which is the one thing a deleted probe moves.
+  { guard: "gate 11 · a cell quietly dropped from a probe", file: "core.test.mjs",
+    from: '        tag: "two-dots-closed", cells: [[0, 0], [0, 1]] },',
+    to: '        tag: "two-dots-closed", cells: [[0, 0]] },',
+    expect: "cells and this file says" },
   { guard: "gate 11 · the two-dot answer typed into the cell, the engine still asked",
     file: "steps.mjs",
     from: '                [[closed.closed_walks === 0 ? "none" : String(closed.closed_walks),\n'
       + '                  closed.closed_walks === 0 ? "no" : "yes"]],',
     to: '                [["none", "no"]],',
-    expect: "whether or not loops_json answers differently" },
+    expect: "whether or not loops_json says something else" },
   { guard: "gate 11 · the eight-face walk taken from the payload instead of asked", file: "steps.mjs",
     from: '          const fs = engine.faceSum("octahedron", faceArrows);',
     to: "          const fs = { ...P.face_sum, cycle_names: R.gaps.outward_face_sum.cycle_names,\n"

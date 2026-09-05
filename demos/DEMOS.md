@@ -339,8 +339,14 @@ is one more figure to go stale:
    and must say something else. **Per cell, and one perturbation per field**: the first version of
    that probe compared whole tables, and a reviewer typed a verdict word into one column while
    leaving its neighbour honest — the neighbour moved, so the table moved, so the probe passed. A
-   cell is what a reader reads. And a tag no spec claims fails too: a table that thinks it is
-   guarded is worse than one that knows it is not. **And every leg ran**: each of these counts, and a leg that fired on
+   cell is what a reader reads. The same probe runs **over the vendored payload** where a cell comes
+   off a vendored row rather than an answer — the step is rebuilt on a changed copy of the payload
+   and must say something else — and each step is driven into **its own** states, because a
+   control's opening values come off the payload it was built against. And a tag no spec claims
+   fails too: a table that thinks it is guarded is worse than one that knows it is not. **How many
+   cells the probes speak for is itself a number in the check**, because a probe entry can be
+   deleted with every leg still firing on what remains: a reviewer deleted one and both the check
+   and the mutation suite stayed green. **And every leg ran**: each of these counts, and a leg that fired on
    no state of any step fails, whether it was switched off in the check, in the step, or in the
    enumerator that drives it. A step names the tables this gate reads by a `tag` nobody is shown, so
    a caption may be rewritten freely and losing the tag is a failure rather than a quiet exemption.
