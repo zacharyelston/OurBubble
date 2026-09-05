@@ -91,16 +91,9 @@ never hand-made**: `tools/figures.mjs` emits every committed still from the demo
 check` refuses a chapter that shows one this code does not draw, in either direction. That is the
 whole difference in what the two are worth: a study is judged, a figure is derived and checked.
 
-**The front door carries neither**, and deliberately: it is a statement about the book rather than a
-step in it, it makes no claim a picture could illustrate, and an analogy image above it would be the
-first thing a reader met — before anything had been earned. **Neither does *Where the inside
-shows*** (2026-09-05), and the honest reason is narrower than the front door's: its subject is an
-arrangement — a thing, an edge, and somebody outside — rather than any of the things that have one,
-and the egg it opens on is deliberately disposable. A study that would earn its place there has not
-been drawn, and until it is, the page says so by carrying none rather than by carrying a picture of
-an egg. **A chapter that asks the reader to
-write a guess down carries no picture of the answer above the guess**, which is why *Is it round?*
-opens with none: its rings are data, and they belong where the answer is given.
+**A chapter that asks the reader to write a guess down carries no picture of the answer above the
+guess**, which is why *Is it round?* opens with none: its rings are data, and they belong where the
+answer is given.
 
 ## Numbers computed while the page is built
 
