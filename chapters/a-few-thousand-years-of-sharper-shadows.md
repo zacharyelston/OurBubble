@@ -11,8 +11,9 @@
 
 <!-- beat a-few-thousand-years-of-sharper-shadows.1 -->
 
-You have just watched an instrument refuse a law its owners committed to. That is not a modern
-virtue; it is the oldest habit in measurement, and there is a two-thousand-year case study.
+A shadow, two marks and one multiplication: that is where the last chapter left off, and it is where
+measuring started. Before building anything of our own, it is worth knowing what that habit could and
+could not do — because the same trick that sized the Earth could not size the Sun.
 
 Eratosthenes sized the Earth with two posts and one multiplication. The obvious next question is how
 far away the Sun is — asked immediately, and unanswered for another two thousand years.
@@ -130,90 +131,21 @@ seventeen centuries late, and the first stellar parallax anyone believed. For 61
 about a third of a second of arc — a coin at fifteen kilometres. The stars had never been still.
 They had been outside the resolution.
 
-Which is exactly the shape of something in our own record.
+## The question you can ask of any mark
 
-## The first: a number already in the record
+<!-- beat a-few-thousand-years-of-sharper-shadows.5 -->
 
-<!-- beat a-few-thousand-years-of-sharper-shadows.6 -->
+So what carries forward from all of that is not a discovery. Nobody in this chapter needed a new
+idea; they needed a finer reading of the same one. What carries forward is a question to ask of any
+mark you ever make: how finely can this be read, and what would it look like if the answer were no?
 
-Two measurements here had been recorded as misses — quantities outside their registered bands. They
-sat in the record as failures for a long time, and this book would have reported them so.
-
-Both were later dissolved, and it is tempting to say they went the same way. They did not.
-
-Both quantities are measured *from* a critical point — where the little world changes character —
-and that point is only located to within a margin. Neither miss was a fact about the little world;
-both were that margin, never carried into the number depending on it. What differs is what it took
-to carry it through.
-
-The first miss needed nothing new at all. The rung that recorded it had published its own locator
-margin, and had measured how far the quantity swings when the location moves. Multiply the two and
-the uncertainty comes to about eighty per cent of the band the rung registered. At all three
-candidate locations the miss then falls inside the margin the rung registered to judge it by —
-comfortably at only one. That is what *dissolves* means here, and the rung says so of itself: the
-miss is no longer significant, not the value confirmed.
-
-No new estimator, no new run — two numbers already on the page, multiplied by somebody who thought
-to.
-
-## The one that needed a better instrument
-
-<!-- beat a-few-thousand-years-of-sharper-shadows.6 -->
-
-The second was not like that, and calling it the same would be flattering ourselves.
-
-Its own published numbers do not dissolve it. Closing it took a *new* estimator — written for the
-next rung, for another purpose — and an error bar that did not exist until the re-analysis added it.
-With those the miss closes to within one standard deviation; without them it stands at about five.
-
-And notice what it did *not* take: no new measurement. The curves it re-read were the failing rung's
-own. The observation had been sufficient all along; what nobody had written down was the way to read
-it.
-
-And it still rests on a choice. There are two defensible ways to aggregate the curves it fits, and
-**they give opposite verdicts**. What licenses the choice is a case where the answer is
-independently known — a real argument, and not the same as not having to choose. The next rung says
-outright that it does not generalise.
-
-One miss dissolved into arithmetic already published; the other into an instrument that had to be
-built.
-
-## The star that was never fixed, twice over
-
-<!-- beat a-few-thousand-years-of-sharper-shadows.7 -->
-
-Now put them against Ptolemy, because there turn out to be three ways this can go and he is only one
-of them.
-
-**Ptolemy could not have done better.** He looked with the instrument he had, recorded honestly that
-there was nothing to see, and the record stood until a finer one found the shift. Nothing available
-to him was left unused.
-
-**Our first is the opposite, and the uncomfortable one.** The number that dissolved it was already
-in the record, correct, and never multiplied through. The resolution was there and we had not used
-it.
-
-**Our second is neither.** The measurement was good enough; the way to read it had not been written.
-Not a telescope we lacked, not arithmetic we skipped — a method nobody had invented, applied
-afterwards to data that had been waiting.
-
-## Why the rows stay, and what it cost to find them
-
-<!-- beat a-few-thousand-years-of-sharper-shadows.7 -->
-
-Which is why the original rows are still there, not deleted and rewritten, carrying a note of what
-later work found — so the miss is still there to read. Both re-analyses are rungs of their own,
-named in the appendix.
-
-And it is why this is the rarest thing an instrument can do. Recovering a known answer is
-calibration; an unknown one is a result; refusing a law you proposed is discipline. Going back to a
-published failure and finding it was the reading rather than the world — the number unused, or the
-method unwritten — cannot be arranged in advance.
-
-There is one step left, and it does not belong to us.
+Asking it of a star took an instrument nobody had built yet. Asking it of something you built
+yourself takes nothing at all — you can see every mark in it, and every limit, because you put them
+there. So that is what we are going to do, starting with rather less than Eratosthenes had. No
+stick, no sun, no ground. A blank page, and the smallest thing anyone could draw on it.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-a-few-thousand-years-of-sharper-shadows).*
 
-**Next:** [Cast your own shadow](cast-your-own-shadow.md)—the part where you stop reading and check
-one of these results yourself.
+**Next:** [Two dots, a line, and the first thing that closes](two-dots-and-a-line.md)—where you
+could put a number, and the smallest thing that comes back to where it started.

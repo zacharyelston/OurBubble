@@ -112,7 +112,7 @@ Nothing should change. If any number in these chapters had been nudged after the
 taste, or typed in by hand, that is where it appears.
 
 Every appendix section with a result of its own carries the command that re-runs it — the early
-chapters and the history chapter have none, because they have no run. Start with one whose runtime
+chapters, the history among them, have none, because they have no run. Start with one whose runtime
 suits your machine, and read what the section says before you run anything.
 
 ## ✎ Before you press Return

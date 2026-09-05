@@ -70,7 +70,7 @@ must preserve the concept, alt-text intent, caption distinction, and firewall.
 
 ## Numbers computed while the page is built
 
-Chapters 2–6 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+Chapters 3–7 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
 and every number in them is finger-countable — or, in the one case where it stops being, visibly
 stops being, which is that chapter's point. Quoting such a number from the record would be theatre:
 the reader can check it on a napkin, so the book does the arithmetic in front of her instead of
@@ -216,3 +216,24 @@ So the firewall is held by the Scope block, by this contract, and by whoever is 
 `check_edition.py` alone. A drafter may not treat a green check as evidence that a sentence honours
 the firewall, and a proof-read may not skip the naive read on the grounds that the guard would have
 caught it.
+
+## A moved chapter's old hand-off is refused by name, and that guard is a denylist too
+
+A chapter that moves keeps every sentence it had, including the ones that were only true where it
+used to sit. Checking that the new hand-off is present cannot catch that — the old one is present
+too — so `edition.json`'s `retired_phrasings` refuses the old ones by their own words, in every
+chapter, each with the `probe` beside it that proves on every build that it still fires. **The
+comparison is on the words alone** — line breaks, bold, italics, links and punctuation are stripped
+from both sides — because prose here is hard-wrapped and a hand-off long enough to be worth refusing
+is one that will be broken across lines and marked up in the middle. Add an entry whenever a rewrite
+retires a sentence that named a neighbour: the list is an audit trail as much as a guard.
+
+**What it does not see**, and every part of this is the writer's job. It reads `chapters/*.md` and
+nothing else — not `OUTLINE.md`, not the titles and notes in `edition.json` that render into the
+appendix a reader reads, not `demos/`. It refuses only what somebody thought to declare: a stale
+hand-off nobody wrote down here passes. And it refuses sentences, not ideas: the same hand-off
+*reworded* passes, and always will. Those three were found by reading the code and the files, on
+2026-09-04. Three others found by mutation the same day are closed: the phrasing wrapped across a
+line, the phrasing with one bolded word and part of it inside a link, and four probes replaced by
+four copies of one — which left three declared phrasings tested by nothing while the pass line still
+said each was proved by its own.

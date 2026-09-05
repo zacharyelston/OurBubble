@@ -123,6 +123,98 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
             errors.append(f"self-test: the guard false-positives on {sentence!r}: {stray}")
 
 
+# A retired phrasing is compared on its WORDS. Everything else about a sentence — where the lines
+# break, which half is bold, whether the comma became an em dash, whether part of it sits inside a
+# link — is presentation, and every one of those walked past the first two versions of this while a
+# reader read the retired sentence unchanged (a proofreader, rounds 2 and 3, 2026-09-04).
+LINK_TARGET = re.compile(r"\]\([^)]*\)")
+# Anything the page does not show the reader. An HTML comment is the sharp one: this repository's
+# own reading-note device is `<!-- NOTE(name): … -->`, documented in the Makefile as something you
+# leave *in the text where the trouble is*, so a retired sentence with one sitting inside it renders
+# identically and is a shape the book actually writes.
+INVISIBLE = re.compile(r"<!--.*?-->|<[^>\n]{0,200}>|\[\^[^\]]*\]|[\u00ad\u200b\ufeff]", re.S)
+NOT_WORD = re.compile(r"[^0-9a-z]+")
+
+
+def flattened(text: str) -> str:
+    """A string as its lowercase words, single-spaced: anything invisible or decorative gone.
+
+    Prose in `chapters/` is hard-wrapped at about a hundred columns and hand-offs carry bold and
+    links, so a sentence long enough to be worth refusing is a sentence that will be broken across
+    lines and marked up in the middle. Matching the raw file therefore catches the phrase only in a
+    shape the chapters never have. Three proofreading rounds put a retired hand-off back and watched
+    tier 0 stay green while the page read exactly as before: wrapped (round 2); with one bolded
+    word, one italic, an em dash for a comma and part of it inside a link (round 3); and with an
+    HTML comment, an inline tag, a footnote marker and a soft hyphen inside it (round 4).
+
+    So the comparison is on the words the reader is shown. Link targets, HTML comments and tags,
+    footnote markers and zero-width characters are removed; everything else that is not a letter or
+    a digit becomes a space.
+
+    **What is left, stated because a denylist's limit is only a limit when it is written down.** The
+    same sentence *reworded* passes, and always will: this refuses the sentences somebody wrote
+    down, in any punctuation and any markup, not the idea behind them.
+    """
+    return NOT_WORD.sub(" ", INVISIBLE.sub(" ", LINK_TARGET.sub("", text)).casefold()).strip()
+
+
+def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:
+    """Every retired phrasing present in `text`, as human-readable reasons. **Pure.**"""
+    flat = flattened(text)
+    return [f"carries a retired phrasing ({rule.get('why', 'moved')}): {rule['phrase']!r}"
+            for rule in retired if flattened(str(rule["phrase"])) in flat]
+
+
+def check_retired_phrasings(manifest: Dict[str, object], order: Sequence[str],
+                            errors: List[str]) -> None:
+    """Refuse a sentence that was only true of a position the chapter no longer holds.
+
+    A chapter that moves keeps every sentence it had, including the ones that only made sense where
+    it used to sit. Tranche E moved the history chapter from last-but-one to second, and its opening
+    — "You have just watched an instrument refuse a law its owners committed to" — was rewritten by
+    hand. A proofreader (2026-09-04, §2b) put the old opening back at the top of the now-second
+    chapter and tier 0 stayed green: the exact defect the move existed to fix built clean, so the
+    next chapter move would re-create it with only a reader to catch it.
+
+    Checking that the *new* sentence is present cannot close that, because the old one is present
+    too — the writing contract's rule 4, on a hand-off. So the old ones are refused, in every
+    chapter, by their own words — matched on the words alone, so wrapping, markup and punctuation
+    cannot smuggle one back (see `flattened`). The list doubles as an audit trail: it says what the
+    book used to say, and where it used to make sense.
+
+    **Each phrasing carries its own probe, and the probe is tested against that phrasing alone.**
+    The first version asked only that every probe hit *some* rule, and a proofreader replaced all
+    four probes with four copies of one of them: green, and the pass line still said each phrasing
+    was proved by its own probe. A probe that proves a rule other than its own proves nothing about
+    that rule, and the report line said otherwise, which is the headline defect exactly.
+
+    **What it cannot see, because a limit is only a limit when it is written down.** It reads
+    `chapters/*.md` and nothing else — not `OUTLINE.md`, not the titles and notes in `edition.json`
+    that render into the appendix, not `demos/`. And it refuses only the sentences somebody thought
+    to declare: a hand-off nobody wrote down here is still the writer's job. `EDITION_STANDARD.md`
+    says the same, beside the exclusion denylist's limit.
+    """
+    retired = [dict(rule) for rule in manifest.get("retired_phrasings", [])]
+    if not retired:
+        errors.append("retired phrasings: none declared, so a moved chapter's old hand-off is "
+                      "refused by nothing")
+        return
+    for rule in retired:
+        probe = str(rule.get("probe", ""))
+        if not probe:
+            errors.append(f"retired phrasings: {rule['phrase']!r} carries no probe, so nothing "
+                          f"shows it still bites")
+        elif not retired_hits(probe, [rule]):
+            errors.append(f"self-test: the retired-phrasing guard does NOT catch its own probe for "
+                          f"{rule['phrase']!r}")
+    for slug in order:
+        path = EDITION_DIR / "chapters" / f"{slug}.md"
+        if not path.exists():
+            continue
+        for hit in retired_hits(path.read_text(encoding="utf-8"), retired):
+            errors.append(f"chapters/{slug}.md: {hit}")
+
+
 def load_manifest() -> Dict[str, object]:
     with MANIFEST_PATH.open(encoding="utf-8") as handle:
         return json.load(handle)
@@ -2033,6 +2125,7 @@ def main() -> int:
     numbers = {slug: f"{i:02d}" for i, slug in enumerate(narrative)}
 
     check_appendix(manifest, numbers, narrative, forbidden, forbidden_patterns, errors)
+    check_retired_phrasings(manifest, narrative, errors)
 
     for index, slug in enumerate(narrative):
         check_chapter(
@@ -2102,6 +2195,10 @@ def report(
         f"Our Bubble edition check passed: {len(entries)} chapters + the appendix, "
         f"{quote_count} record quotations anchored in the appendix, "
         f"{len(list(manifest.get('forbidden_probe_texts', [])))} exclusion probes refused, "
+        f"{len(list(manifest.get('retired_phrasings', [])))} retired phrasings absent from every "
+        f"chapter in any wrapping, punctuation, markup or hidden comment — they are matched on the "
+        f"words the reader is shown, and a rewording is not refused — each proved by the probe "
+        f"declared beside it, "
         f"all links, hand-offs, slug bridges and derived section numbers valid"
         f"{' in source and rendered output' if args.rendered else ''}."
     )
