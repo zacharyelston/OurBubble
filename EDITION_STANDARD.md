@@ -54,10 +54,10 @@ parts is a count nothing guards.
 
 ## Illustration contract
 
-Every chapter begins with one editorial illustration study. **The front door is the one page that
-carries none**, and deliberately: it is a statement about the book rather than a step in it, it
-makes no claim a picture could illustrate, and an analogy image above it would be the first thing a
-reader met — before anything had been earned. Every chapter after it must:
+A chapter may carry **a study**, **figures**, or neither. The two are different kinds of thing and
+the reader can tell them apart from the caption; `ART_DIRECTION.md` is the long version.
+
+A **study** is an editorial analogy image, and where one is used it must:
 
 1. make the chapter's next question visible without pretending to display a result;
 2. carry meaningful alt text and a plain-language caption;
@@ -65,8 +65,22 @@ reader met — before anything had been earned. Every chapter after it must:
 4. remain visually distinct from links labeled `data-true`; and
 5. be declared in `edition.json`, so the checker can verify both source and rendered output.
 
-The current SVG studies are replaceable placeholders. A replacement may be more expressive, but it
-must preserve the concept, alt-text intent, caption distinction, and firewall.
+The SVG studies are replaceable placeholders. A replacement may be more expressive, but it must
+preserve the concept, alt-text intent, caption distinction, and firewall.
+
+A **figure** is a picture of the object rather than of the argument — a still of a drawing the
+engine's own numbers produced, or a page in `record/`. It carries no analogy warning, because there
+is nothing to warn about, and it carries the way into the running thing instead. **Its bytes are
+never hand-made**: `tools/figures.mjs` emits every committed still from the demo code, and `make
+check` refuses a chapter that shows one this code does not draw, in either direction. That check
+stands in for the `edition.json` declaration a study needs, and is stronger: a study is declared,
+a figure is derived.
+
+**The front door carries neither**, and deliberately: it is a statement about the book rather than a
+step in it, it makes no claim a picture could illustrate, and an analogy image above it would be the
+first thing a reader met — before anything had been earned. **A chapter that asks the reader to
+write a guess down carries no picture of the answer above the guess**, which is why *Is it round?*
+opens with none: its rings are data, and they belong where the answer is given.
 
 ## Numbers computed while the page is built
 

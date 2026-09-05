@@ -15,7 +15,13 @@ Which kind a chapter may use is not a taste question. Where the demo code can dr
 picture is the drawing (R10 — the sim IS the graphic). A study is what a chapter gets when there is
 nothing to draw yet.
 
-## Shared language
+## Shared language — for the studies
+
+Everything in this section describes a **study**. A figure follows none of it: it comes out of the
+drawing code in whatever frame that code uses (the stills so far are portrait), in the demo's own
+single ink on its own paper, and its dashes mean whatever the drawing means by them — on the ring,
+a dashed line is a pair of middles with nothing joining them, not a proposal. A figure's own rules
+are in *Wiring a figure* below.
 
 - **Format:** 1200 × 600 responsive SVG, readable in light and dark mdBook themes.
 - **Shape:** soft fields, rounded panels, generous empty space, one visual question per chapter.
@@ -82,8 +88,8 @@ nothing to draw yet.
 | 00 · The shadow | How can a visible shadow invite a test about its unseen source? | [`shadow-question.svg`](chapters/assets/shadow-question.svg) |
 | 01 · Sharper shadows | How does a finer instrument change what the same measurement can tell you? | [`sharper-shadows.svg`](chapters/assets/sharper-shadows.svg) |
 | 01 · Build the object | How do point, line, patch, and volume grow from one another? | [`build-object.svg`](chapters/assets/build-object.svg) |
-| 02 · Is it round? | **replaced.** The question is answered by the run, so the chapter shows the run: the record's two rings at *The obvious setting* — the equal-weight dial beside the geometric one, each ring the measured speed in every direction it was timed in. `round-ripple.svg` is deleted. | [record 0115](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html) · [record 0117](record/lab/warp-1-move/0117-dispersion-isotropy/figures/discovery.html) |
-| 02b · Two worlds threaded | **replaced before it was drawn.** Three stills of the demo's own drawings, in the chapter's own order: the shape between with four faces bare, the same with a tip on every face, and the threaded pair as an orthographic wireframe. Plus the record's turnable render of the pair tiled. | [`four-faces-spare.svg`](chapters/assets/four-faces-spare.svg) · [`a-tip-on-every-face.svg`](chapters/assets/a-tip-on-every-face.svg) · [`the-threaded-pair.svg`](chapters/assets/the-threaded-pair.svg) · [record 0116](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html) |
+| 02 · Is it round? | **study replaced, and by nothing at the top.** The chapter asks the reader to write a guess down before it answers, so a picture above that section would hand her the answer; the record's own rings go where the answer is given, at *The obvious setting*. Two rings, one per dial setting — each drawn from the two speeds the run timed, round the directions the object's symmetry carries them to. `round-ripple.svg` is deleted. | [record 0115](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html), at *The obvious setting* |
+| 02b · Two worlds threaded | **replaced before it was drawn.** Three stills of the demo's own drawings, in the chapter's own order: the shape between with four faces bare, the same with a tip on every face, and the threaded pair as an orthographic wireframe. Plus, at the chapter's last beat, the record's render of the *lattice* those pieces build — one tetrahedron per cube, not this pair repeated. | [`four-faces-spare.svg`](chapters/assets/four-faces-spare.svg) · [`a-tip-on-every-face.svg`](chapters/assets/a-tip-on-every-face.svg) · [`the-threaded-pair.svg`](chapters/assets/the-threaded-pair.svg) · [record 0116](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html) |
 | 03 · The bubble and its bill | Where does a shaped change place its cost? | [`bubble-bill.svg`](chapters/assets/bubble-bill.svg) |
 | 04 · The wall | Can isolation work while the hoped-for inertial effect does not? | [`wall-two-answers.svg`](chapters/assets/wall-two-answers.svg) |
 | 05 · Negative energy | How do boundaries change which vacuum modes fit? | [`vacuum-boundaries.svg`](chapters/assets/vacuum-boundaries.svg) |
