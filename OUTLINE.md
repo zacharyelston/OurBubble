@@ -310,7 +310,16 @@ that carries the idea with none of those words still passes — round 5 walked "
 way of showing its inside: the edge", "Everything that happens inside is written on the surface" and
 "The world, in the end, is edges all the way down" straight through, and so would the next
 rewording. The guard is what stops the sentences somebody has already written; the reading is what
-stops the idea. Do not read the pattern list as coverage of a register.*
+stops the idea. Do not read the pattern list as coverage of a register.
+
+**And eleven of those patterns carry an exemption**, because an exclusivity *about the toy* is how
+chapters 4–8 are honestly written: "everything you add up lives only on the boundary of the
+triangle" was being refused. A match is skipped when a named piece of the toy — a triangle, a
+tetrahedron, a napkin, numbers, dots, lines, edges somebody drew — sits within forty characters of
+it. The first version of that exemption looked for "in this model" anywhere in the sentence and was
+walked by typing "In this book," in front of a declared claim, so it now tests what the claim is
+about rather than what phrase the sentence happens to contain. The legacy programme's patterns carry
+no exemption at all: "in this model, the universe is a bubble" is refused, and must be.*
 
 *Drafter's note on chapters 4–8: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the
