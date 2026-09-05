@@ -482,14 +482,24 @@ ${WIRE_CIRCLE}`,
 
   // ── gate 11: the five the engine answers now, asked rather than remembered ───────────────────
   //
-  // Every one of these is a page that looks right. None of them prints a number the engine did not
-  // produce, so gate 2 sees nothing; none of them types a digit, so gate 3 sees nothing. They are
-  // the shapes the five gaps take once the engine can answer them, and they are why gate 11 exists.
+  // Every one of these is a page that looks right. None prints a number the engine did not produce,
+  // so gate 2 sees nothing; none types a digit, so gate 3 sees nothing. Eight of them are a fresh
+  // reviewer's, who walked all five of the first version's legs — every one of which failed OPEN,
+  // agreeing with the page about the page rather than holding the page to the step.
   { guard: "gate 11 · a wrong weight silently accepted by the dial", file: "steps.mjs",
     from: "          const run = engine.sloshWeighted(\"tetrahedron\", tetraCorners, state.numbers, k, ticks);",
     to: "          const run = engine.sloshWeighted(\"tetrahedron\", tetraCorners,\n"
       + "            LINES.map(() => plainWeight), k, ticks);",
-    expect: "two different dials" },
+    expect: "where the engine answers" },
+  { guard: "gate 11 · a weight written as a word, which used to disarm the dial", file: "steps.mjs",
+    from: "                LINES.map((name, index) => [name, show(state.numbers[index])]),",
+    to: "                LINES.map((name, index) => [name, state.numbers[index] === plainWeight\n"
+      + '                  ? "the same as the rest" : show(state.numbers[index])]),',
+    expect: "where the engine answers" },
+  { guard: "gate 11 · the dialled run one row short", file: "steps.mjs",
+    from: '              runTable("every tick", run.history, run.totals, NAMES, "dial-run"),',
+    to: '              runTable("every tick", run.history.slice(1), run.totals, NAMES, "dial-run"),',
+    expect: "and the engine's answer for this step's own inputs has" },
   { guard: "gate 11 · a running sum read off the terms instead of the engine", file: "steps.mjs",
     from: "                  signed(walk.terms[index]), show(walk.running[index]),",
     to: "                  signed(walk.terms[index]), show(walk.terms[index]),",
@@ -499,10 +509,26 @@ ${WIRE_CIRCLE}`,
     from: '                ]), { runs: [3, 4] }, "walk-running"),',
     to: '                ]), null, "walk-running"),',
     expect: "does not say which of its columns is the walk" },
+  { guard: "gate 11 · a running declaration pointed at two prose columns", file: "steps.mjs",
+    from: '                ]), { runs: [3, 4] }, "walk-running"),',
+    to: '                ]), { runs: [0, 1] }, "walk-running"),',
+    expect: "a declaration pointed at prose exempts the whole table" },
+  { guard: "gate 11 · the same walk entry point asked a different question", file: "steps.mjs",
+    from: '          const inside = engine.walk("tetrahedron", 2, 0, loops.loops);',
+    to: '          const inside = engine.walk("tetrahedron", 1, 0, state.numbers);',
+    expect: "is not the engine's for this step's own inputs" },
   { guard: "gate 11 · the tetrahedron's certificate under the triangle's title", file: "steps.mjs",
     from: '          const certificate = engine.certificate("triangle", chosen);',
     to: '          const certificate = engine.certificate("tetrahedron", chosen);',
-    expect: "is not the engine's for the triangle" },
+    expect: 'the table tagged "triangle-certificate" prints' },
+  { guard: "gate 11 · a certificate pinned to a tick she did not pick", file: "steps.mjs",
+    from: '          const certificate = engine.certificate("triangle", chosen);',
+    to: '          const certificate = engine.certificate("triangle", atShape.k);',
+    expect: 'the table tagged "triangle-certificate" prints' },
+  { guard: "gate 11 · the octahedron step showing another shape's certificate", file: "steps.mjs",
+    from: '          const certificate = engine.certificate("octahedron", poke.k);',
+    to: '          const certificate = engine.certificate("tetrahedron", poke.k);',
+    expect: 'the table tagged "octahedron-certificate" prints' },
   { guard: "gate 11 · a driven step's table with its tag taken off", file: "steps.mjs",
     from: '              runTable("every tick", run.history, run.totals, NAMES, "dial-run"),',
     to: '              runTable("every tick", run.history, run.totals, NAMES),',
@@ -514,13 +540,31 @@ ${WIRE_CIRCLE}`,
   { guard: "gate 11 · the two-dot answer hard-coded instead of asked", file: "steps.mjs",
     from: "          const closed = engine.loops(TWO_DOTS, [ZERO], 1);",
     to: "          const closed = { closed_walks: 0 };",
-    expect: "never asked loops_json about the two-dots" },
+    expect: "never asked loops_json with" },
+  // The same defect with the engine call left in place above it, so that the question IS asked and
+  // the answer is thrown away. Every value comparison passes it — the typed cell agrees with the
+  // answer — and only making the engine answer differently tells them apart.
+  { guard: "gate 11 · the two-dot answer typed into the cell, the engine still asked",
+    file: "steps.mjs",
+    from: '                [[closed.closed_walks === 0 ? "none" : String(closed.closed_walks),\n'
+      + '                  closed.closed_walks === 0 ? "no" : "yes"]],',
+    to: '                [["none", "no"]],',
+    expect: "whether or not loops_json answers differently" },
   { guard: "gate 11 · the eight-face walk taken from the payload instead of asked", file: "steps.mjs",
     from: '          const fs = engine.faceSum("octahedron", faceArrows);',
     to: "          const fs = { ...P.face_sum, cycle_names: R.gaps.outward_face_sum.cycle_names,\n"
       + "            running: R.gaps.outward_face_sum.running,\n"
       + "            orientation: R.gaps.outward_face_sum.orientation };",
-    expect: "never asked face_sum_json about the octahedron" },
+    expect: "never asked face_sum_json with" },
+  { guard: "gate 11 · the faces-walked counter disagreeing with the walk it counts",
+    file: "steps.mjs",
+    from: "                [[count(walked), String(cut.oct_faces),",
+    to: "                [[String(cut.oct_faces), String(cut.oct_faces),",
+    expect: "and the walk above it lists" },
+  { guard: "gate 11 · the dial never driven off the plain", file: "steps.mjs",
+    from: "            also: [R.gaps.dial.weights] },",
+    to: "            also: [] },",
+    expect: "never ran on any state of any step" },
 
   // ── the engine itself ────────────────────────────────────────────────────────────────────────
   // The engine's hashes are `check_edition.py`'s business, not this file's. What THIS check owns is

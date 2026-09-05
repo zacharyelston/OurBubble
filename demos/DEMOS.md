@@ -58,7 +58,11 @@ wrong within two commits — prose counting the artefact beside it, guarded by n
 prints all five on every run, which is the only place they cannot go stale.
 
 The furniture is worth naming beside the budget, because it is not small: on the two most visual
-pages the captions and column headings outweigh the prose they are excluded from. A reader still
+pages the captions and column headings outweigh the prose they are excluded from — and the check now
+**counts it and prints it beside the budget on every run**, which is a reader's finding: a pass can
+hold the budget steady, or even bring it down, while adding fifty words of heading, and the line
+saying "at most N words on a page" then reports something it did not measure. It is printed, not
+capped. A reader still
 meets those words. They are excluded because they are labels on data and they are held to the same
 rule about numbers as the prose is — not because they are free.
 
@@ -293,18 +297,32 @@ is one more figure to go stale:
    as one fixed answer, a walk's running column read off its own terms, a certificate borrowed from
    another shape, a "no closed walk" nobody computed. None prints a number the engine did not
    produce, so gate 2 sees none of them — this is the part of *right value, wrong place* that can be
-   closed, because for these five the question is known. Three ways, each a different lie: **the
-   question was asked at all** (each driven step is rebuilt against an engine door of its own,
-   rendered in every state, and the questions that door was put are the questions that step asked —
-   a shared door lets one step coast on another's question and answers the second time out of its
-   cache); **the answer on the page answers the question on the page** (the dialled run is re-asked
-   with the weights the reader can see, the certificate re-asked for the shape the step is about and
-   the tick in its own row, both on a second engine door so that the check's own questions never
-   enter the set gate 2 holds the page to); and **the running column is the sum building** — every
-   table declaring `{ runs: [terms, running] }` has that column added up here, in exact arithmetic,
-   on the digits a reader sees. A step names the tables this gate reads by a `tag` nobody is shown,
-   so a caption may be rewritten freely and losing the tag is a failure rather than a quiet
-   exemption.
+   closed, because for these five the question is known.
+
+   **The first version of this gate asked whether the page agreed with itself, and a fresh reviewer
+   walked through every one of its legs in a single read.** It re-asked the engine using the tick
+   the table printed and the weights the table printed, so a certificate pinned to its own printed
+   tick agreed with itself in every state; a weight written as a word disarmed the dial through a
+   `null` check; the two-dot answer could simply be typed into the cell; a `{ runs: … }` declaration
+   pointed at two prose columns exempted a whole walk table; and every leg of it failed **open**.
+   That is the shape of defect this file keeps recording: a guard that stops applying rather than
+   one that fails.
+
+   So it holds the page to the **step**, not to itself. **The question was asked** — each driven
+   step is rebuilt against an engine door of its own, rendered in every state, and the calls that
+   door recorded must include the one the step owes, matched on the entry point *and* the arguments
+   the gate pins, so the right entry point asked a different question is caught. **The cells are the
+   answer** — every driven table's rows are rebuilt here from the engine and the state the check
+   itself drove the step into, and compared cell by cell. **The running column is the sum building**
+   — every table declaring `{ runs: [terms, running] }` has that column added up in exact
+   arithmetic, and a declaration whose columns hold no number on a row that has numbers is refused.
+   **The page reads the answer** — where a question's answer is the same in every state (two dots
+   close nothing; a shape's ceiling does not move), no comparison can tell a cell that read it from
+   a cell written to agree with it, so the step is rebuilt against a door that answers differently
+   and must say something else. **And every leg ran**: each of these counts, and a leg that fired on
+   no state of any step fails, whether it was switched off in the check, in the step, or in the
+   enumerator that drives it. A step names the tables this gate reads by a `tag` nobody is shown, so
+   a caption may be rewritten freely and losing the tag is a failure rather than a quiet exemption.
 
 ### No guard lands without the mutation that proves it bites
 

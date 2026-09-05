@@ -1420,7 +1420,6 @@ function exact(cell) {
   }
   return /^-?\d+$/.test(text) ? [BigInt(text), 1n] : null;
 }
-
 // ── 11 · the five the engine answers now, and the steps that ask it ───────────────────────────────
 //
 // UniForge's `lab/napkin/0003` closed the five places where a step wanted something the browser
@@ -1431,121 +1430,323 @@ function exact(cell) {
 // them — which is exactly the "right value, wrong place" hole this file says it cannot close in
 // general. It can be closed **here**, because for these five the question is known.
 //
-// Three ways, and each is a different kind of lie:
+// The first version of this gate had all of that and was walked through five times in one read, and
+// every escape was the same mistake in a different place: **it asked whether the page agreed with
+// itself.** It re-asked the engine using the tick the table printed, the weights the table printed,
+// and it checked nothing at all about the cells whose whole content was an answer. So a certificate
+// pinned to its own printed tick agreed with itself in every state, a weight written as a word
+// disarmed the dial leg through a `null` check, and the two-dot answer could simply be typed.
 //
-//   · **the question was asked at all.** The engine remembers every call; a step that hard-codes an
-//     answer the engine would have given never appears in that list.
-//   · **the answer on the page is the answer to the question on the page.** The dial's run is
-//     re-asked with the weights the reader can see, and the certificate is re-asked for the shape
-//     the step is about and the tick in its own table — on a SECOND engine door, so that the
-//     check's questions never enter the set gate 2 holds the page to.
-//   · **the running column is the sum building.** Every table declaring `{ runs: [terms, running] }`
-//     has its running column added up here, in exact arithmetic, on the digits a reader sees.
+// So this version rebuilds what the page must show **from the step's own inputs** — the state the
+// check itself drove the step into — and holds the cells to that:
+//
+//   · **the question was asked at all.** Each driven step is rebuilt against an engine door of its
+//     own, rendered in every state, and the calls that door recorded must include the one the step
+//     owes, matched on the entry point *and the arguments this gate pins* — the object, and for a
+//     walk its degree and index, so the right entry point asked a different question is caught.
+//   · **the cells are the answer.** Every driven table's rows are computed here from the engine and
+//     the state, and compared cell by cell (a `null` means this gate does not speak for that cell).
+//   · **the running column is the sum building**, added up in exact arithmetic on the digits a
+//     reader sees — and a declared running column that holds no number on a row that has numbers is
+//     refused, because pointing the declaration at two prose columns exempted a whole walk table.
+//   · **and every leg ran.** Each of these checks counts, and a leg that never fired on any state of
+//     any step is reported: all five legs failed *open* in the first version, which is the shape of
+//     defect this repository has met most often — a guard that stops applying rather than fails.
 //
 // A step names the tables this gate reads by `tag`, which is not shown to anybody, so a caption may
 // be rewritten freely and deleting the tag is a failure rather than a quiet exemption.
 const oracle = new Engine(glue, payload, rows);
 
-const DRIVEN = {
-  // The two-dot world: the difference on its one line, and its own count of closed walks.
-  "change-lives-between": { asks: ["loops_json", "two-dots"], tags: ["two-dots-difference"] },
-  "nothing-closes-yet": { asks: ["loops_json", "two-dots"], tags: ["two-dots-closed"] },
-  // The walks, with the sum building term by term.
-  "walk-it-and-add": { asks: ["walk_json", "triangle"], tags: ["walk-running"], runs: true },
-  "any-three-numbers-at-all": { asks: ["walk_json", "triangle"], tags: ["walk-running"],
-    runs: true },
-  "why-it-is-exact-and-not-approximate": { asks: ["walk_json", "triangle"],
-    tags: ["walk-running"], runs: true },
-  "round-the-inside": { asks: ["walk_json", "tetrahedron"], tags: ["walk-running"], runs: true },
-  // The dial, turned to wherever she has left it.
-  "turn-the-dial": { asks: ["slosh_weighted_json", "tetrahedron"],
-    tags: ["dial-weights", "dial-run"], dial: "tetrahedron" },
-  // The triangle's own ceiling, which used to panic instead of answering.
-  "the-tick-belongs-to-the-shape": { asks: ["certificate_json", "triangle"],
-    tags: ["triangle-certificate"], certificate: "triangle" },
-  // The eight faces, walked outward, per face.
-  "coming-home-on-eight-faces": { asks: ["face_sum_json", "octahedron"], tags: ["face-walk"],
-    runs: true },
-};
+const TWO_DOTS = "two-dots";
+const NOTHING = payload.poke.history[0][1];
+const CORNER_NAMES = payload.tetrahedron.names;
+const LINE_NAMES = payload.tetrahedron.line_names;
+const FIRST_THREE = payload.triangle.chapter.values;
+const AT_BOOK = rows.triangle_motion.at_the_book_tick;
+// The corner a napkin will not write, which is the one that step swaps in — the engine's own count
+// of how far it gets says which row it comes off, exactly as the step derives it.
+const UNPRINTABLE = AT_BOOK.history[AT_BOOK.printable_rows][0];
 
-/** One printed cell back as the exact rational a reader could read off it, or null. */
-function asExact(cell) {
-  const found = exact(cell);
-  if (found === null) return null;
-  return found[1] === 1n ? String(found[0]) : `${found[0]}/${found[1]}`;
+const printed = (value) => oracle.text(value);
+const signedText = (value) => oracle.signed(value).text;
+
+/** What a certificate's own answer puts in the columns a table gives it; `null` is not spoken for. */
+function certificateCells(object, k, at) {
+  const answer = oracle.certificate(object, k);
+  const say = {
+    k: () => printed(answer.k),
+    bound: () => printed(answer.bound),
+    eigenvalue: () => printed(String(answer.eigenvalue)),
+    eigenvector: () => answer.eigenvector.map((value) => printed(String(value))).join("  "),
+    holds: () => (answer.holds ? "yes" : "no"),
+  };
+  return at.map((field) => (field === null ? null : say[field]()));
 }
 
-/** Which entry points, about which objects, one engine door has actually been asked. */
+/** One walk's terms and its running column, as the engine gives them for these inputs. */
+function walkNumbers(object, degree, index, values, take) {
+  const walk = oracle.walk(object, degree, index, values);
+  const upto = take === null ? walk.terms.length : take;
+  return {
+    terms: walk.terms.slice(0, upto).map(signedText),
+    running: walk.running.slice(0, upto).map(printed),
+  };
+}
+
+/** The differences on the triangle's lines, from three corner numbers. */
+const triangleEdges = (values) => oracle.loops("triangle", values, 0).loops;
+
+const DRIVEN = {
+  // Two dots and a line: the difference on its one line, and its own count of closed walks.
+  "change-lives-between": {
+    asks: ["loops_json", TWO_DOTS],
+    tables: {
+      "two-dots-difference": (state) => [[
+        LINE_NAMES[0],
+        `${printed(state.numbers[1])} − ${printed(state.numbers[0])}`,
+        signedText(oracle.loops(TWO_DOTS, state.numbers, 0).loops[0]),
+      ]],
+    },
+  },
+  "nothing-closes-yet": {
+    asks: ["loops_json", TWO_DOTS],
+    // The answer is the same in every state — two dots and a line close nothing, whatever she
+    // types — so the comparison above cannot tell a cell that READ that answer from a cell that
+    // was written to agree with it. This is what tells them apart: the engine is made to answer
+    // differently, and a page that does not notice is a page that was not asking.
+    reads: (answer) => ({ ...answer, closed_walks: answer.closed_walks + 1 }),
+    tables: {
+      "two-dots-closed": () => {
+        const closed = oracle.loops(TWO_DOTS, [NOTHING], 1);
+        const walks = closed.closed_walks;
+        // "none", not a nought — the page's convention, stated here so that the cell is the
+        // engine's answer rendered one fixed way rather than a word anybody may type.
+        return [[walks === 0 ? "none" : String(walks), walks === 0 ? "no" : "yes"]];
+      },
+    },
+  },
+
+  // The walks, with the sum building term by term.
+  "walk-it-and-add": {
+    asks: ["walk_json", "triangle", 1, 0],
+    walk: { tag: "walk-running",
+      of: (state) => walkNumbers("triangle", 1, 0, triangleEdges(state.numbers), state.tick) },
+  },
+  "any-three-numbers-at-all": {
+    asks: ["walk_json", "triangle", 1, 0],
+    walk: { tag: "walk-running",
+      of: (state) => walkNumbers("triangle", 1, 0, triangleEdges(state.choice.value), null) },
+  },
+  "why-it-is-exact-and-not-approximate": {
+    asks: ["walk_json", "triangle", 1, 0],
+    walk: { tag: "walk-running",
+      of: (state) => walkNumbers("triangle", 1, 0, triangleEdges(state.pressed
+        ? [...FIRST_THREE.slice(0, 2), UNPRINTABLE] : FIRST_THREE), null) },
+  },
+  "round-the-inside": {
+    asks: ["walk_json", "tetrahedron", 2, 0],
+    walk: { tag: "walk-running",
+      of: (state) => walkNumbers("tetrahedron", 2, 0,
+        oracle.loops("tetrahedron", state.numbers, 1).loops, null) },
+  },
+
+  // The dial, run at the weights the reader has left it at.
+  "turn-the-dial": {
+    asks: ["slosh_weighted_json", "tetrahedron"],
+    turned: true,
+    tables: {
+      "dial-weights": (state) => LINE_NAMES.map((name, index) => [name, printed(state.numbers[index])]),
+      "dial-run": (state) => {
+        const answer = oracle.sloshWeighted("tetrahedron", payload.tetrahedron.corners,
+          state.numbers, payload.motion.k, payload.motion.ticks);
+        return answer.history.map((row, tick) =>
+          [String(tick), ...row.map(printed), printed(answer.totals[tick])]);
+      },
+    },
+  },
+
+  // The eight faces, walked outward, per face — and the counter that says how far she has got,
+  // which is held to the rows the walk table actually lists. Two counters of the same thing
+  // disagreeing is a defect this step has had once already.
+  "coming-home-on-eight-faces": {
+    asks: ["face_sum_json", "octahedron"],
+    reads: (answer) => ({ ...answer, running: [...answer.running].reverse() }),
+    walk: { tag: "face-walk",
+      of: (state) => {
+        const answer = oracle.faceSum("octahedron", payload.face_sum.arrows);
+        return {
+          terms: answer.face_numbers.slice(0, state.tick).map(signedText),
+          running: answer.running.slice(0, state.tick).map(printed),
+        };
+      } },
+    counter: { tag: "face-count", column: 0, of: "face-walk" },
+  },
+
+  // Every certificate on the pages, not only the one this pass rewired: the triangle's is the new
+  // answer, and the other four were rendered by the same code and held by nothing.
+  "the-tick-belongs-to-the-shape": {
+    asks: ["certificate_json", "triangle"],
+    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    tables: {
+      "triangle-certificate": (state) => [certificateCells("triangle", state.choice.value,
+        ["k", "eigenvalue", "eigenvector", "bound", "holds"])],
+    },
+  },
+  "now-the-tetrahedron": {
+    asks: ["certificate_json", "tetrahedron"],
+    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    tables: {
+      "tetrahedron-certificate": () => [certificateCells("tetrahedron", payload.motion.k,
+        ["k", "eigenvalue", "bound", "holds"])],
+    },
+  },
+  "it-takes-two-ticks-to-cross": {
+    asks: ["certificate_json", "octahedron"],
+    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    tables: {
+      "octahedron-certificate": () => [certificateCells("octahedron", payload.poke.k,
+        ["k", "eigenvalue", "bound", "holds"])],
+    },
+  },
+  "the-tick-that-stops-working": {
+    asks: ["certificate_json", "stella"],
+    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    tables: {
+      "stella-certificate": () => [certificateCells("stella", payload.refusal.runaway.k,
+        ["k", "eigenvalue", "bound", "holds"])],
+    },
+  },
+  "the-smaller-tick-does-not-save-it": {
+    asks: ["certificate_json", "stella"],
+    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    tables: {
+      // The last two columns are the run's, not the certificate's, so this gate does not speak for
+      // them: a null says so rather than leaving the row unchecked.
+      "stella-tried": (state) => [certificateCells("stella", state.choice.value.k,
+        ["k", "bound", "holds", null, null])],
+    },
+  },
+};
+
+/** Every leg that must fire at least once, and how often it did. */
+const legsRan = new Map();
+const ran = (anchor, leg) => legsRan.set(`${anchor} · ${leg}`,
+  (legsRan.get(`${anchor} · ${leg}`) || 0) + 1);
+for (const [anchor, spec] of Object.entries(DRIVEN)) {
+  for (const tag of Object.keys(spec.tables || {})) legsRan.set(`${anchor} · ${tag}`, 0);
+  if (spec.walk) legsRan.set(`${anchor} · ${spec.walk.tag}`, 0);
+  if (spec.counter) legsRan.set(`${anchor} · ${spec.counter.tag}`, 0);
+  if (spec.turned) legsRan.set(`${anchor} · a dial turned off the plain`, 0);
+  if (spec.reads) legsRan.set(`${anchor} · the answer is read, not agreed with`, 0);
+}
+
+/** Which entry points, with which pinned arguments, one engine door has actually been asked. */
 function questionsAsked(door) {
-  const asked = new Set();
+  const asked = [];
   for (const key of door.calls) {
     const found = /^([a-z_]+)\((.*)\)$/s.exec(key);
     if (!found) continue;
-    let args;
-    try { args = JSON.parse(found[2]); } catch { continue; }
-    asked.add(`${found[1]}|${args[0]}`);
+    try { asked.push([found[1], ...JSON.parse(found[2])]); } catch { /* not a call this gate reads */ }
   }
   return asked;
 }
 
-/** Hold one rendered state of one driven step to the engine's own answer. */
-function drivenBy(step, rendered, where) {
-  const spec = step.anchors.map((anchor) => DRIVEN[anchor]).find(Boolean);
-  if (!spec) return;
-  const tables = new Map();
-  for (const tag of spec.tags) {
+/** Does any call match this pin — the entry point and the leading arguments named with it? */
+const wasAsked = (asked, pins) => asked.some((call) =>
+  pins.every((pin, index) => JSON.stringify(call[index]) === JSON.stringify(pin)));
+
+/** Does this row carry a number anywhere in it? */
+const hasNumbers = (row) => row.some((cell) => exact(cell) !== null);
+
+/** Hold one rendered state of one driven step to the engine's answer for that state's own inputs. */
+function drivenBy(step, rendered, state, where) {
+  const anchor = step.anchors.find((one) => DRIVEN[one]);
+  if (!anchor) return;
+  const spec = DRIVEN[anchor];
+  const find = (tag) => {
     const found = rendered.tables.find((table) => table.tag === tag);
     if (!found) {
       fail(`${where}: no table tagged "${tag}". That tag is how this gate finds the table whose `
         + `numbers are ${spec.asks[0]}'s answer, so a step that loses it is a step nothing holds `
         + `to the engine any more`);
+    }
+    return found;
+  };
+
+  // Every cell this gate speaks for, against the engine's answer for this state's own inputs.
+  for (const [tag, expect] of Object.entries(spec.tables || {})) {
+    const shown = find(tag);
+    if (!shown) continue;
+    const wanted = expect(state);
+    ran(anchor, tag);
+    if (shown.rows.length !== wanted.length) {
+      fail(`${where}: the table tagged "${tag}" prints ${shown.rows.length} row(s) and the engine's `
+        + `answer for this step's own inputs has ${wanted.length}`);
       continue;
     }
-    tables.set(tag, found);
-    if (spec.runs && !(found.shape && found.shape.runs)) {
-      fail(`${where}: the table tagged "${tag}" does not say which of its columns is the walk's `
-        + `running sum. Declare { runs: [terms, running] } — a running column nothing adds up is a `
-        + `column a reader is asked to trust`);
-    }
+    wanted.forEach((row, index) => {
+      row.forEach((cell, at) => {
+        if (cell === null) return;
+        if (String(shown.rows[index][at]) !== cell) {
+          fail(`${where}: the table tagged "${tag}" prints "${shown.rows[index][at]}" where the `
+            + `engine answers "${cell}" for this step's own inputs — the row is `
+            + `${shown.rows[index].join(" · ")}`);
+        }
+      });
+    });
   }
 
-  // The dial: the run on the page is the engine's answer for the weights on the page. A weight
-  // shown and a different weight asked about is the whole defect this step could have.
-  if (spec.dial) {
-    const weights = (tables.get("dial-weights")?.rows || []).map((row) => asExact(row[1]));
-    const run = tables.get("dial-run");
-    if (run && weights.length && weights.every((weight) => weight !== null)) {
-      const answer = oracle.sloshWeighted(spec.dial, payload.tetrahedron.corners, weights,
-        payload.motion.k, payload.motion.ticks);
-      const wanted = answer.history.map((row, tick) => [String(tick), ...row.map((value) =>
-        oracle.text(value)), oracle.text(answer.totals[tick])]);
-      if (JSON.stringify(run.rows) !== JSON.stringify(wanted)) {
-        fail(`${where}: the dialled run printed is not what the engine answers for the weights `
-          + `this step shows (${weights.join(" ")}) — the dial on the page and the dial the rule `
-          + `was run at are two different dials`);
+  // The walk's terms and its running column, likewise — read off the columns the table itself
+  // declares, so a declaration pointed anywhere else disagrees with the engine here.
+  if (spec.walk) {
+    const shown = find(spec.walk.tag);
+    const runs = shown && shown.shape && shown.shape.runs;
+    if (shown && !runs) {
+      fail(`${where}: the table tagged "${spec.walk.tag}" does not say which of its columns is the `
+        + `walk's running sum. Declare { runs: [terms, running] } — a running column nothing adds `
+        + `up is a column a reader is asked to trust`);
+    }
+    if (shown && runs) {
+      const wanted = spec.walk.of(state);
+      const terms = [];
+      const running = [];
+      for (const row of shown.rows) {
+        if (!hasNumbers(row)) continue;                 // a "none yet" row holds no walk
+        if (exact(row[runs[0]]) === null || exact(row[runs[1]]) === null) {
+          fail(`${where}: the table tagged "${spec.walk.tag}" declares columns ${runs.join(" and ")} `
+            + `as its terms and its running sum, and on a row that carries numbers one of them `
+            + `holds none — a declaration pointed at prose exempts the whole table`);
+          continue;
+        }
+        terms.push(String(row[runs[0]]));
+        running.push(String(row[runs[1]]));
+      }
+      ran(anchor, spec.walk.tag);
+      if (JSON.stringify([terms, running]) !== JSON.stringify([wanted.terms, wanted.running])) {
+        fail(`${where}: the walk printed in "${spec.walk.tag}" is not the engine's for this step's `
+          + `own inputs — the page walks ${terms.join(" ")} / ${running.join(" ")} and the engine `
+          + `answers ${wanted.terms.join(" ")} / ${wanted.running.join(" ")}`);
       }
     }
   }
 
-  // The certificate: for THIS shape, at the tick in its own row. Rendering the tetrahedron's
-  // certificate under the triangle's title is right in every digit and wrong in every noun.
-  if (spec.certificate) {
-    const shown = tables.get("triangle-certificate");
-    const row = shown ? shown.rows[0] : null;
-    const tick = row ? asExact(row[0]) : null;
-    if (row && tick !== null) {
-      const answer = oracle.certificate(spec.certificate, tick);
-      const wanted = [oracle.text(answer.k), oracle.text(String(answer.eigenvalue)),
-        answer.eigenvector.map((value) => oracle.text(String(value))).join("  "),
-        oracle.text(answer.bound), answer.holds ? "yes" : "no"];
-      if (JSON.stringify(row) !== JSON.stringify(wanted)) {
-        fail(`${where}: the certificate on the page is not the engine's for the ${spec.certificate} `
-          + `at ${row[0]} — it says ${row.join(" · ")} and the engine says ${wanted.join(" · ")}`);
+  // And a counter about a walk is held to the walk it counts.
+  if (spec.counter) {
+    const shown = find(spec.counter.tag);
+    const walked = rendered.tables.find((table) => table.tag === spec.counter.of);
+    if (shown && walked) {
+      const listed = walked.rows.filter(hasNumbers).length;
+      ran(anchor, spec.counter.tag);
+      if (String(shown.rows[0][spec.counter.column]) !== String(listed)) {
+        fail(`${where}: the table tagged "${spec.counter.tag}" says `
+          + `${shown.rows[0][spec.counter.column]} walked and the walk above it lists ${listed}. `
+          + `Two counters of the same thing disagreeing is how this step shipped last time`);
       }
     }
   }
+
+  if (spec.turned && new Set(state.numbers).size > 1) ran(anchor, "a dial turned off the plain");
 }
-
 
 const report = [];
 // The narrowest gap between any two labels, anywhere. Not a rule — the rule is `LABEL_GAP`, and it
@@ -1589,6 +1790,11 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
 
   // ── 2 and 6 · render everything, scan everything, count the words ───────────────────────────
   const words = new Set();
+  // The furniture: captions, column headings and a drawing's own sentences. It is NOT in the budget
+  // — DEMOS.md has said so since the budget existed, and a reader still meets every word of it —
+  // and until now nothing said how much of it there was, so a pass could hold the budget steady
+  // while the page grew. It is counted here and printed beside the budget: observable, not capped.
+  const furniture = new Set();
   words.add(pageText.get(`${slug}.html`));
   words.add(chapter.title);
   let surfaces = 0;
@@ -1638,6 +1844,11 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
           }
         }
       }
+      for (const table of rendered.tables) {
+        furniture.add(table.caption);
+        for (const head of table.head) furniture.add(head);
+      }
+      for (const sentence of sentencesOf(rendered.drawing)) furniture.add(sentence);
       for (const sentence of sentencesOf(rendered.drawing)) {
         if (/\d/.test(sentence)) {
           fail(`${slug} ${step.label}: the drawing's own words carry a digit — "${sentence}". A `
@@ -1775,7 +1986,7 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
       }
 
       // Gate 11: the five the engine answers now, asked rather than remembered.
-      drivenBy(step, rendered, `${slug} ${step.label}`);
+      drivenBy(step, rendered, state, `${slug} ${step.label}`);
 
       // Gate 4, for EVERY drawing. It used to hold the wireframe alone — the drawing a reader was
       // invited to count off — and left the other three to be trusted, which is the same mistake in
@@ -1905,7 +2116,9 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
     words.add(word);
   }
   const count = [...words].reduce((total, text) => total + wordsOf(text), 0);
-  report.push({ slug, steps: joined.steps.length, beats: chapter.sections.length, words: count });
+  const furnitureCount = [...furniture].reduce((total, text) => total + wordsOf(text), 0);
+  report.push({ slug, steps: joined.steps.length, beats: chapter.sections.length, words: count,
+    furniture: furnitureCount });
 }
 
 // ── 11 (part) · every one of the five was actually asked ─────────────────────────────────────────
@@ -1936,11 +2149,69 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
   for (const state of statesOf(found, view)) {
     try { found.render(state); } catch { /* the render gate above reports a throw */ }
   }
-  const key = `${spec.asks[0]}|${spec.asks[1]}`;
-  if (!questionsAsked(door).has(key)) {
-    fail(`the step for "${anchor}" never asked ${spec.asks[0]} about the ${spec.asks[1]}, and `
-      + `that question is what it is for. An answer that reaches the page without the engine `
-      + `being asked is an answer somebody wrote down`);
+
+  // Does the step READ the answer? For a question whose answer is the same in every state — two
+  // dots close nothing, a shape's ceiling does not move — comparing the cells against the engine
+  // cannot tell a page that asked from a page written to agree. So the same step is built against
+  // a door that answers differently, and the tables this gate names must say something else. A
+  // reviewer typed the two-dot answer into the cell with the engine call left above it, and every
+  // other leg of this gate passed it.
+  if (spec.reads) {
+    const deaf = new Engine(glue, payload, rows);
+    const honest = new Engine(glue, payload, rows);
+    const ask = deaf.ask.bind(deaf);
+    deaf.ask = (entry, ...args) => {
+      const answer = ask(entry, ...args);
+      return entry === spec.asks[0] ? spec.reads(answer) : answer;
+    };
+    const stepOf = (which) => {
+      for (const build of Object.values(chapterSteps(which, drawings(which)))) {
+        for (const step of build()) if (step.anchors.includes(anchor)) return step;
+      }
+      return null;
+    };
+    const tags = [...Object.keys(spec.tables || {}), ...(spec.walk ? [spec.walk.tag] : [])];
+    const rowsOf = (step, state) => {
+      try {
+        const shown = step.render(state);
+        return JSON.stringify(tags.map((tag) =>
+          (shown.tables.find((table) => table.tag === tag) || {}).rows));
+      } catch { return null; }
+    };
+    const deafStep = stepOf(deaf);
+    const honestStep = stepOf(honest);
+    let noticed = false;
+    for (const state of statesOf(honestStep, view)) {
+      const one = rowsOf(honestStep, state);
+      const other = rowsOf(deafStep, state);
+      if (one !== null && other !== null && one !== other) noticed = true;
+    }
+    if (!noticed) {
+      fail(`the step for "${anchor}" prints the same ${tags.join(", ")} whether or not `
+        + `${spec.asks[0]} answers differently. The engine may be being asked and the answer thrown `
+        + `away: a cell written to agree with an answer that never changes is indistinguishable `
+        + `from one that read it, except like this`);
+    } else {
+      ran(anchor, "the answer is read, not agreed with");
+    }
+  }
+
+  if (!wasAsked(questionsAsked(door), spec.asks)) {
+    fail(`the step for "${anchor}" never asked ${spec.asks[0]} with ${spec.asks.slice(1).join(", ")}, `
+      + `and that question is what it is for. An answer that reaches the page without the engine `
+      + `being asked is an answer somebody wrote down — and the same entry point asked a different `
+      + `question is the same defect wearing the right name`);
+  }
+}
+
+// And every leg of this gate fired. All five of them failed OPEN in the first version — a value
+// this gate did not speak for, a `null` cell that disarmed a comparison, a state the enumerator
+// never drove — and a guard that stops applying looks exactly like a guard that passes.
+for (const [leg, count] of legsRan) {
+  if (count === 0) {
+    fail(`gate 11's leg "${leg}" never ran on any state of any step. A leg that fires on nothing `
+      + `is switched off, whether that was done to the check, to the step, or to the enumerator `
+      + `that drives it`);
   }
 }
 
@@ -1957,7 +2228,8 @@ for (const line of report) {
 
 for (const line of report) {
   process.stdout.write(`core.test.mjs: ${line.slug} — ${line.steps} steps over ${line.beats} `
-    + `beats, ${line.words} words\n`);
+    + `beats, ${line.words} words against the budget and ${line.furniture} more in captions and `
+    + `headings, which it does not count\n`);
 }
 
 // Before the verdict, and on both sides of it: a red run is exactly the run whose coverage

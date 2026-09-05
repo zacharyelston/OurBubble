@@ -609,8 +609,8 @@ export function chapterSteps(engine, draw) {
     // Where the dial starts: the weights the register ran the dialled row at, one line counted for
     // more than the rest. Plain is what every other line is worth, and what turning one back to
     // gives the run with no dial in it at all.
-    const dialWeights = R.gaps.dial.weights;
     const plainWeight = ONE;
+    const dialed = P.motion.dialed_line;
     // The triangle's own ceiling, asked of the engine rather than written down here — it is the
     // third tick the reader can try, and the one the certificate refuses.
     const triangleCeiling = engine.certificate("triangle", k).bound;
@@ -802,7 +802,8 @@ export function chapterSteps(engine, draw) {
               table("is this tick inside the shape's ceiling",
                 ["tick", "the shape's stiffest", "the ceiling", "inside it"],
                 [[show(certificate.k), show(String(certificate.eigenvalue)),
-                  show(certificate.bound), certificate.holds ? "yes" : "no"]], { notASum: true }),
+                  show(certificate.bound), certificate.holds ? "yes" : "no"]],
+                { notASum: true }, "tetrahedron-certificate"),
             ],
           };
         },
@@ -836,9 +837,16 @@ export function chapterSteps(engine, draw) {
       },
       {
         anchors: ["turn-the-dial"],
-        act: "Turn a line's dial.",
+        act: `Count ${dialed} double.`,
         controls: [
-          { kind: "numbers", names: LINES, initial: dialWeights },
+          // Every line worth the same, which is where the rule has been all chapter. The dial is
+          // hers to turn from there: a reader who opens on a dial already turned has been shown
+          // the answer and has nothing to change, and cannot see the rhythm move at all.
+          // …and the register's own dialled position among the states this is driven into, so that
+          // the state the beat is about is one the checks walk rather than one only a reader
+          // reaches. Every line the same is a dial nobody has turned.
+          { kind: "numbers", names: LINES, initial: LINES.map(() => plainWeight),
+            also: [R.gaps.dial.weights] },
           { kind: "tick", count: ticks, noun: "tick" },
         ],
         render: (state) => {
@@ -853,9 +861,12 @@ export function chapterSteps(engine, draw) {
               emphasis: turned,
               values: Object.fromEntries(NAMES.map((name, index) =>
                 [name, show(run.history[state.tick][index])])),
+              // What the title may say is that they are no longer all the same. It said "a line
+              // counted for more", which is a claim about a direction the dial does not have: she
+              // can count a line for less, and she can turn five and leave one.
               title: turned.length === 0
                 ? "Every line, counted the same"
-                : "A line counted for more than the others",
+                : "The lines, no longer all counted the same",
             }),
             tables: [
               // What the dial is set to, which is what the run below was asked with.
@@ -863,10 +874,17 @@ export function chapterSteps(engine, draw) {
                 LINES.map((name, index) => [name, show(state.numbers[index])]),
                 null, "dial-weights"),
               runTable("every tick", run.history, run.totals, NAMES, "dial-run"),
-              // The two things the dial does and does not change, both off the same run: the total
-              // is the same number it was at the start, and the rhythm is the engine's period.
-              table("what the dial changed", ["back where it started every", "the total"],
-                [[run.period === 0 ? "never" : String(run.period), show(run.totals[state.tick])]]),
+              // How far a napkin gets, as every other run in this chapter says it — a dial she can
+              // turn to a weight of her own can send the run past what a napkin will write, and a
+              // run that does that says so here rather than only in its own rows.
+              printableRow(run.history, run.printable_rows),
+              // What the dial changed and what it did not, both off the same run: the total is the
+              // number it was at the start — printed beside itself, which is the claim — and the
+              // rhythm is the engine's period.
+              table("what the dial changed, and what it did not",
+                ["back where it started every", "the total at the start", "the total now"],
+                [[run.period === 0 ? "never" : String(run.period),
+                  show(run.totals[0]), show(run.totals[state.tick])]], { notASum: true }),
             ],
           };
         },
@@ -1026,7 +1044,7 @@ export function chapterSteps(engine, draw) {
                 ["tick", "the shape's stiffest", "the ceiling", "inside it"],
                 [[show(certificate.k), show(String(certificate.eigenvalue)),
                   show(certificate.bound), certificate.holds ? "yes" : "no"]],
-                { notASum: true }),
+                { notASum: true }, "octahedron-certificate"),
             ],
           };
         },
@@ -1090,11 +1108,11 @@ export function chapterSteps(engine, draw) {
                   last ? show(fs.sum) : "not all walked yet"]], { total: 1 }),
               table("how far round it has got",
                 ["faces walked", "faces there are", "lines walked, each way once",
-                  "which way each face is walked"],
+                  "which way round"],
                 [[count(walked), String(cut.oct_faces),
                   last ? String(fs.lines_walked_each_way) : "not all walked yet",
                   fs.orientation]],
-                { notASum: true }),
+                { notASum: true }, "face-count"),
               table("what is on each face now", ["faces looking at a tip", "faces still bare"],
                 [[count(atATip), count(stillBare)]]),
             ],
@@ -1218,7 +1236,7 @@ export function chapterSteps(engine, draw) {
                 ["tick", "the shape's stiffest", "the ceiling", "inside it"],
                 [[show(certificate.k), show(String(certificate.eigenvalue)),
                   show(certificate.bound), certificate.holds ? "yes" : "no"]],
-                { notASum: true }),
+                { notASum: true }, "stella-certificate"),
               table("how far a napkin gets", ["rows it can write", "rows there are"],
                 [[String(run.printable_rows), count(run.history)]]),
               table("does it come back", ["ticks run", "back where it started every"],
@@ -1247,7 +1265,7 @@ export function chapterSteps(engine, draw) {
                   "back where it started every"],
                 [[show(tried.k), show(certificate.bound), certificate.holds ? "yes" : "no",
                   String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]],
-                { notASum: true }),
+                { notASum: true }, "stella-tried"),
             ],
           };
         },
