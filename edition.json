@@ -9,6 +9,12 @@
         "FIREWALL.md"
       ]
     },
+    "where-the-inside-shows": {
+      "sources": [
+        "book/LESSON_STANDARD.md",
+        "FIREWALL.md"
+      ]
+    },
     "the-shadow": {
       "sources": [
         "book/LESSON_STANDARD.md",
@@ -101,6 +107,14 @@
       "what-you-will-have": {
         "title": "What you will have — the front door, and no experiment",
         "note": "**What this section carries.** No rung, no gate, no figure and no quoted number — the front door is a statement about the book and how to read it, and it is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. Its promises are the later chapters' to keep, and each of those has its own section below. The standards are what its one scope claim rests on.\n",
+        "standards": [
+          "book/LESSON_STANDARD.md",
+          "FIREWALL.md"
+        ]
+      },
+      "where-the-inside-shows": {
+        "title": "Where the inside shows — why we measure at an edge, and no experiment",
+        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where an observation has to be made, and the two things it promises the reader will do with a pencil — walk a shape's rim and come home to nothing, add the faces that close around an inside and get nothing — are kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
         "standards": [
           "book/LESSON_STANDARD.md",
           "FIREWALL.md"

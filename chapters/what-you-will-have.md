@@ -80,11 +80,11 @@ down. That pause is the method, performed instead of described, and it works onl
 Sticks and light, dots and lines. That is what we have had since the first shadows anyone watched on
 a cave wall, it is all this book uses, and it was enough for everything in here.
 
-We start where measuring started: a shadow, and a man in Alexandria who did the smallest possible
-next thing about one.
+We start with the reason a shadow can tell you anything at all: whatever you can learn about a
+thing, you learn at its edge.
 
 *What this page cites — and what it does not:
 [the simulations](the-simulations.md#s-what-you-will-have).*
 
-**Next:** [The shadow](the-shadow.md)—a child in a yard, a Greek with a well, and the order of work
-this whole book is made of.
+**Next:** [Where the inside shows](where-the-inside-shows.md)—why an edge is the only part of
+anything you can measure, and why we go and stand there on purpose.

@@ -3,7 +3,7 @@
 **A book about a small world we built inside a computer, and what happened when we pointed real
 tests at it.**
 
-A short front door, fifteen chapters and an appendix. The front door says what the book is about
+A short front door, sixteen chapters and an appendix. The front door says what the book is about
 and what a reader will have at the end of it; then it starts with a child noticing her shadow and a
 Greek who knew what to do next, and it ends with you running the checks yourself. In between: a
 structure built out of points and lines, a ripple that came out lopsided until one setting fixed it,
@@ -33,7 +33,7 @@ UniForge builds The Container. The lab tests it. Our Bubble teaches it.
 The reading order is [`chapters/SUMMARY.md`](chapters/SUMMARY.md) — that file is the *only* place
 the order is written down, so a chapter carries no number in its name and none in its prose.
 
-The front door and the fifteen chapters are narrative. They carry no rung labels and no quotations,
+The front door and the sixteen chapters are narrative. They carry no rung labels and no quotations,
 on purpose. Everything
 a skeptic wants — which registered experiment each chapter rests on, its gate, its data-true figure,
 the exact numbers quoted and the file that carries each one, and the commands that regenerate them —

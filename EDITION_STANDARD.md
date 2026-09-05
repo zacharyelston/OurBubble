@@ -54,10 +54,14 @@ parts is a count nothing guards.
 
 ## Illustration contract
 
-Every chapter begins with one editorial illustration study. **The front door is the one page that
-carries none**, and deliberately: it is a statement about the book rather than a step in it, it
-makes no claim a picture could illustrate, and an analogy image above it would be the first thing a
-reader met — before anything had been earned. Every chapter after it must:
+Every chapter begins with one editorial illustration study, with two exceptions at the front of the
+book. **The front door carries none**, and deliberately: it is a statement about the book rather
+than a step in it, it makes no claim a picture could illustrate, and an analogy image above it
+would be the first thing a reader met — before anything had been earned. **Neither does *Where the
+inside shows*** (2026-09-05), for the second half of the same reason: its subject is why an edge is
+the part of anything you can measure, and drawing an edge would hand the reader a particular thing
+with a particular boundary at the moment the chapter is asking her to notice the arrangement rather
+than an example of it. Every chapter that does carry one must:
 
 1. make the chapter's next question visible without pretending to display a result;
 2. carry meaningful alt text and a plain-language caption;
@@ -70,7 +74,7 @@ must preserve the concept, alt-text intent, caption distinction, and firewall.
 
 ## Numbers computed while the page is built
 
-Chapters 3–7 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+Chapters 4–8 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
 and every number in them is finger-countable — or, in the one case where it stops being, visibly
 stops being, which is that chapter's point. Quoting such a number from the record would be theatre:
 the reader can check it on a napkin, so the book does the arithmetic in front of her instead of
