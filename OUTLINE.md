@@ -52,7 +52,7 @@ reader every time instead of explained to her once.
 ## 2 · The shadow
 
 1. Why is my shadow short at noon and long in the evening?
-2. If I scratch a mark where it ends and come back in an hour — what do I have?  *(two marks: a number from the world, not from me)*
+2. If I scratch a mark where it ends, and another after lunch — what do I have?  *(two marks: a number from the world, not from me — and lunch is a clock she already owns, no measuring required)*
 3. So what is a measurement, exactly, and why is it not yet an answer?
 4. Who first did the next thing with a shadow — and did you have to be a genius?  *(Eratosthenes: he ran the library at Alexandria; the measurement used none of it — one multiplication)*
 5. Two posts, same noon, one shadow: what does that rule out?  *(a flat world)*
