@@ -31,7 +31,7 @@
     fill: none; }
 </style>
   <title>The two tetrahedra, threaded</title>
-  <desc>An orthographic wireframe of two tetrahedra threaded through one another, sharing the shape between them. The first tetrahedron's lines are the full stroke, the second's lighter, and the octahedron's lie between them. Every dot carries its name. No shading and no perspective. Drag it, or use the arrow keys, to turn it; the numbers are all in the table below.</desc>
+  <desc>An orthographic wireframe of two tetrahedra threaded through one another, sharing the shape between them. The first tetrahedron's lines are the full stroke, the second's lighter, and the octahedron's lie between them. Every dot carries its name. No shading and no perspective.</desc>
   <g class="stroke octahedron">
     <line class="edge" data-edge="AB|AC" x1="321.66" y1="198.29" x2="240" y2="155.43"/>
     <line class="edge" data-edge="AB|AD" x1="321.66" y1="198.29" x2="308.52" y2="289.71"/>
