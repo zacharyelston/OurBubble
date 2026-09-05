@@ -43,14 +43,21 @@
 #          wrong chapter's file, a thirteenth beat, and a book-wide beat number left in the outline,
 #          in CONTINUUM.md, in DEMOS.md's prose or in a chapter — each applied to a private copy and
 #          required to go red by name. The Python checks had no mutations at all until this.
-#   3. the three guards the edition check does not reach — `tools/engine_check.py` (the Python
+#   3. the guards the edition check does not reach — `tools/engine_check.py` (the Python
 #      oracle recomputes the whole payload and must reproduce the vendored engine's bytes exactly),
 #      `tools/octahedron.py`'s own assertions (the geometry the octahedron chapter's appendix note
-#      rests on) and `tools/beat_coverage.py` (the prose against OUTLINE.md's beats, chapter by
-#      chapter, capped at twelve, with no book-wide beat number left anywhere it scans).
+#      rests on), `tools/beat_coverage.py` (the prose against OUTLINE.md's beats, chapter by
+#      chapter, capped at twelve, with no book-wide beat number left anywhere it scans), and
+#      `tools/figures.mjs --check` (every figure a chapter shows is byte-for-byte the still the
+#      demo code emits for that step, and the run refuses an altered byte, bytes that did not come
+#      from the drawing code, and a page showing a figure nothing draws — before printing a line
+#      claiming it did any of that).
 #   4. build the book — which regenerates the appendix from the record
-#   5. check the built pages, including that every record link resolves and that the built site
-#      actually carries demos/ — the one piece of wiring nothing else would notice breaking
+#   5. check the built pages, including that every record link resolves, that the built site
+#      actually carries demos/ — the one piece of wiring nothing else would notice breaking — and
+#      that every figure a BUILT page shows is one `tools/figures.mjs` drew. The built page is where
+#      that is settled: a chapter can write an image half a dozen ways, and mdBook makes them all
+#      the same `<img>` only here.
 #
 # The build can legitimately rewrite `chapters/the-simulations.md`, so the last thing this does is
 # ask git whether it did: a dirty tree after a build means the record moved and the committed
@@ -85,7 +92,7 @@ fi
 step "2/5 · check the edition (snapshot integrity + quotations)"
 python3 -B check_edition.py
 
-step "3/5 · the three guards the edition check does not reach"
+step "3/5 · the guards the edition check does not reach"
 # Why these are here (a proofreader, 2026-09-02): both were run by nothing automated, and both
 # back claims the book makes. `octahedron.py` asserts the geometry the octahedron chapter's
 # appendix note rests on — the 1:1 face pairing, one line in seven, 13/7×, "never comes home" —
@@ -106,6 +113,18 @@ python3 -B tools/octahedron.py > /dev/null
 # the two halves the beat contract is actually about (a reviewer, 2026-09-04).
 echo "octahedron.py: every audit asserted"
 python3 -B tools/beat_coverage.py | tail -1
+# And the chapters' figures, which are stills of the demo's own drawings rather than pictures anyone
+# drew: the committed SVG has to be byte-for-byte what `demos/` emits today. A figure generated once
+# and then committed is a figure that drifts from the code it claims to be a picture of, and the
+# drift is invisible — the page still shows something plausible. `--check` also mutates one of its
+# own emitted figures by a byte and requires its comparison to catch that, so this line cannot go
+# green with the comparison switched off. Without node it says so and the pass goes on, the same way
+# the demo cross-check does.
+if command -v node >/dev/null 2>&1; then
+  node tools/figures.mjs --check
+else
+  echo "figures.mjs: unverified — node is not installed"
+fi
 
 step "4/5 · build the book"
 command -v mdbook >/dev/null 2>&1 || {
@@ -116,6 +135,18 @@ mdbook build
 
 step "5/5 · check the rendered pages and every record link"
 python3 -B check_edition.py --rendered
+# And the figures a reader is actually served. The source-side half of this ran in step 3; this is
+# the one that decides, and it asks what each built page REACHES FOR rather than which tag reached:
+# two reviewers between them got a hand-painted SVG in front of a reader a dozen ways past scans
+# that looked at tags — an unquoted attribute, an uppercase tag, a nested figure, a `data-src`
+# decoy, a Markdown image, `srcset`, `<picture>`, `<object>`, a CSS background, a subdirectory. So
+# every `assets/…` file a page reaches for has to be a figure the code drew or a study
+# ART_DIRECTION.md names.
+if command -v node >/dev/null 2>&1; then
+  node tools/figures.mjs --check-rendered
+else
+  echo "figures.mjs: unverified — node is not installed"
+fi
 
 step "the generated appendix is in step with the record"
 if ! git diff --quiet -- chapters/the-simulations.md; then

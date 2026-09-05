@@ -4,11 +4,6 @@
 > and *isotropy* name properties of that pattern and of fits to its output — not real light, not a
 > measurement of the speed of anything, and not a claim about space.
 
-<figure class="chapter-illustration">
-  <img src="assets/round-ripple.svg" alt="A pulse spreads from one point as solid teal rings, with a dashed coral diamond overlaid to suggest the grid pulling the ring away from roundness.">
-  <figcaption><strong>Analogy — not data.</strong> Solid is what was observed; dashed is what a badly chosen sense of size does to it. The measured difference is in the figure linked below.</figcaption>
-</figure>
-
 <!-- beat the-round-ripple.1 -->
 
 You have the object and you have the question: poke it, and see whether the front travels at the
@@ -89,6 +84,9 @@ The number is what makes this more than a story, so here it is. Send a pulse fro
 its arrival along an edge direction, time its arrival along a diagonal, and compare the two speeds.
 If the ring were round they would be equal. They differ by **22.4%**.
 
+**[Open the data-true rings](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)**
+— two rings, one per setting. The lopsided one is this section's; the other is the next section's.
+
 What if the dial is set from the shape instead?
 
 ## The same dial, set from the geometry
@@ -104,8 +102,8 @@ Both predictions were written down before either run — that the naive setting 
 uneven, and that the geometric one would at least halve it. That matters more than the numbers do,
 and it is the step people skip.
 
-**[Open the data-true isotropy figure](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)**
-— the two rings side by side, dots measured, a dashed circle for reference.
+The rounder of the two rings in the last section's figure is this one. The pair of them, together,
+is the difference between an assumption and a reading.
 
 But 2.2% is not zero. What is it?
 

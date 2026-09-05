@@ -219,7 +219,7 @@ records the SHA it was taken at, and it must match the lock.
 
 | path | what it is |
 |---|---|
-| `chapters/` | the book — `SUMMARY.md` (the reading order), the chapters, the generated appendix, and `assets/` (the editorial illustration studies) |
+| `chapters/` | the book — `SUMMARY.md` (the reading order), the chapters, the generated appendix, and `assets/` (the editorial illustration studies, and the data-true figures `tools/figures.mjs` renders from the demo code) |
 | `theme/` | the edition's CSS |
 | `edition.json` | the manifest: per-chapter sources, the appendix's sections, the declared quotations, and the excluded-claims guard with the probe sentences that test it |
 | `check_edition.py` | the checker |

@@ -31,6 +31,57 @@
   }
 }
 
+/* A data-true figure — a still of the demo's own drawing, not an editorial illustration.
+   `ART_DIRECTION.md` says which a chapter may use where; the difference a reader sees is the
+   caption, which opens with the analogy warning on one and with the way into the running sim on
+   the other.
+
+   It carries its own paper. The stills are drawn for the demo pages, which set their own light
+   background under them, and their ink is a single dark blue with no fill behind it — dropped
+   straight onto mdBook's dark themes they would be dark on dark and effectively blank. So the
+   figure is a light card in every theme, the way a printed plate is, rather than an image that
+   changes with the page around it. The colours are the stills' own, from `demos/core.mjs`. */
+.chapter-figure {
+  margin: 1.75rem 0 2rem;
+}
+
+.chapter-figure img {
+  display: block;
+  /* Capped, not stretched. A still is drawn in the demo's own frame — the flat ring is taller than
+     it is wide — so `width: 100%` on a book column blows one up to most of a screen and the reader
+     scrolls through a drawing rather than reading past it. The cap is on the height; the width
+     follows the drawing's own shape.
+
+     The cap is in `px`, deliberately. mdBook sets the root font size to 62.5%, so `1rem` here is
+     10px and a cap written in `rem` comes out a third of the size it reads as — small enough that
+     the dot names stopped being legible, which is the one thing these drawings are for. */
+  width: auto;
+  max-width: 100%;
+  max-height: min(70vh, 560px);
+  margin-inline: auto;
+  padding: 0.9rem;
+  box-sizing: border-box;
+  background: #fffdf8;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 1rem;
+  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 16%);
+}
+
+.chapter-figure figcaption {
+  max-width: 66ch;
+  margin: 0.7rem auto 0;
+  color: var(--fg);
+  font-size: 0.9em;
+  line-height: 1.45;
+  opacity: 0.82;
+}
+
+@media (max-width: 700px) {
+  .chapter-figure {
+    margin-inline: -0.35rem;
+  }
+}
+
 /* The reader's note link — one under every section heading, put there at build time by
    `preprocessor.py`. It has to be findable and it has to be ignorable, in that order of difficulty:
    a reader who wants to say something should not have to hunt for the way to say it, and a reader

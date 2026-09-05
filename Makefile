@@ -1,6 +1,6 @@
 # Our Bubble — the whole repository in five verbs.
 
-.PHONY: check record build serve clean notes
+.PHONY: check record figures build serve clean notes
 
 ## check — tier 0: fetch the record, verify the edition against it, build, verify the built pages.
 check:
@@ -11,6 +11,12 @@ check:
 record:
 	@tools/fetch_record.sh
 	@tools/snapshot_record.sh
+
+## figures — redraw the chapters' data-true figures from the demo code that draws them on screen.
+## Tier 0 refuses a committed figure that is not what this emits, so a drawing change lands here in
+## the same commit or it does not land. Needs node.
+figures:
+	@node tools/figures.mjs
 
 ## build — regenerate the appendix from the record and render the book into book/.
 build:

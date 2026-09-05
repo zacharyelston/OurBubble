@@ -502,6 +502,15 @@
       },
       "two-worlds-threaded": {
         "title": "Two worlds threaded — the last object that fits on a napkin, and the first that does not",
+        "rungs": [
+          "primer 0116 — the tet-oct complex: census, and the render the chapter's last beat links"
+        ],
+        "entries": [
+          "lab/primer/0116-tetoct-primer"
+        ],
+        "figures": [
+          "lab/primer/0116-tetoct-primer/figures/tetoct-render.html"
+        ],
         "standards": [
           "book/chapters/00-the-object/chapter.md",
           "book/LESSON_STANDARD.md"
