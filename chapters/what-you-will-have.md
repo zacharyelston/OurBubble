@@ -57,13 +57,15 @@ triangle, then the smallest solid there is — and that turns out to be a whole 
 number it can hold, and one setting for what each line counts. Then we make it move, by hand.
 
 Then the napkin runs out. The smallest world with any room in it needs arithmetic no hand can
-do, so the same rule goes to a machine, unchanged — on a world with no edge.
+do, so the rule you ran goes to a machine, unchanged. It builds a world with no edge, and you learn
+to test whether a measurement made there deserves your trust.
 
-The rest is what came back. A ripple lopsided until one setting fixed it. What it costs to push on a
-piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement with
-its answer key taken away, a law that came back refused, and misses that were in our own reading
-rather than in the world. The noes are kept on purpose and given the same room as the yeses: a
-machine that can only agree with you is not an instrument.
+Then the questions widen. Some stay on that world; others use a different small model that makes the
+next mark readable. A ripple comes out lopsided until one setting fixes it. A wall works, and hopes
+do not. A gap gives a difference to measure. An answer key is taken away, a law comes back refused,
+and misses turn out to have been in our own reading rather than in the model. The object can change;
+the discipline does not. Make a mark, state what you expect, compare, test the other reading, and
+keep the answer — especially when it is no.
 
 ## How to read it
 

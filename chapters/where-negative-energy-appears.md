@@ -22,6 +22,11 @@ It does, and the place is a surprise. It is not in the fields. It is in what is 
 the fields away — an effect Hendrik Casimir worked out in 1948, and which has since been measured in
 the laboratory.
 
+This question uses a new, smaller instrument: a one-dimensional row of coupled oscillators with two
+fixed walls. The Container remains the world you learned to test; the row is the model this
+experiment uses to make one mark easy to read — the difference between the baseline inside the
+walls and the baseline outside them.
+
 What is left when you take the fields away, though? Isn't that nothing?
 
 ## What "empty" contains
@@ -91,9 +96,9 @@ what does that mean the walls will *do*?
 
 <!-- beat where-negative-energy-appears.6 -->
 
-We built the one-dimensional version. Two walls in the little world, the allowed vibration shapes
-worked out from the object itself, the part that is the same inside and out subtracted away, and
-then the question: what is left?
+We ran that one-dimensional instrument. Two walls, the allowed vibration shapes worked out from the
+row itself, the part that is the same inside and out subtracted away, and then the question: what is
+left?
 
 Every measured value sits below the free-space line. And as the walls move closer, it goes further
 down.

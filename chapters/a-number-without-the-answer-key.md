@@ -11,8 +11,14 @@
 
 <!-- beat a-number-without-the-answer-key.1 -->
 
-You now have something that can find a law it was not told. The obvious thing to do with it is point
-it somewhere nobody knows the answer — and the obvious thing is where toys go wrong.
+You now have a way to find a law in a set of marks without supplying its answer. The gap was the
+case that earned it. The next question needs a different instrument: an Ising model, a lattice of
+two-state pieces whose collective change leaves class numbers to be read. Those numbers let a known
+case test the method before an unknown case takes the answer key away.
+
+Changing models does not make the test looser. It makes the expectation more important. The obvious
+thing to do is point the method somewhere nobody knows the answer — and the obvious thing is where
+toys go wrong.
 
 So start with the failure mode, because it is seductive and this project used to do it.
 

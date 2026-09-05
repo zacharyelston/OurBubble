@@ -12,8 +12,13 @@
 
 <!-- beat the-bubble-and-its-bill.1 -->
 
-The world now behaves the same way in every direction, which means a measurement made in it means
-what it appears to mean. So here is the next thing you can ask of such a world.
+The Container has now done more than give you a result. You built it, found the choice that could
+bend its answer, and tested that choice. It is the instrument you know from the inside.
+
+From here the object may change when a question needs a different mark. What will not change is the
+work you just did: state what you expect, compare it with what came back, test the other explanation,
+and keep the answer or the correction. The first questions still belong to the Container. It now
+behaves the same way in every direction, so here is the next one.
 
 What would it cost to move a *piece* of it?
 

@@ -85,15 +85,14 @@ Is that really the whole law?
 
 <!-- beat make-it-move.5 -->
 
-Yes. Everything the rest of this book measures is that sentence, run.
+For the world you are building, yes. This sentence carries the numbers from the triangle to the
+tetrahedron, through the shape between them, and on to the larger world where you will test its
+ripple. Nothing extra is switched on when that world gets too large for your pencil.
 
-The ripple that comes out round or lopsided, the cost of pushing on a region, the walls and what
-fits between them, the numbers that agree with real matter, the prediction that came back refused —
-all of it is that sentence on a bigger object.
-
-There is no second rule for the hard chapters, and no extra term switched on when a result needs
-help. When a later chapter surprises you, the surprise is in what that sentence *does*, not in
-anything added.
+Later questions will not all use this update rule, or even this object. What they keep is the habit
+you are learning here: make a mark, say what you expect it to do, compare, and keep the answer when
+it surprises you. First, though, follow this one rule as far as it goes. That is how you will know
+what the first machine has—and has not—been asked to do.
 
 So run it. Not on the tetrahedron, though — on something smaller.
 
