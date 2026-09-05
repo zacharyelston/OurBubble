@@ -136,8 +136,8 @@ reader every time instead of explained to her once.
 5. What if I weight the lines by their real geometry — the same dial, set from the shape?  *(round to 2.2%)*
 6. Is 2.2% the world being slightly uneven, or my grid being coarse — how could I tell?  *(a coarse grid improves with gentler ripples; a wrong geometry does not)*
 7. Could a machine decide that without my thumb on the scale?  *(hand it the timings and a written menu of laws; it picks, and says by how much)*  [picture: the fit, the runner-up]
-8. Did we ever get this wrong in public?  *(the demo lopsided 3.8× for months — the mesh, not the optics; the switch is still on the page)*  [demo]
-9. What did this chapter actually settle?  *(one dial decides whether the world behaves the same every way; and we can tell coarse from broken)*
+8. *An interlude:* could a picture be lopsided because of the instrument itself?  *(the public demo ran 3.8× lopsided on a mirror-symmetric scene — a mark with two readings; mirroring the mesh picks one, alternating the diagonals leaves 5×10⁻¹⁵, and the switch is still on the page. Carried by two adjacent sections: the mark and its two readings, then the test and the correction)*  [demo]
+9. What did this chapter actually settle, and can I measure with this thing?  *(one dial decides whether the world behaves the same every way; we can tell coarse from broken; and that is what calibration is — the unevenness measured, the symmetries checked)*
 
 ## 10 · What does pushing on it cost?
 

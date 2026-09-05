@@ -147,54 +147,49 @@ The speed it returned agrees across directions to within a couple of percent, an
 Then the same pipeline, unchanged, on the naive setting. The spread there is **33.2%**, and it does
 not shrink. Coarse and broken, told apart, by something with no opinion.
 
-Have we ever got this wrong where anyone could see?
+Could a picture be lopsided because of the instrument itself?
 
-## The part where we were the problem
+## An interlude: the shadow of the mesh
 
 <!-- beat the-round-ripple.8 -->
 
-Yes, and it belongs here rather than in a footnote.
+It could, and it was — on a page of ours anyone could open. A detour, then, before the chapter
+closes, because it is the child in the yard with the stick turned around on us.
 
-This project has a public demonstration page: a ripple going through two gaps, making the fringes
-you would expect. It ran for months. It was quietly, visibly wrong — about **3.8×** brighter on one
-side of the screen than the other, across that same mirror.
+There is a public demonstration page: a ripple through two gaps, making the fringes you would
+expect. It ran that way for months. The scene is mirror-symmetric by construction — two identical
+gaps, one centred source, nothing in it that prefers a side — so the halves of the picture should
+have matched. One came out **3.8×** brighter than the other.
 
-It looked like optics. Nobody had built any asymmetry into the scene; the two gaps were identical
-and the source was centred. If you wanted to read something profound into it, the material was
-there.
+That is a mark, in the sense her two scratches in the dirt were marks: a number nobody chose, that
+the thing itself put there. And like hers it is mute. Two readings fit it equally well. Either what
+the ripple does at the gaps really is lopsided, or the thing doing the measuring is, and the picture
+is faithfully reporting the shape of what it travelled on rather than the shape of the question.
 
-It was the grid, and the reason is the grain the last chapter warned about — though a different
-grain, in a different place, which is why it took months to find.
+Which one? The readings differ, so a test can tell them apart.
 
-## It was the grid, not the optics
+## Mirror the mesh
 
 <!-- beat the-round-ripple.8 -->
 
 Cutting a square region into triangles means choosing which way the diagonals lean. Lean them all
-the same way and the mesh loses a symmetry the *experiment* has: flip the scene about the axis that
-runs through the source and between the two gaps, and the scene maps onto itself — two identical
-gaps, one centred source. Flip the mesh the same way and it does not. So the mesh was quietly
-asserting a difference between left and right that nothing in the physics asserted, and the ripple
-faithfully reported the shape of the thing it was travelling on rather than the shape of the
-question.
+the same way, then flip the scene about the axis through the source and between the gaps: the scene
+lands on itself and the mesh does not. Second reading, confirmed: the mesh had been asserting a
+left-right difference nothing in the question asserted.
 
-Note what this is *not*. It is not the three-way grain of the object itself, which is a fact about
-the little world and comes with a symmetry that carries each kind of place onto the others. This was
-a two-dimensional drawing choice in one demo, and it broke a mirror the experiment depended on.
+Note what this is *not*: not the three-way grain of the object itself, which comes with a symmetry
+carrying each kind of place onto the others. This was a drawing choice in one demo that broke a mirror
+the experiment needed.
 
-## The fix, and the switch still on the page
-
-<!-- beat the-round-ripple.8 -->
-
-The fix is embarrassing in its simplicity: alternate the diagonals, so mirroring the mesh maps it
-onto itself. Same scene, same solver, same everything else. The asymmetry drops to about fifteen
-decimal places down, which is another way of saying *exactly*, as far as the machine can tell.
+The correction is as small as the fault: alternate the diagonals, so mirroring the mesh lands it on
+itself. Same scene, same solver, nothing else touched. The imbalance falls to
+**5×10⁻¹⁵** — numerical noise, the machine's way of saying nothing is left.
 
 **[Open the data-true mesh-repair figure](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)**
 · **[open the demo and turn it on and off yourself](record/viz/doubleslit.html)**
 
-That last link is the one worth clicking. It carries a switch between the two meshes, so you can
-watch a real defect of ours appear and disappear. The switch is still in it, on the public page.
+The switch between the two meshes is still on the page: you can make the shadow come and go. Which
+is why roundness and symmetry are checked before anything measured here is interpreted.
 
 So what did the chapter settle?
 
@@ -204,7 +199,7 @@ So what did the chapter settle?
 
 Not that the little world has light in it. It does not.
 
-Two things, both of which everything after this depends on.
+Two things, and everything after this depends on both.
 **One setting decides whether the world behaves the same way in every direction** — and that setting
 is a choice somebody makes, not a fact the object hands over. And
 **we can tell a coarse grid from a broken geometry**, by whether the disagreement shrinks when the
@@ -213,8 +208,9 @@ ripples get gentler.
 Go and look at your guess now. Whichever way it went, you know something about the dial that you
 could not have known by being told.
 
-A world that steers untrue is a world where no measurement means what it appears to mean. This one
-steers true enough to push on — so push on it.
+Which is what calibrating an instrument means: not a world with nothing left in it, but one whose
+remaining unevenness has been measured, and whose symmetries have been checked rather than assumed.
+This one steers true enough to measure with — so measure with it.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-the-round-ripple).*
