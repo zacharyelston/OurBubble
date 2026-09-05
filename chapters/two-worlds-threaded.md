@@ -5,10 +5,11 @@
 > is being built, so you can check any of it with a pencil — right up to the point where the book
 > says you cannot. Nothing in it is a claim about nature.
 
-<!-- NOTE(figure): one study wanted here; the Illustration lane owns drawing it. -->
-<!-- NOTE(figure): the threaded pair — caption: "Analogy — not data. Fill the four faces that lie flat in the original's faces and a second tetrahedron appears, the same size as the first and pointing the other way. The two share the shape between them." -->
-<!-- NOTE(figure): alt — "Two tetrahedra of the same size interpenetrating, one pointing up and one down, with the eight-faced shape they share picked out at the centre and the eight tips falling on the corners of a cube." -->
-<!-- NOTE(figure): brief — both tetrahedra must be legibly the same size, and the shared centre must read as the same shape as the previous chapter's centre. Show the cube only as eight faint corner marks; it is where the tips land, not a box the object sits in. -->
+<figure class="chapter-figure">
+  <img src="assets/four-faces-spare.svg" alt="The shape between the tips, drawn flat: six middles on two rings, with a tetrahedron's tip standing over four of its eight faces and the other four faces carrying nothing.">
+  <figcaption>Where the last chapter left you. Every dot and every line is the engine's own.
+  <strong><a href="demos/two-worlds-threaded.html">Open the data-true drawing</a></strong></figcaption>
+</figure>
 
 You were left holding four bare faces and something that would fit on each of them.
 
@@ -33,6 +34,13 @@ face, and putting one on each bare face is the only way to finish what the cut l
 
 Do it. Four more tetrahedra, and stand back.
 
+<figure class="chapter-figure">
+  <img src="assets/a-tip-on-every-face.svg" alt="The same flat drawing with a tip now standing over every one of the eight faces, each tip joined to its own face's three middles and to no other tip.">
+  <figcaption>The bare faces filled: a tip on every one, and no tip joined to another.
+  <strong><a href="demos/two-worlds-threaded.html">Open the data-true drawing and add them one at a
+  time</a></strong></figcaption>
+</figure>
+
 ## Two tetrahedra, threaded
 
 <!-- beat two-worlds-threaded.2 -->
@@ -42,6 +50,14 @@ Do it. Four more tetrahedra, and stand back.
 The four you just added are not a decoration on the outside. Their tips are the four corners of a
 second tetrahedron, the same size as the one you cut, pointing the other way — and its own six
 middles are the same six middles. The two of them share the shape between them.
+
+<figure class="chapter-figure">
+  <img src="assets/the-threaded-pair.svg" alt="A wireframe of two tetrahedra of the same size threaded through one another, one drawn in the full stroke and the other lighter, with the eight-faced shape they share between them and every dot carrying its name.">
+  <figcaption>The pair, at the view the drawing's own sweep scored best: no line lost, no dot on a
+  line it does not end. One tetrahedron in the full stroke, the other lighter.
+  <strong><a href="demos/two-worlds-threaded.html">Open the data-true drawing and turn
+  it</a></strong></figcaption>
+</figure>
 
 Kepler named the pair a *stella octangula* — an eight-pointed star — in 1619. The plainer name is
 the useful one: two tetrahedra, threaded through one another, overlapping in the shape between
@@ -122,6 +138,10 @@ Two things, in that order.
 First it has to be told where to put the next shape. You have two shapes now and no rule for
 arranging them, and getting that rule is the next chapter — it is where the shape between the tips
 stops being something inside one tetrahedron and becomes the thing that sits between all of them.
+
+**[Open the record's own render of this pair, tiled](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html)**
+— what that arrangement looks like when it is made, turnable, every dot and line of it the
+engine's.
 
 Then the arithmetic, which is only the same tick repeated more times than a hand can manage.
 
