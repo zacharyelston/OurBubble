@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/primer/0116-tetoct-primer/eval.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/primer/0116-tetoct-primer/eval.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0116 — TetOct primer: evaluation
+
+**Verdict:** CONFIRMED · **Gate:** `primer_tetoct_census_gate` (green: yes) · **Commit:** `5b7a22d` (registered) → run at the following commit
+
+## Result
+
+The tet-oct stella complex at n=4 has exactly the registered structure, and the gate&#x27;s export is
+byte-identical (verts/edges/tets) to the exploratory MCP-session probe that motivated the entry.
+The interactive render ([`figures/tetoct-render.html`](figures/tetoct-render.html)) embeds that
+data verbatim, with the 64 construction cubes as a toggleable scaffold overlay.
+
+| quantity | expected | measured | pass |
+|---|---|---|---|
+| d²=0 (integer identity, all D1·D0 rows) | true | true | ✅ |
+| vertices (dense / active even-sum) | 125 / 63 | 125 / 63 | ✅ |
+| edges (√2 / long diagonals) | 240 / 14 | 240 / 14 | ✅ |
+| faces | 312 | 312 | ✅ |
+| tets (matter / antimatter / oct) | 32 / 32 / 56 | 32 / 32 / 56 | ✅ |
+| oct tets per long diagonal | 4 (all 14) | 4 (all 14) | ✅ |
+| screw111 axis census (holes x/y/z) | 2 / 6 / 6 | 2 / 6 / 6 | ✅ |
+
+Data: [`data/lattice.json`](data/lattice.json). Figure: [`figures/tetoct-render.html`](figures/tetoct-render.html)
+(self-contained; published as a Claude artifact from this file).
+
+## What it rules in / out
+
+The census pins the n=4 reference numbers for every later primer/render (any regression in the
+builder now trips a registered gate, not a picture). Honestly ruled OUT of scope: there is **no 4D
+TetOct builder** — the tetoct complex is the 3D spatial lattice (&quot;4D&quot; in the repo tagline is the
+spacetime of the sim; `Cell4` appears only in the canonical single 4-simplex), and this entry&#x27;s
+render says so on its face. The scaffold cubes are construction geometry, not complex edges (unit
+length 1 vs lattice √2), and are labelled as such in the viewer.
+
+## Deferred / next
+
+- **mcp-export** (chapter menu): produce `lattice.json` over the MCP surface and gate on byte
+  equality with this entry&#x27;s data — closes the loop this chapter exists for.
+- Periodic-variant and mirror-handedness primers (menu rows), which reuse this gate&#x27;s
+  classification helper pattern.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

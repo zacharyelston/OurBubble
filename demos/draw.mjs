@@ -363,6 +363,20 @@ function segmentsCross(a, b, c, d) {
 /** How many directions each of the two angles is swept in when the opening view is chosen. */
 export const VIEW_GRID = 72;
 
+/**
+ * What the wireframe says about itself, in two parts, and why they are apart.
+ *
+ * The first part is true wherever the drawing goes. The second is true **on this page and nowhere
+ * else**: a still of this drawing has nothing to drag and no table under it, so `tools/figures.mjs`
+ * takes the invitation out before writing a figure into the book. It removes exactly this constant
+ * — it does not guess at the wording — because the first two versions of that removal matched the
+ * sentence's own words and a reviewer defeated both by rewriting it here.
+ *
+ * So: if you reword the invitation, reword it here, and the still keeps up on its own.
+ */
+export const WIRE_DESC = "An orthographic wireframe of two tetrahedra threaded through one another, sharing the shape between them. The first tetrahedron's lines are the full stroke, the second's lighter, and the octahedron's lie between them. Every dot carries its name. No shading and no perspective.";
+export const WIRE_INVITATION = "Drag it, or use the arrow keys, to turn it; the numbers are all in the table below.";
+
 const WIRE_BOX = 480;
 const WIRE_RADIUS = 176;
 
@@ -1148,7 +1162,7 @@ export function drawings(engine) {
     body.push(`<svg xmlns="${SVG_NS}" viewBox="0 0 ${WIRE_BOX} ${WIRE_BOX}" role="img" class="wire" data-drawing="wire" tabindex="0">`);
     if (!title) throw new Error("a wireframe was asked for without a title");
     body.push(`  <title>${esc(title)}</title>`);
-    body.push(`  <desc>${esc(desc || "An orthographic wireframe of two tetrahedra threaded through one another, sharing the shape between them. The first tetrahedron's lines are the full stroke, the second's lighter, and the octahedron's lie between them. Every dot carries its name. No shading and no perspective. Drag it, or use the arrow keys, to turn it; the numbers are all in the table below.")}</desc>`);
+    body.push(`  <desc>${esc(desc || `${WIRE_DESC} ${WIRE_INVITATION}`)}</desc>`);
 
     for (const kind of ["octahedron", "second", "first"]) {
       if (!wanted.includes(kind)) continue;

@@ -54,24 +54,48 @@ parts is a count nothing guards.
 
 ## Illustration contract
 
-Every chapter begins with one editorial illustration study, with two exceptions at the front of the
-book. **The front door carries none**, and deliberately: it is a statement about the book rather
-than a step in it, it makes no claim a picture could illustrate, and an analogy image above it
-would be the first thing a reader met — before anything had been earned. **Neither does *Where the
-inside shows*** (2026-09-05), and the honest reason is narrower than the front door's: its subject
-is an arrangement — a thing, an edge, and somebody outside — rather than any of the things that have
-one, and the egg it opens on is deliberately disposable. A study that would earn its place here has
-not been drawn, and until it is, the page says so by carrying none rather than by carrying a picture
-of an egg. Every chapter that does carry one must:
+A chapter may carry **a study**, **figures**, or neither. The two are different kinds of thing and
+the reader can tell them apart from the caption; `ART_DIRECTION.md` is the long version.
+
+Two chapters at the front carry neither, deliberately. **The front door** is a statement about the
+book rather than a step in it, makes no claim a picture could illustrate, and an analogy image above
+it would be the first thing a reader met — before anything had been earned. ***Where the inside
+shows*** (2026-09-05) has a narrower reason: its subject is an arrangement — a thing, an edge, and
+somebody outside — rather than any of the things that have one, and the egg it opens on is
+deliberately disposable. A study that would earn its place there has not been drawn, and until it is,
+the page says so by carrying none rather than a picture of an egg.
+
+A **study** is an editorial analogy image, and where one is used it must:
 
 1. make the chapter's next question visible without pretending to display a result;
 2. carry meaningful alt text and a plain-language caption;
 3. say explicitly that it is an analogy image, not simulation data;
 4. remain visually distinct from links labeled `data-true`; and
-5. be declared in `edition.json`, so the checker can verify both source and rendered output.
+5. be listed in `ART_DIRECTION.md`'s table, which is where a study is written down.
 
-The current SVG studies are replaceable placeholders. A replacement may be more expressive, but it
-must preserve the concept, alt-text intent, caption distinction, and firewall.
+**Nothing checks a study**, and this document said otherwise for months: it required a study to be
+declared in `edition.json` "so the checker can verify both source and rendered output", and no
+study has ever appeared in that manifest. A reviewer deleted a whole illustration block and tier 0
+stayed green (issue [#95](https://github.com/zacharyelston/OurBubble/issues/95)). A study is held
+by review and by the table, which is a weaker guarantee honestly stated rather than a strong one
+nobody performs. The rendered check does hold its `<img src>`: a
+study whose file is missing is a dead link and refused like any other.
+
+The SVG studies are replaceable placeholders. A replacement may be more expressive, but it must
+preserve the concept, alt-text intent, caption distinction, and firewall.
+
+A **figure** is a picture of the object rather than of the argument — a still of a drawing the
+engine's own numbers produced, or a page in `record/`. It carries no analogy warning, because there
+is nothing to warn about, and it carries the way into the running thing instead. **Its bytes are
+never hand-made**: `tools/figures.mjs` emits every committed still from the demo code, and `make
+check` refuses a chapter that shows one this code does not draw, in either direction. That is the
+whole difference in what the two are worth: a study is judged, a figure is derived and checked.
+
+**The front door carries neither**, and deliberately: it is a statement about the book rather than a
+step in it, it makes no claim a picture could illustrate, and an analogy image above it would be the
+first thing a reader met — before anything had been earned. **A chapter that asks the reader to
+write a guess down carries no picture of the answer above the guess**, which is why *Is it round?*
+opens with none: its rings are data, and they belong where the answer is given.
 
 ## Numbers computed while the page is built
 

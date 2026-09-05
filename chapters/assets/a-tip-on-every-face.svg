@@ -1,0 +1,113 @@
+<!-- Our Bubble demo still · two-worlds-threaded · step 1 of 5. Computed in the browser by the vendored napkin engine (engine/, pinned by engine.lock). A drawing of a toy: nothing in it is a claim about nature. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30.29 -13 508.40 648" role="img" class="ring" data-drawing="ring">
+  <style>
+  .net .panel polygon, .ring .panel polygon { fill: #f4ead8; stroke: none; }
+  .net .stroke, .ring .stroke, .wire .stroke { stroke: #20314a; stroke-width: 3; fill: none;
+    stroke-linecap: round; stroke-linejoin: round; }
+  .ring .stroke { stroke-width: 2; }
+  .net .stroke .strong, .ring .stroke .strong { stroke-width: 6; }
+  .ring .stroke .tip-line { stroke-width: 1.2; }
+  .net .stroke .cut polygon { fill: none; stroke: #20314a; stroke-width: 1.5;
+    stroke-dasharray: 7 6; }
+  .net .walk .head { fill: #20314a; stroke: none; }
+  .net .middle circle { fill: #20314a; stroke: none; }
+  .ring .absent line { stroke: #20314a; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.45; }
+  .ring .dots circle { fill: #20314a; stroke: none; }
+  .ring .dots circle.tip { fill: none; stroke: #20314a; stroke-width: 2; }
+  .wire .stroke line, .wire .stroke .edge { stroke-width: 1.6; }
+  .wire .stroke.first line { stroke-width: 1.6; }
+  .wire .stroke.second line { stroke-width: 1; opacity: 0.55; }
+  .wire .stroke.octahedron line { stroke-width: 1.1; opacity: 0.75; }
+  .wire .stroke line.strong { stroke-width: 3.2; opacity: 1; }
+  .wire .dots circle { fill: #20314a; stroke: none; }
+  .wire .dots circle.tip { fill: none; stroke: #20314a; stroke-width: 1.6; }
+  .net .labels .value, .ring .labels .value, .wire .labels .value { font-weight: 600; }
+  .net .labels, .ring .labels, .wire .labels { fill: #20314a;
+    font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif; }
+  .net .labels text, .ring .labels text, .wire .labels text {
+    paint-order: stroke fill; stroke: #fffdf8; stroke-width: 4px; stroke-linejoin: round; }
+  .ring .labels .tip { font-style: italic; }
+  .net .leaders line, .ring .leaders line, .wire .leaders line { stroke: #5c6a80; stroke-width: 1;
+    fill: none; }
+</style>
+  <title>A tip on each face that was bare</title>
+  <desc>The six middles on two concentric circles, with a tip drawn over each of the faces that looks at one, joined to that face's three middles. No two tips are joined to each other.</desc>
+  <g class="stroke">
+    <line data-line="AB|AC" x1="284.49" y1="176" x2="137.26" y2="431"/>
+    <line data-line="AB|AD" x1="284.49" y1="176" x2="431.71" y2="431"/>
+    <line data-line="AB|BC" x1="284.49" y1="176" x2="229.93" y2="314.50"/>
+    <line data-line="AB|BD" x1="284.49" y1="176" x2="339.05" y2="314.50"/>
+    <line data-line="AC|AD" x1="137.26" y1="431" x2="431.71" y2="431"/>
+    <line data-line="AC|BC" x1="137.26" y1="431" x2="229.93" y2="314.50"/>
+    <line data-line="AC|CD" x1="137.26" y1="431" x2="284.49" y2="409"/>
+    <line data-line="AD|BD" x1="431.71" y1="431" x2="339.05" y2="314.50"/>
+    <line data-line="AD|CD" x1="431.71" y1="431" x2="284.49" y2="409"/>
+    <line data-line="BC|BD" x1="229.93" y1="314.50" x2="339.05" y2="314.50"/>
+    <line data-line="BC|CD" x1="229.93" y1="314.50" x2="284.49" y2="409"/>
+    <line data-line="BD|CD" x1="339.05" y1="314.50" x2="284.49" y2="409"/>
+    <line class="tip-line" data-tip-line="A|AB" x1="284.49" y1="44" x2="284.49" y2="176"/>
+    <line class="tip-line" data-tip-line="A|AC" x1="284.49" y1="44" x2="137.26" y2="431"/>
+    <line class="tip-line" data-tip-line="A|AD" x1="284.49" y1="44" x2="431.71" y2="431"/>
+    <line class="tip-line" data-tip-line="B|AB" x1="284.49" y1="277.35" x2="284.49" y2="176"/>
+    <line class="tip-line" data-tip-line="B|BD" x1="284.49" y1="277.35" x2="339.05" y2="314.50"/>
+    <line class="tip-line" data-tip-line="B|BC" x1="284.49" y1="277.35" x2="229.93" y2="314.50"/>
+    <line class="tip-line" data-tip-line="C|AC" x1="225.04" y1="380.32" x2="137.26" y2="431"/>
+    <line class="tip-line" data-tip-line="C|BC" x1="225.04" y1="380.32" x2="229.93" y2="314.50"/>
+    <line class="tip-line" data-tip-line="C|CD" x1="225.04" y1="380.32" x2="284.49" y2="409"/>
+    <line class="tip-line" data-tip-line="D|AD" x1="343.94" y1="380.32" x2="431.71" y2="431"/>
+    <line class="tip-line" data-tip-line="D|CD" x1="343.94" y1="380.32" x2="284.49" y2="409"/>
+    <line class="tip-line" data-tip-line="D|BD" x1="343.94" y1="380.32" x2="339.05" y2="314.50"/>
+    <line class="tip-line" data-tip-line="D′|AB" x1="83.57" y1="230" x2="284.49" y2="176"/>
+    <line class="tip-line" data-tip-line="D′|BC" x1="83.57" y1="230" x2="229.93" y2="314.50"/>
+    <line class="tip-line" data-tip-line="D′|AC" x1="83.57" y1="230" x2="137.26" y2="431"/>
+    <line class="tip-line" data-tip-line="C′|AB" x1="485.41" y1="230" x2="284.49" y2="176"/>
+    <line class="tip-line" data-tip-line="C′|AD" x1="485.41" y1="230" x2="431.71" y2="431"/>
+    <line class="tip-line" data-tip-line="C′|BD" x1="485.41" y1="230" x2="339.05" y2="314.50"/>
+    <line class="tip-line" data-tip-line="B′|AC" x1="284.49" y1="578" x2="137.26" y2="431"/>
+    <line class="tip-line" data-tip-line="B′|CD" x1="284.49" y1="578" x2="284.49" y2="409"/>
+    <line class="tip-line" data-tip-line="B′|AD" x1="284.49" y1="578" x2="431.71" y2="431"/>
+    <line class="tip-line" data-tip-line="A′|BC" x1="284.49" y1="346" x2="229.93" y2="314.50"/>
+    <line class="tip-line" data-tip-line="A′|BD" x1="284.49" y1="346" x2="339.05" y2="314.50"/>
+    <line class="tip-line" data-tip-line="A′|CD" x1="284.49" y1="346" x2="284.49" y2="409"/>
+  </g>
+  <g class="absent">
+    <line data-absent="AB|CD" x1="284.49" y1="176" x2="284.49" y2="409"/>
+    <line data-absent="AC|BD" x1="137.26" y1="431" x2="339.05" y2="314.50"/>
+    <line data-absent="AD|BC" x1="431.71" y1="431" x2="229.93" y2="314.50"/>
+  </g>
+  <g class="dots">
+    <circle data-dot="AB" cx="284.49" cy="176" r="13"/>
+    <circle data-dot="AC" cx="137.26" cy="431" r="13"/>
+    <circle data-dot="AD" cx="431.71" cy="431" r="13"/>
+    <circle data-dot="BC" cx="229.93" cy="314.50" r="13"/>
+    <circle data-dot="BD" cx="339.05" cy="314.50" r="13"/>
+    <circle data-dot="CD" cx="284.49" cy="409" r="13"/>
+    <circle class="tip" data-dot="A" cx="284.49" cy="44" r="10"/>
+    <circle class="tip" data-dot="B" cx="284.49" cy="277.35" r="10"/>
+    <circle class="tip" data-dot="C" cx="225.04" cy="380.32" r="10"/>
+    <circle class="tip" data-dot="D" cx="343.94" cy="380.32" r="10"/>
+    <circle class="tip" data-dot="D′" cx="83.57" cy="230" r="10"/>
+    <circle class="tip" data-dot="C′" cx="485.41" cy="230" r="10"/>
+    <circle class="tip" data-dot="B′" cx="284.49" cy="578" r="10"/>
+    <circle class="tip" data-dot="A′" cx="284.49" cy="346" r="10"/>
+  </g>
+  <g class="labels">
+    <text font-weight="700" x="312.96" y="166.54" font-size="19" text-anchor="middle" dominant-baseline="central">AB</text>
+    <text font-weight="700" x="108.01" y="437.65" font-size="19" text-anchor="middle" dominant-baseline="central">AC</text>
+    <text font-weight="700" x="460.96" y="437.65" font-size="19" text-anchor="middle" dominant-baseline="central">AD</text>
+    <text font-weight="700" x="183.72" y="264.62" font-size="19" text-anchor="middle" dominant-baseline="central">BC</text>
+    <text font-weight="700" x="405.35" y="299.42" font-size="19" text-anchor="middle" dominant-baseline="central">BD</text>
+    <text font-weight="700" x="272.08" y="449.12" font-size="19" text-anchor="middle" dominant-baseline="central">CD</text>
+    <text class="tip" x="284.49" y="14" font-size="15" text-anchor="middle" dominant-baseline="central">A</text>
+    <text class="tip" x="293.35" y="248.69" font-size="15" text-anchor="middle" dominant-baseline="central">B</text>
+    <text class="tip" x="195.12" y="378.03" font-size="15" text-anchor="middle" dominant-baseline="central">C</text>
+    <text class="tip" x="356.91" y="407.37" font-size="15" text-anchor="middle" dominant-baseline="central">D</text>
+    <text class="tip" x="57.59" y="215" font-size="15" text-anchor="middle" dominant-baseline="central">D′</text>
+    <text class="tip" x="511.39" y="215" font-size="15" text-anchor="middle" dominant-baseline="central">C′</text>
+    <text class="tip" x="284.49" y="608" font-size="15" text-anchor="middle" dominant-baseline="central">B′</text>
+    <text class="tip" x="338.52" y="404.99" font-size="15" text-anchor="middle" dominant-baseline="central">A′</text>
+  </g>
+  <g class="leaders">
+    <line class="leader" data-leader="A′" x1="284.49" y1="346" x2="329.06" y2="394.67"/>
+  </g>
+</svg>
