@@ -7,12 +7,13 @@
 <!-- beat where-the-inside-shows.1 -->
 
 Put an egg on the table and look at it as hard as you like. You are not seeing the inside of the
-egg. You are seeing the place where the egg stops and the room begins, and that is the whole of
-what is on offer to look at.
+egg. You are seeing the place where the egg stops and the room begins. That is where you are
+standing: outside, looking at an edge.
 
 That is not a complaint about eyes. It is the position of anyone who has ever measured anything. The
 inside of a thing is not handed to you. Its edge is — and things cross it. Light, warmth, a sound, a
-smell, a crack running down the shell. Whatever reached you got to you by crossing.
+smell, a crack running down the shell. Everything you have noticed about the egg so far came to you
+across that edge.
 
 So an edge is not the leftover part of an object, the bit you are stuck with once the interesting
 middle has been sealed away. It is the part you are in contact with, and it is where the work of
