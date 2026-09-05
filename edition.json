@@ -125,7 +125,8 @@
           "1761–1769 · Edmond Halley (the method, set out decades earlier) and the transit expeditions, James Cook to Tahiti among them — the Sun's distance, at last, from Venus transits timed at widely separated places.",
           "1838 · Friedrich Bessel — stellar parallax, found. ~0.3 arcseconds for 61 Cygni. The answer to the ~150 CE null, seventeen centuries later.",
           "1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could."
-        ]
+        ],
+        "note": "**One entry runs past the chapter.** The chapter stops at Bessel, because that is where the ancient null gets its answer. The list carries one more — Leavitt's period–luminosity relation, 1912 — because it is the next rung of the same ladder and the first that reaches past what any triangle can do. It is here rather than in the chapter for the reason the chapter states about every episode in it: an episode earns its place by changing how a trace becomes evidence, and by then the reader has that.\n"
       },
       "the-round-ripple": {
         "title": "Is it round? — the dial, set twice",
@@ -418,7 +419,7 @@
             "source": "book/chapters/06-dna-thz/chapter.md"
           }
         ],
-        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.\n\n**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. They were not dissolved the same way, which is the coda's point — so the two rungs are listed above **in the coda's order, not in their own numbering**. 5.10 is the first. Its site value went inside a band the rung could have drawn from numbers it had already published. 5.9 is the second. Its bond value closed only with an estimator written for the next rung, and it rests on a choice of ordering that 5.10 says does not generalise.\n\nBoth sit here rather than under the chapter whose measurements they correct. What they demonstrate is this chapter's own subject — an instrument disagreeing with its owners — turned on the record. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.\n"
+        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.\n\n**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. They were not dissolved the same way, which is the coda's point — so the two rungs are listed above **in the coda's order, not in their own numbering**. 5.10 is the first. Its site value sits inside a band the rung could have drawn from numbers it had already published — not comfortably at two of its three candidate locations, but inside. 5.9 is the second. Its bond value closed only with an estimator written for the next rung, and it rests on a choice of ordering that 5.10 says does not generalise.\n\nBoth sit here rather than under the chapter whose measurements they correct. What they demonstrate is this chapter's own subject — an instrument disagreeing with its owners — turned on the record. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.\n"
       },
       "cast-your-own-shadow": {
         "title": "Cast your own shadow — the reproduce path",
@@ -593,7 +594,7 @@
     {
       "phrase": "Starting with nothing at all, and how little it turns out you need",
       "why": "the shadow's hand-off straight into the napkin, from before the history chapter sat between them",
-      "probe": "and let it answer. Starting with nothing at all, and how\nlittle it turns out you need."
+      "probe": "and let it answer. <!-- NOTE(reader): does this land? --> Starting with <span>nothing</span> at\nall, and how little[^1] it turns out you need."
     }
   ]
 }

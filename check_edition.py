@@ -128,24 +128,34 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
 # link — is presentation, and every one of those walked past the first two versions of this while a
 # reader read the retired sentence unchanged (a proofreader, rounds 2 and 3, 2026-09-04).
 LINK_TARGET = re.compile(r"\]\([^)]*\)")
+# Anything the page does not show the reader. An HTML comment is the sharp one: this repository's
+# own reading-note device is `<!-- NOTE(name): … -->`, documented in the Makefile as something you
+# leave *in the text where the trouble is*, so a retired sentence with one sitting inside it renders
+# identically and is a shape the book actually writes.
+INVISIBLE = re.compile(r"<!--.*?-->|<[^>\n]{0,200}>|\[\^[^\]]*\]|[\u00ad\u200b\ufeff]", re.S)
 NOT_WORD = re.compile(r"[^0-9a-z]+")
 
 
 def flattened(text: str) -> str:
-    """A string as its lowercase words, single-spaced: markup, punctuation and line breaks gone.
+    """A string as its lowercase words, single-spaced: anything invisible or decorative gone.
 
     Prose in `chapters/` is hard-wrapped at about a hundred columns and hand-offs carry bold and
     links, so a sentence long enough to be worth refusing is a sentence that will be broken across
     lines and marked up in the middle. Matching the raw file therefore catches the phrase only in a
-    shape the chapters never have: a proofreader put a retired hand-off back wrapped (round 2), then
-    put it back with one bolded word, one italic, one em dash for a comma, and part of it inside a
-    link (round 3) — and each of those built green while the page read exactly as before.
+    shape the chapters never have. Three proofreading rounds put a retired hand-off back and watched
+    tier 0 stay green while the page read exactly as before: wrapped (round 2); with one bolded
+    word, one italic, an em dash for a comma and part of it inside a link (round 3); and with an
+    HTML comment, an inline tag, a footnote marker and a soft hyphen inside it (round 4).
+
+    So the comparison is on the words the reader is shown. Link targets, HTML comments and tags,
+    footnote markers and zero-width characters are removed; everything else that is not a letter or
+    a digit becomes a space.
 
     **What is left, stated because a denylist's limit is only a limit when it is written down.** The
     same sentence *reworded* passes, and always will: this refuses the sentences somebody wrote
     down, in any punctuation and any markup, not the idea behind them.
     """
-    return NOT_WORD.sub(" ", LINK_TARGET.sub("", text).casefold()).strip()
+    return NOT_WORD.sub(" ", INVISIBLE.sub(" ", LINK_TARGET.sub("", text)).casefold()).strip()
 
 
 def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:
@@ -2186,8 +2196,9 @@ def report(
         f"{quote_count} record quotations anchored in the appendix, "
         f"{len(list(manifest.get('forbidden_probe_texts', [])))} exclusion probes refused, "
         f"{len(list(manifest.get('retired_phrasings', [])))} retired phrasings absent from every "
-        f"chapter in any wrapping, markup or punctuation — they are matched on their words, and a "
-        f"rewording is not refused — each proved by the probe declared beside it, "
+        f"chapter in any wrapping, punctuation, markup or hidden comment — they are matched on the "
+        f"words the reader is shown, and a rewording is not refused — each proved by the probe "
+        f"declared beside it, "
         f"all links, hand-offs, slug bridges and derived section numbers valid"
         f"{' in source and rendered output' if args.rendered else ''}."
     )

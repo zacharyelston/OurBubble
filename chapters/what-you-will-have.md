@@ -61,8 +61,8 @@ do, so the same rule, unchanged, goes to a machine — on a world with no edge.
 
 The rest is what came back. A ripple lopsided until one setting fixed it. What it costs to push on a
 piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement with
-its answer key taken away, a law that came back refused, and misses that turned out to be our own
-bookkeeping. The noes are kept on purpose and given the same room as the yeses, because a
+its answer key taken away, a law that came back refused, and misses that turned out to be in our
+own reading rather than in the world. The noes are kept on purpose and given the same room as the yeses, because a
 machine that can only agree with you is not an instrument.
 
 ## How to read it

@@ -83,6 +83,9 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
+**One entry runs past the chapter.** The chapter stops at Bessel, because that is where the ancient null gets its answer. The list carries one more — Leavitt's period–luminosity relation, 1912 — because it is the next rung of the same ladder and the first that reaches past what any triangle can do. It is here rather than in the chapter for the reason the chapter states about every episode in it: an episode earns its place by changing how a trace becomes evidence, and by then the reader has that.
+
+
 **What this chapter recounts.** Measurement history, and it is not work of ours — no rung, gate, figure or quoted number here corresponds to any of it. The history is listed in the order the chapter tells it, so a reader can check the chapter against the historical record rather than against us.
 
 - ~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.
@@ -478,7 +481,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.
 
-**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. They were not dissolved the same way, which is the coda's point — so the two rungs are listed above **in the coda's order, not in their own numbering**. 5.10 is the first. Its site value went inside a band the rung could have drawn from numbers it had already published. 5.9 is the second. Its bond value closed only with an estimator written for the next rung, and it rests on a choice of ordering that 5.10 says does not generalise.
+**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. They were not dissolved the same way, which is the coda's point — so the two rungs are listed above **in the coda's order, not in their own numbering**. 5.10 is the first. Its site value sits inside a band the rung could have drawn from numbers it had already published — not comfortably at two of its three candidate locations, but inside. 5.9 is the second. Its bond value closed only with an estimator written for the next rung, and it rests on a choice of ordering that 5.10 says does not generalise.
 
 Both sit here rather than under the chapter whose measurements they correct. What they demonstrate is this chapter's own subject — an instrument disagreeing with its owners — turned on the record. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.
 
