@@ -172,24 +172,25 @@ Which one? The readings differ, so a test can tell them apart.
 
 <!-- beat the-round-ripple.8 -->
 
-Cutting a square into triangles means choosing which way the diagonals lean. Lean them all the same
+Cutting a square into triangles means choosing which way the diagonals lean. Lean them all one
 way, then flip the scene about the axis through the source and between the gaps: the scene lands on
 itself and the mesh does not. So the mesh is the suspect: it had been asserting a left-right
-difference nothing in the question asserted.
+difference the question never did.
 
 Note what this is *not*: not the object's own three-way grain, whose symmetry carries each kind of
 place onto the others. This was a drawing choice in one demo that broke a mirror the experiment
 needed.
 
-The correction is as small as the suspicion: alternate the diagonals, so mirroring the mesh lands on
+The correction is as small as the fault: alternate the diagonals, so mirroring the mesh lands on
 itself. Same scene, same solver, nothing else touched. The two halves now disagree by **5×10⁻¹⁵** of
 themselves — numerical noise. Suspect confirmed, by a run and not a story.
 
 **[Open the data-true mesh-repair figure](record/lab/warp-3-shield/0305-doubleslit-mirror/figures/doubleslit_mirror.html)**
-— the same scene on both meshes, measured, side by side.
+— the same scene on both meshes, side by side.
 
 The switch between the two meshes was left in [the demo page](record/viz/doubleslit.html) rather
-than quietly removed. Which is why roundness and mirrors get tested before later results are read.
+than quietly removed — a defect of ours kept beside its repair, because roundness and mirrors get
+tested before later results are read.
 
 So what did the chapter settle?
 
