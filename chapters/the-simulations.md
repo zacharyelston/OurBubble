@@ -169,6 +169,10 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 **The chapter.** [two-worlds-threaded.md](two-worlds-threaded.md)
 
+**Registered rungs.**
+
+- primer 0116 — the tet-oct complex: census, and the render the chapter's last beat links
+
 **What this chapter deliberately does not say.** Two readings of the threaded pair were put to the same arithmetic and refused. Both are on the page above, rather than argued with in the prose.
 
 **No tick both holds and comes home.** The book's tick is over the size this shape's own numbers allow, so the run grows instead of sloshing. A smaller tick stops the growth and buys nothing else. At no tick that can be written as a fraction does the pair of rows return to the pair it started from.
@@ -176,6 +180,14 @@ What the book carries forward is the **method** — measure, state your resoluti
 **And no such tick gives a table.** Every tick under the bound prints two rows at most. After that the numbers stop fitting in a couple of decimal places, which is the test every table in these chapters is held to.
 
 Both come from the vendored engine, rendered by `stella_refusal` — register rows R16, R17, R18 and R20 of `lab/napkin/0001`. The bound is certified by an integer eigenvector: whole numbers throughout, no decimals, no square roots. That is why a refusal about an object of fourteen dots is still something a reader can check.
+
+**Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
+
+- [`lab/primer/0116-tetoct-primer`](record/lab/primer/0116-tetoct-primer)
+
+**Data-true figures.** Rendered from the run's own committed output — no analogy art.
+
+- [`lab/primer/0116-tetoct-primer/figures/tetoct-render.html`](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html)
 
 **Standards and record this section rests on.**
 

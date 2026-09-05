@@ -53,8 +53,8 @@ middles are the same six middles. The two of them share the shape between them.
 
 <figure class="chapter-figure">
   <img src="assets/the-threaded-pair.svg" alt="A wireframe of two tetrahedra of the same size threaded through one another, one drawn in the full stroke and the other lighter, with the eight-faced shape they share between them and every dot carrying its name.">
-  <figcaption>The pair, at the view the drawing's own sweep scored best: no line lost, no dot on a
-  line it does not end. One tetrahedron in the full stroke, the other lighter.
+  <figcaption>The pair, at the view the drawing's own sweep scored best: twenty crossings, which
+  is its floor, and no line lost.
   <strong><a href="demos/two-worlds-threaded.html">Open the data-true drawing and turn
   it</a></strong></figcaption>
 </figure>
@@ -139,9 +139,9 @@ First it has to be told where to put the next shape. You have two shapes now and
 arranging them, and getting that rule is the next chapter — it is where the shape between the tips
 stops being something inside one tetrahedron and becomes the thing that sits between all of them.
 
-**[Open the record's own render of this pair, tiled](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html)**
-— what that arrangement looks like when it is made, turnable, every dot and line of it the
-engine's.
+**[Open the record's own render of that arrangement](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html)**
+— one tetrahedron per cube, facings alternating, a shape between in every gap: the next chapter's
+answer, not this pair repeated.
 
 Then the arithmetic, which is only the same tick repeated more times than a hand can manage.
 

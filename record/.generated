@@ -31,6 +31,12 @@ lab/dna-thz/0001-dna-permittivity-shift-law/data/shift_law.html	lab/dna-thz/0001
 lab/dna-thz/0001-dna-permittivity-shift-law/eval.html	lab/dna-thz/0001-dna-permittivity-shift-law/eval.md
 lab/dna-thz/0001-dna-permittivity-shift-law/index.html
 lab/dna-thz/0001-dna-permittivity-shift-law/spec.html	lab/dna-thz/0001-dna-permittivity-shift-law/spec.md
+lab/primer/0116-tetoct-primer/PROVENANCE.html	lab/primer/0116-tetoct-primer/PROVENANCE.md
+lab/primer/0116-tetoct-primer/data/lattice.html	lab/primer/0116-tetoct-primer/data/lattice.json
+lab/primer/0116-tetoct-primer/eval.html	lab/primer/0116-tetoct-primer/eval.md
+lab/primer/0116-tetoct-primer/figures/inject.html	lab/primer/0116-tetoct-primer/figures/inject.py
+lab/primer/0116-tetoct-primer/index.html
+lab/primer/0116-tetoct-primer/spec.html	lab/primer/0116-tetoct-primer/spec.md
 lab/warp-1-move/0115-lattice-matched-isotropy/PROVENANCE.html	lab/warp-1-move/0115-lattice-matched-isotropy/PROVENANCE.md
 lab/warp-1-move/0115-lattice-matched-isotropy/data/isotropy.html	lab/warp-1-move/0115-lattice-matched-isotropy/data/isotropy.csv
 lab/warp-1-move/0115-lattice-matched-isotropy/eval.html	lab/warp-1-move/0115-lattice-matched-isotropy/eval.md
