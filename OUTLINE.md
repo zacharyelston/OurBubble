@@ -194,7 +194,7 @@ reader every time instead of explained to her once.
 5. Why — and why is the explanation written as a *new* prediction rather than an excuse?  *(the lump is a fraction of the volume; if that is the reason, a bigger lump moves p toward −½ — a new commitment)*
 6. What does a refusal tell us, coming from the same kind of instrument — a fitter told nothing — that found the ripple's law, the vacuum's coefficient and the class numbers?  *(that its yeses meant something. Not the same code each time; the same discipline: no answer supplied)*
 7. Now look back at the two results this record had published as misses — what did they turn out to be?  *(the locator's own margin, never carried through; both inside their bands once it was; one took arithmetic already on the page, the other an estimator that had to be written)*
-8. Why is that the rarest thing an instrument can do — and how is it different from an honest null?  *(find that a published miss was its own bookkeeping, and say so on the record; Ptolemy left nothing unused, and we did)*
+8. Why is that the rarest thing an instrument can do — and how is it different from a null nobody could have read better?  *(find that a published miss was its own bookkeeping, and say so on the record. The ancient null was outside anyone's resolution; ours were inside ours, one of them in numbers already on the page)*
 
 ## 15 · Cast your own shadow
 

@@ -83,7 +83,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
-**What this chapter recounts.** Measurement history, and none of it is work of ours — no rung, gate, figure or quoted number here corresponds to any of it. It is listed in the order the chapter tells it, so a reader can check the chapter against the historical record rather than against us.
+**What this chapter recounts.** Measurement history, and it is not work of ours — no rung, gate, figure or quoted number here corresponds to any of it. It is listed in the order the chapter tells it, so a reader can check the chapter against the historical record rather than against us.
 
 - ~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.
 - ~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.
@@ -473,25 +473,27 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 **Registered rungs.**
 
 - dna-thz 6.1 — the permittivity shift law, and the falsified square root
-- warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator
-- warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published
+- warp-5 5.10 — the coda's first miss, the one that needed nothing new: the site value falls inside a band the rung could have drawn from numbers it had already published
+- warp-5 5.9 — the coda's second, the one that needed an instrument: the bond value closes only with an estimator written for the next rung, and an error bar the re-analysis added
 
 The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.
 
-**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above rather than under the chapter whose measurements they correct: what they demonstrate is this chapter's subject — an instrument disagreeing with its owners — turned on the record itself. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.
+**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. They were not dissolved the same way, which is the coda's point — so the two rungs are listed above **in the coda's order, not in their own numbering**. 5.10 is the first. Its site value went inside a band the rung could have drawn from numbers it had already published. 5.9 is the second. Its bond value closed only with an estimator written for the next rung, and it rests on a choice of ordering that rung says does not generalise.
+
+Both sit here rather than under the chapter whose measurements they correct. What they demonstrate is this chapter's own subject — an instrument disagreeing with its owners — turned on the record. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.
 
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
 - [`lab/dna-thz/0001-dna-permittivity-shift-law`](record/lab/dna-thz/0001-dna-permittivity-shift-law)
-- [`lab/warp-5-universality/0509-bond-locator-reprocess`](record/lab/warp-5-universality/0509-bond-locator-reprocess)
 - [`lab/warp-5-universality/0510-site-locator-reprocess`](record/lab/warp-5-universality/0510-site-locator-reprocess)
+- [`lab/warp-5-universality/0509-bond-locator-reprocess`](record/lab/warp-5-universality/0509-bond-locator-reprocess)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
 - [`core/uniforge/tests/uf6_1_thz_shift_law_gate.rs`](record/core/uniforge/tests/uf6_1_thz_shift_law_gate.html)
-- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html)
 - [`core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html)
+- [`core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs`](record/core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -509,10 +511,10 @@ The chapter guards the vocabulary it actually uses — cavity, resonance, materi
 
 ```sh
 cd core
-cargo test --release -p uniforge --test uf6_1_thz_shift_law_gate -- --nocapture
+cargo test --release -p uniforge --test uf6_1_thz_shift_law_gate      -- --nocapture
 cargo run  --release -p viz     --bin gen_shift_law
-cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --nocapture
 cargo test --release -p uniforge --test uf5_10_site_locator_reprocess_gate -- --nocapture
+cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --nocapture
 ```
 
 ---

@@ -382,27 +382,27 @@
         "title": "When the world you built says no — the obvious answer refused, and two published misses dissolved",
         "rungs": [
           "dna-thz 6.1 — the permittivity shift law, and the falsified square root",
-          "warp-5 5.9 — reprocessing a registered negative: the bond miss dissolves into the locator",
-          "warp-5 5.10 — the site miss dissolves inside an error bar the rung had already published"
+          "warp-5 5.10 — the coda's first miss, the one that needed nothing new: the site value falls inside a band the rung could have drawn from numbers it had already published",
+          "warp-5 5.9 — the coda's second, the one that needed an instrument: the bond value closes only with an estimator written for the next rung, and an error bar the re-analysis added"
         ],
         "entries": [
           "lab/dna-thz/0001-dna-permittivity-shift-law",
-          "lab/warp-5-universality/0509-bond-locator-reprocess",
-          "lab/warp-5-universality/0510-site-locator-reprocess"
+          "lab/warp-5-universality/0510-site-locator-reprocess",
+          "lab/warp-5-universality/0509-bond-locator-reprocess"
         ],
         "gates": [
           "core/uniforge/tests/uf6_1_thz_shift_law_gate.rs",
-          "core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs",
-          "core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs"
+          "core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs",
+          "core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs"
         ],
         "figures": [
           "lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html"
         ],
         "commands": [
-          "cargo test --release -p uniforge --test uf6_1_thz_shift_law_gate -- --nocapture",
+          "cargo test --release -p uniforge --test uf6_1_thz_shift_law_gate      -- --nocapture",
           "cargo run  --release -p viz     --bin gen_shift_law",
-          "cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --nocapture",
-          "cargo test --release -p uniforge --test uf5_10_site_locator_reprocess_gate -- --nocapture"
+          "cargo test --release -p uniforge --test uf5_10_site_locator_reprocess_gate -- --nocapture",
+          "cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --nocapture"
         ],
         "record_quotes": [
           {
@@ -418,7 +418,7 @@
             "source": "book/chapters/06-dna-thz/chapter.md"
           }
         ],
-        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.\n\n**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above rather than under the chapter whose measurements they correct: what they demonstrate is this chapter's subject — an instrument disagreeing with its owners — turned on the record itself. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.\n"
+        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.\n\n**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. They were not dissolved the same way, which is the coda's point — so the two rungs are listed above **in the coda's order, not in their own numbering**. 5.10 is the first. Its site value went inside a band the rung could have drawn from numbers it had already published. 5.9 is the second. Its bond value closed only with an estimator written for the next rung, and it rests on a choice of ordering that rung says does not generalise.\n\nBoth sit here rather than under the chapter whose measurements they correct. What they demonstrate is this chapter's own subject — an instrument disagreeing with its owners — turned on the record. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.\n"
       },
       "cast-your-own-shadow": {
         "title": "Cast your own shadow — the reproduce path",
@@ -577,25 +577,23 @@
   "retired_phrasings": [
     {
       "phrase": "You have just watched an instrument refuse a law",
-      "why": "the opening a few thousand years of sharper shadows carried while it followed the refusal chapter; it is second in the book now and nothing has been run yet"
+      "why": "the opening a few thousand years of sharper shadows carried while it followed the refusal chapter; it is second in the book now and nothing has been run yet",
+      "probe": "You have just watched an instrument refuse a law its owners committed to."
     },
     {
       "phrase": "Which is exactly the shape of something in our own record",
-      "why": "the bridge that chapter used to make into the two dissolved misses, which stayed behind in when the world you built says no"
+      "why": "the bridge that chapter used to make into the two dissolved misses, which stayed behind in when the world you built says no",
+      "probe": "They had been outside the resolution.\n\nWhich is exactly the shape of\nsomething in our own record."
     },
     {
       "phrase": "two thousand years of the same method, and what our own two failures turned out to be",
-      "why": "the hand-off when the world you built says no used to make into the history chapter, which now precedes it by twelve chapters"
+      "why": "the hand-off when the world you built says no used to make into the history chapter, which now precedes it by twelve chapters",
+      "probe": "**Next:** [A few thousand years of sharper shadows](a.md)—two\nthousand years of the same method, and what our own two failures turned out\nto be."
     },
     {
       "phrase": "Starting with nothing at all, and how little it turns out you need",
-      "why": "the shadow's hand-off straight into the napkin, from before the history chapter sat between them"
+      "why": "the shadow's hand-off straight into the napkin, from before the history chapter sat between them",
+      "probe": "and let it answer. Starting with nothing at all, and how\nlittle it turns out you need."
     }
-  ],
-  "retired_probe_texts": [
-    "You have just watched an instrument refuse a law its owners committed to.",
-    "Which is exactly the shape of something in our own record.",
-    "Next: two thousand years of the same method, and what our own two failures turned out to be.",
-    "Starting with nothing at all, and how little it turns out you need."
   ]
 }

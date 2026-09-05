@@ -123,11 +123,27 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
             errors.append(f"self-test: the guard false-positives on {sentence!r}: {stray}")
 
 
+FLATTEN = re.compile(r"\s+")
+
+
+def flattened(text: str) -> str:
+    """One line, one space between words, casefolded — how a retired phrasing is compared.
+
+    Prose in `chapters/` is hard-wrapped at about a hundred columns, so a sentence long enough to be
+    worth refusing is a sentence that will be broken across lines. Substring-matching the raw file
+    therefore catches the phrase only in the one shape the chapters never have: a proofreader put a
+    retired hand-off back, wrapped exactly the way its neighbours are, and the first version of this
+    returned no errors (2026-09-04, round 2). Whitespace is flattened on both sides instead, and one
+    of the probes below is wrapped so the self-test exercises the shape that actually occurs.
+    """
+    return FLATTEN.sub(" ", text).casefold()
+
+
 def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:
     """Every retired phrasing present in `text`, as human-readable reasons. **Pure.**"""
-    lowered = text.casefold()
+    flat = flattened(text)
     return [f"carries a retired phrasing ({rule.get('why', 'moved')}): {rule['phrase']!r}"
-            for rule in retired if str(rule["phrase"]).casefold() in lowered]
+            for rule in retired if flattened(str(rule["phrase"])) in flat]
 
 
 def check_retired_phrasings(manifest: Dict[str, object], order: Sequence[str],
@@ -146,21 +162,31 @@ def check_retired_phrasings(manifest: Dict[str, object], order: Sequence[str],
     chapter, by their own words. The list doubles as an audit trail: it says what the book used to
     say, and where it used to make sense.
 
-    The guard is proved on declared probes before it is trusted, the way the exclusion guard is: a
-    phrase list that only ever runs against text written to satisfy it is untested code.
+    **Each phrasing carries its own probe, and the probe is tested against that phrasing alone.**
+    The first version asked only that every probe hit *some* rule, and a proofreader replaced all
+    four probes with four copies of one of them: green, and the pass line still said each phrasing
+    was proved by its own probe. A probe that proves a rule other than its own proves nothing about
+    that rule, and the report line said otherwise, which is the headline defect exactly.
+
+    **What it cannot see, because a limit is only a limit when it is written down.** It reads
+    `chapters/*.md` and nothing else — not `OUTLINE.md`, not the titles and notes in `edition.json`
+    that render into the appendix, not `demos/`. And it refuses only the sentences somebody thought
+    to declare: a hand-off nobody wrote down here is still the writer's job. `EDITION_STANDARD.md`
+    says the same, beside the exclusion denylist's limit.
     """
     retired = [dict(rule) for rule in manifest.get("retired_phrasings", [])]
-    probes = list(manifest.get("retired_probe_texts", []))
     if not retired:
         errors.append("retired phrasings: none declared, so a moved chapter's old hand-off is "
                       "refused by nothing")
         return
-    if len(probes) != len(retired):
-        errors.append(f"retired phrasings: {len(retired)} declared and {len(probes)} probe(s) — "
-                      f"every retired phrasing carries the sentence that proves it still bites")
-    for probe in probes:
-        if not retired_hits(str(probe), retired):
-            errors.append(f"self-test: the retired-phrasing guard does NOT catch {probe!r}")
+    for rule in retired:
+        probe = str(rule.get("probe", ""))
+        if not probe:
+            errors.append(f"retired phrasings: {rule['phrase']!r} carries no probe, so nothing "
+                          f"shows it still bites")
+        elif not retired_hits(probe, [rule]):
+            errors.append(f"self-test: the retired-phrasing guard does NOT catch its own probe for "
+                          f"{rule['phrase']!r}")
     for slug in order:
         path = EDITION_DIR / "chapters" / f"{slug}.md"
         if not path.exists():
@@ -2150,7 +2176,8 @@ def report(
         f"{quote_count} record quotations anchored in the appendix, "
         f"{len(list(manifest.get('forbidden_probe_texts', [])))} exclusion probes refused, "
         f"{len(list(manifest.get('retired_phrasings', [])))} retired phrasings absent from every "
-        f"chapter and each proved by its own probe, "
+        f"chapter — whitespace flattened, so a wrapped one is still found — and each proved by the "
+        f"probe declared beside it, "
         f"all links, hand-offs, slug bridges and derived section numbers valid"
         f"{' in source and rendered output' if args.rendered else ''}."
     )

@@ -106,11 +106,11 @@ that asks you for no email address and loads nothing onto the page you are readi
             # stale.
             ours = [key for key in ("rungs", "entries", "gates", "figures", "record_quotes")
                     if s.get(key)]
-            L.append("**What this chapter recounts.** Measurement history, and none of it is work of "
-                     "ours" + (": " + ", ".join(ours) + " below are" if ours else " — no rung, gate, "
-                     "figure or quoted number here corresponds to any of it") + ". It is listed in "
-                     "the order the chapter tells it, so a reader can check the chapter against the "
-                     "historical record rather than against us.\n")
+            L.append("**What this chapter recounts.** Measurement history, and it is not work of "
+                     "ours" + (". The " + ", ".join(ours) + " below are." if ours else " — no rung, "
+                     "gate, figure or quoted number here corresponds to any of it.") + " It is "
+                     "listed in the order the chapter tells it, so a reader can check the chapter "
+                     "against the historical record rather than against us.\n")
             L+=[f"- {h}" for h in s['history']]; L.append("")
             L.append("What the book carries forward is the **method** — measure, state your resolution, let "
                      "a finer instrument overturn you — never the discoveries. The record's own two "
