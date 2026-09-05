@@ -19,7 +19,7 @@ So go on.
 
 ## Four faces spare
 
-<!-- beat 48 -->
+<!-- beat two-worlds-threaded.1 -->
 
 Look again at which faces are which. Four of the eight look straight out at a tip and are already
 covered by it. The other four lie flat in the faces of the tetrahedron you cut, and have nothing on
@@ -35,7 +35,7 @@ Do it. Four more tetrahedra, and stand back.
 
 ## Two tetrahedra, threaded
 
-<!-- beat 49 -->
+<!-- beat two-worlds-threaded.2 -->
 
 {{napkin:stella_counts}}
 
@@ -56,7 +56,7 @@ Which leaves one thing to do with it. Make it move.
 
 ## The tick that stops working
 
-<!-- beat 50 -->
+<!-- beat two-worlds-threaded.3 -->
 
 {{napkin:stella_refusal}}
 
@@ -77,7 +77,7 @@ So bring a smaller tick.
 
 ## The smaller tick does not save it
 
-<!-- beat 51 -->
+<!-- beat two-worlds-threaded.4 -->
 
 You can. It stops running away. And then you cannot write the table down.
 
@@ -98,7 +98,7 @@ So what have you actually found?
 
 ## The surprise
 
-<!-- beat 52 -->
+<!-- beat two-worlds-threaded.5 -->
 
 That the smallest world with any room in it is already too big for a napkin.
 
@@ -115,7 +115,7 @@ Which settles what has to happen next.
 
 ## What the machine is handed, and what comes back
 
-<!-- beat 53 -->
+<!-- beat two-worlds-threaded.6 -->
 
 Two things, in that order.
 

@@ -26,7 +26,7 @@ body:
     attributes:
       label: The section
       description: Filled in by the link you followed. Please leave it as it is.
-      placeholder: A chapter · a section · beat 0
+      placeholder: A chapter · a section · beat make-it-move.3
     validations:
       required: true
 

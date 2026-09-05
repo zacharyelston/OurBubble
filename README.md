@@ -57,7 +57,7 @@ never agreed to.
 How it works, for a maintainer:
 
 - the links are **generated at build time** by [`preprocessor.py`](preprocessor.py) from the
-  `<!-- beat N -->` markers that already sit under every section heading — nobody maintains a link,
+  `<!-- beat slug.n -->` markers that already sit under every section heading — nobody maintains a link,
   and no chapter's prose changed to get one;
 - the URL format and its parser are one file, [`tools/reader_note.py`](tools/reader_note.py), which
   round-trips itself on every build;
@@ -149,10 +149,11 @@ artifact and the hashes together. `engine.lock`'s header is the long version.
 
 ## The demos
 
-Chapters 2–5 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
+Chapters 2–6 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
 numbers in the reader's browser** and walks her through the chapter's beats one at a time. Their
 beat ranges moved twice — when the outline gained *Two worlds threaded*, and again when it gained
-the front door; `demos/DEMOS.md` says which pages have yet to catch up. They are
+the front door — which is why a beat's id is now its own chapter's (`make-it-move.3`) and a demo
+step is labelled by its place on its page. They are
 plain static pages — one shared vanilla-JS module, one stylesheet, nothing loaded from anywhere — and
 they are published beside the book, at `…/OurBubble/demos/`, through the `chapters/demos` symlink
 that mdBook copies.
@@ -227,7 +228,9 @@ records the SHA it was taken at, and it must match the lock.
 | `engine.lock` · `engine/` · `tools/build_engine.sh` · `tools/lock_engine.py` | the engine contract: the pin, the vendored artifact, and the two scripts that produce them |
 | `tools/engine.py` · `tools/napkin.py` · `preprocessor.py` · `TOKENS.md` | the only door to the vendored data, the renderer that turns it into the book's sixteen blocks, the mdBook hook that runs them, and what else is available |
 | `tools/oracle.py` · `tools/octahedron.py` · `tools/engine_check.py` · `tools/engine_wasm_check.mjs` | the Python that used to be the engine, kept as the independent recomputation that must reproduce it byte for byte, and the node probe that proves the vendored wasm is the same engine as the vendored JSON |
-| `tools/renumber_beats.py` | moves beat numbers through `OUTLINE.md` and every chapter's markers together, when a beat is inserted |
+| `tools/renumber_beats.py` | shifts one chapter's beat numbers through `OUTLINE.md` and that chapter's markers together, when a beat is inserted |
+| `tools/migrate_beat_ids.py` | the one-shot migration that turned book-wide beat numbers into `slug.n` ids — idempotent, so it is also the check that none is left |
+| `tools/attacks_beats.py` | the mutations for the beat contract: each one applied to a private copy, `beat_coverage.py` required to refuse it by name |
 | `demos/` · `tools/napkin_export.py` | the demos: one page per chapter of the napkin world, recomputing its numbers in the reader's browser, and the export they are checked against — `demos/DEMOS.md` |
 | `CANON.md` · `tools/canon.py` | the one labeling of the tetrahedron, derived from the napkin, and the only code that draws its net |
 | `tools/check.sh` · `Makefile` | tier 0 |

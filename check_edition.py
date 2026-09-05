@@ -304,8 +304,8 @@ def check_note_links(order: Sequence[str], errors: List[str]) -> str:
     """Every marked section in the **built** book carries exactly one reader's-note link, and it fits.
 
     This is the check that makes the links maintainable rather than merely present. They are
-    generated at build time from the `<!-- beat N -->` markers (`preprocessor.py`), and the failure
-    mode of a generated link is not that it disappears — it is that it survives a rename or a
+    generated at build time from the `<!-- beat slug.n -->` markers (`preprocessor.py`), and the
+    failure mode of a generated link is not that it disappears — it is that it survives a rename or a
     reorder and quietly points somewhere else. So each link is read back out of the HTML mdBook
     actually wrote and made to agree with the section it sits under, on all four of the things it
     carries:
@@ -404,7 +404,8 @@ def check_note_links(order: Sequence[str], errors: List[str]) -> str:
             if not beats:
                 if found:
                     errors.append(
-                        f"{where}: carries a note link but declares no `<!-- beat N -->` marker"
+                        f"{where}: carries a note link but declares no `<!-- beat slug.n -->` "
+                        f"marker"
                     )
                 continue
             marked += 1
@@ -433,7 +434,7 @@ def check_note_links(order: Sequence[str], errors: List[str]) -> str:
                     f"misencoded, or disagrees with another: {unescape(link.group('href'))!r}"
                 )
                 continue
-            if parsed["beat"] != int(beats[0]):
+            if parsed["beat"] != beats[0]:
                 errors.append(
                     f"{where}: the note link says beat {parsed['beat']}, the section's marker says "
                     f"beat {beats[0]}"
@@ -754,6 +755,7 @@ DEMO_ASSETS = (
     "demo.css", "data/napkin.json",
 )
 DEMO_ATTACKS = DEMOS_DIR / "attacks.mjs"
+BEAT_ATTACKS = EDITION_DIR / "tools" / "attacks_beats.py"
 DEMO_STEPS = DEMOS_DIR / "steps.json"
 
 
@@ -1022,8 +1024,8 @@ def check_demo_steps(errors: List[str]) -> str:
     """The demos' step scaffolding is what `OUTLINE.md` and the chapters' markers now derive.
 
     No beat number is typed into a demo. `tools/demo_steps.py` reads the questions off `OUTLINE.md`
-    and the numbers off each chapter's `<!-- beat N -->` markers, keyed by section anchor, and writes
-    `demos/steps.json`; the pages render their titles and beat labels from that. So the file has to
+    and the ids off each chapter's `<!-- beat slug.n -->` markers, keyed by section anchor, and
+    writes `demos/steps.json`; the pages render their titles from that. So the file has to
     be in step with the contract, and this is where a renumber that has not been regenerated becomes
     a red check rather than a page quoting last week's numbering. The preface being drafted will move
     every beat in the book, which is precisely the event this is here for.
@@ -1158,6 +1160,41 @@ def check_demo_attacks(errors: List[str]) -> str:
             errors.append(f"demo attacks: node exited {finished.returncode} with nothing on stderr")
         return "unavailable"
     summary = [line for line in finished.stdout.splitlines() if line.startswith("attacks.mjs:")]
+    return summary[-1].split(": ", 1)[1] if summary else "passed, with no summary line"
+
+
+def check_beat_attacks(errors: List[str]) -> str:
+    """Every rule of the beat-id contract, with the mutation that proves `beat_coverage.py` bites.
+
+    The demos have had their mutations in the repository since `demos/attacks.mjs`; the Python
+    checks had none, so "the coverage tool catches this" was a claim in a commit message rather than
+    something the repository runs. `tools/attacks_beats.py` is the same arrangement in Python: each
+    mutation is applied to a **private copy** of the contract and the prose under the system temp
+    directory, `tools/beat_coverage.py` is run from that copy and required to complain **by name**,
+    and the copy is deleted. It runs the unmutated copy first — an attack suite that cannot tell red
+    from red proves nothing — and asks git afterwards whether it left the working tree alone.
+
+    A mutation whose needle has gone stale fails too, which is how a refactor says an attack has
+    stopped testing anything instead of passing quietly.
+    """
+    import subprocess
+
+    if not BEAT_ATTACKS.exists():
+        errors.append(f"beat attacks: {BEAT_ATTACKS.relative_to(EDITION_DIR)} is missing")
+        return "unavailable"
+    finished = subprocess.run(  # noqa: S603 - a fixed argv, no shell
+        [sys.executable, "-B", str(BEAT_ATTACKS)],
+        capture_output=True, text=True, cwd=EDITION_DIR, timeout=900, check=False,
+    )
+    if finished.returncode != 0:
+        for line in (finished.stdout or "").splitlines():
+            if line.strip().startswith("PROBLEM:"):
+                errors.append(f"beat attacks: {line.strip()[len('PROBLEM: '):]}")
+        if not [error for error in errors if error.startswith("beat attacks:")]:
+            errors.append(f"beat attacks: the suite exited {finished.returncode} with no problem "
+                          f"line of its own")
+        return "unavailable"
+    summary = [line for line in finished.stdout.splitlines() if line.startswith("beat attacks:")]
     return summary[-1].split(": ", 1)[1] if summary else "passed, with no summary line"
 
 
@@ -1954,6 +1991,7 @@ def main() -> int:
         status(errors, "demo steps", lambda: check_demo_steps(errors))
         status(errors, "demo cross-check", lambda: check_demo_cross_check(errors))
         status(errors, "demo attacks", lambda: check_demo_attacks(errors))
+        status(errors, "beat attacks", lambda: check_beat_attacks(errors))
 
     appendix_file = str(manifest["appendix"]["file"])
     if appendix_file != APPENDIX_FILE:

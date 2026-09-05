@@ -1,7 +1,7 @@
 {
   "note": "Which of core.test.mjs's fail sites the mutations in attacks.mjs reach. Regenerate with `node demos/attacks.mjs --baseline`, in the same commit as the guard or the mutation that changed it. A run that reaches fewer of them than this fails.",
-  "sites": 93,
-  "floor": 93,
+  "sites": 98,
+  "floor": 98,
   "reached": [
     "fail(`draw.mjs sets LABEL_GAP to ${LABEL_GAP}, and this check will not go below ${GAP_FLOOR}: `",
     "fail(`draw.mjs sets DOT_CLEARANCE to ${DOT_CLEARANCE}, and this check will not go below `",
@@ -38,9 +38,10 @@
     "fail(\"DEMOS.md no longer has the crossings paragraph this gate is written against\");",
     "fail(`DEMOS.md's crossings paragraph contains the figure ${found[0]}, which SWEEP does not `",
     "fail(`DEMOS.md has no page-table row for ${slug}`);",
-    "fail(`DEMOS.md's row for ${slug} states no beat range`);",
-    "fail(`DEMOS.md says ${slug} is beats ${found[1]}–${found[2]}, and steps.json derives `",
-    "fail(`DEMOS.md writes \"${found[0]}\" outside its page table. A beat number in prose goes stale `",
+    "fail(`DEMOS.md's row for ${slug} states no beat count and step count`);",
+    "fail(`DEMOS.md says ${slug} has ${found[1]} beats, and steps.json derives `",
+    "fail(`DEMOS.md:${lineOf(found.index)} writes \"${found[0].replace(/\\s+/g, \" \")}\" outside its `",
+    "fail(`DEMOS.md names ${slug}.${n}, and steps.json says ${slug} has ${chapter.beats} beats`);",
     "fail(`${where}: the drawing does not say which convention it is drawn in`);",
     "fail(`${where}: the ${kind} drawing emitted a <${found[1]}>, and it may only emit `",
     "fail(`${where}: the ${kind} drawing emitted a <${element}> that does not say what it is: `",
@@ -78,6 +79,9 @@
     "if (!build) { fail(`there is no demo for the chapter ${slug}`); continue; }",
     "fail(`${slug}: ${failure.message}`);",
     "fail(`${slug}: the steps claim beats ${claimed.join(\", \")} and the chapter's markers say `",
+    "fail(`${slug}: the beat id \"${beat}\" is not this chapter's slug and a number. A beat is `",
+    "fail(`${slug}: step ${index + 1} is labelled \"${step.label}\" and this page's own count says `",
+    "fail(`DEMOS.md says ${slug}'s page walks ${tableSteps.get(slug)} steps and it walks `",
     "fail(`${slug}: the step for \"${section.anchor}\" does not agree with steps.json`);",
     "fail(`${slug} ${step.label}: rendering threw — ${failure.message}`);",
     "fail(`${slug} ${step.label}: the number ${token} appears in \"${surface}\", and the `",
@@ -95,6 +99,7 @@
     "fail(`${slug} ${step.label}: the drawing emits class \"${name}\" and the still's `",
     "fail(`${slug} ${step.label}: a step with no table — every number has to be readable as text`);",
     "fail(`${slug} ${step.label}: a step with no drawing`);",
+    "fail(`DEMOS.md lists the folded pairs as [${listed}] and the pages fold [${actual}]`);",
     "fail(`${line.slug}: ${line.words} reader-facing words, and the budget is ${BUDGET}`);"
   ],
   "uncovered": []

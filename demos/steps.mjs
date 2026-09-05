@@ -14,9 +14,9 @@
 //   **THE WORDS BELONG TO THE BOOK. THE DEMO IS THE SIM.**
 //
 // A step is exactly three things. Its **title** is the outline's own question, and it is not written
-// here — `tools/demo_steps.py` reads it off `OUTLINE.md` and the chapter's `<!-- beat N -->` marker,
-// so no beat number and no question is ever typed into a demo and the preface can renumber the whole
-// book without touching this file. Its **`act`** is one short line telling her what to do. And its
+// here — `tools/demo_steps.py` reads it off `OUTLINE.md` and the chapter's `<!-- beat slug.n -->`
+// marker, so no beat id and no question is ever typed into a demo and a chapter can be renumbered
+// without touching this file. Its **`act`** is one short line telling her what to do. And its
 // **`render`** is what the object does about it: a drawing and a table, and nothing else. There is no
 // field for prose, because a step that wanted to explain itself would have to add one.
 //

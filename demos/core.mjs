@@ -24,14 +24,19 @@ export { chapterSteps } from "./steps.mjs";
  * This is where a renumber would show up as a failure rather than as a wrong number on a page: every
  * step declares the chapter sections it covers by **anchor**, and the join insists that the anchors
  * partition the chapter's marked sections exactly — each section covered once, none left over, none
- * named that the chapter has not got. The beat numbers and the questions come off the scaffolding.
+ * named that the chapter has not got. The beat ids and the questions come off the scaffolding.
+ *
+ * **A step is labelled by its place on this page** — "step 3 of 9" — and not by any beat number. A
+ * beat's id is its chapter's own (`make-it-move.3`, issue #77), and a reader walking one page is
+ * counting that page's steps; a number that counted something outside the page is the thing that
+ * kept going stale.
  */
 export function joinSteps(slug, steps, scaffold) {
   const chapter = scaffold.chapters[slug];
   if (!chapter) throw new Error(`steps.json has no chapter ${slug}`);
   const byAnchor = new Map(chapter.sections.map((section) => [section.anchor, section]));
   const seen = new Set();
-  const joined = steps.map((step) => {
+  const joined = steps.map((step, index) => {
     const sections = step.anchors.map((anchor) => {
       const section = byAnchor.get(anchor);
       if (!section) {
@@ -50,10 +55,9 @@ export function joinSteps(slug, steps, scaffold) {
       sections,
       beats,
       beat: beats[0],
+      n: index + 1,
       title: titled.question,
-      label: beats.length === 1
-        ? `beat ${beats[0]}`
-        : `beats ${beats[0]}–${beats[beats.length - 1]}`,
+      label: `step ${index + 1} of ${steps.length}`,
     };
   });
   const missing = chapter.sections.filter((section) => !seen.has(section.anchor));
@@ -157,10 +161,10 @@ export const SVG_STILL_STYLE_TEXT = `
  * The stills are the point of the drawing code and not a side effect of it: they are the intended
  * replacement for the illustration studies in the chapters, one at a time, in a later PR the owner
  * judges. So a still stands on its own — its own stylesheet inlined, its own title and description,
- * and a line naming the beat it came from. `DEMOS.md` says how the replacement will go.
+ * and a line naming the step it came from. `DEMOS.md` says how the replacement will go.
  */
-export function stillFrom(svgText, { chapter, beat, title }) {
-  const stamp = `<!-- Our Bubble demo still · ${chapter} · beat ${beat}. Computed in the browser `
+export function stillFrom(svgText, { chapter, step, title }) {
+  const stamp = `<!-- Our Bubble demo still · ${chapter} · ${step}. Computed in the browser `
     + `by the vendored napkin engine (engine/, pinned by engine.lock). A drawing of a toy: nothing `
     + `in it is a claim about nature. -->`;
   return svgText.replace(
@@ -232,21 +236,19 @@ export async function mount(slug) {
   const view = draw.wireDefaultView();
 
   document.querySelector("#chapter-title").textContent = chapter.title;
-  document.querySelector("#chapter-beats").textContent =
-    `beats ${chapter.first}–${chapter.last}`;
+  document.querySelector("#chapter-beats").textContent = `${steps.length} steps`;
   const back = document.querySelector("#back-to-chapter");
   if (back) back.setAttribute("href", `../${slug}.html`);
 
   const nav = element("nav", { class: "steps", "aria-label": "the beats" });
   const list = element("ol");
   const chips = steps.map((step, index) => {
-    // The chip carries the whole range a folded step covers, so a reader counting along the row
-    // does not find a beat missing and wonder where it went.
+    // The chip carries this step's own place on this page. It used to carry the beat number, or a
+    // range where a pair is folded, which is a number about the book rather than about the row the
+    // reader is counting along.
     const button = element("button", {
       type: "button",
-      text: step.beats.length === 1
-        ? String(step.beats[0])
-        : `${step.beats[0]}–${step.beats[step.beats.length - 1]}`,
+      text: String(index + 1),
       "aria-label": `${step.label}: ${step.title}`,
       title: step.title,
     });
@@ -327,7 +329,7 @@ export async function mount(slug) {
       if (control.kind === "numbers") {
         const group = element("div", { class: "typed" });
         control.names.forEach((name, index) => {
-          const id = `number-${slug}-${step.beat}-${index}`;
+          const id = `number-${slug}-${step.n}-${index}`;
           const label = element("label", { for: id, text: name });
           const input = element("input", {
             id, type: "text", inputmode: "text", size: "6",
@@ -426,12 +428,12 @@ export async function mount(slug) {
     const button = element("button", { type: "button", text: "still" });
     button.addEventListener("click", () => {
       const svg = stillFrom(rendered.drawing, {
-        chapter: slug, beat: step.beats.join("–"), title: `${chapter.title} — ${step.label}`,
+        chapter: slug, step: step.label, title: `${chapter.title} — ${step.label}`,
       });
       const blob = new Blob([`${svg}\n`], { type: "image/svg+xml" });
       const link = element("a", {
         href: URL.createObjectURL(blob),
-        download: `${slug}-beat-${step.beat}.svg`,
+        download: `${slug}-step-${step.n}.svg`,
         text: "download",
       });
       const source = element("details");
@@ -445,7 +447,9 @@ export async function mount(slug) {
     });
     previous.disabled = current === 0;
     onward.disabled = current === steps.length - 1;
-    place.textContent = `${step.label} · ${current + 1} of ${steps.length}`;
+    // The label already says which of this page's steps she is on, so the line beside the arrows is
+    // the label. It used to be the beat number followed by the same count, which said it twice.
+    place.textContent = step.label;
     document.title = `${chapter.title} · ${step.label} · Our Bubble`;
   }
 
@@ -454,7 +458,7 @@ export async function mount(slug) {
     current = Math.max(0, Math.min(steps.length - 1, index));
     state = initialState(steps[current], view);
     render();
-    const hash = `#beat-${steps[current].beat}`;
+    const hash = `#step-${steps[current].n}`;
     if (window.location.hash !== hash) window.history.replaceState(null, "", hash);
   }
 
@@ -468,12 +472,12 @@ export async function mount(slug) {
   });
 
   const indexForHash = () => {
-    const requested = /^#beat-(\d+)$/.exec(window.location.hash || "");
+    const requested = /^#step-(\d+)$/.exec(window.location.hash || "");
     if (!requested) return 0;
-    const found = steps.findIndex((step) => step.beats.includes(Number(requested[1])));
+    const found = steps.findIndex((step) => step.n === Number(requested[1]));
     return found < 0 ? 0 : found;
   };
-  // The hash is the beat in both directions: the back button and a hand-typed #beat-31 move the
+  // The hash is the step in both directions: the back button and a hand-typed #step-3 move the
   // page, not only the first load.
   window.addEventListener("hashchange", () => {
     const wanted = indexForHash();
@@ -488,11 +492,13 @@ export async function mountIndex() {
   const scaffold = await fetch("steps.json").then((answer) => answer.json());
   const list = document.querySelector("#demo-index");
   if (!list) return;
-  const inOrder = Object.entries(scaffold.chapters).sort((a, b) => a[1].first - b[1].first);
+  // In the book's own order, which `steps.json` carries as `order` — the file is sorted by key, and
+  // a chapter's place in the book is neither alphabetical nor a beat number any more.
+  const inOrder = Object.entries(scaffold.chapters).sort((a, b) => a[1].order - b[1].order);
   for (const [slug, chapter] of inOrder) {
     const item = element("li");
     const link = element("a", { href: `${slug}.html`, text: chapter.title });
-    const beats = element("span", { class: "beats", text: `beats ${chapter.first}–${chapter.last}` });
+    const beats = element("span", { class: "beats", text: `${chapter.beats} beats` });
     item.append(link, beats);
     list.append(item);
   }

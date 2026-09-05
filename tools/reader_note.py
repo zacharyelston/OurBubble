@@ -17,8 +17,10 @@ The pieces of a link, and where each one comes from:
 
 * **the chapter title** — the chapter's `# H1`, as written in the source;
 * **the section heading** — the `##` heading the link sits under;
-* **the beat** — the `<!-- beat N -->` marker under that heading, which the outline and
-  `tools/beat_coverage.py` already treat as the section's identity;
+* **the beat** — the `<!-- beat slug.n -->` marker under that heading, which the outline and
+  `tools/beat_coverage.py` already treat as the section's identity. Since issue #77 that id is the
+  chapter's own slug and the beat's place inside it, so a note filed on `make-it-move.3` still names
+  the same beat after the next chapter is inserted anywhere in the book;
 * **the page** — the published URL plus mdBook's own heading anchor, so a maintainer opening the
   issue lands on the paragraph the reader was looking at.
 
@@ -56,20 +58,23 @@ LABEL = "reader-note"
 # guess what a glyph beside a heading would do.
 LINK_TEXT = "Leave a note on this section"
 
-# `chapter · heading · beat N` and `note · chapter · heading`. The separator is a middle dot with
+# `chapter · heading · beat slug.n` and `note · chapter · heading`. The separator is a middle dot with
 # spaces, which is the book's own; a heading containing one would make `parse()` fail loudly rather
 # than silently mis-split, and a failed build is the outcome we want from that.
 SEP = " · "
-BEAT_SUFFIX = re.compile(r"^(?P<rest>.*?)" + re.escape(SEP) + r"beat (?P<beat>\d+)$", re.DOTALL)
+BEAT_SUFFIX = re.compile(
+    r"^(?P<rest>.*?)" + re.escape(SEP) + r"beat (?P<beat>[a-z0-9][a-z0-9-]*\.\d+)$", re.DOTALL)
 
 # One rendered link, as it appears in the built HTML.
 LINK_HTML = re.compile(
     r'<a class="section-note-link" href="(?P<href>[^"]+)"[^>]*>(?P<text>[^<]*)</a>'
 )
 
-# The `<!-- beat N -->` marker, in source or in a built page — mdBook passes HTML comments through
-# untouched, which is what lets the rendered check read the same marker the source declares.
-BEAT_MARKER = re.compile(r"<!--\s*beat\s+(\d+)\s*-->")
+# The `<!-- beat slug.n -->` marker, in source or in a built page — mdBook passes HTML comments
+# through untouched, which is what lets the rendered check read the same marker the source declares.
+# One group, and it captures the whole id: a caller reading `findall` gets a list of ids rather than
+# a list of pairs.
+BEAT_MARKER = re.compile(r"<!--[ \t]*beat[ \t]+([a-z0-9][a-z0-9-]*\.\d+)[ \t]*-->")
 
 # Markdown that a heading may legitimately carry and a title should not: emphasis and code spans.
 # `## The word is *carries*` must title as `The word is carries`, which is also what mdBook renders
@@ -113,7 +118,7 @@ def title(chapter: str, heading: str) -> str:
     return f"note{SEP}{plain(chapter)}{SEP}{plain(heading)}"
 
 
-def build(chapter: str, heading: str, beat: int, slug: str) -> str:
+def build(chapter: str, heading: str, beat: str, slug: str) -> str:
     """The prefilled new-issue URL for one section.
 
     Every field is carried in the query string, which is the only prefill mechanism GitHub issue
@@ -136,7 +141,7 @@ def build(chapter: str, heading: str, beat: int, slug: str) -> str:
     return f"{NEW_ISSUE_URL}?{query}"
 
 
-def link_html(chapter: str, heading: str, beat: int, slug: str) -> str:
+def link_html(chapter: str, heading: str, beat: str, slug: str) -> str:
     """One line of raw HTML, because mdBook treats a multi-line HTML block differently.
 
     `rel="nofollow noopener"` on principle rather than out of need, and `target="_blank"` so a reader
@@ -192,7 +197,7 @@ def parse(href: str) -> Optional[Dict[str, object]]:
     return {
         "chapter": chapter,
         "heading": heading,
-        "beat": int(marked.group("beat")),
+        "beat": marked.group("beat"),
         "slug": slug,
         "anchor": page.fragment,
     }
@@ -209,7 +214,8 @@ def self_test() -> list:
     one for another.
     """
     failures = []
-    chapter, heading, beat, slug = "The shape between", "The word is *carries*", 37, "make-it-move"
+    chapter, heading, beat, slug = ("The shape between", "The word is *carries*",
+                                    "make-it-move.3", "make-it-move")
     href = build(chapter, heading, beat, slug)
     found = parse(href)
 
@@ -245,7 +251,9 @@ def self_test() -> list:
     # of the URL and not the other looks like.
     refuses("a title that disagrees with its section field", href.replace("note%20%C2%B7", "x%20%C2%B7"))
     # the fields themselves
-    refuses("no beat in the section field", href.replace("%20%C2%B7%20beat%2037", ""))
+    refuses("no beat in the section field", href.replace("%20%C2%B7%20beat%20make-it-move.3", ""))
+    refuses("a book-wide beat number in the section field",
+            href.replace("beat%20make-it-move.3", "beat%2037"))
     refuses("the template dropped", href.replace(f"template={TEMPLATE}&", ""))
     refuses("the wrong label", href.replace(f"labels={LABEL}", "labels=bug"))
     refuses("a page on another site", href.replace(quote(BOOK_URL, safe=""), "https%3A%2F%2Felsewhere.example"))

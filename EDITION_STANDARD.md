@@ -25,6 +25,33 @@ hand-drawn result graphics are out of scope.
 
 The epilogue closes the sequence and therefore does not need a `Next` hand-off.
 
+## A beat's name, and how many a chapter may have
+
+Every `##` section carries one `<!-- beat slug.n -->` marker: the chapter's own slug, and the beat's
+place inside that chapter counted from 1. `OUTLINE.md` numbers each chapter's beats from 1 under its
+heading, and the chapters' order lives in `chapters/SUMMARY.md` and those headings — never inside a
+beat's id. So inserting a beat renumbers that chapter and nothing else, and moving a chapter
+renumbers nothing at all. A chapter's opening prose carries a marker only when it is the prose that
+answers a beat; `tools/beat_coverage.py` reads one there as a declared excusal.
+
+**A chapter is capped at twelve beats**, which is today's largest (*Make it move*) and what the
+100–200-word grain implies about a chapter's length. A chapter that wants a thirteenth splits — the
+scope rule, mechanically. `tools/beat_coverage.py` enforces the cap, the numbering and the ids;
+`tools/attacks_beats.py` holds it to each of those with the mutation that proves it bites.
+
+**No book-wide beat number in any file the guard reads.** It was the numbering that went stale
+three times in two weeks, so the old form — the word followed by a number, or by the schema letter a
+drafter would copy — is refused in every file `tools/beat_coverage.py` lists as scanned: the
+contract, the ledger, this standard, the canon, the art direction, the README, the demos' document
+and modules, the working note, the reviewer's skill, the modules whose comments name a beat, and
+every chapter. Three guard files quote the old form in order to refuse it and are named there as the
+exception; every other file in the repository is unscanned rather than clean, `record/` — derived
+and never edited — most of all. An id that
+resolves to nothing — a chapter the book has not got, or a beat past the end of one it has — is
+refused in the same pass. Tooling and review notes name a beat `slug.n`; **chapter prose
+names it by what it is**, which is rule 4's own logic applied to counting: a page that counts its own
+parts is a count nothing guards.
+
 ## Illustration contract
 
 Every chapter begins with one editorial illustration study. **The front door is the one page that

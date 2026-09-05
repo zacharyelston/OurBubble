@@ -19,7 +19,7 @@ check. Build the book and the working tree stays clean, or the record moved and 
 
 It does two more things to the book on the way past, both of them additions to a page rather than
 edits to prose: it renders every `{{napkin:…}}` token from the vendored
-engine, and it puts one **reader's note link** at each section heading. The note pass is driven by the `<!-- beat N -->` marker that already sits
+engine, and it puts one **reader's note link** at each section heading. The note pass is driven by the `<!-- beat slug.n -->` marker that already sits
 under every section heading, which is the only place in the book where a section's heading and its
 beat number are written down together — so a section that is renamed, renumbered or moved carries a
 correct link without anyone maintaining one. `tools/reader_note.py` holds the URL format;
@@ -51,8 +51,8 @@ NAPKIN = re.compile(r"\{\{napkin:([a-z0-9_]+)\}\}")
 
 # The chapter's own title, and its section headings. Used by the reader-note pass below, which adds
 # HTML *around* the prose and never inside it — the same contract the napkin token has, read from the
-# other direction: the lane that writes chapters writes only the `<!-- beat N -->` markers it already
-# writes, and this file turns each one into a link.
+# other direction: the lane that writes chapters writes only the `<!-- beat slug.n -->` markers it
+# already writes, and this file turns each one into a link.
 CHAPTER_TITLE = re.compile(r"^# +(.+?)\s*$", re.M)
 SECTION_HEADING = re.compile(r"^## +(.+?)\s*$", re.M)
 
@@ -123,10 +123,10 @@ def with_note_links(markdown: str, slug: str, report: list) -> str:
 
     Three decisions worth writing down:
 
-    * **The marker is the trigger, not the heading.** A heading with no `<!-- beat N -->` under it
-      gets no link, which is what keeps the generated appendix (fourteen headings, no markers) out
-      of this and makes the rendered check's rule a two-way one: marked sections carry exactly one
-      link, unmarked headings carry none.
+    * **The marker is the trigger, not the heading.** A heading with no `<!-- beat slug.n -->`
+      under it gets no link, which is what keeps the generated appendix (fourteen headings, no
+      markers) out of this and makes the rendered check's rule a two-way one: marked sections carry
+      exactly one link, unmarked headings carry none.
     * **The link goes immediately after the heading**, before the marker and the prose, so the
       reader meets it where the section starts and the stylesheet can pull it up beside the heading.
     * **Only the first marker in a section counts.** A second one would be a defect in the prose,
@@ -148,7 +148,7 @@ def with_note_links(markdown: str, slug: str, report: list) -> str:
         cursor = heading.end()
         if marked is None:
             continue
-        beat = int(marked.group(1))
+        beat = marked.group(1)
         out.append("\n\n" + reader_note.link_html(chapter, heading.group(1), beat, slug))
         report.append((slug, beat))
     out.append(markdown[cursor:])
