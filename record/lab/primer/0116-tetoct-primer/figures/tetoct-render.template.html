@@ -1,0 +1,358 @@
+<title>TetOct lattice — mesh_3d_chiral_tetoct(4,4,4)</title>
+<style>
+  :root{
+    --ground:#0F1118; --panel:#161A23; --edge-ui:#252B3A;
+    --ink:#E9EAEF; --muted:#8C92A4; --faint:#5A607280;
+    --matter:#E2A455; --anti:#7FB4DC; --oct:#7D76A6; --diag:#B9A8E8;
+    --scaffold:#3A4156;
+    --ax0:#C4586E; --ax1:#5FAE8B; --ax2:#8A7BC8;
+    --sans:"Avenir Next","Segoe UI",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  html,body{height:100%;margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--sans);overflow:hidden}
+  #stage{position:fixed;inset:0;cursor:grab;touch-action:none}
+  #stage.dragging{cursor:grabbing}
+
+  header{position:fixed;top:0;left:0;right:0;padding:14px 20px 10px;
+    display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    pointer-events:none;background:linear-gradient(180deg,#0F1118F0,#0F111800)}
+  header h1{margin:0;font-size:15px;font-weight:600;letter-spacing:.01em}
+  header h1 code{font-family:var(--mono);font-size:13px;color:var(--muted);font-weight:400}
+  #counts{font-family:var(--mono);font-size:11.5px;color:var(--muted);
+    white-space:nowrap;font-variant-numeric:tabular-nums}
+  #counts b{color:var(--ink);font-weight:600}
+
+  #rail{position:fixed;left:14px;top:64px;width:212px;background:var(--panel);
+    border:1px solid var(--edge-ui);border-radius:6px;padding:12px 14px 14px;
+    display:flex;flex-direction:column;gap:2px;font-size:12px}
+  #rail .sec{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin:8px 0 5px}
+  #rail .sec:first-child{margin-top:0}
+  .chip{display:flex;align-items:center;gap:9px;padding:5px 6px;margin:0 -6px;
+    border-radius:4px;cursor:pointer;user-select:none;border:none;background:none;
+    color:var(--ink);font:inherit;text-align:left;width:calc(100% + 12px)}
+  .chip:hover{background:#1E2431}
+  .chip:focus-visible{outline:2px solid var(--anti);outline-offset:-2px}
+  .chip .sw{width:11px;height:11px;border-radius:2px;flex:none;
+    box-shadow:0 0 0 1px #00000055 inset}
+  .chip .n{font-family:var(--mono);color:var(--muted);margin-left:auto;
+    font-variant-numeric:tabular-nums}
+  .chip[aria-pressed="false"]{opacity:.38}
+  .chip[aria-pressed="false"] .sw{background:transparent !important;
+    box-shadow:0 0 0 1px var(--muted) inset}
+
+  .slider{display:flex;flex-direction:column;gap:3px;padding:4px 0 2px}
+  .slider label{display:flex;justify-content:space-between;color:var(--muted);
+    font-family:var(--mono);font-size:10.5px}
+  .slider output{color:var(--ink)}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;
+    border-radius:2px;background:var(--edge-ui);outline-offset:4px;margin:6px 0 2px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;
+    border-radius:50%;background:var(--ink);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:12px;height:12px;border:none;
+    border-radius:50%;background:var(--ink);cursor:pointer}
+
+  footer{position:fixed;left:0;right:0;bottom:0;padding:9px 20px;
+    font-size:11px;color:var(--muted);pointer-events:none;
+    background:linear-gradient(0deg,#0F1118F0,#0F111800)}
+  footer .fw{max-width:920px}
+  footer b{color:#A6ACBD;font-weight:600}
+
+  #hint{position:fixed;right:18px;top:66px;font-family:var(--mono);font-size:10.5px;
+    color:var(--faint);text-align:right;pointer-events:none;line-height:1.7}
+
+  @media (max-width:640px){
+    #rail{width:178px;top:78px}
+    header{flex-direction:column;gap:2px}
+    #hint{display:none}
+  }
+</style>
+
+<canvas id="stage" aria-label="Interactive 3D render of the chiral tet-oct lattice"></canvas>
+
+<header>
+  <h1>TetOct lattice &nbsp;<code>mesh_3d_chiral_tetoct(4,4,4, chiral_oct_screw111)</code></h1>
+  <div id="counts"></div>
+</header>
+
+<div id="rail" role="group" aria-label="Render layers">
+  <div class="sec">Stella tets · cube pass</div>
+  <button class="chip" id="t-matter" aria-pressed="true"><span class="sw" style="background:var(--matter)"></span>matter family<span class="n">32</span></button>
+  <button class="chip" id="t-anti" aria-pressed="true"><span class="sw" style="background:var(--anti)"></span>antimatter family<span class="n">32</span></button>
+  <div class="sec">Octahedra · odd-sum holes</div>
+  <button class="chip" id="t-oct" aria-pressed="true"><span class="sw" style="background:var(--oct)"></span>oct tets<span class="n">56</span></button>
+  <button class="chip" id="t-screw" aria-pressed="false"><span class="sw" style="background:linear-gradient(90deg,var(--ax0),var(--ax1),var(--ax2))"></span>color by screw axis</button>
+  <button class="chip" id="t-diag" aria-pressed="true"><span class="sw" style="background:var(--diag)"></span>long diagonals<span class="n">14</span></button>
+  <div class="sec">Skeleton</div>
+  <button class="chip" id="t-edges" aria-pressed="true"><span class="sw" style="background:#49506A"></span>edges √2<span class="n">240</span></button>
+  <button class="chip" id="t-verts" aria-pressed="true"><span class="sw" style="background:#C9CDD9;border-radius:50%"></span>FCC vertices<span class="n">63</span></button>
+  <div class="sec">Construction · scaffold</div>
+  <button class="chip" id="t-cubes" aria-pressed="false"><span class="sw" style="background:var(--scaffold)"></span>unit cubes<span class="n">64</span></button>
+  <div class="sec">View</div>
+  <div class="slider"><label for="explode">explode <output id="explode-v">0.00</output></label>
+    <input type="range" id="explode" min="0" max="100" value="0"></div>
+  <div class="slider"><label for="opacity">face opacity <output id="opacity-v">0.14</output></label>
+    <input type="range" id="opacity" min="0" max="60" value="14"></div>
+  <button class="chip" id="t-spin" aria-pressed="true"><span class="sw" style="background:var(--edge-ui)"></span>auto-orbit</button>
+</div>
+
+<div id="hint">drag&nbsp;·&nbsp;orbit<br>wheel&nbsp;·&nbsp;zoom</div>
+
+<footer><div class="fw">
+  <b>FIREWALL</b> — UniForge is a computational-physics toy: a DEC geometrical simulation on
+  simplicial lattices. <i>Matter, antimatter, photon, charge</i> name features of a lattice, never
+  claims about nature. Data-true render (R10): every vertex, edge, and tet below is the exact
+  <code style="font-family:var(--mono)">geom</code> engine output
+  (lab/primer/0116, <code style="font-family:var(--mono)">data/lattice.json</code>); the unit-cube
+  scaffold is construction geometry, not part of the complex; color and explode are labels, not physics.
+</div></footer>
+
+<script>
+const DATA = __LATTICE_JSON__;
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const COL = {
+  matter: css('--matter'), anti: css('--anti'), oct: css('--oct'),
+  diag: css('--diag'), ax: [css('--ax0'), css('--ax1'), css('--ax2')],
+  edge: '#49506A', vert: '#C9CDD9'
+};
+
+// --- data prep (verbatim from the engine export) ---------------------------
+const V = DATA.verts.map(v => [v[0], v[1], v[2]]);          // dense id == index
+const USED = DATA.verts.map(v => v[3] === 1);
+const C = [2, 2, 2];                                        // mesh centre (n=4)
+const EDGES = DATA.edges;                                   // [a, b, len2]
+const TETS = DATA.tets.map(t => {
+  const vs = t.slice(0, 4), kind = t[4], axis = t[5];
+  const cen = [0, 1, 2].map(i => vs.reduce((s, v) => s + V[v][i], 0) / 4);
+  const faces = [[0,1,2],[0,1,3],[0,2,3],[1,2,3]].map(f => f.map(i => vs[i]));
+  const wire = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]].map(e => [vs[e[0]], vs[e[1]]]);
+  return { vs, kind, axis, cen, faces, wire };
+});
+// Construction scaffold: dedup the 64 cubes' edges into unique unit segments
+// (dense ids; corners include odd-sum hole centres, which are not complex vertices).
+const SCAFFOLD = (() => {
+  const s = 5, id = (x, y, z) => x * s * s + y * s + z, seen = new Set(), segs = [];
+  const E = [[[0,0,0],[1,0,0]],[[0,0,0],[0,1,0]],[[0,0,0],[0,0,1]],
+             [[1,0,0],[1,1,0]],[[1,0,0],[1,0,1]],[[0,1,0],[1,1,0]],
+             [[0,1,0],[0,1,1]],[[0,0,1],[1,0,1]],[[0,0,1],[0,1,1]],
+             [[1,1,0],[1,1,1]],[[1,0,1],[1,1,1]],[[0,1,1],[1,1,1]]];
+  for (const [i, j, k] of DATA.cubes) {
+    for (const [p, q] of E) {
+      const a = id(i+p[0], j+p[1], k+p[2]), b = id(i+q[0], j+q[1], k+q[2]);
+      const key = Math.min(a, b) * 1000 + Math.max(a, b);
+      if (!seen.has(key)) { seen.add(key); segs.push([a, b]); }
+    }
+  }
+  return segs;
+})();
+document.getElementById('counts').innerHTML =
+  `<b>${USED.filter(Boolean).length}</b> vertices · <b>${EDGES.length}</b> edges · ` +
+  `<b>${DATA.meta.faces}</b> faces · <b>${TETS.length}</b> tets &nbsp;|&nbsp; ` +
+  `geom v0.1.0 · d²=0 combinatorial`;
+
+// --- state ------------------------------------------------------------------
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const S = {
+  matter: true, anti: true, oct: true, screw: false, diag: true,
+  edges: true, verts: true, cubes: false, spin: !reduced,
+  explode: 0, opacity: 0.14,
+  yaw: 0.65, pitch: 0.42, dist: 11.5
+};
+if (reduced) document.getElementById('t-spin').setAttribute('aria-pressed', 'false');
+
+function bindChip(id, key) {
+  const el = document.getElementById(id);
+  el.addEventListener('click', () => {
+    S[key] = !S[key];
+    el.setAttribute('aria-pressed', String(S[key]));
+  });
+}
+bindChip('t-matter','matter'); bindChip('t-anti','anti'); bindChip('t-oct','oct');
+bindChip('t-screw','screw'); bindChip('t-diag','diag'); bindChip('t-edges','edges');
+bindChip('t-verts','verts'); bindChip('t-cubes','cubes'); bindChip('t-spin','spin');
+
+function bindSlider(id, key, scale, fmt) {
+  const el = document.getElementById(id), out = document.getElementById(id + '-v');
+  el.addEventListener('input', () => {
+    S[key] = el.value * scale;
+    out.textContent = fmt(S[key]);
+  });
+}
+bindSlider('explode', 'explode', 0.012, v => v.toFixed(2));
+bindSlider('opacity', 'opacity', 0.01, v => v.toFixed(2));
+
+// --- camera / projection ------------------------------------------------
+const cv = document.getElementById('stage'), cx2d = cv.getContext('2d');
+let W, H, dpr;
+function resize() {
+  dpr = Math.min(devicePixelRatio || 1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+}
+addEventListener('resize', resize); resize();
+
+let rot = new Float64Array(9);
+function makeRot() {
+  const cy = Math.cos(S.yaw), sy = Math.sin(S.yaw);
+  const cp = Math.cos(S.pitch), sp = Math.sin(S.pitch);
+  rot[0] = cy;      rot[1] = 0;  rot[2] = -sy;
+  rot[3] = sy * sp; rot[4] = cp; rot[5] = cy * sp;
+  rot[6] = sy * cp; rot[7] = -sp; rot[8] = cy * cp;
+}
+function view(p, out) {                       // world (centred) -> view space
+  out[0] = rot[0]*p[0] + rot[1]*p[1] + rot[2]*p[2];
+  out[1] = rot[3]*p[0] + rot[4]*p[1] + rot[5]*p[2];
+  out[2] = rot[6]*p[0] + rot[7]*p[1] + rot[8]*p[2] + S.dist;
+}
+const FOV = 780;
+function px(v)  { return W/2 + FOV * v[0] / v[2]; }
+function py(v)  { return H/2 - FOV * v[1] / v[2]; }
+
+// interaction
+let drag = null;
+cv.addEventListener('pointerdown', e => {
+  drag = [e.clientX, e.clientY];
+  cv.classList.add('dragging'); cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove', e => {
+  if (!drag) return;
+  S.yaw   += (e.clientX - drag[0]) * 0.0055;
+  S.pitch += (e.clientY - drag[1]) * 0.0055;
+  S.pitch = Math.max(-1.55, Math.min(1.55, S.pitch));
+  drag = [e.clientX, e.clientY];
+});
+cv.addEventListener('pointerup', () => { drag = null; cv.classList.remove('dragging'); });
+cv.addEventListener('wheel', e => {
+  e.preventDefault();
+  S.dist = Math.max(5, Math.min(30, S.dist * (1 + e.deltaY * 0.0011)));
+}, { passive: false });
+
+// --- render ------------------------------------------------------------
+const LIGHT = [0.42, 0.72, 0.55];              // fixed view-space light
+const tmpA = [0,0,0];
+const vView = V.map(() => [0, 0, 0]);          // per-vertex view cache (rest positions)
+
+function tetOn(t) {
+  return t.kind === 0 ? S.matter : t.kind === 1 ? S.anti : S.oct;
+}
+function tetColor(t) {
+  if (t.kind === 0) return COL.matter;
+  if (t.kind === 1) return COL.anti;
+  return S.screw ? COL.ax[t.axis] : COL.oct;
+}
+function shade(hex, k) {                       // hex -> rgba with lambert factor
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16),
+        b = parseInt(hex.slice(5,7),16);
+  return `rgba(${(r*k)|0},${(g*k)|0},${(b*k)|0},`;
+}
+
+function frame() {
+  if (S.spin && !drag) S.yaw += 0.0022;
+  makeRot();
+  cx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+  cx2d.clearRect(0, 0, W, H);
+
+  const ex = S.explode;
+  // vertex view cache at rest positions (all 125 dense points: the scaffold
+  // also needs the odd-sum hole centres)
+  for (let i = 0; i < V.length; i++) {
+    tmpA[0] = V[i][0]-C[0]; tmpA[1] = V[i][1]-C[1]; tmpA[2] = V[i][2]-C[2];
+    view(tmpA, vView[i]);
+  }
+
+  // construction scaffold: fixed frame, drawn first so the complex sits inside it
+  if (S.cubes) {
+    cx2d.lineWidth = 1;
+    for (const [a, b] of SCAFFOLD) {
+      const va = vView[a], vb = vView[b];
+      const depth = 2 / (va[2] + vb[2]) * S.dist;
+      cx2d.strokeStyle = `rgba(58,65,86,${0.6 * depth})`;
+      cx2d.beginPath();
+      cx2d.moveTo(px(va), py(va)); cx2d.lineTo(px(vb), py(vb));
+      cx2d.stroke();
+    }
+  }
+
+  // lattice edges (dedup'd skeleton) only when not exploded
+  if (ex < 0.004) {
+    cx2d.lineWidth = 1;
+    for (const [a, b, l2] of EDGES) {
+      const isDiag = l2 === 4;
+      if (isDiag ? !S.diag : !S.edges) continue;
+      const va = vView[a], vb = vView[b];
+      const depth = 2 / (va[2] + vb[2]) * S.dist;      // ~1 near centre
+      if (isDiag) {
+        cx2d.strokeStyle = `rgba(185,168,232,${0.85 * depth})`;
+        cx2d.lineWidth = 1.6;
+      } else {
+        cx2d.strokeStyle = `rgba(73,80,106,${0.55 * depth})`;
+        cx2d.lineWidth = 1;
+      }
+      cx2d.beginPath();
+      cx2d.moveTo(px(va), py(va)); cx2d.lineTo(px(vb), py(vb));
+      cx2d.stroke();
+    }
+  }
+
+  // tets: exploded vertex positions + painter-sorted translucent faces
+  const tris = [];
+  for (const t of TETS) {
+    if (!tetOn(t)) continue;
+    const pos = {};                                  // per-tet vertex -> view
+    for (const vi of t.vs) {
+      tmpA[0] = V[vi][0]-C[0] + ex*(t.cen[0]-C[0])*1.15;
+      tmpA[1] = V[vi][1]-C[1] + ex*(t.cen[1]-C[1])*1.15;
+      tmpA[2] = V[vi][2]-C[2] + ex*(t.cen[2]-C[2])*1.15;
+      const o = [0,0,0]; view(tmpA, o); pos[vi] = o;
+    }
+    if (S.opacity > 0.002) {
+      for (const f of t.faces) {
+        const a = pos[f[0]], b = pos[f[1]], c = pos[f[2]];
+        // view-space normal for lambert shading
+        const ux=b[0]-a[0], uy=b[1]-a[1], uz=b[2]-a[2];
+        const wx=c[0]-a[0], wy=c[1]-a[1], wz=c[2]-a[2];
+        let nx=uy*wz-uz*wy, ny=uz*wx-ux*wz, nz=ux*wy-uy*wx;
+        const nl = Math.hypot(nx,ny,nz) || 1;
+        const lam = Math.abs(nx*LIGHT[0]+ny*LIGHT[1]+nz*LIGHT[2]) / nl;
+        tris.push({ z: (a[2]+b[2]+c[2])/3, a, b, c,
+                    col: tetColor(t), k: 0.55 + 0.45*lam });
+      }
+    }
+    if (ex >= 0.004) {                               // per-tet wireframe when apart
+      cx2d.lineWidth = 1;
+      cx2d.strokeStyle = shade(tetColor(t), 0.9) + '0.5)';
+      cx2d.beginPath();
+      for (const [a, b] of t.wire) {
+        cx2d.moveTo(px(pos[a]), py(pos[a]));
+        cx2d.lineTo(px(pos[b]), py(pos[b]));
+      }
+      cx2d.stroke();
+    }
+  }
+  tris.sort((p, q) => q.z - p.z);
+  for (const tr of tris) {
+    cx2d.fillStyle = shade(tr.col, tr.k) + S.opacity + ')';
+    cx2d.beginPath();
+    cx2d.moveTo(px(tr.a), py(tr.a));
+    cx2d.lineTo(px(tr.b), py(tr.b));
+    cx2d.lineTo(px(tr.c), py(tr.c));
+    cx2d.closePath(); cx2d.fill();
+  }
+
+  // vertices on top (fade out as the complex explodes)
+  if (S.verts && ex < 0.5) {
+    const va = 1 - ex * 2;
+    for (let i = 0; i < V.length; i++) {
+      if (!USED[i]) continue;
+      const v = vView[i], r = Math.max(1.2, 26 / v[2]);
+      cx2d.fillStyle = `rgba(201,205,217,${0.9 * va})`;
+      cx2d.beginPath(); cx2d.arc(px(v), py(v), r, 0, 6.2832); cx2d.fill();
+    }
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>

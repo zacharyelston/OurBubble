@@ -413,8 +413,8 @@ export const ATTACKS = [
     to: "    (_match, attributes) => `${stamp}\\n<svg${attributes}>`,",
     expect: "the still has no its own stylesheet, inlined" },
   { guard: "gate 10 · a still shipped without a description", file: "draw.mjs",
-    from: '<desc>${esc(desc || "An orthographic wireframe',
-    to: '<desc-x>${esc(desc || "An orthographic wireframe',
+    from: '<desc>${esc(desc || `${WIRE_DESC}',
+    to: '<desc-x>${esc(desc || `${WIRE_DESC}',
     expect: "the still has no a description" },
 
 
