@@ -222,15 +222,18 @@ caught it.
 A chapter that moves keeps every sentence it had, including the ones that were only true where it
 used to sit. Checking that the new hand-off is present cannot catch that — the old one is present
 too — so `edition.json`'s `retired_phrasings` refuses the old ones by their own words, in every
-chapter, each with the `probe` beside it that proves on every build that it still fires. Whitespace
-is flattened on both sides, because prose here is hard-wrapped and a sentence worth refusing is one
-long enough to break across lines. Add an entry whenever a rewrite retires a sentence that named a
-neighbour: the list is an audit trail as much as a guard.
+chapter, each with the `probe` beside it that proves on every build that it still fires. **The
+comparison is on the words alone** — line breaks, bold, italics, links and punctuation are stripped
+from both sides — because prose here is hard-wrapped and a hand-off long enough to be worth refusing
+is one that will be broken across lines and marked up in the middle. Add an entry whenever a rewrite
+retires a sentence that named a neighbour: the list is an audit trail as much as a guard.
 
-**What it does not see**, and both halves are the writer's job. It reads `chapters/*.md` and nothing
-else — not `OUTLINE.md`, not the titles and notes in `edition.json` that render into the appendix a
-reader reads, not `demos/`. And it refuses only what somebody thought to declare: a stale hand-off
-nobody wrote down here passes. Both limits were found by mutation on 2026-09-04, along with two
-others since closed — the same phrasing wrapped across a line, and four probes replaced by four
-copies of one, which left three declared phrasings tested by nothing while the pass line still said
-each was proved by its own.
+**What it does not see**, and every part of this is the writer's job. It reads `chapters/*.md` and
+nothing else — not `OUTLINE.md`, not the titles and notes in `edition.json` that render into the
+appendix a reader reads, not `demos/`. It refuses only what somebody thought to declare: a stale
+hand-off nobody wrote down here passes. And it refuses sentences, not ideas: the same hand-off
+*reworded* passes, and always will. Those three were found by reading the code and the files, on
+2026-09-04. Three others found by mutation the same day are closed: the phrasing wrapped across a
+line, the phrasing with one bolded word and part of it inside a link, and four probes replaced by
+four copies of one — which left three declared phrasings tested by nothing while the pass line still
+said each was proved by its own.

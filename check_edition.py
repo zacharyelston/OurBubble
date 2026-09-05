@@ -123,20 +123,29 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
             errors.append(f"self-test: the guard false-positives on {sentence!r}: {stray}")
 
 
-FLATTEN = re.compile(r"\s+")
+# A retired phrasing is compared on its WORDS. Everything else about a sentence — where the lines
+# break, which half is bold, whether the comma became an em dash, whether part of it sits inside a
+# link — is presentation, and every one of those walked past the first two versions of this while a
+# reader read the retired sentence unchanged (a proofreader, rounds 2 and 3, 2026-09-04).
+LINK_TARGET = re.compile(r"\]\([^)]*\)")
+NOT_WORD = re.compile(r"[^0-9a-z]+")
 
 
 def flattened(text: str) -> str:
-    """One line, one space between words, casefolded — how a retired phrasing is compared.
+    """A string as its lowercase words, single-spaced: markup, punctuation and line breaks gone.
 
-    Prose in `chapters/` is hard-wrapped at about a hundred columns, so a sentence long enough to be
-    worth refusing is a sentence that will be broken across lines. Substring-matching the raw file
-    therefore catches the phrase only in the one shape the chapters never have: a proofreader put a
-    retired hand-off back, wrapped exactly the way its neighbours are, and the first version of this
-    returned no errors (2026-09-04, round 2). Whitespace is flattened on both sides instead, and one
-    of the probes below is wrapped so the self-test exercises the shape that actually occurs.
+    Prose in `chapters/` is hard-wrapped at about a hundred columns and hand-offs carry bold and
+    links, so a sentence long enough to be worth refusing is a sentence that will be broken across
+    lines and marked up in the middle. Matching the raw file therefore catches the phrase only in a
+    shape the chapters never have: a proofreader put a retired hand-off back wrapped (round 2), then
+    put it back with one bolded word, one italic, one em dash for a comma, and part of it inside a
+    link (round 3) — and each of those built green while the page read exactly as before.
+
+    **What is left, stated because a denylist's limit is only a limit when it is written down.** The
+    same sentence *reworded* passes, and always will: this refuses the sentences somebody wrote
+    down, in any punctuation and any markup, not the idea behind them.
     """
-    return FLATTEN.sub(" ", text).casefold()
+    return NOT_WORD.sub(" ", LINK_TARGET.sub("", text).casefold()).strip()
 
 
 def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:
@@ -159,8 +168,9 @@ def check_retired_phrasings(manifest: Dict[str, object], order: Sequence[str],
 
     Checking that the *new* sentence is present cannot close that, because the old one is present
     too — the writing contract's rule 4, on a hand-off. So the old ones are refused, in every
-    chapter, by their own words. The list doubles as an audit trail: it says what the book used to
-    say, and where it used to make sense.
+    chapter, by their own words — matched on the words alone, so wrapping, markup and punctuation
+    cannot smuggle one back (see `flattened`). The list doubles as an audit trail: it says what the
+    book used to say, and where it used to make sense.
 
     **Each phrasing carries its own probe, and the probe is tested against that phrasing alone.**
     The first version asked only that every probe hit *some* rule, and a proofreader replaced all
@@ -2176,8 +2186,8 @@ def report(
         f"{quote_count} record quotations anchored in the appendix, "
         f"{len(list(manifest.get('forbidden_probe_texts', [])))} exclusion probes refused, "
         f"{len(list(manifest.get('retired_phrasings', [])))} retired phrasings absent from every "
-        f"chapter — whitespace flattened, so a wrapped one is still found — and each proved by the "
-        f"probe declared beside it, "
+        f"chapter in any wrapping, markup or punctuation — they are matched on their words, and a "
+        f"rewording is not refused — each proved by the probe declared beside it, "
         f"all links, hand-offs, slug bridges and derived section numbers valid"
         f"{' in source and rendered output' if args.rendered else ''}."
     )

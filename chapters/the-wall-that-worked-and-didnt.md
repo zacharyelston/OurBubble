@@ -123,8 +123,8 @@ resistance and potentials live in different places in the equations. To get the 
 need an extra law — a new rule tying mass to environmental coupling — and that rule is a separate,
 contested hypothesis, which this experiment does not assume.
 
-That is a bound rather than a shrug: a null stated with its size, which is what took Aristarchus'
-successors [two thousand years](a-few-thousand-years-of-sharper-shadows.md) to learn.
+That is a bound rather than a shrug: a null stated with its size, which is the thing nobody stated
+about the missing star-shift for [seventeen centuries](a-few-thousand-years-of-sharper-shadows.md).
 
 And the run even priced the interesting version for us: *if*
 such a law existed, this shell's isolation figure would predict a spectacularly lighter interior. It

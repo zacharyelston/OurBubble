@@ -124,13 +124,14 @@ high and inside its band — two others, and they were outside theirs. They sat 
 failures for a long time, and this book would have reported them so.
 
 Both were later dissolved. Both are measured *from* a critical point — where the little world
-changes character — and that point is only located to within a margin. Neither miss was a fact about
-the little world; both were that margin, never carried into the number depending on it. What differs
-is what it took to carry it through.
+changes character — which is itself only located to within a margin. Neither miss was a fact about
+the little world; both were that margin, never carried through. What differs is what it took to
+carry it.
 
 The first needed nothing new. The rung that recorded it had published its own locator margin, and
 had measured how far the quantity swings when the location moves. Multiply the two, and at all three
-candidate locations the miss falls inside the margin the rung had registered to judge it by. That is
+candidate locations the miss stops being significant — well inside at the best-centred one, and
+under the line the rung registered to judge it by at the other two, though not comfortably. That is
 what *dissolves* means here, and the rung says so of itself: the miss is no longer significant, not
 the value confirmed.
 
