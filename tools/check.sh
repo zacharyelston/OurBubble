@@ -49,11 +49,15 @@
 #      rests on), `tools/beat_coverage.py` (the prose against OUTLINE.md's beats, chapter by
 #      chapter, capped at twelve, with no book-wide beat number left anywhere it scans), and
 #      `tools/figures.mjs --check` (every figure a chapter shows is byte-for-byte the still the
-#      demo code emits for that step, and the comparison is made to refuse an altered byte in the
-#      same run).
+#      demo code emits for that step, and the run refuses an altered byte, bytes that did not come
+#      from the drawing code, and a page showing a figure nothing draws — before printing a line
+#      claiming it did any of that).
 #   4. build the book — which regenerates the appendix from the record
-#   5. check the built pages, including that every record link resolves and that the built site
-#      actually carries demos/ — the one piece of wiring nothing else would notice breaking
+#   5. check the built pages, including that every record link resolves, that the built site
+#      actually carries demos/ — the one piece of wiring nothing else would notice breaking — and
+#      that every figure a BUILT page shows is one `tools/figures.mjs` drew. The built page is where
+#      that is settled: a chapter can write an image half a dozen ways, and mdBook makes them all
+#      the same `<img>` only here.
 #
 # The build can legitimately rewrite `chapters/the-simulations.md`, so the last thing this does is
 # ask git whether it did: a dirty tree after a build means the record moved and the committed
@@ -131,6 +135,17 @@ mdbook build
 
 step "5/5 · check the rendered pages and every record link"
 python3 -B check_edition.py --rendered
+# And the figures a reader is actually served. The source-side half of this ran in step 3; this is
+# the one that decides. A reviewer put a hand-painted SVG in front of a reader seven ways past a
+# scan of the chapters' Markdown — an unquoted attribute, an uppercase tag, a nested figure, a
+# `data-src` decoy, the class on a bare img, and a plain Markdown image, which mdBook turns into an
+# `<img>` only at build time, after a source scan has finished looking. The built page has none of
+# that variety, so it is where the set of figures is settled.
+if command -v node >/dev/null 2>&1; then
+  node tools/figures.mjs --check-rendered
+else
+  echo "figures.mjs: unverified — node is not installed"
+fi
 
 step "the generated appendix is in step with the record"
 if ! git diff --quiet -- chapters/the-simulations.md; then

@@ -3,8 +3,9 @@
 // FIREWALL: these drawings are of a toy DEC lattice. Nothing in them is a claim about nature.
 // See ../FIREWALL.md.
 //
-//   node tools/figures.mjs            write chapters/assets/*.svg
-//   node tools/figures.mjs --check    refuse if what is committed is not what the code emits
+//   node tools/figures.mjs                    write chapters/assets/*.svg
+//   node tools/figures.mjs --check            the committed bytes are what the code emits
+//   node tools/figures.mjs --check-rendered   every figure a BUILT page shows is one it drew
 //
 // WHY THIS EXISTS. `chapters/assets/` used to hold hand-drawn SVG studies — editorial analogy
 // pictures of what a chapter was about. The owner called them slop, and R10 says the sim IS the
@@ -19,15 +20,25 @@
 // the asset does not — or the asset is touched and the drawing did not. Neither direction is
 // allowed to be silent.
 //
-// AND THE SET, not only the bytes. `FIGURES` says what this code draws; the chapters say what the
-// reader is shown; `--check` insists those are the same set. Without that, a figure the book
-// actually shows could be hand-drawn — drop its row here, paint the SVG, and a byte-identity check
-// over the rows that remain goes green. A reviewer did exactly that, on this file, before this
-// paragraph existed.
+// AND THE SET, not only the bytes. `FIGURES` says what this code draws; a page says what the reader
+// is shown; the check insists those are the same set. Without that, a figure the book actually
+// shows could be hand-drawn — drop its row here, paint the SVG, and a byte-identity check over the
+// rows that remain goes green. A reviewer did exactly that, on this file, before this paragraph
+// existed.
+//
+// **The set is settled on the BUILT page**, which is why there are two modes. `--check` runs before
+// the build and reads the chapters' Markdown, as an early warning. `--check-rendered` runs after it
+// and reads `book/`, and that one is the authority: a reviewer put a hand-painted SVG in front of a
+// reader seven ways past a scan of the source — an unquoted attribute, an uppercase tag, a nested
+// `<figure>`, a `data-src` decoy, the class on a bare `<img>`, the class on a `<p>`, and, the way
+// anyone would actually write it, a plain Markdown image inside the block, which mdBook turns into
+// an `<img>` only at build time, after a source scan has finished looking. On the built page every
+// image is an `<img>` with a `src`, however it was authored.
 //
 // AND ITS OWN MUTATIONS, in the same file, because a guard nobody has watched fail is a guard
-// nobody has tested (DEMOS.md, standing rule). `--check` finishes by attacking itself twice, and
-// the line it prints at the end is built from what the run counted rather than written in advance.
+// nobody has tested (DEMOS.md, standing rule). `--check` attacks itself four times before it is
+// allowed to print anything, and the line it prints is built from what the run counted rather than
+// written in advance.
 
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -113,24 +124,37 @@ function render(figure) {
 }
 
 /**
- * The one sentence this file takes out of a drawing, and why.
+ * The sentences this file takes out of a drawing, and why.
  *
  * The wireframe's own `<desc>` ends by inviting the reader to drag it and to read the numbers in
  * the table below — true on the demo page, and false in a committed book asset, where there is
  * nothing to drag and no table under it. A reader who opens the file directly is the one person
  * that sentence is written for, so leaving it is not harmless. Nothing is written in its place:
- * this removes a sentence, it does not author one, and what is left is byte-checked like the rest.
+ * this removes sentences, it does not author one, and what is left is byte-checked like the rest.
+ *
+ * It is a **vocabulary and a post-condition**, not one literal. The first version matched the
+ * sentence's opening words, and a reviewer made it a silent no-op by rewording the drawing — "Turn
+ * it with the arrow keys" — after which `make figures` wrote the invitation back into the committed
+ * asset, green. So: any sentence naming an interaction, or the page around the drawing, goes; and
+ * if one of those words survives, this throws rather than writing the file.
  */
+const INTERACTION = /\b(drag|dragging|arrow keys?|table below|below|click|tap|press|scroll|hover)\b/i;
+
 function withoutTheInvitation(drawing) {
-  const out = drawing.replace(/\s*Drag it,[^.]*\./, "");
-  // A strip that has quietly become a no-op is invisible: the sentence comes back, the committed
-  // bytes are regenerated to match, and the check is green over a file that lies to the one reader
-  // it is written for. So the removal is required to remove something whenever there is something
-  // to remove. Found by a reviewer, who moved the sentence off the end of the description.
-  if (out === drawing && /Drag it,/.test(drawing)) {
-    throw new Error("the drawing still invites an interaction and the strip did not fire");
+  const found = /<desc>([\s\S]*?)<\/desc>/.exec(drawing);
+  if (!found) return drawing;
+  const kept = found[1]
+    .split(/(?<=\.)\s+/)
+    .filter((sentence) => !INTERACTION.test(sentence))
+    .join(" ")
+    .trim();
+  if (!kept) {
+    throw new Error("every sentence of a drawing's description names an interaction; nothing left");
   }
-  return out;
+  if (INTERACTION.test(kept)) {
+    throw new Error(`a drawing's description still names an interaction after the strip: ${kept}`);
+  }
+  return drawing.replace(found[0], `<desc>${kept}</desc>`);
 }
 
 /**
@@ -170,7 +194,7 @@ function shownByTheChapters() {
         const source = attribute(image[0], "src");
         if (source === null) continue;
         const asset = /^\.?\/?assets\/(.+)$/.exec(source);
-        if (asset) shown.set(asset[1], name);
+        if (asset) shown.set(asset[1], `chapters/${name}`);
       }
     }
   }
@@ -188,9 +212,15 @@ function shownByTheChapters() {
  * lets `classesOf` treat the class as the token list it is.
  */
 function attribute(tag, name) {
-  const found = new RegExp(`\\b${name}\\s*=\\s*("([^"]*)"|'([^']*)')`).exec(tag);
+  // `(?<![-\w])` and not `\b`: `\bsrc` matches inside `data-src`, and a reviewer used exactly that
+  // to shadow the real one — `<img data-src="a-real-figure.svg" src="hand-painted.svg">` recorded
+  // the decoy and never looked at what the reader was shown. Unquoted values are read too, because
+  // HTML allows them and refusing to see one is the same blindness in a different coat.
+  const found = new RegExp(
+    `(?<![-\\w])${name}\\s*=\\s*("([^"]*)"|'([^']*)'|([^\\s"'>\`=]+))`, "i",
+  ).exec(tag);
   if (!found) return null;
-  return found[2] !== undefined ? found[2] : found[3];
+  return [found[2], found[3], found[4]].find((value) => value !== undefined) ?? null;
 }
 
 /** The class attribute of a tag, as the list of names it is. */
@@ -218,7 +248,95 @@ function drift(file, emitted, onDisk) {
     + `emitted ${JSON.stringify(emitted.slice(at, at + 30))}`;
 }
 
-const rendered = FIGURES.map((figure) => ({ file: figure.file, bytes: render(figure) }));
+/**
+ * The one place a figure's bytes are produced.
+ *
+ * The real run and the second self-attack both go through it, because a reviewer replaced
+ * `render(figure)` at the old call site with a read of the committed file: every counter still
+ * added up, both self-attacks still passed, and the run printed "byte-for-byte what demos/ draws"
+ * over a hand-painted SVG. An attack has to break the path the real run takes, or it is testing
+ * something else.
+ */
+function renderAll(figures) {
+  return figures.map((figure) => ({ file: figure.file, bytes: render(figure) }));
+}
+
+const rendered = renderAll(FIGURES);
+
+/**
+ * The set a page shows against the set this code draws, in both directions.
+ *
+ * A function rather than a loop inside the check, so a self-attack can hand it a page showing
+ * something nothing draws and require it to complain. Before that it could be switched off with
+ * `if (true)` while every counter stayed honest — a reviewer's finding.
+ */
+function setProblems(shown) {
+  const problems = [];
+  const drawn = new Set(FIGURES.map((figure) => figure.file));
+  let matched = 0;
+  for (const [file, where] of shown) {
+    if (drawn.has(file)) matched += 1;
+    else {
+      problems.push(`${where} shows assets/${file} as a data-true figure and nothing here draws `
+        + `it — a figure is never hand-drawn (ART_DIRECTION.md)`);
+    }
+  }
+  for (const file of drawn) {
+    if (!shown.has(file)) {
+      problems.push(`${file} is drawn here and no page shows it — a still nothing has placed is a `
+        + `picture nobody has judged`);
+    }
+  }
+  return { problems, matched };
+}
+
+/**
+ * Every asset a **built page** shows inside a `chapter-figure` block.
+ *
+ * THIS IS THE AUTHORITY, and the source-side scan above is only the early warning. A reviewer got a
+ * hand-painted SVG in front of a reader seven ways past a scan of the chapters' Markdown — an
+ * unquoted attribute, an uppercase tag, a nested `<figure>`, a `data-src` decoy, the class on a
+ * bare `<img>`, and, the way anyone would actually write it, a plain Markdown image inside the
+ * block, which mdBook turns into an `<img>` *after* a source scan has finished looking.
+ *
+ * The built page has no such variety: whatever the author wrote, every image is an `<img>` with a
+ * `src`, and every element carries its class as an attribute. So this reads `book/`, and it runs
+ * after the build — `tools/check.sh` step 5, beside the other rendered checks.
+ */
+function shownByTheBuiltPages() {
+  const shown = new Map();
+  const dir = path.join(ROOT, "book");
+  let pages = [];
+  try {
+    pages = readdirSync(dir).filter((file) => file.endsWith(".html"));
+  } catch {
+    return null;
+  }
+  for (const name of pages) {
+    const html = readFileSync(path.join(dir, name), "utf8");
+    // Every element that carries the class, not only `<figure>`: the block is styled by its class,
+    // so a `<p class="chapter-figure">` or an `<img class="chapter-figure">` reads to a reader as
+    // the same card. The scan is over tags rather than over nesting, which is what let a `<figure>`
+    // inside a `<figure>` slip past the previous version.
+    const carriers = [...html.matchAll(/<([a-zA-Z][-\w]*)\b([^>]*)>/g)]
+      .filter((tag) => classesOf(tag[2]).includes("chapter-figure"));
+    for (const carrier of carriers) {
+      // From the carrier to the end of the element it opens, or to the end of the page — a figure
+      // whose block is malformed still shows its images, so the scan may not depend on finding a
+      // closing tag.
+      const from = carrier.index;
+      const closing = html.indexOf(`</${carrier[1]}>`, from);
+      const region = html.slice(from, closing === -1 ? html.length : closing);
+      for (const image of [...region.matchAll(/<img\b[^>]*>/gi), carrier]) {
+        const source = attribute(image[0], "src");
+        if (source === null) continue;
+        const asset = /(?:^|\/)assets\/([^/]+)$/.exec(source.split("?")[0].split("#")[0]);
+        if (asset) shown.set(asset[1], `book/${name}`);
+      }
+    }
+  }
+  return shown;
+}
 
 /**
  * Compare every figure against what `read` hands back — the one place a figure is ever compared.
@@ -250,21 +368,9 @@ if (process.argv.includes("--check")) {
   const refused = [];
 
   const shown = shownByTheChapters();
-  const drawn = new Set(FIGURES.map((figure) => figure.file));
-  let matchedToChapters = 0;
-  for (const [file, chapter] of shown) {
-    if (drawn.has(file)) matchedToChapters += 1;
-    else {
-      problems.push(`chapters/${chapter} shows assets/${file} as a data-true figure and nothing `
-        + `here draws it — a figure is never hand-drawn (ART_DIRECTION.md)`);
-    }
-  }
-  for (const file of drawn) {
-    if (!shown.has(file)) {
-      problems.push(`${file} is drawn here and no chapter shows it — a still no chapter has `
-        + `placed is a picture nobody has judged`);
-    }
-  }
+  const set = setProblems(shown);
+  problems.push(...set.problems);
+  const matchedToChapters = set.matched;
 
   if (problems.length) {
     for (const problem of problems) process.stderr.write(`figures: ${problem}\n`);
@@ -293,11 +399,28 @@ if (process.argv.includes("--check")) {
   }
   refused.push("a figure whose committed bytes were altered");
 
-  // 2 · what is compared really came out of the drawing code. A second figure's step is rendered
+  // 2 · the bytes this run compared are the bytes the drawing code produces, re-derived here from
+  // nothing but `FIGURES`. A reviewer replaced the `rendered` binding with a read of the committed
+  // files: the loop then compared each file with itself, the other attacks still passed, and the
+  // run printed its pass line over a hand-painted SVG. Under that mutation this comes back with the
+  // real drawing and the two disagree.
+  const fresh = renderAll(FIGURES);
+  const swapped = fresh.findIndex((one, index) => one.bytes !== rendered[index].bytes);
+  if (swapped !== -1) {
+    process.stderr.write(
+      `figures: ${rendered[swapped].file} was compared against something the drawing code does not `
+      + `produce — what this run checked is not the figures\n`,
+    );
+    process.exit(1);
+  }
+  refused.push("bytes this run did not draw");
+
+  // 3 · what is compared really came out of the drawing code. A second figure's step is rendered
   // under the first one's name, and it has to come out different. If `render()` has been made to
   // read the committed file, the two are identical and this says so.
   const other = FIGURES.find((figure) => figure.file !== first.file);
-  if (render({ ...other, file: first.file }) === first.bytes) {
+  const [elsewhere] = renderAll([{ ...other, file: first.file }]);
+  if (elsewhere.bytes === first.bytes || elsewhere.bytes === committed(first.file)) {
     process.stderr.write(
       "figures: two different steps rendered to the same bytes — what this file compares is not "
       + "coming from the drawing code, so the comparison proves nothing about the figures\n",
@@ -306,12 +429,26 @@ if (process.argv.includes("--check")) {
   }
   refused.push("bytes that did not come from the drawing code");
 
+  // 4 · the set half complains about a page showing something nothing draws. Its own counters are
+  // no evidence: `if (true)` in the loop left them adding up while the check did nothing.
+  const planted = new Map([...shown, ["a-picture-nobody-drew.svg", "a page"]]);
+  if (!setProblems(planted).problems.some((problem) => problem.includes("a-picture-nobody-drew"))) {
+    process.stderr.write(
+      "figures: the set check accepted a page showing a figure nothing here draws — the half of "
+      + "this guard that keeps a hand-drawn picture out of the book is not running\n",
+    );
+    process.exit(1);
+  }
+  refused.push("a page showing a figure nothing draws");
+
   // The pass line is refused unless the run did what it would have claimed: one comparison per
   // figure, one file opened per comparison in each of the two passes, every figure a chapter shows
   // accounted for, and both attacks refused.
-  const expectedReads = rendered.length * 2;
+  // Two passes over every figure — the real one and self-attack 1 — plus the single read
+  // self-attack 2 makes to ask whether the bytes it produced are the file's own.
+  const expectedReads = rendered.length * 2 + 1;
   if (real.matched !== FIGURES.length || matchedToChapters !== shown.size
-    || readsFromDisk !== expectedReads || refused.length !== 2) {
+    || readsFromDisk !== expectedReads || refused.length !== 4) {
     process.stderr.write(
       `figures: the run did not do what the pass line would have claimed — ${real.matched} `
       + `compared, ${matchedToChapters} matched to a chapter, ${readsFromDisk} file(s) opened `
@@ -323,6 +460,38 @@ if (process.argv.includes("--check")) {
     `figures.mjs: ${real.matched} chapter figure(s), ${real.bytes} bytes read off disk and `
     + `byte-for-byte what demos/ draws; ${matchedToChapters} of them shown by a chapter and `
     + `nothing else shown as one; and this run refused ${refused.join(" and ")}\n`,
+  );
+} else if (process.argv.includes("--check-rendered")) {
+  // The same set check, over the pages a reader is actually served. Run after the build.
+  const shown = shownByTheBuiltPages();
+  if (shown === null) {
+    process.stderr.write("figures: the book is not built — run `mdbook build` before this\n");
+    process.exit(1);
+  }
+  const set = setProblems(shown);
+  const planted = new Map([...shown, ["a-picture-nobody-drew.svg", "a page"]]);
+  const bites = setProblems(planted).problems
+    .some((problem) => problem.includes("a-picture-nobody-drew"));
+  if (set.problems.length || !bites) {
+    for (const problem of set.problems) process.stderr.write(`figures: ${problem}\n`);
+    if (!bites) {
+      process.stderr.write(
+        "figures: the set check accepted a page showing a figure nothing here draws — the half of "
+        + "this guard that keeps a hand-drawn picture out of the book is not running\n",
+      );
+    }
+    process.exit(1);
+  }
+  if (set.matched !== FIGURES.length) {
+    process.stderr.write(
+      `figures: ${set.matched} figure(s) found on the built pages, and this code draws `
+      + `${FIGURES.length}\n`,
+    );
+    process.exit(1);
+  }
+  process.stdout.write(
+    `figures.mjs: ${set.matched} figure(s) on the built pages, every one of them drawn here and `
+    + `nothing else shown as one; and this run refused a page showing a figure nothing draws\n`,
   );
 } else {
   for (const { file, bytes } of rendered) {

@@ -76,6 +76,12 @@ are in *Wiring a figure* below.
   therefore never touched by hand, and never edited into agreement with a chapter — the drawing
   changes, or the chapter does.
 
+  **And the set is settled on the built page.** After the build, the same tool reads `book/` and
+  requires every image inside a `chapter-figure` block to be one it drew, and every figure it drew
+  to be shown. That check is on the rendered page rather than on the chapter source deliberately: a
+  chapter can write an image half a dozen ways — a Markdown image is the obvious one — and mdBook
+  makes them all the same `<img>` only at build time.
+
   **A figure may also be a page rather than an image.** The record's own renders are interactive
   HTML, snapshotted into `record/` and pinned by `record.lock`; a chapter puts one in front of the
   reader as a bold `Open the data-true…` link with a sentence saying what is in it. That link is a
