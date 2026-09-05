@@ -102,8 +102,8 @@ Both predictions were written down before either run — that the naive setting 
 uneven, and that the geometric one would at least halve it. That matters more than the numbers do,
 and it is the step people skip.
 
-The rounder of the two rings in the last section's figure is this one. The pair of them, side by
-side, is the difference between an assumption and a reading.
+The rounder of the two rings in the last section's figure is this one. The pair of them, together,
+is the difference between an assumption and a reading.
 
 But 2.2% is not zero. What is it?
 

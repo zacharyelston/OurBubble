@@ -139,9 +139,9 @@ First it has to be told where to put the next shape. You have two shapes now and
 arranging them, and getting that rule is the next chapter — it is where the shape between the tips
 stops being something inside one tetrahedron and becomes the thing that sits between all of them.
 
-**[Open the record's own render of that arrangement](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html)**
-— one tetrahedron per cube, facings alternating, a shape between in every gap: the next chapter's
-answer, not this pair repeated.
+**[Open the record's render of that arrangement](record/lab/primer/0116-tetoct-primer/figures/tetoct-render.html)**
+— the engine's own page, in its own words: one tetrahedron per cube, each pointing the other way,
+and a shape between in every interior gap.
 
 Then the arithmetic, which is only the same tick repeated more times than a hand can manage.
 
