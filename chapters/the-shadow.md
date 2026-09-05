@@ -141,13 +141,13 @@ missing.
 
 <!-- beat the-shadow.8 -->
 
-She has taken his first step and no more, and the rest are not large. She has something that changed
-and a number for how much. What she lacks is what came next for him: a structure small enough to
-hold in her head, and a statement of what it would do that could turn out false.
+She has done the noticing, and she has a number for how much. What is still to come is small: a
+structure she can hold in her head, and a statement of what it would do that could turn out false.
 
 That is the hard part, and it is what the rest of this book does: builds a small world a little at a
-time, says what it should do before it does it, and lets it answer. But a mark can be faithful and
-still be too coarse to settle what was asked of it — worth knowing before you make one.
+time, says what it should do before it does it, and lets it answer. The one thing to carry in with
+you is that a mark can be faithful and still be too coarse to settle what was asked of it — which is
+worth knowing before you make one.
 
 So this is where she hands the book over. She got you this far.
 
