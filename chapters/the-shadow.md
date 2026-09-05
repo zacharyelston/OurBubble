@@ -143,8 +143,8 @@ That is the hard part — and it is where she hands the book over. She got you t
 from the blank page.
 
 What the rest of this does is build a small world a little at a time, say what it should do before
-it does it, and let it answer. Before that, one chapter on what happened to everyone else who
-started from a shadow — because the hard part turns out not to be the reasoning.
+it does it, and let it answer. First, though, one chapter on everyone else who started from a
+shadow.
 
 *Every chapter ends with a line like this one: which files back up the chapter's claims, and which
 parts nothing backs up. The last chapter is about going and looking yourself.*
