@@ -10,7 +10,7 @@
   <figcaption><strong>Analogy — not data.</strong> The steep line was the guess and it was refused; the gentle line was the measurement and it was kept. The exponent that decides it is in the figure linked below.</figcaption>
 </figure>
 
-<!-- beat 105 -->
+<!-- beat when-the-expected-law-fails.1 -->
 
 The instrument has now agreed with everything it was pointed at. That is the problem.
 
@@ -25,7 +25,7 @@ Here is one.
 
 ## A lump in a cavity
 
-<!-- beat 106 -->
+<!-- beat when-the-expected-law-fails.2 -->
 
 Put a small region inside a resonating cavity and make it harder for the field to move through — a
 lump of denser material, in effect.
@@ -39,7 +39,7 @@ The question is *by how much*, as the lump is made denser. Which is a law, and l
 
 ## ✎ Before we look
 
-<!-- beat 107 -->
+<!-- beat when-the-expected-law-fails.3 -->
 
 Here is the argument everybody reaches for, and it is a good one.
 
@@ -55,7 +55,7 @@ We registered ours before running, and it was the obvious one: the exponent shou
 
 ## What came back
 
-<!-- beat 108 -->
+<!-- beat when-the-expected-law-fails.4 -->
 
 We handed the peak positions and the weights to a fitter and asked it for one thing: the power the
 pitch follows as the lump gets denser. No menu this time, and no runner-up — one law, fitted, with
@@ -76,7 +76,7 @@ writing, in advance.
 
 ## Why — and what the reason is worth
 
-<!-- beat 109 -->
+<!-- beat when-the-expected-law-fails.5 -->
 
 The square-root argument assumes the material weight governs the whole resonating volume. Here it
 does not: the lump is a small part of the cavity and most of the vibration sits in unchanged space.
@@ -97,7 +97,7 @@ there is, it is an explanation that has not paid: better than an excuse, and les
 
 ## What a refusal is worth
 
-<!-- beat 110 -->
+<!-- beat when-the-expected-law-fails.6 -->
 
 The same *kind* of instrument — a fitter told nothing — found the ripple's law, the vacuum's
 coefficient and the class numbers. Here it refused the most natural material-scaling analogy anyone

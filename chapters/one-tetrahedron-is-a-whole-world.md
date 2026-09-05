@@ -19,7 +19,7 @@ What have you got?
 
 ## Four dots, and everything you can draw between them
 
-<!-- beat 23 -->
+<!-- beat one-tetrahedron-is-a-whole-world.1 -->
 
 You have a tetrahedron: a little pyramid with a triangle for a base and a triangle for each of its
 three sides.
@@ -35,7 +35,7 @@ four of them fence off between them, and that is the one to count.
 
 ## The whole inventory
 
-<!-- beat 24 -->
+<!-- beat one-tetrahedron-is-a-whole-world.2 -->
 
 {{napkin:tetra_counts}}
 
@@ -51,7 +51,7 @@ faces say?
 
 ## Four numbers on the corners, four faces, four zeros
 
-<!-- beat 25 -->
+<!-- beat one-tetrahedron-is-a-whole-world.3 -->
 
 The lines say what they said before. Each line joins two corners, so each line carries the
 difference between them: six lines, six differences, none of them chosen.
@@ -70,7 +70,7 @@ Because so far the line-numbers were *differences*. What if they were not?
 
 ## What if the lines came first
 
-<!-- beat 26 -->
+<!-- beat one-tetrahedron-is-a-whole-world.4 -->
 
 Everything so far started at the corners. The lines only ever carried what the corners already said.
 But nothing forces that. You can put six numbers straight onto the six lines and never mention the
@@ -87,7 +87,7 @@ Four faces, four such numbers. Which raises the same question one rung higher.
 
 ## Round the inside
 
-<!-- beat 27 -->
+<!-- beat one-tetrahedron-is-a-whole-world.5 -->
 
 The four faces are the boundary of the inside, the way the three lines were the boundary of the
 triangle's face. So do to the faces what you did to the lines — add the four face-numbers up around
@@ -115,7 +115,7 @@ So how many kinds of number can this world hold?
 
 ## Four kinds, and that is all there will ever be
 
-<!-- beat 28 -->
+<!-- beat one-tetrahedron-is-a-whole-world.6 -->
 
 You have now met the same fact twice — walk the boundary of a closed thing and the total comes home
 to zero — and it cost nothing either time.
@@ -137,7 +137,7 @@ tell you.
 
 ## The one choice: what a line is worth
 
-<!-- beat 29 -->
+<!-- beat one-tetrahedron-is-a-whole-world.7 -->
 
 Still nothing has a length. The six lines join things; none of them is long or short. So suppose you
 now decide to say how long each one is, because you want to.
@@ -159,7 +159,7 @@ Is that really enough to call a world?
 
 ## Enough for a world
 
-<!-- beat 30 -->
+<!-- beat one-tetrahedron-is-a-whole-world.8 -->
 
 Take the inventory again, and this time notice that it is finished.
 

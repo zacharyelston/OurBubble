@@ -115,7 +115,7 @@ def _columns(matrix) -> List[List[Fraction]]:
 CORNERS: Tuple[int, int, int, int] = (2, 5, 1, 4)
 
 # Six freely chosen line-numbers for `tetra_inside_sum` — arrows in their own right rather than
-# differences of corner values. This is beat 22's move, and it is the whole reason that token is
+# differences of corner values. This is beat two-dots-and-a-line.10's move, and it is the whole reason that token is
 # worth printing: differences would give four zero faces, and 0+0+0+0 = 0 demonstrates nothing.
 ARROWS: Tuple[int, ...] = (3, 1, 1, 2, 1, 1)
 

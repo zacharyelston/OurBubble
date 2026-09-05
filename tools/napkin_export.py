@@ -100,10 +100,10 @@ def complexes() -> Dict[str, Any]:
 
 
 def triangle() -> Dict[str, Any]:
-    """Beat 14's walk, and beat 15's answer to "would any three numbers do that?".
+    """Beat two-dots-and-a-line.2's walk, and beat two-dots-and-a-line.3's answer to "would any three numbers do that?".
 
     The second triple is the demo's own control and it is checked here rather than there: the claim
-    beat 15 makes is *every time*, so the export carries a walk on numbers that are not the
+    beat two-dots-and-a-line.3 makes is *every time*, so the export carries a walk on numbers that are not the
     chapter's and asserts its sum is zero too.
     """
     def walk(values: Sequence[int]) -> Dict[str, Any]:

@@ -9,14 +9,16 @@ the reader **does something** and watches the object answer.
 
 | page | chapter | beats | steps |
 |---|---|---|---|
-| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 13–22 | 9 |
-| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 23–30 | 6 |
-| [`make-it-move.html`](make-it-move.html) | Make it move | 31–42 | 9 |
-| [`the-shape-between.html`](the-shape-between.html) | The shape between | 43–47 | 5 |
-| [`two-worlds-threaded.html`](two-worlds-threaded.html) | Two worlds threaded | 48–53 | 5 |
+| [`two-dots-and-a-line.html`](two-dots-and-a-line.html) | Two dots, a line, and the first thing that closes | 10 | 9 |
+| [`one-tetrahedron-is-a-whole-world.html`](one-tetrahedron-is-a-whole-world.html) | One tetrahedron is a whole world | 8 | 6 |
+| [`make-it-move.html`](make-it-move.html) | Make it move | 12 | 9 |
+| [`the-shape-between.html`](the-shape-between.html) | The shape between | 5 | 5 |
+| [`two-worlds-threaded.html`](two-worlds-threaded.html) | Two worlds threaded | 6 | 5 |
 
-**Those beat numbers are not written anywhere in `demos/`,** and neither is that table's arithmetic —
-see *Nothing here knows a beat number* below.
+**Those two columns are counts, not ranges, and neither number is written anywhere in `demos/`.** A
+beat's id is its own chapter's — `make-it-move.3` — so there is no book-wide number left to print
+here or anywhere else; both columns are checked against `steps.json` on every run. See *Nothing here
+knows a beat number* below.
 
 ## 2026-09-02 — the owner's two verdicts, and what they changed
 
@@ -42,11 +44,16 @@ the page beside it — and did nothing in between.
 The step definitions have **no field for prose**. A step that wanted to explain itself would have to
 add one, which is a thing a reviewer can see in a diff.
 
-**A beat with nothing to do is not a step**, so seven pairs are folded into one step each: 17–18,
-19–20, 25–26, 27–28, 30–31, 37–38 and 48–49. A folded step keeps the question of the beat whose
-action it performs — the later one in the first pair, the earlier one in the other six — its chip
-carries the range, and it covers both sections' anchors, which the check holds it to. Forty-one
-beats, thirty-four steps.
+**A beat with nothing to do is not a step**, so a pair of beats is folded into one step wherever
+that happens. The folds, checked against the steps themselves because the last list like this went
+stale:
+`two-dots-and-a-line.9+10`, `one-tetrahedron-is-a-whole-world.1+2`,
+`one-tetrahedron-is-a-whole-world.7+8`, `make-it-move.1+2`, `make-it-move.4+5`,
+`make-it-move.11+12`, `two-worlds-threaded.5+6`. A folded step keeps the question of the beat
+whose action it performs — the later one in the first pair, the earlier one in the rest — and it
+covers both sections' anchors, which the check holds it to. The counts are the page table's, above,
+where they are checked against `steps.json` — this sentence used to repeat them, and a reviewer
+changed the repeat to "Ninety-nine beats, two steps." with tier 0 green.
 
 **The budget.** All the reader-facing text on a page — the masthead, the scope box, the footer, every
 step's title and instruction, every control's label — is **under 250 words**, and `check_edition.py`
@@ -127,16 +134,24 @@ the object leaves the plane.
 
 ## Nothing here knows a beat number
 
-The preface being drafted will insert beats at the **front** of `OUTLINE.md` and shift every number
-in the book again. It has happened twice already — tranche C added a chapter and moved every beat
-from the old 36 on, tranche D moved them by three more — and each time, anything holding a beat
-number in its own source went stale silently.
+Beats used to be numbered across the whole book, so inserting one shifted every later number. It
+happened three times in two weeks — a chapter added, a chapter added again, then the preface moving
+every beat in the book by four — and each time, anything holding a beat number in its own source went
+stale silently.
 
-So the demos hold none. [`tools/demo_steps.py`](../tools/demo_steps.py) reads each beat's **question**
-off `OUTLINE.md` and its **number** off the chapter's own `<!-- beat N -->` marker, keyed by the
+So the demos hold none, and since issue #77 there is no book-wide number left to hold: a beat's id is
+`<chapter-slug>.<n>`, counted from 1 inside its own chapter, and inserting a beat renumbers only that
+chapter. [`tools/demo_steps.py`](../tools/demo_steps.py) reads each beat's **question** off
+`OUTLINE.md` and its **id** off the chapter's own `<!-- beat slug.n -->` marker, keyed by the
 section's anchor, and writes [`steps.json`](steps.json). A step declares which sections it covers by
-anchor — a string a renumber cannot touch — and the page renders its title, its beat label and the
-chapter's beat range from what the generator wrote.
+anchor — a string a renumber cannot touch — and the page renders its title from what the generator
+wrote.
+
+**A step is labelled by its place on the page**: *step 3 of 9*, the chip on the row is its number,
+and the address in the bar is `#step-3`. A reader walking one page is counting that page's steps, and
+nothing she is shown counts anything outside it. The label is one phrase with the page's own counter
+in it, so the word budget counts it once rather than once per step — the same rule the budget already
+applies to a button labelled the same way on nine steps.
 
 A renumber therefore changes `OUTLINE.md` and the chapters, `steps.json` follows, and **no file under
 `demos/` is edited at all**. `check_edition.py` regenerates the file and fails if the committed one
@@ -212,8 +227,9 @@ is one more figure to go stale:
    as a `<polygon>`, which the whitelist allowed for the panels and the identity loop never looked
    at; and a second dot called `D` at an arbitrary point, which passed because `D` legitimately
    appears three times. The author's own six attacks had all been in the identity dimension: none of
-   them moved a mark. Beats 12 and 41 print counts a reader is invited to check against the picture,
-   which is why that was a blocker and not a nit. Every one of those clauses is a hole that was walked through rather than foreseen.
+   them moved a mark. The step that counts the ring's lines and the one that counts the threaded
+   pair's strokes print counts a reader is invited to check against the picture, which is why that
+   was a blocker and not a nit. Every one of those clauses is a hole that was walked through rather than foreseen.
    A drawing that names its lines correctly and points them all at the wrong dot is the failure a
    reader is invited to catch by counting. An unlabelled stroke joining nothing to nothing rode into
    a commit while the labelled count stayed at thirty-six. And when that was fixed by counting every
@@ -404,12 +420,13 @@ did not notice, which is what the generated scaffolding is for: `steps.json` was
 else did.
 
 **This document did notice, and it had not extended the discipline to itself.** Nine hand-written
-"beat N" references in the prose here went silently wrong — the poke step, the walk step, the dial
+beat references in the prose here went silently wrong — the poke step, the walk step, the dial
 step, all named by a number that had moved. A file whose whole argument is *no beat number is ever
 typed into a demo* had typed nine.
 
-Both halves are now guarded rather than remembered. The page table's ranges are checked against
-`steps.json`, so a renumber that skips them fails. The prose scan skips **only the page-table rows
+Both halves are now guarded rather than remembered. The page table's two counts are checked against
+`steps.json` and against the pages' own steps, so a renumber that skips them fails, and so is every
+`slug.n` written anywhere in this file. The prose scan skips **only the page-table rows
 it just checked**: it used to skip any line containing `.html`, which let a sentence naming a page
 and a beat in the same breath — the likeliest such sentence anyone would write — straight through.
 And **everywhere else a beat is named by what it is** — the poke step, the walk step, chapter one's opening step — because a name needs no

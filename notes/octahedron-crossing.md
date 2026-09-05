@@ -45,7 +45,7 @@ FIREWALL: this is arithmetic on a toy DEC lattice. Nothing here is a claim about
 
 ---
 
-## 1 · THE SUM — TRUE, and it is beat 23 again
+## 1 · THE SUM — TRUE, and it is beat one-tetrahedron-is-a-whole-world.1 again
 
 Put a freely chosen arrow on each of the record's cut octahedron's **13** lines (6 dots, 13 lines,
 12 faces, 4 insides; Euler `6 − 13 + 12 − 4 = 1`, a ball). `F = dA` is then a number on each face —
@@ -223,16 +223,16 @@ scale, centred on a hole.
 *Beat numbers below were brought up to the outline's current ones when the change landed, so they
 are correct as they stand; the last section records what the change was.*
 
-Beat 49 already tells her the tetrahedra never meet face to face and that octahedra sit between them;
+Beat two-worlds-threaded.2 already tells her the tetrahedra never meet face to face and that octahedra sit between them;
 the computed fact worth adding is the exact 1:1 pairing — 864 tetrahedron faces, 864 octahedron
 faces, each face one of each — and then the correction her next question earns: on the *lines*, where
 numbers actually live, tetrahedra do touch each other directly, and what the octahedron uniquely
 supplies is one line in seven, two of every dot's fourteen, that no tetrahedron provides. A new chapter
-between beats 35 and 47 can give her the octahedron on its own napkin at the same tick size she already
+between beats make-it-move.5 and the-shape-between.5 can give her the octahedron on its own napkin at the same tick size she already
 has: poke one dot, and at tick 2 the whole of it is on the opposite dot, at tick 3 the whole of it is
 home, and it does not truly repeat until 12 — her first object where crossing takes longer than one
-tick, which is exactly the room beat 34 says the tetrahedron does not have. The strongest new idea is
-the one for beat 23's callback: whatever the eight tetrahedra push across an octahedron's closed
+tick, which is exactly the room beat make-it-move.4 says the tetrahedron does not have. The strongest new idea is
+the one for beat one-tetrahedron-is-a-whole-world.1's callback: whatever the eight tetrahedra push across an octahedron's closed
 surface sums to **exactly zero**, with no lengths in it — the same coming-home she proved on four
 faces, now on eight, and the honest meaning of "the octahedron holds the sum". Three things must not
 be said: that a tick is a trip round the octahedron (crossing is 2 steps, going round is 4, and the

@@ -9,7 +9,7 @@
   <figcaption><strong>Analogy — not data.</strong> Every stop on that walk is a file in the repository. This page is not one of them — the trail runs through the record rather than through the book.</figcaption>
 </figure>
 
-<!-- beat 118 -->
+<!-- beat cast-your-own-shadow.1 -->
 
 So what did we actually do? One sentence, and it should be the honest one rather than the warm one.
 
@@ -27,7 +27,7 @@ including mine?
 
 ## Follow one result without running anything
 
-<!-- beat 119 -->
+<!-- beat cast-your-own-shadow.2 -->
 
 Take the refusal from the last chapter — the exponent that came out a little over half the expected
 steepness. Four files, ten minutes, no build required.
@@ -53,7 +53,7 @@ encouraging ones.
 
 ## What travels with the book
 
-<!-- beat 120 -->
+<!-- beat cast-your-own-shadow.3 -->
 
 The chapters you have read carry no experiment numbers and no quotations. That was a choice, and the
 provenance did not go missing — it moved to the appendix.
@@ -79,7 +79,7 @@ question at this point is the other one.
 
 ## And exactly which sentences no program has read
 
-<!-- beat 120 -->
+<!-- beat cast-your-own-shadow.3 -->
 
 A fair amount of this book. It is worth knowing which.
 
@@ -100,7 +100,7 @@ instead, which is a better guarantee than any program here can give.
 
 ## The check that would actually catch us
 
-<!-- beat 121 -->
+<!-- beat cast-your-own-shadow.4 -->
 
 The commands above verify bookkeeping. Here is the one that verifies the science, and it is the
 reason this project can make the claims it does.
@@ -117,7 +117,7 @@ suits your machine, and read what the section says before you run anything.
 
 ## ✎ Before you press Return
 
-<!-- beat 122 -->
+<!-- beat cast-your-own-shadow.5 -->
 
 **Write down what you expect.**
 
@@ -134,7 +134,7 @@ result's history and worth more than the result.
 
 ## What we carry out of the bubble
 
-<!-- beat 123 -->
+<!-- beat cast-your-own-shadow.6 -->
 
 The shadow was never proof of a sphere. It was an invitation to build a test.
 
@@ -147,7 +147,7 @@ exponent.
 
 ## What it adds up to
 
-<!-- beat 123 -->
+<!-- beat cast-your-own-shadow.6 -->
 
 Put together, those do not add up to a discovery. They add up to a method:
 

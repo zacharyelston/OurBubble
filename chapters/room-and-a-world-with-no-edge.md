@@ -24,7 +24,7 @@ Do they stack?
 
 ## They do not stack
 
-<!-- beat 54 -->
+<!-- beat room-and-a-world-with-no-edge.1 -->
 
 No, and the way they fail is one of the better stories in mathematics.
 
@@ -41,7 +41,7 @@ Which raises a fair question: why insist on tetrahedra at all?
 
 ## What a square can do that a triangle cannot
 
-<!-- beat 55 -->
+<!-- beat room-and-a-world-with-no-edge.2 -->
 
 Because triangles are rigid and squares are not, and rigidity is the property you cannot do without.
 
@@ -57,7 +57,7 @@ If there is no perfect answer, what did we choose?
 
 ## The compromise we chose
 
-<!-- beat 56 -->
+<!-- beat room-and-a-world-with-no-edge.3 -->
 
 Every tetrahedral world is a compromise, and a compromise is a choice with measurable consequences.
 
@@ -77,7 +77,7 @@ Now you have room. So poke a dot in the middle of a great many, and watch.
 
 ## The pond
 
-<!-- beat 57 -->
+<!-- beat room-and-a-world-with-no-edge.4 -->
 
 There is a ring.
 
@@ -98,7 +98,7 @@ Watch it a little longer, though, and it does something a pond in a field does n
 
 ## It hits the edge
 
-<!-- beat 58 -->
+<!-- beat room-and-a-world-with-no-edge.5 -->
 
 It reaches the outermost dots and comes back.
 
@@ -114,7 +114,7 @@ world with no edge at all — and there is a cheap trick for that.
 
 ## Wrap it
 
-<!-- beat 59 -->
+<!-- beat room-and-a-world-with-no-edge.6 -->
 
 Glue the far side to the near side.
 
@@ -136,7 +136,7 @@ Which leaves one thing to check before the question you have been unable to ask 
 
 ## Now that the world has no edge — is any dot special?
 
-<!-- beat 60 -->
+<!-- beat room-and-a-world-with-no-edge.7 -->
 
 The object is finished, so the question can finally be asked honestly: standing on one dot of this
 wrapped world, does it look like standing on any other?
@@ -160,7 +160,7 @@ So the world has a grain, and no dot is privileged.
 
 ## The object, and the only question left
 
-<!-- beat 61 -->
+<!-- beat room-and-a-world-with-no-edge.8 -->
 
 You can now ask the stopwatch question: poke a dot, count the ticks, see how far the front has gone,
 then do it again in another direction and compare.

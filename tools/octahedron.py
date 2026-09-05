@@ -502,7 +502,7 @@ def _orientation(cell: Sequence[int]) -> int:
 
 # Thirteen freely chosen line-numbers — arrows in their own right, not differences of dot values.
 # Chosen (and asserted) so that every one of the twelve faces carries a non-zero number: a boundary
-# sum of eight zeros would demonstrate nothing, which is the same trap beat 22 avoids.
+# sum of eight zeros would demonstrate nothing, which is the same trap beat two-dots-and-a-line.10 avoids.
 OCT_ARROWS: Tuple[int, ...] = (3, 1, 4, 1, 5, 2, 6, 5, 3, 5, 8, 9, 7)
 
 
@@ -515,7 +515,7 @@ def boundary_sum() -> Dict[str, object]:
     octahedron's outside. Add those eight up, each walked the way round it faces from outside, and
     the answer is **zero for every A whatever**, with no length anywhere in it.
 
-    And it is not a new fact: it is `tetra_inside_sum` — chapter 2's beat 23 — run four times and
+    And it is not a new fact: it is `tetra_inside_sum` — the tetrahedron chapter's first beat — run four times and
     added. Each of the four insides has its own four face-numbers summing to zero, and the four
     interior faces appear in two insides each with opposite signs, so they cancel and leave exactly
     the eight outside ones. That cancellation is asserted term by term below, not asserted in prose.
@@ -1389,7 +1389,7 @@ def midpoint_cut() -> Dict[str, object]:
 
 
 # Twelve freely chosen arrows, one per line of the octahedron — arrows in their own right, not
-# differences of anything, which is beat 22's move and the only way the sum below demonstrates
+# differences of anything, which is beat two-dots-and-a-line.10's move and the only way the sum below demonstrates
 # something. Chosen (and asserted) so that all eight faces carry a non-zero number.
 MID_ARROWS: Tuple[int, ...] = (3, 1, 4, 1, 5, 2, 6, 5, 3, 5, 8, 9)
 

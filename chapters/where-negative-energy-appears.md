@@ -9,7 +9,7 @@
   <figcaption><strong>Analogy — not data.</strong> Fewer shapes fit inside than outside, so the baseline between the plates differs from the baseline beyond them. What the difference actually measures is in the figure linked below.</figcaption>
 </figure>
 
-<!-- beat 87 -->
+<!-- beat where-negative-energy-appears.1 -->
 
 Three noes now, all at the same barrier. A shaped push wants something below the floor. Ordinary
 fields cannot go below the floor. Walling a region off does not change what resistance is, and aimed
@@ -26,7 +26,7 @@ What is left when you take the fields away, though? Isn't that nothing?
 
 ## What "empty" contains
 
-<!-- beat 88 -->
+<!-- beat where-negative-energy-appears.2 -->
 
 Not nothing. This is the one piece of quantum theory the book needs, and it is one sentence long.
 
@@ -43,7 +43,7 @@ fitting.
 
 ## The long shapes stop fitting
 
-<!-- beat 89 -->
+<!-- beat where-negative-energy-appears.3 -->
 
 The long ones.
 
@@ -59,7 +59,7 @@ Which is lower, and why?
 
 ## Inside, because we took things away
 
-<!-- beat 90 -->
+<!-- beat where-negative-energy-appears.4 -->
 
 Inside. And you can get there without any calculation at all.
 
@@ -75,7 +75,7 @@ Now: we can build that in the little world. Before we do, commit to something.
 
 ## ✎ Before we look
 
-<!-- beat 91 -->
+<!-- beat where-negative-energy-appears.5 -->
 
 **Write down your guess.** As the two walls are brought closer together, does the difference between
 inside and outside grow, or shrink?
@@ -89,7 +89,7 @@ what does that mean the walls will *do*?
 
 ## What the little world did
 
-<!-- beat 92 -->
+<!-- beat where-negative-energy-appears.6 -->
 
 We built the one-dimensional version. Two walls in the little world, the allowed vibration shapes
 worked out from the object itself, the part that is the same inside and out subtracted away, and
@@ -107,7 +107,7 @@ That is the sign three attempts had been unable to reach, appearing on its own.
 
 ## A sign is easy
 
-<!-- beat 93 -->
+<!-- beat where-negative-energy-appears.7 -->
 
 Which is exactly why a sign is not enough, and this is the sceptical beat of the chapter.
 
@@ -124,7 +124,7 @@ Neither of those can be guessed. So: did the machine find them without being tol
 
 ## What came back
 
-<!-- beat 94 -->
+<!-- beat where-negative-energy-appears.8 -->
 
 It did.
 
@@ -138,7 +138,7 @@ then measured again with nothing pinning it — read straight off the slope, fre
 
 ## And the part nobody put in
 
-<!-- beat 94 -->
+<!-- beat where-negative-energy-appears.8 -->
 
 And the coefficient was not assumed at any point. It came out at **−0.13099** where the exact answer
 is **−π/24 = −0.13090** — a match to **0.07%**, on a fit that tracks the measured curve to seven
@@ -158,7 +158,7 @@ Something else changed here, though, and it is quieter than the physics.
 
 ## What quietly changed
 
-<!-- beat 95 -->
+<!-- beat where-negative-energy-appears.9 -->
 
 Up to now, a person set up each experiment, ran it, and read off the answer.
 
