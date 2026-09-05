@@ -28,12 +28,15 @@
 //
 // **The set is settled on the BUILT page**, which is why there are two modes. `--check` runs before
 // the build and reads the chapters' Markdown, as an early warning. `--check-rendered` runs after it
-// and reads `book/`, and that one is the authority: a reviewer put a hand-painted SVG in front of a
-// reader seven ways past a scan of the source — an unquoted attribute, an uppercase tag, a nested
-// `<figure>`, a `data-src` decoy, the class on a bare `<img>`, the class on a `<p>`, and, the way
-// anyone would actually write it, a plain Markdown image inside the block, which mdBook turns into
-// an `<img>` only at build time, after a source scan has finished looking. On the built page every
-// image is an `<img>` with a `src`, however it was authored.
+// and reads `book/`, and that one is the authority — and it asks what a page *reaches for* rather
+// than what tag reached. Two reviewers between them got a hand-painted SVG in front of a reader a
+// dozen ways past scans that looked at tags: an unquoted attribute, an uppercase tag, a `data-src`
+// decoy, the class on a bare `<img>` or a `<p>`, a plain Markdown image (which mdBook turns into an
+// `<img>` only at build time), a `<figure>` nested in another so the block's end came early,
+// `srcset`, `<picture><source>`, `<object>`, `<embed>`, a CSS `background-image`, and a file in a
+// subdirectory of `assets/`. Every one of those answers "which element is this" differently, so the
+// question changed: **every `assets/…` file a built page reaches for, anywhere on it, must be a
+// figure this code drew or a study `ART_DIRECTION.md` names.**
 //
 // AND ITS OWN MUTATIONS, in the same file, because a guard nobody has watched fail is a guard
 // nobody has tested (DEMOS.md, standing rule). `--check` attacks itself four times before it is
@@ -55,7 +58,7 @@ const ASSETS = path.join(ROOT, "chapters", "assets");
 const load = (file) => import(pathToFileURL(path.join(DEMOS, file)).href);
 
 const { Engine } = await load("engine.mjs");
-const { drawings } = await load("draw.mjs");
+const { drawings, WIRE_INVITATION } = await load("draw.mjs");
 const { chapterSteps } = await load("steps.mjs");
 const { joinSteps, initialState, stillFrom } = await load("core.mjs");
 
@@ -124,37 +127,27 @@ function render(figure) {
 }
 
 /**
- * The sentences this file takes out of a drawing, and why.
+ * The one sentence this file takes out of a drawing, and why.
  *
- * The wireframe's own `<desc>` ends by inviting the reader to drag it and to read the numbers in
- * the table below — true on the demo page, and false in a committed book asset, where there is
- * nothing to drag and no table under it. A reader who opens the file directly is the one person
- * that sentence is written for, so leaving it is not harmless. Nothing is written in its place:
- * this removes sentences, it does not author one, and what is left is byte-checked like the rest.
+ * The wireframe's `<desc>` ends by inviting the reader to drag it and to read the numbers in the
+ * table below — true on the demo page, and false in a committed book asset, where there is nothing
+ * to drag and no table under it. A reader who opens the file directly is the one person that
+ * sentence is written for, so leaving it is not harmless.
  *
- * It is a **vocabulary and a post-condition**, not one literal. The first version matched the
- * sentence's opening words, and a reviewer made it a silent no-op by rewording the drawing — "Turn
- * it with the arrow keys" — after which `make figures` wrote the invitation back into the committed
- * asset, green. So: any sentence naming an interaction, or the page around the drawing, goes; and
- * if one of those words survives, this throws rather than writing the file.
+ * **The drawing owns the sentence**, as `WIRE_INVITATION` in `demos/draw.mjs`, and this removes
+ * exactly that string. Two earlier versions guessed at it instead — first by its opening words,
+ * then by a vocabulary of interaction words — and a reviewer defeated both by rewording the
+ * drawing: the invitation came back into the committed asset, green, and one rewording left a
+ * sentence fragment behind. A word list can never be complete; a constant two files share cannot
+ * drift.
  */
-const INTERACTION = /\b(drag|dragging|arrow keys?|table below|below|click|tap|press|scroll|hover)\b/i;
-
 function withoutTheInvitation(drawing) {
-  const found = /<desc>([\s\S]*?)<\/desc>/.exec(drawing);
-  if (!found) return drawing;
-  const kept = found[1]
-    .split(/(?<=\.)\s+/)
-    .filter((sentence) => !INTERACTION.test(sentence))
-    .join(" ")
-    .trim();
-  if (!kept) {
-    throw new Error("every sentence of a drawing's description names an interaction; nothing left");
+  if (!drawing.includes(WIRE_INVITATION)) return drawing;
+  const out = drawing.replace(` ${WIRE_INVITATION}`, "").replace(WIRE_INVITATION, "");
+  if (out.includes(WIRE_INVITATION)) {
+    throw new Error("the drawing still invites an interaction after the removal");
   }
-  if (INTERACTION.test(kept)) {
-    throw new Error(`a drawing's description still names an interaction after the strip: ${kept}`);
-  }
-  return drawing.replace(found[0], `<desc>${kept}</desc>`);
+  return out;
 }
 
 /**
@@ -264,47 +257,23 @@ function renderAll(figures) {
 const rendered = renderAll(FIGURES);
 
 /**
- * The set a page shows against the set this code draws, in both directions.
+ * Every `assets/…` file a **built page** reaches for, however it reaches for it.
  *
- * A function rather than a loop inside the check, so a self-attack can hand it a page showing
- * something nothing draws and require it to complain. Before that it could be switched off with
- * `if (true)` while every counter stayed honest — a reviewer's finding.
+ * THIS IS THE AUTHORITY, and the source-side scan above is only the early warning. A reviewer put a
+ * hand-painted SVG in front of a reader past every earlier version of this: past a scan of the
+ * chapters' Markdown (an unquoted attribute, an uppercase tag, a `data-src` decoy, the class on a
+ * bare `<img>` or a `<p>`, and a plain Markdown image, which mdBook turns into an `<img>` only at
+ * build time); and then past a scan of the built page that sliced each figure block out, by nesting
+ * one `<figure>` inside another, by `srcset`, by `<picture><source>`, by `<object>`, `<embed>`, a
+ * CSS `background-image`, and by putting the file in a subdirectory of `assets/`.
+ *
+ * Every one of those was a different answer to "which element is this, and where does its block
+ * end". So the question changed. This asks **what files does this page reach for** — anywhere on
+ * it, in any attribute of any element and in any style in it — and every one has to be a figure
+ * this code drew or a study `ART_DIRECTION.md` names. A picture nobody has judged cannot be got
+ * onto a page by choosing a different tag for it, because no tag is being looked at.
  */
-function setProblems(shown) {
-  const problems = [];
-  const drawn = new Set(FIGURES.map((figure) => figure.file));
-  let matched = 0;
-  for (const [file, where] of shown) {
-    if (drawn.has(file)) matched += 1;
-    else {
-      problems.push(`${where} shows assets/${file} as a data-true figure and nothing here draws `
-        + `it — a figure is never hand-drawn (ART_DIRECTION.md)`);
-    }
-  }
-  for (const file of drawn) {
-    if (!shown.has(file)) {
-      problems.push(`${file} is drawn here and no page shows it — a still nothing has placed is a `
-        + `picture nobody has judged`);
-    }
-  }
-  return { problems, matched };
-}
-
-/**
- * Every asset a **built page** shows inside a `chapter-figure` block.
- *
- * THIS IS THE AUTHORITY, and the source-side scan above is only the early warning. A reviewer got a
- * hand-painted SVG in front of a reader seven ways past a scan of the chapters' Markdown — an
- * unquoted attribute, an uppercase tag, a nested `<figure>`, a `data-src` decoy, the class on a
- * bare `<img>`, and, the way anyone would actually write it, a plain Markdown image inside the
- * block, which mdBook turns into an `<img>` *after* a source scan has finished looking.
- *
- * The built page has no such variety: whatever the author wrote, every image is an `<img>` with a
- * `src`, and every element carries its class as an attribute. So this reads `book/`, and it runs
- * after the build — `tools/check.sh` step 5, beside the other rendered checks.
- */
-function shownByTheBuiltPages() {
-  const shown = new Map();
+function assetsOnTheBuiltPages() {
   const dir = path.join(ROOT, "book");
   let pages = [];
   try {
@@ -312,30 +281,55 @@ function shownByTheBuiltPages() {
   } catch {
     return null;
   }
+  const shown = new Map();
   for (const name of pages) {
     const html = readFileSync(path.join(dir, name), "utf8");
-    // Every element that carries the class, not only `<figure>`: the block is styled by its class,
-    // so a `<p class="chapter-figure">` or an `<img class="chapter-figure">` reads to a reader as
-    // the same card. The scan is over tags rather than over nesting, which is what let a `<figure>`
-    // inside a `<figure>` slip past the previous version.
-    const carriers = [...html.matchAll(/<([a-zA-Z][-\w]*)\b([^>]*)>/g)]
-      .filter((tag) => classesOf(tag[2]).includes("chapter-figure"));
-    for (const carrier of carriers) {
-      // From the carrier to the end of the element it opens, or to the end of the page — a figure
-      // whose block is malformed still shows its images, so the scan may not depend on finding a
-      // closing tag.
-      const from = carrier.index;
-      const closing = html.indexOf(`</${carrier[1]}>`, from);
-      const region = html.slice(from, closing === -1 ? html.length : closing);
-      for (const image of [...region.matchAll(/<img\b[^>]*>/gi), carrier]) {
-        const source = attribute(image[0], "src");
-        if (source === null) continue;
-        const asset = /(?:^|\/)assets\/([^/]+)$/.exec(source.split("?")[0].split("#")[0]);
-        if (asset) shown.set(asset[1], `book/${name}`);
-      }
+    for (const found of html.matchAll(/assets\/([A-Za-z0-9._/-]+)/g)) {
+      const asset = found[1].split("?")[0].split("#")[0];
+      if (asset && !shown.has(asset)) shown.set(asset, `book/${name}`);
     }
   }
   return shown;
+}
+
+/**
+ * The studies `ART_DIRECTION.md` names, read off the document that is their only record.
+ *
+ * A study is not derived from anything and nothing checks its content (issue #95), so the most this
+ * can say is that somebody wrote it down. That is the point: an asset a page reaches for that the
+ * table does not name is a picture nobody has judged, and it is refused whichever tag put it there.
+ */
+function studiesNamed() {
+  const text = readFileSync(path.join(ROOT, "ART_DIRECTION.md"), "utf8");
+  return new Set([...text.matchAll(/chapters\/assets\/([A-Za-z0-9._/-]+)/g)].map((m) => m[1]));
+}
+
+/**
+ * What a page reaches for against what this code draws and what the table names, both ways.
+ *
+ * A function rather than a loop inside the check, so a self-attack can hand it a page reaching for
+ * something nothing draws and nobody wrote down, and require it to complain. Before that it could
+ * be switched off with `if (true)` while every counter stayed honest — a reviewer's finding.
+ */
+function setProblems(shown, studies) {
+  const problems = [];
+  const drawn = new Set(FIGURES.map((figure) => figure.file));
+  let matched = 0;
+  for (const [file, where] of shown) {
+    if (drawn.has(file)) matched += 1;
+    else if (!studies.has(file)) {
+      problems.push(`${where} reaches for assets/${file}, which nothing here draws and `
+        + `ART_DIRECTION.md does not name — a figure is never hand-drawn, and a study nobody has `
+        + `written down is a picture nobody has judged`);
+    }
+  }
+  for (const file of drawn) {
+    if (!shown.has(file)) {
+      problems.push(`${file} is drawn here and no page reaches for it — a still nothing has `
+        + `placed is a picture nobody has judged`);
+    }
+  }
+  return { problems, matched };
 }
 
 /**
@@ -365,10 +359,21 @@ if (process.argv.includes("--check")) {
   // is switched off — `check_edition.py`'s `status()` exists for the same reason.
   const real = compareAll(committed);
   const problems = [...real.problems];
-  const refused = [];
 
+  // What each self-attack below records is the **return value of its own test**, not a line beside
+  // it. A `refused.push(...)` on its own line could be left standing over an attack switched off
+  // with `if (false)`, and the pass line would then name an attack that had not run — the same
+  // defect, one level up, that these attacks exist to catch. A refusal that did not happen records
+  // nothing, and the gate at the end counts the records.
+  const refused = [];
+  const refuse = (happened, what) => {
+    if (happened) refused.push(what);
+    return happened;
+  };
+
+  const studies = studiesNamed();
   const shown = shownByTheChapters();
-  const set = setProblems(shown);
+  const set = setProblems(shown, studies);
   problems.push(...set.problems);
   const matchedToChapters = set.matched;
 
@@ -390,14 +395,16 @@ if (process.argv.includes("--check")) {
   const flipped = compareAll(
     (file) => (file === first.file ? `${committed(file).slice(0, -1)} ` : committed(file)),
   );
-  if (!flipped.problems.some((problem) => problem.startsWith(first.file))) {
+  if (!refuse(
+    flipped.problems.some((problem) => problem.startsWith(first.file)),
+    "a figure whose committed bytes were altered",
+  )) {
     process.stderr.write(
       "figures: the comparison passed a figure whose committed bytes had just been altered — the "
       + "guard is not guarding, and no number of green runs would have said so\n",
     );
     process.exit(1);
   }
-  refused.push("a figure whose committed bytes were altered");
 
   // 2 · the bytes this run compared are the bytes the drawing code produces, re-derived here from
   // nothing but `FIGURES`. A reviewer replaced the `rendered` binding with a read of the committed
@@ -405,41 +412,48 @@ if (process.argv.includes("--check")) {
   // run printed its pass line over a hand-painted SVG. Under that mutation this comes back with the
   // real drawing and the two disagree.
   const fresh = renderAll(FIGURES);
-  const swapped = fresh.findIndex((one, index) => one.bytes !== rendered[index].bytes);
-  if (swapped !== -1) {
+  if (!refuse(
+    fresh.every((one, index) => one.bytes === rendered[index].bytes),
+    "bytes this run did not draw",
+  )) {
+    const swapped = fresh.findIndex((one, index) => one.bytes !== rendered[index].bytes);
     process.stderr.write(
       `figures: ${rendered[swapped].file} was compared against something the drawing code does not `
       + `produce — what this run checked is not the figures\n`,
     );
     process.exit(1);
   }
-  refused.push("bytes this run did not draw");
 
   // 3 · what is compared really came out of the drawing code. A second figure's step is rendered
   // under the first one's name, and it has to come out different. If `render()` has been made to
   // read the committed file, the two are identical and this says so.
   const other = FIGURES.find((figure) => figure.file !== first.file);
   const [elsewhere] = renderAll([{ ...other, file: first.file }]);
-  if (elsewhere.bytes === first.bytes || elsewhere.bytes === committed(first.file)) {
+  if (!refuse(
+    elsewhere.bytes !== first.bytes && elsewhere.bytes !== committed(first.file),
+    "bytes that did not come from the drawing code",
+  )) {
     process.stderr.write(
       "figures: two different steps rendered to the same bytes — what this file compares is not "
       + "coming from the drawing code, so the comparison proves nothing about the figures\n",
     );
     process.exit(1);
   }
-  refused.push("bytes that did not come from the drawing code");
 
   // 4 · the set half complains about a page showing something nothing draws. Its own counters are
   // no evidence: `if (true)` in the loop left them adding up while the check did nothing.
   const planted = new Map([...shown, ["a-picture-nobody-drew.svg", "a page"]]);
-  if (!setProblems(planted).problems.some((problem) => problem.includes("a-picture-nobody-drew"))) {
+  if (!refuse(
+    setProblems(planted, studies).problems.some((p) => p.includes("a-picture-nobody-drew")),
+    "a page reaching for a figure nothing draws",
+  )) {
     process.stderr.write(
-      "figures: the set check accepted a page showing a figure nothing here draws — the half of "
-      + "this guard that keeps a hand-drawn picture out of the book is not running\n",
+      "figures: the set check accepted a page reaching for a picture nothing here draws and "
+      + "ART_DIRECTION.md does not name — the half of this guard that keeps a hand-drawn picture "
+      + "out of the book is not running\n",
     );
     process.exit(1);
   }
-  refused.push("a page showing a figure nothing draws");
 
   // The pass line is refused unless the run did what it would have claimed: one comparison per
   // figure, one file opened per comparison in each of the two passes, every figure a chapter shows
@@ -457,41 +471,45 @@ if (process.argv.includes("--check")) {
     process.exit(1);
   }
   process.stdout.write(
-    `figures.mjs: ${real.matched} chapter figure(s), ${real.bytes} bytes read off disk and `
+    `figures.mjs: ${real.matched} chapter figure(s), ${real.bytes} character(s) read off disk `
+    + `and `
     + `byte-for-byte what demos/ draws; ${matchedToChapters} of them shown by a chapter and `
     + `nothing else shown as one; and this run refused ${refused.join(" and ")}\n`,
   );
 } else if (process.argv.includes("--check-rendered")) {
-  // The same set check, over the pages a reader is actually served. Run after the build.
-  const shown = shownByTheBuiltPages();
+  // The same question, asked of the pages a reader is actually served. Run after the build.
+  const shown = assetsOnTheBuiltPages();
   if (shown === null) {
     process.stderr.write("figures: the book is not built — run `mdbook build` before this\n");
     process.exit(1);
   }
-  const set = setProblems(shown);
+  const studies = studiesNamed();
+  const set = setProblems(shown, studies);
   const planted = new Map([...shown, ["a-picture-nobody-drew.svg", "a page"]]);
-  const bites = setProblems(planted).problems
+  const bites = setProblems(planted, studies).problems
     .some((problem) => problem.includes("a-picture-nobody-drew"));
   if (set.problems.length || !bites) {
     for (const problem of set.problems) process.stderr.write(`figures: ${problem}\n`);
     if (!bites) {
       process.stderr.write(
-        "figures: the set check accepted a page showing a figure nothing here draws — the half of "
-        + "this guard that keeps a hand-drawn picture out of the book is not running\n",
+        "figures: the set check accepted a page reaching for a picture nothing here draws and "
+        + "ART_DIRECTION.md does not name — the half of this guard that keeps a hand-drawn "
+        + "picture out of the book is not running\n",
       );
     }
     process.exit(1);
   }
   if (set.matched !== FIGURES.length) {
     process.stderr.write(
-      `figures: ${set.matched} figure(s) found on the built pages, and this code draws `
+      `figures: ${set.matched} figure(s) reached for by the built pages, and this code draws `
       + `${FIGURES.length}\n`,
     );
     process.exit(1);
   }
   process.stdout.write(
-    `figures.mjs: ${set.matched} figure(s) on the built pages, every one of them drawn here and `
-    + `nothing else shown as one; and this run refused a page showing a figure nothing draws\n`,
+    `figures.mjs: ${shown.size} asset(s) reached for by the built pages — ${set.matched} figures `
+    + `this code drew and ${shown.size - set.matched} studies ART_DIRECTION.md names; and this run `
+    + `refused a page reaching for a figure nothing draws\n`,
   );
 } else {
   for (const { file, bytes } of rendered) {

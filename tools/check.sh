@@ -136,11 +136,12 @@ mdbook build
 step "5/5 · check the rendered pages and every record link"
 python3 -B check_edition.py --rendered
 # And the figures a reader is actually served. The source-side half of this ran in step 3; this is
-# the one that decides. A reviewer put a hand-painted SVG in front of a reader seven ways past a
-# scan of the chapters' Markdown — an unquoted attribute, an uppercase tag, a nested figure, a
-# `data-src` decoy, the class on a bare img, and a plain Markdown image, which mdBook turns into an
-# `<img>` only at build time, after a source scan has finished looking. The built page has none of
-# that variety, so it is where the set of figures is settled.
+# the one that decides, and it asks what each built page REACHES FOR rather than which tag reached:
+# two reviewers between them got a hand-painted SVG in front of a reader a dozen ways past scans
+# that looked at tags — an unquoted attribute, an uppercase tag, a nested figure, a `data-src`
+# decoy, a Markdown image, `srcset`, `<picture>`, `<object>`, a CSS background, a subdirectory. So
+# every `assets/…` file a page reaches for has to be a figure the code drew or a study
+# ART_DIRECTION.md names.
 if command -v node >/dev/null 2>&1; then
   node tools/figures.mjs --check-rendered
 else
