@@ -28,8 +28,9 @@ Do they stack?
 
 No, and the way they fail is one of the better stories in mathematics.
 
-Aristotle wrote that tetrahedra all of one size and shape will fill space, and the mistake stood for
-something like eighteen centuries before anyone checked properly. They come *very close*, and very
+Aristotle — him again, and wrong for about as long as last time — wrote that tetrahedra all of one
+size and shape will fill space, and the mistake stood for something like eighteen centuries before
+anyone checked properly. They come *very close*, and very
 close is the whole story.
 
 Stack them around one shared line, like slices of a cake meeting at the spine. The angle at which

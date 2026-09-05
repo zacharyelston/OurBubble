@@ -301,6 +301,7 @@ Its five history beats travel unchanged; its opening no longer presumes an instr
 because at this point in the book nothing has been run, and its last beat now hands her to the blank
 page rather than to the record. **The two beats that looked back at the record's own dissolved misses
 did not move with it** — they need the experiments, so they are the last two beats of *When the world
-you built says no*, the chapter that owns those misses, with the comparison against Ptolemy
-back-referenced to here. No beat id changed anywhere: an id is `slug.n` (issue #77), so a chapter
+you built says no*, whose subject they are: an instrument disagreeing with its owners, turned on the
+record itself. The comparison they make is against this chapter's ancient null, back-referenced by
+link and no longer credited to Ptolemy, who is not the one this chapter shows looking. No beat id changed anywhere: an id is `slug.n` (issue #77), so a chapter
 that moves renumbers nothing.*

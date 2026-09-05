@@ -79,7 +79,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 <a id="s-a-few-thousand-years-of-sharper-shadows"></a>
 
-## §02 · A few thousand years of sharper shadows — history, and none of it ours
+## §02 · A few thousand years of sharper shadows — the measurement history
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
@@ -478,7 +478,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.
 
-**The last two beats are a coda about the record, not about this experiment.** They look back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above with the refusal: the chapter that owns a miss owns its correction. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.
+**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above rather than under the chapter whose measurements they correct: what they demonstrate is this chapter's subject — an instrument disagreeing with its owners — turned on the record itself. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.
 
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.

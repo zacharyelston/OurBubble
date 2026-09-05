@@ -115,7 +115,7 @@
         ]
       },
       "a-few-thousand-years-of-sharper-shadows": {
-        "title": "A few thousand years of sharper shadows — history, and none of it ours",
+        "title": "A few thousand years of sharper shadows — the measurement history",
         "history": [
           "~240 BCE · Eratosthenes of Cyrene — the Earth's circumference, from two upright posts (Syene and Alexandria) and one shadow angle.",
           "~270 BCE · Aristarchus of Samos — the Sun's distance, attempted. Right method; the angle needed is about 89.85°, and reading it as 87° puts the Sun ~20× the Moon's distance instead of ~400×. A resolution failure, not a reasoning one.",
@@ -418,7 +418,7 @@
             "source": "book/chapters/06-dna-thz/chapter.md"
           }
         ],
-        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.\n\n**The last two beats are a coda about the record, not about this experiment.** They look back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above with the refusal: the chapter that owns a miss owns its correction. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.\n"
+        "note": "The chapter guards the vocabulary it actually uses — cavity, resonance, material weight, exponent. The record's own name for this experiment is wider: it was registered as a **toy bridge toward terahertz spectroscopy of biological material**, asking whether a lattice Maxwell solver reproduces the frequency-shift signatures that field shares. No molecule, cell or clinical sample appears anywhere in the run; the bridge is the question the rung was aimed at, and the exponent below is the answer it got.\n\n**The end of this chapter is a coda about the record, not about this experiment.** It looks back at two quantities this record had published as misses. Both were later dissolved. The bond one went to the locator's own published margin, carried through at last. The site one needed an estimator written for the next rung. Both re-analyses are rungs in their own right, and they are listed above rather than under the chapter whose measurements they correct: what they demonstrate is this chapter's subject — an instrument disagreeing with its owners — turned on the record itself. The history the coda measures itself against is in the section for [a few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md), which cites no work of ours.\n"
       },
       "cast-your-own-shadow": {
         "title": "Cast your own shadow — the reproduce path",
@@ -573,5 +573,29 @@
     "The universe is a bubble.",
     "Eight tests, eight passes.",
     "1/α = 2^7 plus a correction."
+  ],
+  "retired_phrasings": [
+    {
+      "phrase": "You have just watched an instrument refuse a law",
+      "why": "the opening a few thousand years of sharper shadows carried while it followed the refusal chapter; it is second in the book now and nothing has been run yet"
+    },
+    {
+      "phrase": "Which is exactly the shape of something in our own record",
+      "why": "the bridge that chapter used to make into the two dissolved misses, which stayed behind in when the world you built says no"
+    },
+    {
+      "phrase": "two thousand years of the same method, and what our own two failures turned out to be",
+      "why": "the hand-off when the world you built says no used to make into the history chapter, which now precedes it by twelve chapters"
+    },
+    {
+      "phrase": "Starting with nothing at all, and how little it turns out you need",
+      "why": "the shadow's hand-off straight into the napkin, from before the history chapter sat between them"
+    }
+  ],
+  "retired_probe_texts": [
+    "You have just watched an instrument refuse a law its owners committed to.",
+    "Which is exactly the shape of something in our own record.",
+    "Next: two thousand years of the same method, and what our own two failures turned out to be.",
+    "Starting with nothing at all, and how little it turns out you need."
   ]
 }

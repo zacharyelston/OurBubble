@@ -123,6 +123,52 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
             errors.append(f"self-test: the guard false-positives on {sentence!r}: {stray}")
 
 
+def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:
+    """Every retired phrasing present in `text`, as human-readable reasons. **Pure.**"""
+    lowered = text.casefold()
+    return [f"carries a retired phrasing ({rule.get('why', 'moved')}): {rule['phrase']!r}"
+            for rule in retired if str(rule["phrase"]).casefold() in lowered]
+
+
+def check_retired_phrasings(manifest: Dict[str, object], order: Sequence[str],
+                            errors: List[str]) -> None:
+    """Refuse a sentence that was only true of a position the chapter no longer holds.
+
+    A chapter that moves keeps every sentence it had, including the ones that only made sense where
+    it used to sit. Tranche E moved the history chapter from last-but-one to second, and its opening
+    — "You have just watched an instrument refuse a law its owners committed to" — was rewritten by
+    hand. A proofreader (2026-09-04, §2b) put the old opening back at the top of the now-second
+    chapter and tier 0 stayed green: the exact defect the move existed to fix built clean, so the
+    next chapter move would re-create it with only a reader to catch it.
+
+    Checking that the *new* sentence is present cannot close that, because the old one is present
+    too — the writing contract's rule 4, on a hand-off. So the old ones are refused, in every
+    chapter, by their own words. The list doubles as an audit trail: it says what the book used to
+    say, and where it used to make sense.
+
+    The guard is proved on declared probes before it is trusted, the way the exclusion guard is: a
+    phrase list that only ever runs against text written to satisfy it is untested code.
+    """
+    retired = [dict(rule) for rule in manifest.get("retired_phrasings", [])]
+    probes = list(manifest.get("retired_probe_texts", []))
+    if not retired:
+        errors.append("retired phrasings: none declared, so a moved chapter's old hand-off is "
+                      "refused by nothing")
+        return
+    if len(probes) != len(retired):
+        errors.append(f"retired phrasings: {len(retired)} declared and {len(probes)} probe(s) — "
+                      f"every retired phrasing carries the sentence that proves it still bites")
+    for probe in probes:
+        if not retired_hits(str(probe), retired):
+            errors.append(f"self-test: the retired-phrasing guard does NOT catch {probe!r}")
+    for slug in order:
+        path = EDITION_DIR / "chapters" / f"{slug}.md"
+        if not path.exists():
+            continue
+        for hit in retired_hits(path.read_text(encoding="utf-8"), retired):
+            errors.append(f"chapters/{slug}.md: {hit}")
+
+
 def load_manifest() -> Dict[str, object]:
     with MANIFEST_PATH.open(encoding="utf-8") as handle:
         return json.load(handle)
@@ -2033,6 +2079,7 @@ def main() -> int:
     numbers = {slug: f"{i:02d}" for i, slug in enumerate(narrative)}
 
     check_appendix(manifest, numbers, narrative, forbidden, forbidden_patterns, errors)
+    check_retired_phrasings(manifest, narrative, errors)
 
     for index, slug in enumerate(narrative):
         check_chapter(
@@ -2102,6 +2149,8 @@ def report(
         f"Our Bubble edition check passed: {len(entries)} chapters + the appendix, "
         f"{quote_count} record quotations anchored in the appendix, "
         f"{len(list(manifest.get('forbidden_probe_texts', [])))} exclusion probes refused, "
+        f"{len(list(manifest.get('retired_phrasings', [])))} retired phrasings absent from every "
+        f"chapter and each proved by its own probe, "
         f"all links, hand-offs, slug bridges and derived section numbers valid"
         f"{' in source and rendered output' if args.rendered else ''}."
     )

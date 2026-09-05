@@ -119,9 +119,9 @@ And it leaves one loose end, from earlier in the record.
 
 <!-- beat when-the-expected-law-fails.7 -->
 
-Two of the measurements behind these chapters had been recorded as misses — quantities outside their
-registered bands. They sat in the record as failures for a long time, and this book would have
-reported them so.
+Two of the measurements behind these chapters had been recorded as misses. Not the one that came in
+high and inside its band — two others, and they were outside theirs. They sat in the record as
+failures for a long time, and this book would have reported them so.
 
 Both were later dissolved. Both are measured *from* a critical point — where the little world
 changes character — and that point is only located to within a margin. Neither miss was a fact about
@@ -156,14 +156,15 @@ It still rests on a choice. There are two defensible ways to aggregate the curve
 independently known — a real argument, and not the same as not having to choose. The next rung says
 outright that it does not generalise.
 
-## Not Ptolemy, and not each other
+## Not the ancient null, and not each other
 
 <!-- beat when-the-expected-law-fails.8 -->
 
-Put those two against the null that
-[opened this book's history](a-few-thousand-years-of-sharper-shadows.md): Ptolemy looked for a
-stellar shift with the instrument he had, recorded honestly that there was nothing to see, and left
-nothing available to him unused. **He could not have done better.**
+Put those two against the missing stellar shift
+[early in this book](a-few-thousand-years-of-sharper-shadows.md), the one that waited seventeen
+centuries. **Nobody then could have seen it.** No instrument in the world was fine enough, and what
+that age owed the question was the bound — how small the shift would have to be to hide — not a
+sharper look. The look was already as sharp as looking got.
 
 **Our first is the opposite, and the uncomfortable one.** The number that dissolved it was already
 in the record, correct, and never multiplied through. The resolution was there and we had not used

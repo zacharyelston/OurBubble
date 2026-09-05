@@ -139,12 +139,11 @@ She is one step from Eratosthenes and it is not a large one. She has something t
 number for how much. What she lacks is what steps two and three would give her: a structure small
 enough to hold in her head, and a statement of what it would do that could turn out false.
 
-That is the hard part — and it is where she hands the book over. She got you this far; you take it
-from the blank page.
+That is the hard part — and it is where she hands the book over. She got you this far.
 
 What the rest of this does is build a small world a little at a time, say what it should do before
-it does it, and let it answer. First, though, one chapter on everyone else who started from a
-shadow.
+it does it, and let it answer. But a mark can be faithful and still be too coarse to settle what was
+asked of it — which is worth knowing before you make one.
 
 *Every chapter ends with a line like this one: which files back up the chapter's claims, and which
 parts nothing backs up. The last chapter is about going and looking yourself.*
