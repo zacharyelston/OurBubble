@@ -114,7 +114,7 @@
       },
       "where-the-inside-shows": {
         "title": "Where the inside shows — why we measure at an edge, and no experiment",
-        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and the two things it promises the reader will do with a pencil — walk a shape's rim and come home to nothing, add the faces that close around an inside and get nothing — are kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
+        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and what it promises the reader will do with a pencil — walk a shape's rim and come home to zero, add the faces that close around an inside and get zero — is kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
         "standards": [
           "book/LESSON_STANDARD.md",
           "FIREWALL.md"
@@ -592,6 +592,18 @@
     {
       "pattern": "\\b(all|every|the\\s+whole)\\s+(of\\s+)?(the\\s+)?(physics|information|content|reality)\\b[^.]{0,40}\\b(lives?|sits?|is|resides?|encoded)\\b[^.]{0,20}\\b(on|at)\\s+(the\\s+|its\\s+)?(boundar(y|ies)|edges?|surfaces?)\\b",
       "why": "everything living on the boundary — the holographic paraphrase of the same claim"
+    },
+    {
+      "pattern": "\\b(no\\s+other|the\\s+only)\\s+(way|route|path|road)\\s+(out|in|across|through|around)\\b",
+      "why": "the necessity register — no other way out, where the book has only where an account is kept"
+    },
+    {
+      "pattern": "\\b(no\\s+other|the\\s+only)\\s+(way|route|path|road)\\b[^.]{0,60}\\b(leaves?|leaving|escapes?|crosses?|crossing|gets?\\s+out|comes?\\s+out)\\b[^.]{0,40}\\b(it|the\\s+middle|the\\s+inside|a\\s+region|the\\s+region|the\\s+edge|the\\s+boundary)\\b",
+      "why": "the necessity register, spelled out — the only way anything leaves a middle"
+    },
+    {
+      "pattern": "\\b(cannot|can\\s?not|can't|could\\s+not|couldn't)\\b[^.]{0,60}\\b(any\\s+other|no\\s+other)\\s+(way|route|path|road)\\b",
+      "why": "the necessity register, negated — the same claim as an impossibility"
     }
   ],
   "forbidden_probe_texts": [
@@ -612,7 +624,12 @@
     "Everything is a boundary.",
     "Boundaries are what the world is made of.",
     "Nature keeps its accounts at the edge.",
-    "All the physics lives on the boundary."
+    "All the physics lives on the boundary.",
+    "The world is **made of** boundaries.",
+    "The world is made <!-- NOTE(reader): does this land? --> of *boundaries*.",
+    "The only way anything ever leaves the middle is across the edge.",
+    "It cannot reach you any other way.",
+    "There is no other route out of it."
   ],
   "retired_phrasings": [
     {

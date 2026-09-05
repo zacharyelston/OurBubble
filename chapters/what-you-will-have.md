@@ -6,7 +6,7 @@
 
 This is the one page that talks about the book instead of doing it. If a section ever loses you,
 there is a link under its heading for telling us so; it needs a free GitHub account, the only thing
-anywhere in here that asks you to sign up for something. A few minutes, and then we begin.
+anywhere in here that asks you to sign up for something. A short read, and then we begin.
 
 ## What this is about
 
@@ -81,8 +81,8 @@ down. That pause is the method, performed instead of described, and it works onl
 Sticks and light, dots and lines. That is what we have had since the first shadows on a cave wall,
 all this book uses, and enough for everything in here.
 
-We start closer to hand than a shadow: an egg on a table, and why measuring gets done at the edge —
-worth holding lightly until you have done it yourself.
+We start closer to hand than a shadow: an egg on a table, and a claim about where measuring gets
+done — worth holding lightly until you have done it yourself.
 
 *What this page cites — and what it does not:
 [the simulations](the-simulations.md#s-what-you-will-have).*

@@ -32,7 +32,7 @@ The wait is one she already knows by heart. Lunch is a clock a child already own
 about the same point in the day, whether or not anybody is watching a shadow. One mark before it and
 one after it is all the time-keeping this needs — a then and a now.
 
-Now there are two marks — each where the shadow's edge fell — and a gap between them, and the gap is
+Now there are two marks — each where the light stopped — and a gap between them, and the gap is
 a certain number of finger-widths across. That number came from the world rather than from her. She
 could have wished it smaller and it would not have moved. All she did was write it down.
 

@@ -77,15 +77,32 @@ def forbidden_hits(
     mutation test showed the phrase list alone does not: rewriting "four faces = four forces" as
     "its four faces are the four forces" walked straight through. A firewall check that only
     recognises one spelling of a claim is a spell-checker, not a firewall.
+
+    **And both layers read the page twice**: the raw file, and the file with its markup taken off.
+    Matching only the raw file is defeated by one emphasis marker inside the phrase — `The world is
+    **made of** boundaries.` renders as the declared probe word for word and returned nothing at all
+    (a proofreader, round 3, as a blocker), which is the same defect `flattened()` was written for
+    on the retired-phrasing guard. `unmarked()` keeps the full stops, so a pattern's own
+    `[^.\\n]{0,40}` window still ends where its sentence does.
     """
     lowered = text.casefold()
+    stripped = unmarked(text)
+    flat = flattened(text)
     hits: List[str] = []
     for phrase in phrases:
-        if phrase.casefold() in lowered:
+        # The markup-blind comparison is for phrases that are still a phrase once the marks come
+        # off. `7π⁵` flattens to `7`, which is in every chapter of the book, so a phrase whose
+        # words do not survive flattening is matched on the raw file only — found by running this
+        # over the whole book the moment the second layer was added.
+        flat_phrase = flattened(phrase)
+        if phrase.casefold() in lowered or (
+            len(flat_phrase.split()) >= 3 and flat_phrase in flat
+        ):
             hits.append(f"unsupported legacy phrase present: {phrase!r}")
     for rule in patterns:
         pattern = str(rule["pattern"])
-        found = re.search(pattern, lowered, flags=re.IGNORECASE)
+        found = (re.search(pattern, lowered, flags=re.IGNORECASE)
+                 or re.search(pattern, stripped, flags=re.IGNORECASE))
         if found:
             hits.append(
                 f"unsupported legacy claim present ({rule.get('why', 'excluded')}): "
@@ -134,6 +151,10 @@ LINK_TARGET = re.compile(r"\]\([^)]*\)")
 # identically and is a shape the book actually writes.
 INVISIBLE = re.compile(r"<!--.*?-->|<[^>\n]{0,200}>|\[\^[^\]]*\]|[\u00ad\u200b\ufeff]", re.S)
 NOT_WORD = re.compile(r"[^0-9a-z]+")
+# The same, with the full stop spared. `forbidden_hits`' patterns bound themselves to one sentence
+# with `[^.\n]{0,40}`, so flattening the stops away would let a pattern reach across a paragraph
+# and refuse a page for two halves of a claim nobody made in one breath.
+NOT_WORD_OR_STOP = re.compile(r"[^0-9a-z.]+")
 
 
 def flattened(text: str) -> str:
@@ -156,6 +177,20 @@ def flattened(text: str) -> str:
     down, in any punctuation and any markup, not the idea behind them.
     """
     return NOT_WORD.sub(" ", INVISIBLE.sub(" ", LINK_TARGET.sub("", text)).casefold()).strip()
+
+
+def unmarked(text: str) -> str:
+    """`flattened()`, but the sentence stops survive.
+
+    What the reader is shown, in lowercase words separated by single spaces, with the full stops
+    left in so a pattern that says "within forty characters and not past the end of this sentence"
+    still means that. Everything `flattened()` removes — link targets, HTML comments and tags,
+    footnote markers, zero-width characters, and every other mark that is not a letter or a digit —
+    is removed here too. **Pure.**
+    """
+    return NOT_WORD_OR_STOP.sub(
+        " ", INVISIBLE.sub(" ", LINK_TARGET.sub("", text)).casefold()
+    ).strip()
 
 
 def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:
