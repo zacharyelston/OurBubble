@@ -4,11 +4,12 @@
 tests at it.**
 
 A short front door, sixteen chapters and an appendix. The front door says what the book is about
-and what a reader will have at the end of it; then it starts with a child noticing her shadow and a
-Greek who knew what to do next, and it ends with you running the checks yourself. In between: a
-structure built out of points and lines, a ripple that came out lopsided until one setting fixed it,
-a wall that worked and a hoped-for effect that did not, an energy bill, a measurement with no answer
-key, and a law that came back gentler than the one we proposed.
+and what a reader will have at the end of it; then it starts with an egg on a table and why the work
+of measuring gets done at an edge, goes on to a child noticing her shadow and a Greek who knew what
+to do next, and it ends with you running the checks yourself. In between: a structure built out of
+points and lines, a ripple that came out lopsided until one setting fixed it, a wall that worked and
+a hoped-for effect that did not, an energy bill, a measurement with no answer key, and a law that
+came back gentler than the one we proposed.
 
 > **Scope.** This is a book about a **toy**: a small world built inside a computer, and what happened
 > when we pointed real tests at it. Nothing here is a claim about nature. Where a chapter uses a word

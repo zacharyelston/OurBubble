@@ -16,7 +16,7 @@ smell, a crack running down the shell. Whatever reached you got to you by crossi
 
 So an edge is not the leftover part of an object, the bit you are stuck with once the interesting
 middle has been sealed away. It is the part you are in contact with, and it is where the work of
-measuring actually gets done. That is worth a few pages before anything else here starts.
+measuring actually gets done. That is worth a few minutes before anything else here starts.
 
 ## So measure at the edge
 
@@ -24,11 +24,11 @@ measuring actually gets done. That is worth a few pages before anything else her
 
 Why there, and not somewhere more central? Because the edge is where the inside gets written down.
 
-Suppose something is going on inside some region. If none of it ever crosses the boundary, nothing
-standing outside can tell that region from an empty one, because there is no other way out. And if
-some of it does get out, it got out *there*. So keeping a patient account of what goes through the
-edge is not a second-best substitute for reaching the middle. Whatever leaves the middle leaves by
-that route, and the account is where it lands.
+Suppose something is going on inside some region. What you have to work with, standing outside it,
+is whatever crosses the boundary; and whatever crosses, crosses *there*. So keeping a patient
+account of what goes through the edge is not a second-best substitute for reaching the middle. That
+account is where the middle turns up in your notebook, and it is the one you are going to be
+keeping.
 
 That sounds too convenient, and you should hold it lightly until you have done it yourself. But it
 is the promise this book keeps as literally as it can: with a pencil, on a napkin. You will draw a
@@ -44,13 +44,16 @@ the edge.
 Notice where that leaves you. Whenever you measure, you are at a boundary — the thing's or your
 instrument's, and usually both at once.
 
-Nearly everything in this book is somebody reading an edge. A wall put up to cut one piece of a small
-world off from the rest, and the question of what still gets past it. The narrow gap between two such
-walls, and what stops fitting in there. A push shaped into one region, and where the bill for it
-turns out to be charged. And a quieter kind of edge, which arrives early: the finest difference an
-instrument can still tell apart, which is what separates being wrong from not being able to see yet.
+Several of the chapters ahead are somebody reading an edge. A wall put up to cut one piece of a
+small world off from the rest, and the question of what still gets past it. The narrow gap between
+two such walls, and what stops fitting in there. A push shaped into one region, and where the bill
+for it turns out to be charged.
 
-What each of those returned is that chapter's to tell, and several of the answers are noes. The point
+A chapter that arrives early reads an edge in another sense entirely — a limit rather than a place:
+the finest difference an instrument can still tell apart, which is what separates being wrong from
+not being able to see yet.
+
+What each of those returned is that chapter's to tell, and some of the answers are noes. The point
 here is smaller, and it holds for every one of them. Not one of those measurements reaches into the
 middle of anything.
 
@@ -60,15 +63,15 @@ middle of anything.
 
 There is a second reason to be interested in boundaries, and it has nothing to do with looking.
 
-An edge between two pieces of a world belongs to both of them. Whatever leaves one across it arrives
-in the other, so a single crossing is a loss read from the left and a gain read from the right: one
-quantity, written down twice, with opposite signs.
+An edge between two pieces of a world belongs to both of them — a seam, not a wall. Whatever leaves
+one across it arrives in the other, so a single crossing is a loss read from the left and a gain
+read from the right: one quantity, written down twice, with opposite signs.
 
-That is a small piece of bookkeeping and it does a large job. Nothing can slip away across an edge
-without turning up, with the other sign, on the far side of it — so an account kept at the edges is
-an account in which nothing goes quietly missing. Easy to assert, and cheap to believe, which is why
-you are not asked to. A later chapter does the sum in front of you, on a shape whose faces you can
-count on your fingers.
+That is a small piece of bookkeeping and it does a large job. In an account kept at the seams, a
+departure and its arrival are the same entry made twice, so the books say where a quantity went
+rather than only that it is gone. Easy to assert, and cheap to believe, which is why you are not
+asked to. A later chapter does the sum in front of you, on a shape whose faces you can count on your
+fingers.
 
 ## Where we start
 
@@ -78,9 +81,9 @@ None of this needs equipment. The oldest boundary anyone measured is outdoors, i
 moves while you watch.
 
 A shadow is an edge. Not a thing in its own right — a place where the light stops, with lit ground on
-one side of the line and unlit ground on the other. You cannot go and inspect the Sun, and you do not
-have to. Something crosses the gap, meets an obstacle, and leaves a line on the ground. Anything
-anyone has ever got out of a shadow, they got from where that line falls.
+one side of the line and unlit ground on the other. Nobody has ever gone to inspect the Sun, and
+nobody needed to. Something crosses the gap, meets an obstacle, and leaves a line on the ground.
+Anything anyone has ever got out of a shadow, they got from where that line falls.
 
 Somebody is about to notice one, in a yard.
 

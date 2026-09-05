@@ -114,7 +114,7 @@
       },
       "where-the-inside-shows": {
         "title": "Where the inside shows — why we measure at an edge, and no experiment",
-        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where an observation has to be made, and the two things it promises the reader will do with a pencil — walk a shape's rim and come home to nothing, add the faces that close around an inside and get nothing — are kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
+        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and the two things it promises the reader will do with a pencil — walk a shape's rim and come home to nothing, add the faces that close around an inside and get nothing — are kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
         "standards": [
           "book/LESSON_STANDARD.md",
           "FIREWALL.md"
@@ -572,6 +572,26 @@
     {
       "pattern": "tetrahedron\\s+(knows|is\\s+(4|four)-?d|is\\s+spacetime|encodes)",
       "why": "the tetrahedron as fundamental spacetime"
+    },
+    {
+      "pattern": "\\b(the\\s+world|the\\s+universe|reality|nature|everything)\\b[^.]{0,40}\\b(made\\s+(of|out\\s+of)|built\\s+(of|from|out\\s+of)|nothing\\s+but)\\s+(boundar(y|ies)|edges?|surfaces?)\\b",
+      "why": "the world as made of boundaries — a claim about nature, where the book has a claim about where an account is kept"
+    },
+    {
+      "pattern": "\\b(everything|the\\s+world|the\\s+universe|reality|nature)\\s+(is|was)\\s+(a|one|its\\s+own)?\\s*(boundar(y|ies)|edge|surface)\\b",
+      "why": "everything is a boundary — the same claim asserted flat"
+    },
+    {
+      "pattern": "\\bboundar(y|ies)\\b[^.]{0,40}\\b(what|all)\\s+(the\\s+world|the\\s+universe|reality|nature|everything)\\b[^.]{0,20}\\b(is|are)\\b",
+      "why": "boundaries as what the world is — the same claim reversed"
+    },
+    {
+      "pattern": "\\b(nature|the\\s+world|the\\s+universe|reality|physics)\\b[^.]{0,30}\\b(keeps?|kept|writes?|wrote|records?|stores?|balances?)\\b[^.]{0,40}\\b(at|on)\\s+(the\\s+|its\\s+|their\\s+)?(boundar(y|ies)|edges?|surfaces?)\\b",
+      "why": "nature keeping its accounts at the edge — the bookkeeping beat promoted from the model to the world"
+    },
+    {
+      "pattern": "\\b(all|every|the\\s+whole)\\s+(of\\s+)?(the\\s+)?(physics|information|content|reality)\\b[^.]{0,40}\\b(lives?|sits?|is|resides?|encoded)\\b[^.]{0,20}\\b(on|at)\\s+(the\\s+|its\\s+)?(boundar(y|ies)|edges?|surfaces?)\\b",
+      "why": "everything living on the boundary — the holographic paraphrase of the same claim"
     }
   ],
   "forbidden_probe_texts": [
@@ -587,7 +607,12 @@
     "Our universe bubbled into existence.",
     "The universe is a bubble.",
     "Eight tests, eight passes.",
-    "1/α = 2^7 plus a correction."
+    "1/α = 2^7 plus a correction.",
+    "The world is made of boundaries.",
+    "Everything is a boundary.",
+    "Boundaries are what the world is made of.",
+    "Nature keeps its accounts at the edge.",
+    "All the physics lives on the boundary."
   ],
   "retired_phrasings": [
     {
@@ -619,6 +644,21 @@
       "phrase": "a child in a yard, a Greek with a well, and the order of work this whole book is made of",
       "why": "the front door's hand-off straight into the shadow, from before the boundaries chapter sat between them",
       "probe": "**Next:** [The shadow](a.md)—a child in a yard, a *Greek with a well*, and the order of\nwork this whole book is made of."
+    },
+    {
+      "phrase": "We start smaller than a shadow: an egg on a table, and the reason you are never looking at the inside of anything",
+      "why": "the front door's closing pointer from before the boundaries chapter's own hedge travelled to it — an egg is not smaller than a shadow, and the pointer stated flat what the chapter it points at asks the reader to hold lightly",
+      "probe": "Sticks and light, dots and lines.\n\nWe start *smaller than a shadow*: an egg on a [table](a.md), and the reason you are\nnever looking at the inside of anything."
+    },
+    {
+      "phrase": "nothing standing outside can tell that region from an empty one, because there is no other way out",
+      "why": "the boundaries chapter's thesis in the necessity register: a statement about what the world cannot do, where the book has only a statement about where an account is kept. The same finding had already moved one beat rather than been fixed once (a proofreader, rounds 1 and 2)",
+      "probe": "Suppose something is going on inside some region. If none of it ever crosses the boundary,\n**nothing standing outside** can tell that region from an empty one, because there is\nno other way out."
+    },
+    {
+      "phrase": "Whatever leaves the middle leaves by that route",
+      "why": "the same necessity register one sentence on — the half of the thesis that survived the first rewrite of it",
+      "probe": "second-best substitute for reaching the middle. *Whatever leaves the middle leaves by\nthat route*, and the account is where it lands."
     }
   ]
 }

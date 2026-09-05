@@ -26,10 +26,10 @@ against that file. That column is the boundary. The history section below carrie
 outside it deliberately, because they are not ours to check — they are checkable against the historical
 record instead, which is a different and in some ways better guarantee.
 
-Some sections cite no experiment of ours at all — the front door, the chapter on boundaries,
-the opening on method, and the history chapter — and they say so rather than being left out, because a reader should be able to
-tell *no evidence was cited* from *no evidence exists*. The closing chapter rests on commands you
-run yourself.
+Some sections cite no experiment of ours at all — the front door, the chapter on boundaries, the
+opening on method, and the history chapter — and they say so rather than being left out, because a
+reader should be able to tell *no evidence was cited* from *no evidence exists*. The closing chapter
+rests on commands you run yourself.
 
 One section per chapter, in reading order, **numbered from `00`** to match the order in
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what
@@ -67,7 +67,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 **The chapter.** [where-the-inside-shows.md](where-the-inside-shows.md)
 
-**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where an observation has to be made, and the two things it promises the reader will do with a pencil — walk a shape's rim and come home to nothing, add the faces that close around an inside and get nothing — are kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.
+**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and the two things it promises the reader will do with a pencil — walk a shape's rim and come home to nothing, add the faces that close around an inside and get nothing — are kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.
 
 
 **Standards and record this section rests on.**
