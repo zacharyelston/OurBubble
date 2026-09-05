@@ -343,10 +343,13 @@ is one more figure to go stale:
    off a vendored row rather than an answer — the step is rebuilt on a changed copy of the payload
    and must say something else — and each step is driven into **its own** states, because a
    control's opening values come off the payload it was built against. And a tag no spec claims
-   fails too: a table that thinks it is guarded is worse than one that knows it is not. **How many
-   cells the probes speak for is itself a number in the check**, because a probe entry can be
-   deleted with every leg still firing on what remains: a reviewer deleted one and both the check
-   and the mutation suite stayed green. **And every leg ran**: each of these counts, and a leg that fired on
+   fails too: a table that thinks it is guarded is worse than one that knows it is not. **What this gate speaks for is
+   computed from what the pages print, and the rule over it is total**: every column of every table
+   it names is compared — no `null`, no row too short to reach it — and every column whose value is
+   the same in every state and every row is probed as well. That replaced a count of the probed
+   cells, which a reviewer laundered by moving one cell from one probe to another: a count says how
+   many and never which. Coverage is recorded per step and per tag, because four steps share the
+   tag `walk-running` and their tables are not the same shape. **And every leg ran**: each of these counts, and a leg that fired on
    no state of any step fails, whether it was switched off in the check, in the step, or in the
    enumerator that drives it. A step names the tables this gate reads by a `tag` nobody is shown, so
    a caption may be rewritten freely and losing the tag is a failure rather than a quiet exemption.
@@ -447,6 +450,13 @@ number and now name them by what they fold.
 ### What no check here can catch
 
 
+
+**A word typed into a table gate 11 does not name.** That gate speaks for the tables it names, and
+what it names are the five the engine was extended for, their neighbours on the same steps, and
+every certificate on the pages. A table it does not name is held by gates 2, 3 and 7 like any
+other — which catch a wrong number and a typed digit, and do not catch a typed *word*: `never`,
+`none`, `yes`, `outward`. Four of those were found typed into driven tables and are now red; the
+same word in an undriven table is not, and the way to close one is to tag it and give it a spec.
 
 **Any value the engine produced, anywhere, put where it does not belong.** `cut.oct_dots` printed in
 the "lines" column reads as *six lines, twelve dots*; a tip named `A′` in a table beside a drawing

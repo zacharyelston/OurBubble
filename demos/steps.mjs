@@ -1114,6 +1114,9 @@ export function chapterSteps(engine, draw) {
                   last ? String(fs.lines_walked_each_way) : "not all walked yet",
                   fs.orientation]],
                 { notASum: true }, "face-count"),
+              // Not driven, and it cannot be: its two columns are the same number from the same
+              // derivation — four faces with a tip, four without — so nothing a reader could do to
+              // one of them changes a byte of the page. Gates 2, 3 and 7 hold it like any other.
               table("what is on each face", ["faces looking at a tip", "faces still bare"],
                 [[count(atATip), count(stillBare)]]),
             ],
@@ -1240,8 +1243,12 @@ export function chapterSteps(engine, draw) {
                 { notASum: true }, "stella-certificate"),
               table("how far a napkin gets", ["rows it can write", "rows there are"],
                 [[String(run.printable_rows), count(run.history)]]),
+              // Tagged, because a reader typed "never" into it: the word is the run's period and
+              // the same word in every state, which is exactly the cell nothing but a probe can
+              // tell from a typed one.
               table("does it come back", ["ticks run", "back where it started every"],
-                [[String(runaway.ticks), run.period === 0 ? "never" : String(run.period)]]),
+                [[String(runaway.ticks), run.period === 0 ? "never" : String(run.period)]],
+                null, "stella-comes-back"),
             ],
           };
         },
