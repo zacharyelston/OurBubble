@@ -85,6 +85,9 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 **The chapter.** [the-shadow.md](the-shadow.md)
 
+**What this section carries.** No rung, no gate, no figure and no quoted number of ours. The chapter is the method before any experiment — a child's two marks, and what Eratosthenes did with the same move. Its facts are historical rather than computed: the posts at Syene and Alexandria, a fiftieth of a turn, five thousand stadia. Those are checkable against the historical record rather than against us, which is a different guarantee and in some ways a better one, and the history chapter's own section below lists them in the order they happened. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.
+
+
 **Standards and record this section rests on.**
 
 - [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)

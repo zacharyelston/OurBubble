@@ -89,10 +89,31 @@ MODEL_NOUN = re.compile(
 # How far from the match a toy noun still counts as what the claim is about. Wide enough for "on the
 # boundary of the triangle", narrow enough that a garnish at the far end of the sentence buys nothing.
 MODEL_NOUN_REACH = 40
+# …and the veto, because proximity is not aboutness. `numbers`, `lines` and `dots` are this book's
+# ordinary vocabulary, so parking one beside a claim about the universe walked fifteen of sixteen
+# nature claims past the first version of this (a proofreader, round 8): "Nothing gets in or out of
+# the universe except at the edge **of the lattice**." A sentence that names the world is a claim
+# about the world however many toy nouns stand next to it, and no exemption reaches it.
+NATURE_SUBJECT = re.compile(
+    r"\b(?:the\s+universe|the\s+cosmos|the\s+real\s+world|in\s+nature|of\s+nature"
+    r"|nature\s+(?:keeps?|does|has|is|shows?|hands?|writes?)"
+    r"|a\s+star|the\s+sun|a\s+black\s+hole|the\s+earth|an\s+atom|the\s+atom"
+    r"|reality|all\s+of\s+physics|the\s+whole\s+of\s+physics"
+    r"|everything\s+there\s+is|all\s+there\s+is|anything\s+there\s+is)\b",
+    re.IGNORECASE,
+)
 
 
 def about_the_toy(piece: str, found: "re.Match[str]") -> bool:
-    """Whether a named piece of the toy sits beside this match. **Pure.**"""
+    """Whether this match is an exclusivity about the toy rather than about the world. **Pure.**
+
+    Two tests, and the veto comes first: a sentence that names the universe, nature, reality or a
+    star is making a claim about the world, and nothing in it can buy an exemption. Otherwise a
+    named piece of the toy within `MODEL_NOUN_REACH` characters of the match means the claim is
+    about the toy — "everything you add up lives only on the boundary of the triangle".
+    """
+    if NATURE_SUBJECT.search(piece):
+        return False
     start = max(0, found.start() - MODEL_NOUN_REACH)
     end = min(len(piece), found.end() + MODEL_NOUN_REACH)
     return bool(MODEL_NOUN.search(piece[start:end]))
@@ -192,25 +213,34 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
         if stray:
             errors.append(f"self-test: the guard false-positives on {sentence!r}: {stray}")
 
-    # The toy exemption, in pairs, because a one-sided test of an exemption is a test of nothing.
-    # The left sentence is an exclusivity **about the toy** and must pass; the right one is the same
-    # sentence with the toy taken out of it, and must be refused. Remove `about_the_toy` and every
-    # left-hand sentence fails; widen it back to "a phrase somewhere in the sentence" and every
-    # right-hand one does. Both halves were live defects, one round apart (a proofreader, rounds 6
-    # and 7).
+    # The toy exemption, in **triples**, because a two-sided test of an exemption still misses the
+    # thing that actually went wrong. Each row is: an exclusivity *about the toy*, which must pass;
+    # the same sentence with the toy taken out, which must be refused; and the same nature claim
+    # with a toy noun parked beside it, which must **also** be refused. The three columns catch
+    # three different mutations — remove the exemption and column one fails; widen it back to a
+    # phrase-anywhere test and column two fails; loosen it to proximity alone, or stretch
+    # `MODEL_NOUN_REACH`, and column three fails. The third column is the one that was missing, and
+    # its absence is exactly why fifteen of sixteen smuggled claims survived a round (a proofreader,
+    # rounds 6, 7 and 8).
     toy_and_twin = [
         ("Everything you add up lives only on the boundary of the triangle.",
-         "Everything there is lives only on the boundary."),
+         "Everything there is lives only on the boundary.",
+         "Everything there is lives only on the boundary, and the lines say so."),
         ("Nothing gets in or out of the triangle except at the edge.",
-         "Nothing gets in or out of the universe except at the edge."),
+         "Nothing gets in or out of the universe except at the edge.",
+         "Nothing gets in or out of the universe except at the edge of the lattice."),
         ("Whatever this shape does, it does at its edge and nowhere else.",
-         "Whatever the inside of a star does, it does at the edge and nowhere else."),
+         "Whatever the inside of a star does, it does at the edge and nowhere else.",
+         "Whatever the inside of a star does, it does at the edge and nowhere else, on this napkin."),
         ("It is impossible for a number to move without crossing an edge.",
-         "It is impossible for anything in the universe to reach you without crossing the edge."),
+         "It is impossible for anything in the universe to reach you without crossing the edge.",
+         "It is impossible for anything in the universe to reach you without crossing the edge we "
+         "drew."),
         ("Nothing moves except at the edges we drew.",
-         "Nothing in nature moves except at the edge, and that is what we found."),
+         "Nothing in nature moves except at the edge, and that is what we found.",
+         "Nothing in nature moves except at the edge, whatever the numbers say."),
     ]
-    for about_toy, about_world in toy_and_twin:
+    for about_toy, about_world, smuggled in toy_and_twin:
         if forbidden_hits(about_toy, phrases, patterns):
             errors.append(
                 f"self-test: the toy exemption does not cover {about_toy!r}, so the guard refuses "
@@ -220,6 +250,11 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
             errors.append(
                 f"self-test: the toy exemption lets {about_world!r} through, so it is an escape "
                 "hatch rather than an exemption"
+            )
+        if not forbidden_hits(smuggled, phrases, patterns):
+            errors.append(
+                f"self-test: the toy exemption lets {smuggled!r} through — a claim about the world "
+                "with a piece of the toy parked beside it, which is proximity passing for aboutness"
             )
 
 

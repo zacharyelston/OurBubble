@@ -317,9 +317,15 @@ chapters 4–8 are honestly written: "everything you add up lives only on the bo
 triangle" was being refused. A match is skipped when a named piece of the toy — a triangle, a
 tetrahedron, a napkin, numbers, dots, lines, edges somebody drew — sits within forty characters of
 it. The first version of that exemption looked for "in this model" anywhere in the sentence and was
-walked by typing "In this book," in front of a declared claim, so it now tests what the claim is
-about rather than what phrase the sentence happens to contain. The legacy programme's patterns carry
-no exemption at all: "in this model, the universe is a bubble" is refused, and must be.*
+walked by typing "In this book," in front of a declared claim. **The second version was walked
+too** — by parking a toy noun next to a claim about the universe, because `numbers` and `lines` are
+this book's ordinary words and proximity is not aboutness ("Nothing gets in or out of the universe
+except at the edge *of the lattice*"). So a sentence that names the universe, nature, reality or a
+star can buy no exemption at all, whatever stands beside it, and the self-test carries each case as
+a **triple**: the sentence about the toy that must pass, the same sentence about the world that must
+be refused, and that one with a toy noun parked beside it, which must be refused too. The legacy
+programme's patterns carry no exemption in the first place: "in this model, the universe is a
+bubble" is refused, and must be.*
 
 *Drafter's note on chapters 4–8: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the
