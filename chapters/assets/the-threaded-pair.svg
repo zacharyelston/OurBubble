@@ -1,0 +1,112 @@
+<!-- Our Bubble demo still · two-worlds-threaded · step 2 of 5. Computed in the browser by the vendored napkin engine (engine/, pinned by engine.lock). A drawing of a toy: nothing in it is a claim about nature. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="35.79 7.08 407.23 465.84" role="img" class="wire" data-drawing="wire" tabindex="0">
+  <style>
+  .net .panel polygon, .ring .panel polygon { fill: #f4ead8; stroke: none; }
+  .net .stroke, .ring .stroke, .wire .stroke { stroke: #20314a; stroke-width: 3; fill: none;
+    stroke-linecap: round; stroke-linejoin: round; }
+  .ring .stroke { stroke-width: 2; }
+  .net .stroke .strong, .ring .stroke .strong { stroke-width: 6; }
+  .ring .stroke .tip-line { stroke-width: 1.2; }
+  .net .stroke .cut polygon { fill: none; stroke: #20314a; stroke-width: 1.5;
+    stroke-dasharray: 7 6; }
+  .net .walk .head { fill: #20314a; stroke: none; }
+  .net .middle circle { fill: #20314a; stroke: none; }
+  .ring .absent line { stroke: #20314a; stroke-width: 1; stroke-dasharray: 2 7; opacity: 0.45; }
+  .ring .dots circle { fill: #20314a; stroke: none; }
+  .ring .dots circle.tip { fill: none; stroke: #20314a; stroke-width: 2; }
+  .wire .stroke line, .wire .stroke .edge { stroke-width: 1.6; }
+  .wire .stroke.first line { stroke-width: 1.6; }
+  .wire .stroke.second line { stroke-width: 1; opacity: 0.55; }
+  .wire .stroke.octahedron line { stroke-width: 1.1; opacity: 0.75; }
+  .wire .stroke line.strong { stroke-width: 3.2; opacity: 1; }
+  .wire .dots circle { fill: #20314a; stroke: none; }
+  .wire .dots circle.tip { fill: none; stroke: #20314a; stroke-width: 1.6; }
+  .net .labels .value, .ring .labels .value, .wire .labels .value { font-weight: 600; }
+  .net .labels, .ring .labels, .wire .labels { fill: #20314a;
+    font-family: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif; }
+  .net .labels text, .ring .labels text, .wire .labels text {
+    paint-order: stroke fill; stroke: #fffdf8; stroke-width: 4px; stroke-linejoin: round; }
+  .ring .labels .tip { font-style: italic; }
+  .net .leaders line, .ring .leaders line, .wire .leaders line { stroke: #5c6a80; stroke-width: 1;
+    fill: none; }
+</style>
+  <title>The two tetrahedra, threaded</title>
+  <desc>An orthographic wireframe of two tetrahedra threaded through one another, sharing the shape between them. The first tetrahedron's lines are the full stroke, the second's lighter, and the octahedron's lie between them. Every dot carries its name. No shading and no perspective. Drag it, or use the arrow keys, to turn it; the numbers are all in the table below.</desc>
+  <g class="stroke octahedron">
+    <line class="edge" data-edge="AB|AC" x1="321.66" y1="198.29" x2="240" y2="155.43"/>
+    <line class="edge" data-edge="AB|AD" x1="321.66" y1="198.29" x2="308.52" y2="289.71"/>
+    <line class="edge" data-edge="AB|BC" x1="321.66" y1="198.29" x2="171.48" y2="190.29"/>
+    <line class="edge" data-edge="AB|BD" x1="321.66" y1="198.29" x2="240" y2="324.57"/>
+    <line class="edge" data-edge="AC|AD" x1="240" y1="155.43" x2="308.52" y2="289.71"/>
+    <line class="edge" data-edge="AC|BC" x1="240" y1="155.43" x2="171.48" y2="190.29"/>
+    <line class="edge" data-edge="AC|CD" x1="240" y1="155.43" x2="158.34" y2="281.71"/>
+    <line class="edge" data-edge="AD|BD" x1="308.52" y1="289.71" x2="240" y2="324.57"/>
+    <line class="edge" data-edge="AD|CD" x1="308.52" y1="289.71" x2="158.34" y2="281.71"/>
+    <line class="edge" data-edge="BC|BD" x1="171.48" y1="190.29" x2="240" y2="324.57"/>
+    <line class="edge" data-edge="BC|CD" x1="171.48" y1="190.29" x2="158.34" y2="281.71"/>
+    <line class="edge" data-edge="BD|CD" x1="240" y1="324.57" x2="158.34" y2="281.71"/>
+  </g>
+  <g class="stroke second">
+    <line class="edge" data-edge="AB|C′" x1="321.66" y1="198.29" x2="390.18" y2="332.57"/>
+    <line class="edge" data-edge="AB|D′" x1="321.66" y1="198.29" x2="253.14" y2="64"/>
+    <line class="edge" data-edge="AC|B′" x1="240" y1="155.43" x2="226.86" y2="246.85"/>
+    <line class="edge" data-edge="AC|D′" x1="240" y1="155.43" x2="253.14" y2="64"/>
+    <line class="edge" data-edge="AD|B′" x1="308.52" y1="289.71" x2="226.86" y2="246.85"/>
+    <line class="edge" data-edge="AD|C′" x1="308.52" y1="289.71" x2="390.18" y2="332.57"/>
+    <line class="edge" data-edge="BC|A′" x1="171.48" y1="190.29" x2="89.82" y2="316.57"/>
+    <line class="edge" data-edge="BC|D′" x1="171.48" y1="190.29" x2="253.14" y2="64"/>
+    <line class="edge" data-edge="BD|A′" x1="240" y1="324.57" x2="89.82" y2="316.57"/>
+    <line class="edge" data-edge="BD|C′" x1="240" y1="324.57" x2="390.18" y2="332.57"/>
+    <line class="edge" data-edge="CD|A′" x1="158.34" y1="281.71" x2="89.82" y2="316.57"/>
+    <line class="edge" data-edge="CD|B′" x1="158.34" y1="281.71" x2="226.86" y2="246.85"/>
+  </g>
+  <g class="stroke first">
+    <line class="edge" data-edge="AB|A" x1="321.66" y1="198.29" x2="390.18" y2="163.43"/>
+    <line class="edge" data-edge="AB|B" x1="321.66" y1="198.29" x2="253.14" y2="233.15"/>
+    <line class="edge" data-edge="AC|A" x1="240" y1="155.43" x2="390.18" y2="163.43"/>
+    <line class="edge" data-edge="AC|C" x1="240" y1="155.43" x2="89.82" y2="147.43"/>
+    <line class="edge" data-edge="AD|A" x1="308.52" y1="289.71" x2="390.18" y2="163.43"/>
+    <line class="edge" data-edge="AD|D" x1="308.52" y1="289.71" x2="226.86" y2="416"/>
+    <line class="edge" data-edge="BC|B" x1="171.48" y1="190.29" x2="253.14" y2="233.15"/>
+    <line class="edge" data-edge="BC|C" x1="171.48" y1="190.29" x2="89.82" y2="147.43"/>
+    <line class="edge" data-edge="BD|B" x1="240" y1="324.57" x2="253.14" y2="233.15"/>
+    <line class="edge" data-edge="BD|D" x1="240" y1="324.57" x2="226.86" y2="416"/>
+    <line class="edge" data-edge="CD|C" x1="158.34" y1="281.71" x2="89.82" y2="147.43"/>
+    <line class="edge" data-edge="CD|D" x1="158.34" y1="281.71" x2="226.86" y2="416"/>
+  </g>
+  <g class="dots">
+    <circle class="middle" data-dot="AB" cx="321.66" cy="198.29" r="7"/>
+    <circle class="middle" data-dot="AC" cx="240" cy="155.43" r="7"/>
+    <circle class="middle" data-dot="AD" cx="308.52" cy="289.71" r="7"/>
+    <circle class="middle" data-dot="BC" cx="171.48" cy="190.29" r="7"/>
+    <circle class="middle" data-dot="BD" cx="240" cy="324.57" r="7"/>
+    <circle class="middle" data-dot="CD" cx="158.34" cy="281.71" r="7"/>
+    <circle class="tip" data-dot="A" cx="390.18" cy="163.43" r="6"/>
+    <circle class="tip" data-dot="B" cx="253.14" cy="233.15" r="6"/>
+    <circle class="tip" data-dot="C" cx="89.82" cy="147.43" r="6"/>
+    <circle class="tip" data-dot="D" cx="226.86" cy="416" r="6"/>
+    <circle class="tip" data-dot="A′" cx="89.82" cy="316.57" r="6"/>
+    <circle class="tip" data-dot="B′" cx="226.86" cy="246.85" r="6"/>
+    <circle class="tip" data-dot="C′" cx="390.18" cy="332.57" r="6"/>
+    <circle class="tip" data-dot="D′" cx="253.14" cy="64" r="6"/>
+  </g>
+  <g class="labels">
+    <text x="336.01" y="171.94" font-size="15" text-anchor="middle" dominant-baseline="central">AB</text>
+    <text x="231.13" y="126.77" font-size="15" text-anchor="middle" dominant-baseline="central">AC</text>
+    <text x="326.51" y="313.72" font-size="15" text-anchor="middle" dominant-baseline="central">AD</text>
+    <text x="153.49" y="166.28" font-size="15" text-anchor="middle" dominant-baseline="central">BC</text>
+    <text x="248.87" y="353.23" font-size="15" text-anchor="middle" dominant-baseline="central">BD</text>
+    <text x="143.99" y="308.06" font-size="15" text-anchor="middle" dominant-baseline="central">CD</text>
+    <text x="416.91" y="149.80" font-size="15" text-anchor="middle" dominant-baseline="central">A</text>
+    <text x="274.69" y="254.01" font-size="15" text-anchor="middle" dominant-baseline="central">B</text>
+    <text x="64.28" y="131.69" font-size="15" text-anchor="middle" dominant-baseline="central">C</text>
+    <text x="224.63" y="445.92" font-size="15" text-anchor="middle" dominant-baseline="central">D</text>
+    <text x="63.09" y="330.20" font-size="15" text-anchor="middle" dominant-baseline="central">A′</text>
+    <text x="245.07" y="209.01" font-size="15" text-anchor="middle" dominant-baseline="central">B′</text>
+    <text x="415.72" y="348.31" font-size="15" text-anchor="middle" dominant-baseline="central">C′</text>
+    <text x="255.37" y="34.08" font-size="15" text-anchor="middle" dominant-baseline="central">D′</text>
+  </g>
+  <g class="leaders">
+    <line class="leader" data-leader="B′" x1="226.86" y1="246.85" x2="239" y2="221.62"/>
+  </g>
+</svg>
