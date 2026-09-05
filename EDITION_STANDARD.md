@@ -70,7 +70,7 @@ must preserve the concept, alt-text intent, caption distinction, and firewall.
 
 ## Numbers computed while the page is built
 
-Chapters 2–6 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+Chapters 3–7 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
 and every number in them is finger-countable — or, in the one case where it stops being, visibly
 stops being, which is that chapter's point. Quoting such a number from the record would be theatre:
 the reader can check it on a napkin, so the book does the arithmetic in front of her instead of
