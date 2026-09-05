@@ -511,6 +511,8 @@ The chapter guards the vocabulary it actually uses — cavity, resonance, materi
 cd core
 cargo test --release -p uniforge --test uf6_1_thz_shift_law_gate -- --nocapture
 cargo run  --release -p viz     --bin gen_shift_law
+cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --nocapture
+cargo test --release -p uniforge --test uf5_10_site_locator_reprocess_gate -- --nocapture
 ```
 
 ---
