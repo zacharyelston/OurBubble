@@ -1,7 +1,7 @@
 {
   "note": "Which of core.test.mjs's fail sites the mutations in attacks.mjs reach. Regenerate with `node demos/attacks.mjs --baseline`, in the same commit as the guard or the mutation that changed it. A run that reaches fewer of them than this fails.",
-  "sites": 114,
-  "floor": 114,
+  "sites": 117,
+  "floor": 117,
   "reached": [
     "fail(`draw.mjs sets LABEL_GAP to ${LABEL_GAP}, and this check will not go below ${GAP_FLOOR}: `",
     "fail(`draw.mjs sets DOT_CLEARANCE to ${DOT_CLEARANCE}, and this check will not go below `",
@@ -78,6 +78,7 @@
     "fail(`${name} has a digit in its own text — the beat numbers and every count come from the `",
     "fail(`${where}: ${found.length} tables are tagged \"${tag}\", and this gate speaks for exactly `",
     "fail(`${where}: the table tagged \"${tag}\" prints ${shown.rows.length} row(s) and the engine's `",
+    "fail(`${where}: the table tagged \"${tag}\" prints ${shownRow.length} cell(s) in row `",
     "fail(`${where}: the table tagged \"${tag}\" prints \"${shown.rows[index][at]}\" where the `",
     "fail(`${where}: the table tagged \"${spec.walk.tag}\" does not say which of its columns is the `",
     "fail(`${where}: the table tagged \"${spec.walk.tag}\" declares columns ${runs.join(\" and \")} `",
@@ -111,9 +112,11 @@
     "fail(`no step covers \"${anchor}\", and it is one of the five the engine was extended for`);",
     "fail(`the step for \"${anchor}\" prints the same cell at row ${row}, column ${at} of `",
     "fail(`the step for \"${anchor}\" never asked ${spec.asks[0]} with ${spec.asks.slice(1).join(\", \")}, `",
-    "fail(`a table is tagged \"${tag}\" and no step in this gate's own list claims it. A tag is how `",
+    "fail(`${where}: a table is tagged \"${tag}\" and this step's own spec in this gate does not `",
     "fail(`gate 11 speaks for no column ${column} of the table tagged \"${key}\", which prints `",
     "fail(`column ${column} of the table tagged \"${key}\" is the same in every state — `",
+    "fail(`no probe names ${cell} any more, and this file says one does. A cell a probe stops `",
+    "fail(`a probe names ${cell} and the committed set does not. Add it: the set is what makes `",
     "fail(`gate 11's leg \"${leg}\" never ran on any state of any step. A leg that fires on nothing `",
     "fail(`DEMOS.md lists the folded pairs as [${listed}] and the pages fold [${actual}]`);",
     "fail(`${line.slug}: ${line.words} reader-facing words, and the budget is ${BUDGET}`);"

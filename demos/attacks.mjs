@@ -597,7 +597,7 @@ ${WIRE_CIRCLE}`,
       + '      corners.map((name, index) => [name, show(values[index])]));',
     to: '    const cornerTable = (values) => table("the corners", ["dot", "number"],\n'
       + '      corners.map((name, index) => [name, show(values[index])]), null, "the-corners");',
-    expect: "and no step in this gate's own list claims it" },
+    expect: "this step's own spec in this gate does not claim it" },
   { guard: "gate 11 · a driven step's anchor renamed out from under the gate", file: "steps.mjs",
     from: '        anchors: ["coming-home-on-eight-faces"],',
     to: '        anchors: ["coming-home-on-eight-face"],',
@@ -664,6 +664,28 @@ ${WIRE_CIRCLE}`,
   // Coverage, which is computed from what the pages print rather than committed as a number:
   // a count says how many and never which, and a reviewer kept the count at twenty-two while
   // covering less by moving one cell from one probe to another.
+  { guard: "gate 11 · a cell no expectation reaches in one state", file: "core.test.mjs",
+    from: '          last ? String(answer.lines_walked_each_way) : "not all walked yet", answer.orientation]];',
+    to: '          last ? String(answer.lines_walked_each_way) : "x", state.tick ? answer.orientation : null]];',
+    expect: "and this gate has" },
+  // A claimed tag worn by a step whose own spec does not name it: the check flattened every spec's
+  // tags into one set, so a table on an undriven step could wear one and be held by nothing.
+  { guard: "gate 11 · a tag borrowed from another step's spec", file: "steps.mjs",
+    from: '                : [["none tried yet", "none tried yet", "none tried yet"]]),',
+    to: '                : [["none tried yet", "none tried yet", "none tried yet"]], null,\n'
+      + '              "stella-comes-back"),',
+    expect: "this step's own spec in this gate does not claim it" },
+  // Both of these keep the file's line count: the fail-site census is keyed by line, and a mutation
+  // that moves the lines below it moves every site with them.
+  { guard: "gate 11 · a probe pointed away from the cell the committed set names",
+    file: "core.test.mjs",
+    from: '        tag: "face-count", cells: [[0, 3]] },',
+    to: '        tag: "face-count", cells: [[0, 2]] },',
+    expect: "any more, and this file says one does" },
+  { guard: "gate 11 · a probed cell missing from the committed set", file: "core.test.mjs",
+    from: '  "nothing-closes-yet · two-dots-closed · 1",',
+    to: '  "nothing-closes-yet · two-dots-closed · 9",',
+    expect: "and the committed set does not" },
   { guard: "gate 11 · a probe cell moved somewhere else, leaving a constant unprobed",
     file: "core.test.mjs",
     from: '        tag: "two-dots-closed", cells: [[0, 0], [0, 1]] },',

@@ -175,6 +175,15 @@ ATTACKS: tuple[Attack, ...] = (
         "chapters/the-shape-between.md",
     ),
     Attack(
+        # A reviewer's (2026-09-05): the deep-link form. `#beat-31` sat in demos/DEMOS.md through a
+        # whole renumber — in the document whose own section is called *Nothing here knows a beat
+        # number* — because the scan looked for a space between the word and the number.
+        "a book-wide number wearing a deep link's hyphen",
+        "demos/DEMOS.md", "**The words belong to the book. The demo is the sim.**",
+        "**The words belong to the book. The demo is the sim.** See `#beat-31`.",
+        "writes 'beat-31'",
+    ),
+    Attack(
         # A reviewer's (2026-09-04): the first version of the scan read the file line by line, and
         # a space pattern matches a newline, so this shape went green in four files at once.
         "a book-wide number hard-wrapped away from its own word",

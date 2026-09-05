@@ -1863,8 +1863,47 @@ const DRIVEN = {
 // That is three of a reviewer's escapes in one rule: a truncated expectation row, a column nulled
 // out, and a probe cell moved somewhere else. What it does not reach is a table this gate does not
 // name at all — those are held by gates 2, 3 and 7 like any other, and DEMOS.md says so.
-const compared = new Map();      // tag → column → the set of expected values seen
-const probedCells = new Set();   // `${tag} · ${column}`
+const compared = new Map();      // `${anchor} · ${tag}` → column → the set of expected values seen
+const probedCells = new Set();   // `${anchor} · ${tag} · ${column}`
+
+// And the probes as a **committed set**, because "constant, therefore probed" is a rule a page can
+// walk out of: give a constant cell a per-state decoration — `state.tick === 0 ? "not walked yet"
+// : answer.orientation`, which reads as an improvement — and the column stops looking constant, and
+// the probe it had may then be deleted. A reader did exactly that in two lines. So which cells are
+// probed is written down: adding one is free, dropping one is a line here as well as a line there,
+// in a commit that says which cell stopped being spoken for.
+const PROBED = [
+  "change-lives-between · two-dots-difference · 0",
+  "nothing-closes-yet · two-dots-closed · 0",
+  "nothing-closes-yet · two-dots-closed · 1",
+  "turn-the-dial · dial-run · 5",
+  "coming-home-on-eight-faces · face-walk · 2",
+  "coming-home-on-eight-faces · face-count · 1",
+  "coming-home-on-eight-faces · face-count · 2",
+  "coming-home-on-eight-faces · face-count · 3",
+  "the-tick-belongs-to-the-shape · triangle-certificate · 1",
+  "the-tick-belongs-to-the-shape · triangle-certificate · 2",
+  "the-tick-belongs-to-the-shape · triangle-certificate · 3",
+  "the-tick-belongs-to-the-shape · triangle-certificate · 4",
+  "now-the-tetrahedron · tetrahedron-certificate · 0",
+  "now-the-tetrahedron · tetrahedron-certificate · 1",
+  "now-the-tetrahedron · tetrahedron-certificate · 2",
+  "now-the-tetrahedron · tetrahedron-certificate · 3",
+  "it-takes-two-ticks-to-cross · octahedron-certificate · 0",
+  "it-takes-two-ticks-to-cross · octahedron-certificate · 1",
+  "it-takes-two-ticks-to-cross · octahedron-certificate · 2",
+  "it-takes-two-ticks-to-cross · octahedron-certificate · 3",
+  "the-tick-that-stops-working · stella-certificate · 0",
+  "the-tick-that-stops-working · stella-certificate · 1",
+  "the-tick-that-stops-working · stella-certificate · 2",
+  "the-tick-that-stops-working · stella-certificate · 3",
+  "the-tick-that-stops-working · stella-comes-back · 0",
+  "the-tick-that-stops-working · stella-comes-back · 1",
+  "the-smaller-tick-does-not-save-it · stella-tried · 1",
+  "the-smaller-tick-does-not-save-it · stella-tried · 2",
+  "the-smaller-tick-does-not-save-it · stella-tried · 3",
+  "the-smaller-tick-does-not-save-it · stella-tried · 4",
+];
 
 /** Every leg that must fire at least once, and how often it did. */
 const legsRan = new Map();
@@ -1933,8 +1972,18 @@ function drivenBy(step, rendered, state, where) {
       continue;
     }
     wanted.forEach((row, index) => {
+      // Every cell of this row, and the row reaches as far as the one on the page. A `null` or a
+      // short expectation used to exempt that state's cell while the column stayed "compared" from
+      // some other state — a reader nulled one state's orientation and printed `inward` there.
+      const shownRow = shown.rows[index] || [];
+      if (row.length !== shownRow.length || row.some((cell) => cell === null)) {
+        fail(`${where}: the table tagged "${tag}" prints ${shownRow.length} cell(s) in row `
+          + `${index} and this gate has ${row.filter((cell) => cell !== null).length} to compare `
+          + `them with. A cell no expectation reaches, in any state, is a cell anything may be `
+          + `written into`);
+        return;
+      }
       row.forEach((cell, at) => {
-        if (cell === null) return;
         const key = `${anchor} · ${tag}`;
         if (!compared.has(key)) compared.set(key, new Map());
         const columns = compared.get(key);
@@ -2288,7 +2337,7 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
       const drivenAnchor = step.anchors.find((one) => DRIVEN[one]);
       for (const table of rendered.tables) {
         if (!table.tag) continue;
-        taggedTables.add(table.tag);
+        taggedTables.add([`${slug} ${step.label}`, table.tag, drivenAnchor]);
         if (!drivenAnchor) continue;
         const key = `${drivenAnchor} · ${table.tag}`;
         widest.set(key, Math.max(widest.get(key) || 0, table.head.length,
@@ -2548,13 +2597,21 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
 // notices (the attacks aimed at that step stop turning the check red), the check itself said
 // nothing. An orphan tag is a table that thinks it is guarded.
 {
-  const claimed = new Set(Object.values(DRIVEN).flatMap((spec) =>
-    [...Object.keys(spec.tables || {}), ...(spec.walk ? [spec.walk.tag] : []),
-      ...(spec.counter ? [spec.counter.tag] : [])]));
-  for (const tag of taggedTables) {
-    if (!claimed.has(tag)) {
-      fail(`a table is tagged "${tag}" and no step in this gate's own list claims it. A tag is how `
-        + `this gate finds a table; one nothing claims is a table that looks guarded and is not`);
+  // By the step that wears it. The first version flattened every spec's tags into one set, so a
+  // table on an UNDRIVEN step could wear a tag some other step's spec claimed and be held by
+  // nothing at all — which is the failure this rule is named for, arrived at by following
+  // DEMOS.md's own advice to tag a table and then forgetting to give it a spec.
+  const claimedBy = (anchor) => {
+    const spec = DRIVEN[anchor] || {};
+    return new Set([...Object.keys(spec.tables || {}), ...(spec.walk ? [spec.walk.tag] : []),
+      ...(spec.counter ? [spec.counter.tag] : [])]);
+  };
+  for (const [where, tag, anchor] of taggedTables) {
+    if (!claimedBy(anchor).has(tag)) {
+      fail(`${where}: a table is tagged "${tag}" and this step's own spec in this gate does not `
+        + `claim it${anchor ? "" : " — the step is not driven at all"}. A tag is how this gate `
+        + `finds a table; one its own step's spec does not name is a table that looks guarded and `
+        + `is not`);
     }
   }
 }
@@ -2564,8 +2621,6 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
 // is a column anything can be written into, and a constant one cannot be told from a typed word by
 // any comparison.
 for (const [key, columns] of widest) {
-  const tag = key.split(" · ")[1];
-  if (!taggedTables.has(tag)) continue;
   for (let column = 0; column < columns; column += 1) {
     const seen = (compared.get(key) || new Map()).get(column);
     if (!seen || seen.size === 0) {
@@ -2580,6 +2635,23 @@ for (const [key, columns] of widest) {
         + `"${[...seen][0]}" — and no probe names it. A comparison cannot tell a constant from a `
         + `word somebody typed; only making the engine, or the vendored row, say something else `
         + `can`);
+    }
+  }
+}
+
+// The committed set and the probes as declared, in both directions.
+{
+  for (const cell of PROBED) {
+    if (!probedCells.has(cell)) {
+      fail(`no probe names ${cell} any more, and this file says one does. A cell a probe stops `
+        + `naming can be typed the moment its column stops looking constant — which is two lines `
+        + `of a page's own source — so dropping one is a line here too`);
+    }
+  }
+  for (const cell of probedCells) {
+    if (!PROBED.includes(cell)) {
+      fail(`a probe names ${cell} and the committed set does not. Add it: the set is what makes `
+        + `dropping a probe a diff rather than a silence`);
     }
   }
 }

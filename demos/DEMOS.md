@@ -344,12 +344,18 @@ is one more figure to go stale:
    and must say something else — and each step is driven into **its own** states, because a
    control's opening values come off the payload it was built against. And a tag no spec claims
    fails too: a table that thinks it is guarded is worse than one that knows it is not. **What this gate speaks for is
-   computed from what the pages print, and the rule over it is total**: every column of every table
-   it names is compared — no `null`, no row too short to reach it — and every column whose value is
-   the same in every state and every row is probed as well. That replaced a count of the probed
-   cells, which a reviewer laundered by moving one cell from one probe to another: a count says how
-   many and never which. Coverage is recorded per step and per tag, because four steps share the
-   tag `walk-running` and their tables are not the same shape. **And every leg ran**: each of these counts, and a leg that fired on
+   computed from what the pages print**: every cell of every row of every table it names is
+   compared — a row that does not reach as far as the page's own is refused, and so is a `null`,
+   because a reader nulled one state's cell and printed a wrong word in exactly that state — and
+   every column whose value is the same in every state and every row is probed as well. That
+   replaced a count of the probed cells, which a reviewer laundered by moving one cell from one
+   probe to another: a count says how many and never which. Coverage is recorded **per step** and
+   per tag, because four steps share the tag `walk-running` and their tables are not the same shape
+   — and a tag is claimed by **the step that wears it**, since a table on an undriven step could
+   otherwise wear a tag some other step's spec claimed and be held by nothing at all. **Which cells
+   are probed is written down**: "constant, therefore probed" is a rule a page can walk out of by
+   giving a constant a per-state decoration, so the probes are a committed set, and dropping one is
+   a line in the check as well as a line in the page. **And every leg ran**: each of these counts, and a leg that fired on
    no state of any step fails, whether it was switched off in the check, in the step, or in the
    enumerator that drives it. A step names the tables this gate reads by a `tag` nobody is shown, so
    a caption may be rewritten freely and losing the tag is a failure rather than a quiet exemption.
@@ -796,7 +802,7 @@ it happens, the shape of it is:
   that slid between two ticks would be inventing something the rule does not do.
 - **Nothing loaded from anywhere.** No framework, no CDN, no font, no image, no analytics. Four
   modules, one stylesheet, and the engine this site already serves.
-- **A deep link is a beat**: `#beat-31` opens that step.
+- **A deep link is a step on its own page**: `#step-3` opens the third step of that chapter.
 
 ## How it reaches the published site
 

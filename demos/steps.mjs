@@ -1114,9 +1114,11 @@ export function chapterSteps(engine, draw) {
                   last ? String(fs.lines_walked_each_way) : "not all walked yet",
                   fs.orientation]],
                 { notASum: true }, "face-count"),
-              // Not driven, and it cannot be: its two columns are the same number from the same
-              // derivation — four faces with a tip, four without — so nothing a reader could do to
-              // one of them changes a byte of the page. Gates 2, 3 and 7 hold it like any other.
+              // Not driven, which is a choice rather than an impossibility: its two columns are
+              // the same number from the same derivation — four faces with a tip, four without —
+              // so swapping them changes no byte of any page, which a reader checked by rendering
+              // both. A word typed into one of them would not be caught, and that is the hole
+              // DEMOS.md names rather than one it hides.
               table("what is on each face", ["faces looking at a tip", "faces still bare"],
                 [[count(atATip), count(stillBare)]]),
             ],
