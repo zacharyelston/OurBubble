@@ -57,6 +57,14 @@ parts is a count nothing guards.
 A chapter may carry **a study**, **figures**, or neither. The two are different kinds of thing and
 the reader can tell them apart from the caption; `ART_DIRECTION.md` is the long version.
 
+Two chapters at the front carry neither, deliberately. **The front door** is a statement about the
+book rather than a step in it, makes no claim a picture could illustrate, and an analogy image above
+it would be the first thing a reader met — before anything had been earned. ***Where the inside
+shows*** (2026-09-05) has a narrower reason: its subject is an arrangement — a thing, an edge, and
+somebody outside — rather than any of the things that have one, and the egg it opens on is
+deliberately disposable. A study that would earn its place there has not been drawn, and until it is,
+the page says so by carrying none rather than a picture of an egg.
+
 A **study** is an editorial analogy image, and where one is used it must:
 
 1. make the chapter's next question visible without pretending to display a result;
