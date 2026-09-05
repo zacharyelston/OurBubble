@@ -592,7 +592,7 @@
   "retired_phrasings": [
     {
       "phrase": "You have just watched an instrument refuse a law",
-      "why": "the opening a few thousand years of sharper shadows carried while it followed the refusal chapter; it is second in the book now and nothing has been run yet",
+      "why": "the opening a few thousand years of sharper shadows carried while it followed the refusal chapter; it sits immediately after the shadow now and nothing has been run yet",
       "probe": "You have just watched an instrument refuse a law its owners committed to."
     },
     {
@@ -609,6 +609,16 @@
       "phrase": "Starting with nothing at all, and how little it turns out you need",
       "why": "the shadow's hand-off straight into the napkin, from before the history chapter sat between them",
       "probe": "and let it answer. <!-- NOTE(reader): does this land? --> Starting with <span>nothing</span> at\nall, and how little[^1] it turns out you need."
+    },
+    {
+      "phrase": "We start where measuring started: a shadow, and a man in Alexandria who did the smallest possible next thing about one",
+      "why": "the front door's closing line from before a chapter on boundaries sat between it and the shadow",
+      "probe": "Sticks and light, dots and lines.\n\nWe start where measuring started: a shadow, and a **man in Alexandria** who did the\nsmallest possible next thing about one."
+    },
+    {
+      "phrase": "a child in a yard, a Greek with a well, and the order of work this whole book is made of",
+      "why": "the front door's hand-off straight into the shadow, from before the boundaries chapter sat between them",
+      "probe": "**Next:** [The shadow](a.md)—a child in a yard, a *Greek with a well*, and the order of\nwork this whole book is made of."
     }
   ]
 }

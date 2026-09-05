@@ -91,7 +91,7 @@ Building can legitimately modify a tracked file: `chapters/the-simulations.md` i
 to the record and someone remembering to run a script. `git status` is therefore part of the check —
 a clean tree after a build means the appendix and the record agree.
 
-The build also **puts some of the book's numbers on the page from the engine**. Chapters 3–7 live on
+The build also **puts some of the book's numbers on the page from the engine**. Chapters 4–8 live on
 one triangle, one tetrahedron and the two shapes it is made of, where every number is
 finger-countable, so rather than quote them the chapters carry `{{napkin:…}}` tokens that the
 preprocessor replaces at build time — the census, the loop sums, the triangle's and the
@@ -149,7 +149,7 @@ artifact and the hashes together. `engine.lock`'s header is the long version.
 
 ## The demos
 
-Chapters 3–7 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
+Chapters 4–8 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
 numbers in the reader's browser** and walks her through the chapter's beats one at a time. Their
 beat ranges moved twice — when the outline gained *Two worlds threaded*, and again when it gained
 the front door — which is why a beat's id is now its own chapter's (`make-it-move.3`) and a demo

@@ -72,8 +72,8 @@ against that file. That column is the boundary. The history section below carrie
 outside it deliberately, because they are not ours to check — they are checkable against the historical
 record instead, which is a different and in some ways better guarantee.
 
-Some sections cite no experiment of ours at all — the front door, the chapter on boundaries, the
-opening on method, and the history chapter — and they say so rather than being left out, because a reader should be able to
+Some sections cite no experiment of ours at all — the front door, the chapter on boundaries,
+the opening on method, and the history chapter — and they say so rather than being left out, because a reader should be able to
 tell *no evidence was cited* from *no evidence exists*. The closing chapter rests on commands you
 run yourself.
 

@@ -51,8 +51,8 @@ physics word names a feature of it.
 
 <!-- beat what-you-will-have.3 -->
 
-After the shadow, what everyone else did with one: the same method for a few thousand years, no
-cleverer and much sharper. Then a run of chapters on a napkin. Two dots and a line, then a
+First, why measuring gets done at edges. Then the shadow — and after it, what everyone else did
+with one: the same method for a few thousand years, no cleverer and much sharper. Then a run of chapters on a napkin. Two dots and a line, then a
 triangle, then the smallest solid there is — and that turns out to be a whole world: every kind of
 number it can hold, and one setting for what each line counts. Then we make it move, by hand.
 
@@ -80,11 +80,11 @@ down. That pause is the method, performed instead of described, and it works onl
 Sticks and light, dots and lines. That is what we have had since the first shadows anyone watched on
 a cave wall, it is all this book uses, and it was enough for everything in here.
 
-We start with the reason a shadow can tell you anything at all: whatever you can learn about a
-thing, you learn at its edge.
+We start smaller than a shadow: an egg on a table, and the reason you are never looking at the
+inside of anything.
 
 *What this page cites — and what it does not:
 [the simulations](the-simulations.md#s-what-you-will-have).*
 
-**Next:** [Where the inside shows](where-the-inside-shows.md)—why an edge is the only part of
-anything you can measure, and why we go and stand there on purpose.
+**Next:** [Where the inside shows](where-the-inside-shows.md)—why measurements get made at edges,
+and what this book will put in your hands about them.

@@ -58,10 +58,11 @@ Every chapter begins with one editorial illustration study, with two exceptions 
 book. **The front door carries none**, and deliberately: it is a statement about the book rather
 than a step in it, it makes no claim a picture could illustrate, and an analogy image above it
 would be the first thing a reader met — before anything had been earned. **Neither does *Where the
-inside shows*** (2026-09-05), for the second half of the same reason: its subject is why an edge is
-the part of anything you can measure, and drawing an edge would hand the reader a particular thing
-with a particular boundary at the moment the chapter is asking her to notice the arrangement rather
-than an example of it. Every chapter that does carry one must:
+inside shows*** (2026-09-05), and the honest reason is narrower than the front door's: its subject
+is an arrangement — a thing, an edge, and somebody outside — rather than any of the things that have
+one, and the egg it opens on is deliberately disposable. A study that would earn its place here has
+not been drawn, and until it is, the page says so by carrying none rather than by carrying a picture
+of an egg. Every chapter that does carry one must:
 
 1. make the chapter's next question visible without pretending to display a result;
 2. carry meaningful alt text and a plain-language caption;

@@ -38,16 +38,16 @@ reader every time instead of explained to her once.
 
 1. What is this book actually about — and should I go and look anything up?  *(the art of collecting data, which is smaller than its reputation: make a mark, take the difference, add the differences up, see whether they come home. A telescope is a better stick; between a child in a yard and a laboratory the instruments change and the bookkeeping gets more careful, and the moves do not change at all. The syntax those moves are written in has a name — **discrete exterior calculus** — said once and put straight back down)*
 2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, why the tick a world runs on belongs to its shape, a machine's honest no told apart from a mistake, and a path from any number we produced to where it came from. Then something we claim rather than something the book proves: the sciences whose papers look like a wall are making marks, taking differences and adding them up too, in their own notation — this book will not teach her one of them, and what it does is put the moves in her hands, on an object small enough to count. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they come from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
-3. What is the road?  *(a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
-4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. Sticks and light, dots and lines: all anyone has had since the first shadows on a cave wall, all this book uses, and enough for everything in it. It starts where measurement started: one shadow, and the smallest possible next thing)*
+3. What is the road?  *(first why measuring gets done at edges; then the shadow, and what everyone else did with one; then a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
+4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. Sticks and light, dots and lines: all anyone has had since the first shadows on a cave wall, all this book uses, and enough for everything in it. It starts smaller than a shadow: an egg on a table, and the reason she is never looking at the inside of anything)*
 
 ## 1 · Where the inside shows
 
-1. What can I actually see of a thing?  *(not its inside — only what reaches me across its edge. A boundary is where a thing becomes observable at all, which is why it is the interesting part rather than the leftover part)*
-2. Then where should I measure, and why there?  *(at the edge, because that is where the inside is written down. Whatever is going on inside a region shows up as what crosses its boundary, and by no other route. Promised, not proved: on a napkin she will walk once round a shape adding the differences and come home to nothing, and add up the faces that close around an inside and get nothing again — the inside and its edge are one account, read from either side)*
-3. So where am I standing when I measure?  *(at a boundary, always — the thing's or the instrument's, usually both. Nearly everything later in this book is somebody reading an edge: a wall and what still gets past it, the narrow gap between two walls and what stops fitting there, the faces that close around an empty middle, and the finest difference an instrument can still tell apart)*
-4. Is looking all a boundary is good for?  *(no — it is also a seam. Whatever leaves one piece of a world across an edge arrives in its neighbour, so a crossing is one quantity written twice with opposite signs; sum every piece at once and the inside crossings cancel in pairs. Said lightly here; a later chapter does the sum in front of her on a shape she can count)*
-5. Where do we start, then?  *(the oldest boundary anyone measured: a shadow is not a thing but a place where the light stops, and somebody is about to notice one)*
+1. What can I actually see of a thing?  *(not its inside — only what reaches me across its edge. An edge is not the leftover part of an object; it is the part I am in contact with, and where the work of measuring gets done)*
+2. Then where should I measure, and why there?  *(at the edge, because that is where the inside gets written down. Whatever leaves a region leaves by that route, and by no other. Promised, not proved: on a napkin she will walk once round a shape adding the differences and come home to nothing, and add up the faces that close around an inside and get nothing again — both sums close, and both times what she walked was the edge)*
+3. So where am I standing when I measure?  *(at a boundary, always — the thing's or the instrument's, usually both. Nearly everything later in this book is somebody reading an edge: a wall and what still gets past it, the narrow gap between two walls and what stops fitting there, a shaped push and where its bill is charged, and the finest difference an instrument can still tell apart. Not one of them reaches into the middle of anything)*
+4. Is looking all a boundary is good for?  *(no — it is also a seam. Whatever leaves one piece of a world across an edge arrives in its neighbour: one quantity, written twice, with opposite signs. So nothing slips away across an edge without turning up on the far side of it. Said once and left there; a later chapter does the sum in front of her on a shape she can count)*
+5. Where do we start, then?  *(the oldest boundary anyone measured: a shadow is not a thing but a place where the light stops, and everything anyone ever got out of one came from where that line falls)*
 
 ## 2 · The shadow
 
@@ -269,6 +269,24 @@ and "the four steps this whole book is made of" in the hand-off to *The shadow* 
 work". Its four beats were inserted at the front on 2026-09-02, and every later beat and chapter
 moved by one pass of `tools/renumber_beats.py`; the 2026-09-03 revision kept the beat count at four
 and needed no renumbering.*
+
+*Drafter's note on chapter 1 (owner, 2026-09-05). The brief, verbatim: "I want to start a chapter,
+maybe even before the prologue or maybe we include this in the prologue, but the chapter is
+boundaries — discussing why boundaries are interesting, why boundaries allow observations, and why
+we measure at the boundary." It is a short chapter of its own rather than part of the front door,
+because the front door is a statement *about* the book and this is the book's first move: it argues
+something, and the preface argues nothing. Five beats, no figure, no number and no token — the
+reader is asked to take nothing on trust that a later chapter does not put in her hands. The two
+napkin facts it promises (walk a rim and come home to nothing; add the faces that close around an
+inside and get nothing) are chapters 4 and 5's to keep, and the seam beat's sum is chapter 7's. The
+ideas arrive and the words do not: no named theorem, no operator, no symbol. **Its slug is
+`where-the-inside-shows`, not `boundaries`** — `tools/beat_coverage.py` finds a beat id by its
+slug's hyphen and refuses a slug without one, so a hyphenless chapter name would make every
+reference to it invisible to the guard. Inserting it moved every later chapter's heading number by
+one and no beat id at all, which is what `slug.n` bought (issue #77). One sentence of the front door
+changed to admit it, plus the hand-off; the road beat now opens at the edge rather than at the
+shadow, because a road map that starts one page past where the reader is standing is the kind of
+promise this book is not allowed to make (a proofreader, round 1, as a blocker).*
 
 *Drafter's note on chapters 4–8: every number there is finger-countable, so the book computes them
 at build time (the counts, the loop sums, the triangle's and the tetrahedron's tables, the
