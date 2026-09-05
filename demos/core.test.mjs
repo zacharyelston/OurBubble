@@ -2261,7 +2261,9 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
 // the questions that door was put are the questions that step asked.
 for (const [anchor, spec] of Object.entries(DRIVEN)) {
   const door = new Engine(glue, payload, rows);
-  const built = chapterSteps(door, drawings(door));
+  // The same drawings for every door: they read the payload's geometry and ask the engine
+  // nothing, and a fresh set re-runs the wireframe's whole view sweep.
+  const built = chapterSteps(door, draw);
   let found = null;
   for (const build of Object.values(built)) {
     for (const step of build()) {
@@ -2274,6 +2276,7 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
   }
   for (const state of statesOf(found, view)) {
     try { found.render(state); } catch { /* the render gate above reports a throw */ }
+    if (wasAsked(questionsAsked(door), spec.asks)) break;     // seen; the rest is the same question
   }
 
   // Does the step READ the answer? For a question whose answer is the same in every state — two
@@ -2291,7 +2294,7 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
       return entry === spec.asks[0] ? probe.change(answer) : answer;
     };
     const stepOf = (which) => {
-      for (const build of Object.values(chapterSteps(which, drawings(which)))) {
+      for (const build of Object.values(chapterSteps(which, draw))) {
         for (const step of build()) if (step.anchors.includes(anchor)) return step;
       }
       return null;
@@ -2311,6 +2314,7 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
     // because the neighbour moved and the table with it.
     const moved = probe.cells.map(() => false);
     for (const state of statesOf(honestStep, view)) {
+      if (moved.every(Boolean)) break;                        // every named cell has moved already
       const one = cellsOf(honestStep, state);
       const other = cellsOf(deafStep, state);
       if (one === null || other === null) continue;
