@@ -22,11 +22,15 @@ The long version of that box is [`FIREWALL.md`](FIREWALL.md). Read it before you
 
 **UniForge is the forge.** The engine and the record: where the object is built, and where every claim about it meets a test that was written down before the run. The *uni* is *one* — one lattice, one operator, many sciences. It does not unify the universe; it forges one small world, exactly, and lets you ask it questions.
 
-**The Container is the object.** A finite world made of the least it needs — a point to hold a number, a line to hold a difference — with one dial that gives it geometry. It contains everything that follows. Nothing in it is a claim about nature; The Container is a toy, kept honest.
+**The Container is the instrument the reader builds.** A finite world made of the least it needs —
+a point to hold a number, a line to hold a difference — with one dial that gives it geometry. The
+reader learns to trust a measurement on it before later questions call for other small instruments.
+Nothing in it is a claim about nature; The Container is a toy, kept honest.
 
-**Our Bubble is the book.** How a reader comes to understand The Container, told as a journey, standing on the forge's record. *Our*, because we build it together.
+**Our Bubble is the book.** How a reader builds and learns to trust The Container, then carries that
+discipline to the other small instruments in the forge's record. *Our*, because we build it together.
 
-UniForge builds The Container. The lab tests it. Our Bubble teaches it.
+UniForge builds the instruments. The lab tests them. Our Bubble teaches the reader how to read them.
 
 ## How to read it
 

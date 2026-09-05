@@ -13,11 +13,12 @@
 
 So what did we actually do? One sentence, and it should be the honest one rather than the warm one.
 
-We did not measure the universe. We inspected one object we had built, and we watched its measuring
-tools do seven things: recover laws that were already known, tell controls apart from results,
-produce a number nobody supplied, state a limit in advance and then hit it, keep the negatives in
-the record at full size, find that two published failures had been our own analysis rather than the
-world — and refuse a law we proposed ourselves.
+We did not measure the universe. We built the Container until we understood its marks, used it to
+learn when an instrument deserves trust, and then carried that discipline across the other small
+models in the record. Together they recovered laws that were already known, told controls apart from
+results, produced a number nobody supplied, stated a limit in advance and then hit it, kept the
+negatives in the record at full size, found that two published failures had been our own analysis
+rather than the models — and refused a law we proposed ourselves.
 
 That is a smaller claim than a theory of everything, and considerably more useful, because it is the
 kind of claim that could have come out false — and you can go and check whether it did.
@@ -156,9 +157,12 @@ Put together, those do not add up to a discovery. They add up to a method:
 3. Say, in advance, what would prove the proposal wrong.
 4. Check — and keep the answer, especially when it is no.
 
-The Container is the object we examined — named back where you finished building it. The bubble is
-the patch of it we pushed on, and measured, and handed back. Neither of them asks for belief, and
-this book has tried hard not to either.
+The Container is the instrument you built and learned to trust from the inside. It did not have to
+be every later model to do its job. It gave you a standard to carry between them: know what made the
+mark, state what you expected, test the other reading, and keep the answer or the correction.
+
+That discipline belongs to no lattice. Neither the Container nor any later model asks for belief,
+and this book has tried hard not to either.
 
 So: where is the next shadow?
 

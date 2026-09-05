@@ -177,9 +177,12 @@ not stack alone; a wrap, because edges echo.
 
 The exception is the dial: the only thing anybody chose, and still unset.
 
-That is the object, and it has a name: **The Container**, because everything this book measures
-happens inside it. Everything from here is this one thing asked a different question — and the first
-is whether the ring it makes is actually round.
+That is the object, and it has a name: **The Container**. You built every part of it, so it can now
+become the first instrument whose marks you learn to trust. It will remain the case you know from the
+inside even when a later question is asked with a different small model.
+
+First it has to earn that role. The dial is still unset, and the first test is whether the ring it
+makes is actually round.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-room-and-a-world-with-no-edge).*

@@ -38,7 +38,7 @@ reader every time instead of explained to her once.
 
 1. What is this book actually about — and should I go and look anything up?  *(the art of collecting data, which is smaller than its reputation: make a mark, take the difference, add the differences up, see whether they come home. A telescope is a better stick; between a child in a yard and a laboratory the instruments change and the bookkeeping gets more careful, and the moves do not change at all. The syntax those moves are written in has a name — **discrete exterior calculus** — said once and put straight back down)*
 2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, why the tick a world runs on belongs to its shape, a machine's honest no told apart from a mistake, and a path from any number we produced to where it came from. Then something we claim rather than something the book proves: the sciences whose papers look like a wall are making marks, taking differences and adding them up too, in their own notation — this book will not teach her one of them, and what it does is put the moves in her hands, on an object small enough to count. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they come from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
-3. What is the road?  *(a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
+3. What is the road?  *(a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine to build and calibrate the Container; then later questions asked with the small instrument that makes each mark readable. The object may change; the discipline does not — expect, compare, test the other reading, keep the answer or correction)*
 4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. Sticks and light, dots and lines: all anyone has had since the first shadows on a cave wall, all this book uses, and enough for everything in it. It starts where measurement started: one shadow, and the smallest possible next thing)*
 
 ## 1 · The shadow
@@ -90,7 +90,7 @@ reader every time instead of explained to her once.
 2. What is the least a clock needs?  *(ticks, all the same)*
 3. One number sitting at a dot — does it say what happens to it next?  *(no: it says where it is, not which way it is going. So the state is two rows, then and now, and the rule reads both — the engine's stepper takes both or it cannot write a next row at all)*
 4. So what does one tick *do* with those two rows?  *(one rule: each dot's number is pushed toward its neighbours' by the differences on its lines — and carries forward the motion the two rows already hold. The push sets the change in the change, not the change; that is the difference between a wave and a leak)*
-5. Is that really the whole law — nothing else, ever?  *(yes; every result in the book is that sentence, run)*
+5. Is that really the whole law — nothing else, ever?  *(for the world she is building, yes: the same update rule carries it through construction and its ripple test, with nothing added when the arithmetic goes to a machine. Later models use other rules; what travels is the discipline for reading their marks)*
 6. Start smaller than the tetrahedron — three numbers on the triangle: what do they do?  *(2, 5, 2 at the triangle's own tick of two thirds: they slosh, whole numbers all the way, the total 9 never moves, and they are back where they started every four ticks)*  [napkin token `triangle_slosh_table`, R07 — computed at build]
 7. Why does the triangle need two thirds, when the next section's tetrahedron takes a half?  *(because the tick belongs to the shape. Run the triangle at the tetrahedron's tick and the same rule still conserves the total, but the numbers stop being writable after three rows and it never comes home. This is the dial arriving in time, before it arrives in length)*  [napkin token `tick_belongs_to_shape`, R07 at the book's tick + R16's ceiling for four dots]
 8. Now the tetrahedron, at a half — four numbers, tick by tick: what do they do?  *(they slosh back and forth — and every four ticks they are exactly back where they started; nothing leaks)*  [napkin token `slosh_table`]
@@ -125,7 +125,7 @@ reader every time instead of explained to her once.
 5. It reached the edge of our world and bounced back — how do I have no edge?  *(wrap it: the far side *is* the near side, like a screen where walking off the right returns you on the left)*
 6. What is that wrapped world called, and why do we live there from now on?  *(a torus — no walls to bounce off, so the ring is only ever the ring)*
 7. Now that the world has no edge — is any dot special?  *(none is singled out — but the rule for cutting the holes twists as it goes, so there are three kinds of place. They are copies of one another: turn one a third of the way round and step it over, and it lands exactly on the next kind. Counted while the page was built: three kinds, in exact thirds. The world has a grain — remember that when a ripple comes out lopsided, because a grain is one place lopsidedness can hide)*  [anchor: napkin token `vertex_classes`, computed at build — not a record quotation]
-8. Can I ask the stopwatch question now?  *(yes — and this is the object: everything from here is this one thing, asked a different question)*
+8. Can I ask the stopwatch question now?  *(yes — and this is the Container: the first instrument she knows from the inside, and the reference she keeps when later questions use other small models. First it has to earn her trust)*
 
 ## 9 · Is it round?
 
@@ -141,7 +141,7 @@ reader every time instead of explained to her once.
 
 ## 10 · What does pushing on it cost?
 
-1. Now that it behaves evenly — what would it cost to move a *piece* of it, contents and all?  *(the bubble)*
+1. Now that the Container has earned trust, what changes and what stays the same? Then what would it cost to move a *piece* of it, contents and all?  *(later questions may change instruments; expectation, comparison, competing readings and retained answers do not. The first questions remain on the Container; this one is the bubble)*
 2. ✎ *Before we look:* what should moving the *whole* world cost?  *(nothing — it is just renaming positions)*
 3. Did it charge us for that?  *(exactly zero — and why that boring number licenses everything after)*
 4. Now shape the push — what came back, and did we put any of it in?  *(three things, all pre-registered)*
@@ -163,7 +163,7 @@ reader every time instead of explained to her once.
 
 ## 12 · Can a gap be emptier than empty?
 
-1. Three noes at one barrier — is there anywhere established physics puts a real negative difference?  *(not in the fields: in what is left when you take them away)*
+1. Three noes at one barrier — is there anywhere established physics puts a real negative difference, and what instrument makes it readable?  *(not in the fields: in what is left when you take them away. This experiment changes to a one-dimensional oscillator row so the inside/outside baseline difference is the mark)*
 2. What does "empty" contain?  *(every shape a field could vibrate in, each carrying a little; the sum is the baseline)*
 3. Put two walls close — what stops fitting?  *(the long shapes)*
 4. So which baseline is lower, inside or outside — and why?  *(inside; we removed possibilities)*
@@ -175,7 +175,7 @@ reader every time instead of explained to her once.
 
 ## 13 · Can it tell me something I didn't tell it?
 
-1. There is a way to make a toy look profound — what is it, and why does it never mean anything?  *(formulas hunting a known constant)*
+1. What instrument makes an unknown answer testable — and what is the seductive way to fake one?  *(change to an Ising model, whose class numbers can be calibrated on a solved case before an unsolved case; contrast that with formulas hunting a known constant)*
 2. What would count instead?  *(a number the method wasn't built to know, no dial to tune, checkable only after committing)*
 3. Where does nature hand you such numbers?  *(critical points; universality — details stop mattering, classes share numbers)*
 4. ✎ *Before we look:* should I trust an instrument on the unknown before it has recovered a known?
@@ -187,18 +187,18 @@ reader every time instead of explained to her once.
 
 ## 14 · When the world you built says no
 
-1. What is the simplest kind of prediction to get wrong?  *(a law you are sure of)*
+1. The Ising instrument agreed and named its limit; what is the simplest kind of prediction a new instrument could get wrong?  *(a law you are sure of; change to a resonating cavity because the readable mark is a shifted pitch, while the advance-expectation discipline stays)*
 2. Put a denser lump in a resonating cavity — the pitch drops; by how much, as it gets denser?
 3. ✎ *Before we look:* the whole-cavity rule is a square root — should a partial lump obey it too?  *(we registered p = −½)*
 4. What came back?  *(p = −0.2753 — not a near miss; the law is refused)*  [picture: the two slopes]
 5. Why — and why is the explanation written as a *new* prediction rather than an excuse?  *(the lump is a fraction of the volume; if that is the reason, a bigger lump moves p toward −½ — a new commitment)*
 6. What does a refusal tell us, coming from the same kind of instrument — a fitter told nothing — that found the ripple's law, the vacuum's coefficient and the class numbers?  *(that its yeses meant something. Not the same code each time; the same discipline: no answer supplied)*
-7. Now look back at the two results this record had published as misses — what did they turn out to be?  *(the locator's own margin, never carried through; both stop being significant once it is; one took arithmetic already on the page, the other an estimator that had to be written)*
+7. The cavity refused its owners' law; can the record make its owners correct an already-published reading?  *(look back at two published misses: the locator's margin was never carried through; both stop being significant once it is; one took arithmetic already on the page, the other an estimator that had to be written)*
 8. Why is that the rarest thing an instrument can do — and how is it different from a null nobody could have read better?  *(find that a published miss was in the reading rather than in the world, and say so on the record. The ancient null was outside anyone's resolution; ours were inside ours, one of them in numbers already on the page)*
 
 ## 15 · Cast your own shadow
 
-1. What did we actually do — in one honest sentence?  *(inspected one object we built, and watched its tools do seven things)*
+1. What did we actually do — in one honest sentence?  *(built the Container until she understood its marks, learned when an instrument deserves trust, and carried that discipline across the other small models in the record)*
 2. Can I follow one result without running anything?  *(four files, ten minutes: question → data → verdict → summary, in that order)*
 3. What travels with the book, and what does the book promise about it?  *(the record, verbatim, checked on every build — and exactly which sentences no program has read)*
 4. What is the check that would actually catch us?  *(re-run a test at full size, let it overwrite the data the book quotes, ask git)*

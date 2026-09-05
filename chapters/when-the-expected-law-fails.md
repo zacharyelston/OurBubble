@@ -12,7 +12,8 @@
 
 <!-- beat when-the-expected-law-fails.1 -->
 
-The instrument has now agreed with everything it was pointed at. That is the problem.
+The Ising instrument recovered a known answer, worked without one, and called its own limit in
+advance. It has agreed with everything it was pointed at. That is the problem.
 
 So ask the sharpest version of the question: what is the simplest kind of prediction to get wrong?
 
@@ -21,7 +22,8 @@ dangerous kind is **a law you are sure of**: something so standard that nobody w
 it, applied one step outside where it was learned. If an instrument cannot refuse one of those, its
 agreements are worth nothing, because it would have agreed anyway.
 
-Here is one.
+Here is one, and it uses a new instrument because the mark we want is a shifted pitch: a resonating
+cavity with a weighted patch inside it. The model changes again. The discipline does not.
 
 ## A lump in a cavity
 
@@ -113,7 +115,9 @@ to in writing — so when it agrees, the agreement is information.
 
 That is what the four steps in [the shadow](the-shadow.md) were for.
 
-And it leaves one loose end, from earlier in the record.
+That is the first refusal: the instrument disagreed with a law its owners had written down. It
+leaves a harder test, from earlier in the record. Can the same discipline make the owners correct
+their reading after a result has already been published?
 
 ## The miss that was already answered
 
