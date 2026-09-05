@@ -65,6 +65,24 @@ RENDERED_BOLD = re.compile(r"<strong>(.*?)</strong>", re.DOTALL)
 TAG = re.compile(r"<[^>]+>")
 
 
+# A sentence that says which world it is talking about is not a claim about the world. The
+# exclusivity patterns key on a shape — *only … at the edge* — and the shape is exactly how chapters
+# 4–8 describe the toy honestly ("on the napkin, everything you add up lives only on the boundary of
+# the triangle"). Refusing those would send a drafter to reword true prose to satisfy a guard, which
+# is how a guard gets weakened rather than fixed (a proofreader, round 6). Only patterns that opt in
+# with `"scoped_ok": true` are exempted, so the legacy programme's claims stay refused however they
+# are framed — "in this model, the universe is a bubble" is still refused, and must be.
+SCOPE_MARKER = re.compile(
+    r"\b(?:in|on|inside|within|across|throughout)\s+"
+    r"(?:this|the|our|its|a)\s+"
+    r"(?:model|toy|toys|lattice|lattices|napkin|book|chapter|page|simulation|structure|mesh|"
+    r"triangle|tetrahedron|octahedron|world\s+we\s+built)\b"
+    r"|\bwe\s+(?:built|drew|made|set\s+up)\b"
+    r"|\bnot\s+in\s+nature\b",
+    re.IGNORECASE,
+)
+
+
 def forbidden_hits(
     text: str,
     phrases: Sequence[str],
@@ -102,11 +120,16 @@ def forbidden_hits(
             hits.append(f"unsupported legacy phrase present: {phrase!r}")
     for rule in patterns:
         pattern = str(rule["pattern"])
-        found = re.search(pattern, lowered, flags=re.IGNORECASE)
+        scoped_ok = bool(rule.get("scoped_ok"))
+        found = None
         for piece in pieces:
+            if scoped_ok and SCOPE_MARKER.search(piece):
+                continue
+            found = re.search(pattern, piece, flags=re.IGNORECASE)
             if found:
                 break
-            found = re.search(pattern, piece, flags=re.IGNORECASE)
+        if not found and not scoped_ok:
+            found = re.search(pattern, lowered, flags=re.IGNORECASE)
         if found:
             hits.append(
                 f"unsupported legacy claim present ({rule.get('why', 'excluded')}): "
@@ -137,6 +160,15 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
         "This book does not try to infer the shape of the universe.",
         "We did not measure the universe. We inspected one constructed object.",
         "The lattice is a toy, and its exponents are dimensionless.",
+        # …and the sentences the napkin chapters are written in. An exclusivity about the toy, said
+        # of the toy, is the honest form and must not be refused: a drafter who hits a guard here
+        # rewords true prose to satisfy it, which is how a guard gets weakened rather than fixed
+        # (a proofreader, round 6). These four are the exemption's own mutation — take the
+        # `scoped_ok` flag off any pattern and one of them turns this red.
+        "On the napkin, everything you add up lives only on the boundary of the triangle.",
+        "In this model, nothing moves except at the edges we drew.",
+        "It is impossible, in this toy, for a number to move without crossing an edge.",
+        "Everything here is built from one rule and four edges.",
     ]
     for sentence in benign:
         stray = forbidden_hits(sentence, phrases, patterns)
@@ -169,11 +201,14 @@ NOT_WORD_OR_STOP = re.compile("[^0-9a-z_/απ⁵\u0000]+")
 # survives: one followed by a capital letter or by the end of the text, closing quotes and brackets
 # allowed in between. `ch. 4` is followed by a digit, `etc. —` by a dash, `of ... boundaries` by a
 # lowercase word; none of them is a sentence end, and none of them shortens the window any more.
-# A block ends a sentence whatever its punctuation: a blank line, a heading, a list item, a table
-# row, or a line that opens with an emphasis marker. Round 5 found 304 sentence ends in `chapters/`
-# that no full stop rule would recognise, and two of them put halves of different sentences inside
-# one pattern window — a guard refusing honest prose, which is how a guard gets weakened.
-BLOCK_BREAK = re.compile(r"\n\s*\n|\n\s*(?:[-*+>#|]|\d+[.)])|\n\s*\*")
+# A block ends a sentence whatever its punctuation, and in hard-wrapped Markdown a **blank line**
+# is the only thing that reliably starts one. The first version of this also broke on any line
+# opening with `>`, `*` or `-`, which is not a block at all when the prose is wrapped: the scope
+# blockquote at the head of every chapter is wrapped that way, and a `**bold**` lead-in lands at
+# the start of a line 64 times in `chapters/` today. Cutting there halved a rendered sentence and
+# let a declared claim through under a reflow nobody edited (a proofreader, round 6). A blank line
+# already precedes every heading, list and table this repository writes, so nothing is lost.
+BLOCK_BREAK = re.compile(r"\n[ \t]*\n")
 # A candidate sentence end: stops, then any closing quotes or brackets, then whitespace or the end.
 CANDIDATE_END = re.compile(r"[.!?]+[\"'\u201d\u2019)\]]*(?=\s|$)")
 # …and the words that carry a full stop without ending anything. A single letter is an initial
@@ -232,12 +267,20 @@ def sentences(text: str) -> List[str]:
     for block in BLOCK_BREAK.split(body):
         start = 0
         for found in CANDIDATE_END.finditer(block):
-            after = block[found.end():].lstrip()
-            if after and not after[0].isupper():
+            tail = block[found.end():]
+            after = tail.lstrip()
+            # A stop at the end of a line ends a sentence: hard-wrapped prose does not break a line
+            # mid-sentence *after* a full stop. That is what closes the em-dashed continuation and
+            # the lowercase quotation the merge half was still joining (a proofreader, round 6).
+            ends_line = tail[:1] in ("\n", "\r") or not tail
+            if not ends_line and after and not after[0].isupper():
                 continue                      # an ellipsis, or a stop inside a sentence
             before = block[:found.start()].split()
             word = "".join(c for c in before[-1] if c.isalpha()).casefold() if before else ""
-            if word in ABBREVIATIONS:
+            # A single letter is an initial. The comment here said so for a round before the code
+            # did, and `F. W. Bessel` split a claim in half while the probe that was supposed to
+            # prove otherwise passed by accident of word order (a proofreader, round 6).
+            if len(word) == 1 or word in ABBREVIATIONS:
                 continue                      # `cf. Chapter 4`, `e.g. Light`, `F. W. Bessel`
             out.append(block[start:found.end()])
             start = found.end()

@@ -44,9 +44,9 @@ walked was the edge.
 Notice where that leaves you. Whenever you measure, you are at a boundary — the thing's or your
 instrument's, and usually both at once.
 
-The nearest of them is the chapter on why sharper shadows took two thousand years, and it reads an
-edge in another sense entirely — a limit rather than a place: the finest difference an instrument
-can still tell apart, which is what separates being wrong from not being able to see yet.
+Nearest first: the chapter on why sharper shadows took two thousand years reads an edge in another
+sense entirely — a limit rather than a place: the finest difference an instrument can still tell
+apart, which is what separates being wrong from not being able to see yet.
 
 Several of the chapters after that are somebody reading an edge in the ordinary sense. A wall put up
 to cut one piece of a small world off from the rest, and the question of what still gets past it.

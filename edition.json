@@ -583,7 +583,7 @@
       "why": "the tetrahedron as fundamental spacetime"
     },
     {
-      "pattern": "\\b(the\\s+world|the\\s+universe|reality|nature|everything)\\b[^.\\n]{0,40}\\b(made|built|composed|consists?|nothing\\s+but)\\b[^.\\n]{0,25}\\b(boundar(y|ies)|edges?|surfaces?)\\b",
+      "pattern": "\\b(the\\s+world|the\\s+universe|reality|nature|everything)\\b[^.\\n]{0,40}\\b(made|built|composed|consists?|nothing\\s+but)\\b[^.\\n]{0,25}\\b(of|out\\s+of|from|but)\\s+(boundar(y|ies)|edges?|surfaces?)\\b",
       "why": "the world as made of boundaries — a claim about nature, where the book has a claim about where an account is kept"
     },
     {
@@ -604,47 +604,58 @@
     },
     {
       "pattern": "\\b(no\\s+other|the\\s+only)\\s+(way|route|path|road)\\b[^.\\n]{0,30}\\b(out|in|across|through|around)\\b",
-      "why": "the necessity register — no other way out, where the book has only where an account is kept"
+      "why": "the necessity register — no other way out, where the book has only where an account is kept",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(no\\s+other|the\\s+only)\\s+(way|route|path|road)\\b[^.]{0,60}\\b(leaves?|leaving|escapes?|crosses?|crossing|gets?\\s+out|comes?\\s+out)\\b[^.]{0,40}\\b(it|the\\s+middle|the\\s+inside|a\\s+region|the\\s+region|the\\s+edge|the\\s+boundary)\\b",
-      "why": "the necessity register, spelled out — the only way anything leaves a middle"
+      "why": "the necessity register, spelled out — the only way anything leaves a middle",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(cannot|can\\s?not|can't|could\\s+not|couldn't|never)\\b[^.]{0,60}\\b(any\\s+other|no\\s+other)\\s+(way|route|path|road)\\b",
-      "why": "the necessity register, negated — the same claim as an impossibility"
+      "why": "the necessity register, negated — the same claim as an impossibility",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(anything|everything|whatever|nothing|all\\s+that)\\b[^.\\n]{0,50}\\b(has\\s+to|have\\s+to|must|can|cannot|can\\s?not|can't|could)\\b[^.\\n]{0,30}\\b(cross|crosses|leave|leaves|escape|escapes|reach|reaches|be\\s+reached|get\\s+out|gets\\s+out|come\\s+out|comes\\s+out|learn|learned)\\b",
-      "why": "the necessity register with a universal subject — anything you learn has to come out through there"
+      "why": "the necessity register with a universal subject — anything you learn has to come out through there",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(cannot|can\\s?not|can't|could\\s+not|must|has\\s+to|have\\s+to|never)\\b[^.\\n]{0,50}\\b(cross|crosses|leave|leaves|escape|escapes|reach|reached|be\\s+reached|get\\s+out|gets\\s+out|come\\s+out|comes\\s+out)\\b[^.\\n]{0,40}\\b(except|only|but\\s+through|but\\s+across|other\\s+than)\\b",
-      "why": "the necessity register as an exclusion — cannot be reached except at its edge"
+      "why": "the necessity register as an exclusion — cannot be reached except at its edge",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(must|has\\s+to|have\\s+to)\\b[^.\\n]{0,20}\\b(cross|pass|go)\\b[^.\\n]{0,20}\\b(the|its|that)\\s+(edge|boundary|surface)\\b",
-      "why": "the necessity register as an obligation on the world — it must cross the boundary to reach you"
+      "why": "the necessity register as an obligation on the world — it must cross the boundary to reach you",
+      "scoped_ok": true
     },
     {
       "pattern": "\\bno\\s+way\\b[^.\\n]{0,40}\\b(to|into|out\\s+of|past|through)\\b[^.\\n]{0,40}\\b(inside|middle|edge|boundary|surface)\\b",
-      "why": "the necessity register without a verb — no way to the inside but through the edge"
+      "why": "the necessity register without a verb — no way to the inside but through the edge",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(nothing|anything|everything|whatever|information|the\\s+inside|the\\s+middle)\\b[^.\\n]{0,60}\\b(only|solely|exclusively|except|nowhere\\s+else|and\\s+nowhere|no\\s+where\\s+else)\\b[^.\\n]{0,40}\\b(edge|edges|boundary|boundaries|surface|surfaces)\\b",
-      "why": "the necessity register with no modal at all — an exclusivity claim about the world, which is the shape the modal patterns were blind to"
+      "why": "the necessity register with no modal at all — an exclusivity claim about the world, which is the shape the modal patterns were blind to",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(only|solely|exclusively|nowhere\\s+else)\\b[^.\\n]{0,40}\\b(at|on|across|through|by\\s+way\\s+of)\\s+(the|its|their)\\s+(edge|edges|boundary|boundaries|surface|surfaces)\\b",
-      "why": "the same exclusivity the other way round — only at the edge"
+      "why": "the same exclusivity the other way round — only at the edge",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(impossible|no\\s+such\\s+thing)\\b[^.\\n]{0,60}\\b(without|other\\s+than|but\\s+by)\\b[^.\\n]{0,40}\\b(cross|crossing|the\\s+edge|the\\s+boundary|the\\s+surface)\\b",
-      "why": "the necessity register as an impossibility written with an adjective rather than a modal"
+      "why": "the necessity register as an impossibility written with an adjective rather than a modal",
+      "scoped_ok": true
     },
     {
       "pattern": "\\b(edge|edges|boundary|boundaries|surface|surfaces)\\b[^.\\n]{0,30}\\band\\s+(nowhere|nothing|no\\s+other|no\\s+one)\\s+else\\b",
-      "why": "the same exclusivity with the boundary named first — at the edge and nowhere else"
+      "why": "the same exclusivity with the boundary named first — at the edge and nowhere else",
+      "scoped_ok": true
     }
   ],
   "forbidden_probe_texts": [
@@ -691,7 +702,12 @@
     "The inside reaches you only across its edge.",
     "Information leaves a region exclusively through its boundary.",
     "Whatever the inside has to say, it says at the edge and nowhere else.",
-    "It is impossible for anything to reach you without crossing the edge."
+    "It is impossible for anything to reach you without crossing the edge.",
+    "The world is made, as F. W. Bessel put it, of boundaries.",
+    "Nothing gets in or out, as F. W. Bessel put it, except at the edge.",
+    "> Nothing gets in or out\n> except at the edge.",
+    "The inside reaches you only\n**across its edge**.",
+    "The world is made\n*of boundaries*."
   ],
   "retired_phrasings": [
     {

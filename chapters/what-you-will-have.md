@@ -79,7 +79,7 @@ in, every chapter that runs an experiment stops before the answer and asks you t
 down. That pause is the method, performed instead of described, and it works only if you commit.
 
 Sticks and light, dots and lines. That is what we have had since the first shadows on a cave wall,
-is all this book uses, and is enough for everything in here.
+is all this book uses, and enough for everything in here.
 
 We start closer to hand than a shadow: an egg on a table, and a claim about where measuring gets
 done — worth holding lightly until you have done it yourself.
