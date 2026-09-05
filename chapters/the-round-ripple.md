@@ -209,9 +209,9 @@ ripples get gentler.
 Go and look at your guess now. Whichever way it went, you know something about the dial that you
 could not have known by being told.
 
-Which is what calibrating an instrument means: not a world with nothing left in it, but one whose
-remaining unevenness has been measured, and whose symmetries have been checked rather than assumed.
-This one steers true enough to measure with — so measure with it.
+Calibration is not a world with nothing left in it. It is a world whose remaining unevenness has
+been measured, and whose symmetries have been checked rather than assumed. This one steers true
+enough to measure with — so measure with it.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-the-round-ripple).*
