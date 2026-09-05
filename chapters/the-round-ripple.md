@@ -85,7 +85,7 @@ its arrival along an edge direction, time its arrival along a diagonal, and comp
 If the ring were round they would be equal. They differ by **22.4%**.
 
 **[Open the data-true rings](record/lab/warp-1-move/0115-lattice-matched-isotropy/figures/isotropy.html)**
-— the lopsided one on the left is this setting; the next section's is beside it.
+— two rings, one per setting. The lopsided one is this section's; the other is the next section's.
 
 What if the dial is set from the shape instead?
 
@@ -102,8 +102,8 @@ Both predictions were written down before either run — that the naive setting 
 uneven, and that the geometric one would at least halve it. That matters more than the numbers do,
 and it is the step people skip.
 
-The ring on the right of the figure in the last section is this one. Put a thumb over the left half
-of that page and the difference between an assumption and a reading is the whole picture.
+The rounder of the two rings in the last section's figure is this one. The pair of them, side by
+side, is the difference between an assumption and a reading.
 
 But 2.2% is not zero. What is it?
 
