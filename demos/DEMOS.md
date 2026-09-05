@@ -247,8 +247,9 @@ is one more figure to go stale:
    three or more numbers — counting a **packed** cell (`+3  +1  −4`) as its numbers, wherever it sits
    — declares itself: `{ total: i }`, meaning column `i` is the sum of the numbers before it, or
    `{ notASum: true }`, meaning they are simply several numbers. A declared
-   total is added up here, on the digits a reader sees, in exact arithmetic: **614 of them on every
-   run.** The declaration is by **column index**, and that is the whole point of its shape: the first
+   total is added up here, on the digits a reader sees, in exact arithmetic, and the check prints
+   how many it added — a figure quoted here went stale the first time a table was added, so it is
+   printed and not quoted. The declaration is by **column index**, and that is the whole point of its shape: the first
    version of this gate read the column *headed* "added up", and a proof-reader switched it off by
    renaming that column in the same edit that broke the arithmetic under it, then switched it off
    again by moving the terms into a second table. Neither of those works now, and it is worth being
@@ -335,7 +336,11 @@ is one more figure to go stale:
    **The page reads the answer** — where a question's answer is the same in every state (two dots
    close nothing; a shape's ceiling does not move), no comparison can tell a cell that read it from
    a cell written to agree with it, so the step is rebuilt against a door that answers differently
-   and must say something else. **And every leg ran**: each of these counts, and a leg that fired on
+   and must say something else. **Per cell, and one perturbation per field**: the first version of
+   that probe compared whole tables, and a reviewer typed a verdict word into one column while
+   leaving its neighbour honest — the neighbour moved, so the table moved, so the probe passed. A
+   cell is what a reader reads. And a tag no spec claims fails too: a table that thinks it is
+   guarded is worse than one that knows it is not. **And every leg ran**: each of these counts, and a leg that fired on
    no state of any step fails, whether it was switched off in the check, in the step, or in the
    enumerator that drives it. A step names the tables this gate reads by a `tag` nobody is shown, so
    a caption may be rewritten freely and losing the tag is a failure rather than a quiet exemption.

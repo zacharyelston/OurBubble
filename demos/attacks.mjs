@@ -577,7 +577,27 @@ ${WIRE_CIRCLE}`,
   { guard: "gate 11 · a driven step's table with its tag taken off", file: "steps.mjs",
     from: '              runTable("every tick", run.history, run.totals, NAMES, "dial-run"),',
     to: '              runTable("every tick", run.history, run.totals, NAMES),',
-    expect: "no table tagged" },
+    expect: "and this gate speaks for exactly" },
+  // A tag used twice: the gate took the first table and the copy — the stella's ceiling under
+  // the tetrahedron's title — was held by nothing, with every number in it still the engine's.
+  { guard: "gate 11 · a second table carrying a tag already used", file: "steps.mjs",
+    from: '                { notASum: true }, "tetrahedron-certificate"),',
+    to: '                { notASum: true }, "tetrahedron-certificate"),\n'
+      + '              table("a second ceiling for the same tick",\n'
+      + '                ["tick", "the stiffest", "the ceiling", "inside it"],\n'
+      + '                [[show(engine.certificate("stella", k).k),\n'
+      + '                  show(String(engine.certificate("stella", k).eigenvalue)),\n'
+      + '                  show(engine.certificate("stella", k).bound),\n'
+      + '                  engine.certificate("stella", k).holds ? "yes" : "no"]],\n'
+      + '                { notASum: true }, "tetrahedron-certificate"),',
+    expect: "and this gate speaks for exactly" },
+  // A tag nothing claims: the table looks guarded and is not.
+  { guard: "gate 11 · a tag no step in the gate's list claims", file: "steps.mjs",
+    from: '    const cornerTable = (values) => table("the corners", ["dot", "number"],\n'
+      + '      corners.map((name, index) => [name, show(values[index])]));',
+    to: '    const cornerTable = (values) => table("the corners", ["dot", "number"],\n'
+      + '      corners.map((name, index) => [name, show(values[index])]), null, "the-corners");',
+    expect: "and no step in this gate's own list claims it" },
   { guard: "gate 11 · a driven step's anchor renamed out from under the gate", file: "steps.mjs",
     from: '        anchors: ["coming-home-on-eight-faces"],',
     to: '        anchors: ["coming-home-on-eight-face"],',
@@ -589,6 +609,36 @@ ${WIRE_CIRCLE}`,
   // The same defect with the engine call left in place above it, so that the question IS asked and
   // the answer is thrown away. Every value comparison passes it — the typed cell agrees with the
   // answer — and only making the engine answer differently tells them apart.
+  // A verdict word typed into ONE column of a driven table, its neighbour left honest. The
+  // probe compared whole tables, so the honest neighbour carried the typed cell along with it.
+  { guard: "gate 11 · the outward orientation typed instead of read", file: "steps.mjs",
+    from: '                  last ? String(fs.lines_walked_each_way) : "not all walked yet",\n'
+      + '                  fs.orientation]],',
+    to: '                  last ? String(fs.lines_walked_each_way) : "not all walked yet",\n'
+      + '                  "outward"]],',
+    expect: "whether or not face_sum_json answers differently" },
+  { guard: "gate 11 · a certificate's verdict typed beside its honest ceiling",
+    file: "steps.mjs",
+    from: '                [[show(certificate.k), show(String(certificate.eigenvalue)),\n'
+      + '                  show(certificate.bound), certificate.holds ? "yes" : "no"]],\n'
+      + '                { notASum: true }, "tetrahedron-certificate"),',
+    to: '                [[show(certificate.k), show(String(certificate.eigenvalue)),\n'
+      + '                  show(certificate.bound), "yes"]],\n'
+      + '                { notASum: true }, "tetrahedron-certificate"),',
+    expect: "whether or not certificate_json answers differently" },
+  // Two columns of a driven row that nothing spoke for, swapped: `never · 1` for `1 · never`.
+  { guard: "gate 11 · a driven row's unspoken-for columns swapped", file: "steps.mjs",
+    from: '                  String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]],',
+    to: '                  tried.period === 0 ? "never" : String(tried.period), String(tried.printable)]],',
+    expect: "where the engine answers" },
+  // A counter with no rows at all crashed the check instead of failing it, which this file has
+  // called a defect once already.
+  { guard: "gate 11 · a counting table with no rows at all", file: "steps.mjs",
+    from: '                  fs.orientation]],\n'
+      + '                { notASum: true }, "face-count"),',
+    to: '                  fs.orientation]].slice(1),\n'
+      + '                { notASum: true }, "face-count"),',
+    expect: "has no rows at all" },
   { guard: "gate 11 · the two-dot answer typed into the cell, the engine still asked",
     file: "steps.mjs",
     from: '                [[closed.closed_walks === 0 ? "none" : String(closed.closed_walks),\n'

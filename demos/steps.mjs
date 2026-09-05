@@ -874,9 +874,10 @@ export function chapterSteps(engine, draw) {
                 LINES.map((name, index) => [name, show(state.numbers[index])]),
                 null, "dial-weights"),
               runTable("every tick", run.history, run.totals, NAMES, "dial-run"),
-              // How far a napkin gets, as every other run in this chapter says it — a dial she can
-              // turn to a weight of her own can send the run past what a napkin will write, and a
-              // run that does that says so here rather than only in its own rows.
+              // How far a napkin gets, as every other run in this chapter says it. It reads the
+              // same in every state a reader has been seen to reach — a whole-number weight keeps
+              // the run in whole numbers — and it is here because the reader may type any exact
+              // rational she likes, not because the dial is expected to break it.
               printableRow(run.history, run.printable_rows),
               // What the dial changed and what it did not, both off the same run: the total is the
               // number it was at the start — printed beside itself, which is the claim — and the
@@ -1113,7 +1114,7 @@ export function chapterSteps(engine, draw) {
                   last ? String(fs.lines_walked_each_way) : "not all walked yet",
                   fs.orientation]],
                 { notASum: true }, "face-count"),
-              table("what is on each face now", ["faces looking at a tip", "faces still bare"],
+              table("what is on each face", ["faces looking at a tip", "faces still bare"],
                 [[count(atATip), count(stillBare)]]),
             ],
           };

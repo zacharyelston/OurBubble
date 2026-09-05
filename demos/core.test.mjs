@@ -1545,8 +1545,15 @@ const DRIVEN = {
     // The answer is the same in every state — two dots and a line close nothing, whatever she
     // types — so the comparison above cannot tell a cell that READ that answer from a cell that
     // was written to agree with it. This is what tells them apart: the engine is made to answer
-    // differently, and a page that does not notice is a page that was not asking.
-    reads: (answer) => ({ ...answer, closed_walks: answer.closed_walks + 1 }),
+    // differently, and the cells that come off the field it changed must say something else.
+    //
+    // **Per cell, one perturbation per field.** A reviewer typed a verdict word into one column of
+    // a driven table and left its neighbour honest, and a whole-table comparison passed it: the
+    // honest cell moved, so the table moved. A cell is what a reader reads.
+    reads: [
+      { change: (answer) => ({ ...answer, closed_walks: answer.closed_walks + 1 }),
+        tag: "two-dots-closed", cells: [[0, 0], [0, 1]] },
+    ],
     tables: {
       "two-dots-closed": () => {
         const closed = oracle.loops(TWO_DOTS, [NOTHING], 1);
@@ -1602,7 +1609,16 @@ const DRIVEN = {
   // disagreeing is a defect this step has had once already.
   "coming-home-on-eight-faces": {
     asks: ["face_sum_json", "octahedron"],
-    reads: (answer) => ({ ...answer, running: [...answer.running].reverse() }),
+    reads: [
+      { change: (answer) => ({ ...answer, running: [...answer.running].reverse() }),
+        tag: "face-walk", cells: [[1, 2]] },
+      // The orientation is a word, and the same word in every state, so nothing but this says the
+      // page read it rather than agreed with it. DEMOS.md claims it is the engine's own word.
+      { change: (answer) => ({ ...answer, orientation: answer.object }),
+        tag: "face-count", cells: [[0, 3]] },
+      { change: (answer) => ({ ...answer, lines_walked_each_way: answer.lines_walked_each_way + 1 }),
+        tag: "face-count", cells: [[0, 2]] },
+    ],
     walk: { tag: "face-walk",
       of: (state) => {
         const answer = oracle.faceSum("octahedron", payload.face_sum.arrows);
@@ -1618,7 +1634,15 @@ const DRIVEN = {
   // answer, and the other four were rendered by the same code and held by nothing.
   "the-tick-belongs-to-the-shape": {
     asks: ["certificate_json", "triangle"],
-    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    reads: [
+      { change: (answer) => ({ ...answer, eigenvalue: answer.eigenvalue + 1 }),
+        tag: "triangle-certificate", cells: [[0, 1]] },
+      { change: (answer) => ({ ...answer, eigenvector: [...answer.eigenvector].reverse() }),
+        tag: "triangle-certificate", cells: [[0, 2]] },
+      { change: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+        tag: "triangle-certificate", cells: [[0, 3]] },
+      { change: (answer) => ({ ...answer, holds: !answer.holds }), tag: "triangle-certificate", cells: [[0, 4]] },
+    ],
     tables: {
       "triangle-certificate": (state) => [certificateCells("triangle", state.choice.value,
         ["k", "eigenvalue", "eigenvector", "bound", "holds"])],
@@ -1626,7 +1650,13 @@ const DRIVEN = {
   },
   "now-the-tetrahedron": {
     asks: ["certificate_json", "tetrahedron"],
-    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    reads: [
+      { change: (answer) => ({ ...answer, eigenvalue: answer.eigenvalue + 1 }),
+        tag: "tetrahedron-certificate", cells: [[0, 1]] },
+      { change: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+        tag: "tetrahedron-certificate", cells: [[0, 2]] },
+      { change: (answer) => ({ ...answer, holds: !answer.holds }), tag: "tetrahedron-certificate", cells: [[0, 3]] },
+    ],
     tables: {
       "tetrahedron-certificate": () => [certificateCells("tetrahedron", payload.motion.k,
         ["k", "eigenvalue", "bound", "holds"])],
@@ -1634,7 +1664,13 @@ const DRIVEN = {
   },
   "it-takes-two-ticks-to-cross": {
     asks: ["certificate_json", "octahedron"],
-    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    reads: [
+      { change: (answer) => ({ ...answer, eigenvalue: answer.eigenvalue + 1 }),
+        tag: "octahedron-certificate", cells: [[0, 1]] },
+      { change: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+        tag: "octahedron-certificate", cells: [[0, 2]] },
+      { change: (answer) => ({ ...answer, holds: !answer.holds }), tag: "octahedron-certificate", cells: [[0, 3]] },
+    ],
     tables: {
       "octahedron-certificate": () => [certificateCells("octahedron", payload.poke.k,
         ["k", "eigenvalue", "bound", "holds"])],
@@ -1642,7 +1678,13 @@ const DRIVEN = {
   },
   "the-tick-that-stops-working": {
     asks: ["certificate_json", "stella"],
-    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    reads: [
+      { change: (answer) => ({ ...answer, eigenvalue: answer.eigenvalue + 1 }),
+        tag: "stella-certificate", cells: [[0, 1]] },
+      { change: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+        tag: "stella-certificate", cells: [[0, 2]] },
+      { change: (answer) => ({ ...answer, holds: !answer.holds }), tag: "stella-certificate", cells: [[0, 3]] },
+    ],
     tables: {
       "stella-certificate": () => [certificateCells("stella", payload.refusal.runaway.k,
         ["k", "eigenvalue", "bound", "holds"])],
@@ -1650,12 +1692,23 @@ const DRIVEN = {
   },
   "the-smaller-tick-does-not-save-it": {
     asks: ["certificate_json", "stella"],
-    reads: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+    reads: [
+      { change: (answer) => ({ ...answer, bound: answer.eigenvector.length.toString() }),
+        tag: "stella-tried", cells: [[0, 1]] },
+      { change: (answer) => ({ ...answer, holds: !answer.holds }),
+        tag: "stella-tried", cells: [[0, 2]] },
+    ],
     tables: {
-      // The last two columns are the run's, not the certificate's, so this gate does not speak for
-      // them: a null says so rather than leaving the row unchecked.
-      "stella-tried": (state) => [certificateCells("stella", state.choice.value.k,
-        ["k", "bound", "holds", null, null])],
+      // The last two columns are the run's rather than the certificate's, and a reviewer swapped
+      // them — `never · 1` where the page means `1 · never` — with every other gate silent. So they
+      // are taken from the vendored run this step offers, found by the tick rather than by reading
+      // them off the choice the page happens to be holding.
+      "stella-tried": (state) => {
+        const tried = payload.refusal.runaway.stable_tried
+          .find((one) => one.k === state.choice.value.k);
+        return [[...certificateCells("stella", state.choice.value.k, ["k", "bound", "holds"]),
+          String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]];
+      },
     },
   },
 };
@@ -1695,14 +1748,18 @@ function drivenBy(step, rendered, state, where) {
   const anchor = step.anchors.find((one) => DRIVEN[one]);
   if (!anchor) return;
   const spec = DRIVEN[anchor];
+  // Exactly one table per tag. `find` took the first, so a second table carrying a tag already
+  // used was unheld by this gate and its numbers were the engine's — two ceiling tables on one
+  // step, disagreeing, and every gate green. A reviewer built exactly that.
   const find = (tag) => {
-    const found = rendered.tables.find((table) => table.tag === tag);
-    if (!found) {
-      fail(`${where}: no table tagged "${tag}". That tag is how this gate finds the table whose `
-        + `numbers are ${spec.asks[0]}'s answer, so a step that loses it is a step nothing holds `
-        + `to the engine any more`);
+    const found = rendered.tables.filter((table) => table.tag === tag);
+    if (found.length !== 1) {
+      fail(`${where}: ${found.length} tables are tagged "${tag}", and this gate speaks for exactly `
+        + `one. That tag is how it finds the table whose numbers are ${spec.asks[0]}'s answer: `
+        + `lose it and nothing holds the table to the engine, repeat it and the copy is unheld`);
+      return null;
     }
-    return found;
+    return found[0];
   };
 
   // Every cell this gate speaks for, against the engine's answer for this state's own inputs.
@@ -1769,7 +1826,11 @@ function drivenBy(step, rendered, state, where) {
     if (shown && walked) {
       const listed = walked.rows.filter(hasNumbers).length;
       ran(anchor, spec.counter.tag);
-      if (String(shown.rows[0][spec.counter.column]) !== String(listed)) {
+      if (!shown.rows.length) {
+        fail(`${where}: the table tagged "${spec.counter.tag}" has no rows at all, so it counts `
+          + `nothing — which is a table that has stopped saying anything rather than one that says `
+          + `something wrong`);
+      } else if (String(shown.rows[0][spec.counter.column]) !== String(listed)) {
         fail(`${where}: the table tagged "${spec.counter.tag}" says `
           + `${shown.rows[0][spec.counter.column]} walked and the walk above it lists ${listed}. `
           + `Two counters of the same thing disagreeing is how this step shipped last time`);
@@ -1791,6 +1852,7 @@ let tightest = Infinity;
 let tightestAt = "";
 let sums = 0;
 let runningSums = 0;
+const taggedTables = new Set();
 let stills = 0;
 // The folded pairs the pages actually have, against the list DEMOS.md prints — see gate 9b.
 const actualFolds = [];
@@ -2048,6 +2110,7 @@ for (const [slug, chapter] of Object.entries(scaffold.chapters)) {
         }
       }
 
+      for (const table of rendered.tables) if (table.tag) taggedTables.add(table.tag);
       // Gate 11: the five the engine answers now, asked rather than remembered.
       drivenBy(step, rendered, state, `${slug} ${step.label}`);
 
@@ -2219,13 +2282,13 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
   // a door that answers differently, and the tables this gate names must say something else. A
   // reviewer typed the two-dot answer into the cell with the engine call left above it, and every
   // other leg of this gate passed it.
-  if (spec.reads) {
+  for (const probe of spec.reads || []) {
     const deaf = new Engine(glue, payload, rows);
     const honest = new Engine(glue, payload, rows);
     const ask = deaf.ask.bind(deaf);
     deaf.ask = (entry, ...args) => {
       const answer = ask(entry, ...args);
-      return entry === spec.asks[0] ? spec.reads(answer) : answer;
+      return entry === spec.asks[0] ? probe.change(answer) : answer;
     };
     const stepOf = (which) => {
       for (const build of Object.values(chapterSteps(which, drawings(which)))) {
@@ -2233,30 +2296,35 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
       }
       return null;
     };
-    const tags = [...Object.keys(spec.tables || {}), ...(spec.walk ? [spec.walk.tag] : [])];
-    const rowsOf = (step, state) => {
+    const cellsOf = (step, state) => {
       try {
         const shown = step.render(state);
-        return JSON.stringify(tags.map((tag) =>
-          (shown.tables.find((table) => table.tag === tag) || {}).rows));
+        const table = shown.tables.find((one) => one.tag === probe.tag);
+        return table ? probe.cells.map(([row, at]) =>
+          String((table.rows[row] || [])[at])) : null;
       } catch { return null; }
     };
     const deafStep = stepOf(deaf);
     const honestStep = stepOf(honest);
-    let noticed = false;
+    // Per cell: every cell this probe names must move when the field it comes off moves. The
+    // whole-table version of this passed a typed verdict word sitting beside an honest neighbour,
+    // because the neighbour moved and the table with it.
+    const moved = probe.cells.map(() => false);
     for (const state of statesOf(honestStep, view)) {
-      const one = rowsOf(honestStep, state);
-      const other = rowsOf(deafStep, state);
-      if (one !== null && other !== null && one !== other) noticed = true;
+      const one = cellsOf(honestStep, state);
+      const other = cellsOf(deafStep, state);
+      if (one === null || other === null) continue;
+      one.forEach((cell, index) => { if (cell !== other[index]) moved[index] = true; });
     }
-    if (!noticed) {
-      fail(`the step for "${anchor}" prints the same ${tags.join(", ")} whether or not `
-        + `${spec.asks[0]} answers differently. The engine may be being asked and the answer thrown `
-        + `away: a cell written to agree with an answer that never changes is indistinguishable `
-        + `from one that read it, except like this`);
-    } else {
-      ran(anchor, "the answer is read, not agreed with");
-    }
+    moved.forEach((noticed, index) => {
+      if (noticed) return;
+      const [row, at] = probe.cells[index];
+      fail(`the step for "${anchor}" prints the same cell at row ${row}, column ${at} of `
+        + `"${probe.tag}" in every state whether or not ${spec.asks[0]} answers differently. The `
+        + `engine may be being asked and that cell written to agree with it: a value that is the `
+        + `same in every state cannot be told from a typed one any other way`);
+    });
+    if (moved.every(Boolean)) ran(anchor, "the answer is read, not agreed with");
   }
 
   if (!wasAsked(questionsAsked(door), spec.asks)) {
@@ -2264,6 +2332,22 @@ for (const [anchor, spec] of Object.entries(DRIVEN)) {
       + `and that question is what it is for. An answer that reaches the page without the engine `
       + `being asked is an answer somebody wrote down — and the same entry point asked a different `
       + `question is the same defect wearing the right name`);
+  }
+}
+
+// Every tag a page puts on a table is claimed by a spec here. Deleting an entry from DRIVEN is
+// otherwise silent — the tables it held simply stop being held — and while the mutation suite
+// notices (the attacks aimed at that step stop turning the check red), the check itself said
+// nothing. An orphan tag is a table that thinks it is guarded.
+{
+  const claimed = new Set(Object.values(DRIVEN).flatMap((spec) =>
+    [...Object.keys(spec.tables || {}), ...(spec.walk ? [spec.walk.tag] : []),
+      ...(spec.counter ? [spec.counter.tag] : [])]));
+  for (const tag of taggedTables) {
+    if (!claimed.has(tag)) {
+      fail(`a table is tagged "${tag}" and no step in this gate's own list claims it. A tag is how `
+        + `this gate finds a table; one nothing claims is a table that looks guarded and is not`);
+    }
   }
 }
 
