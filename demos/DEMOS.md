@@ -463,8 +463,8 @@ make check                            # tier 0, which runs both
 
 ## The gaps in the engine, and what closed them
 
-**Five of these are closed in the engine and driven here; the sixth is not closed and is not
-wanted.** UniForge [#362](https://github.com/zacharyelston/UniForge/pull/362)
+**Five of the six gaps these pages found are closed in the engine and driven here; the sixth is not
+closed, and is not wanted.** UniForge [#362](https://github.com/zacharyelston/UniForge/pull/362)
 (`lab/napkin/0003`) implemented the five, the 2026-09-04 engine bump vendored them, and this pass
 rewired the steps to ask them. `TOKENS.md`'s "The five the demos asked for" lists the rows; gate 11
 above is what holds each step to asking.
@@ -472,7 +472,7 @@ above is what holds each step to asking.
 | what a step wanted | what asks it now |
 |---|---|
 | **the rule with the dial turned** — `slosh_json` ran with every line counted the same, so the dial step could only offer the two positions the engine had computed and vendored | the dial step takes a **weight per line** from the reader and runs `slosh_weighted_json`; the total is the same number at every tick and the rhythm is not, both off that run |
-| **the outward-oriented eight-face sum** — the vendored `face_sum` carried the eight numbers and their total and nothing else | the eight-face walk asks `face_sum_json`, which answers per face: the three lines each one walks, the orientation it walked them in, and the sum building face by face |
+| **the outward-oriented eight-face sum** — the vendored `face_sum` carried the eight numbers and their total and nothing else | the eight-face walk asks `face_sum_json`, which answers per face: the cycle of dots the walk takes round it — which is what makes the orientation visible rather than asserted — the orientation in the engine's own word, and the sum building face by face |
 | **the two-dot complex** — `loops_json` answered for the book's four objects, and two dots and a line was not one of them | both of chapter one's two-dot beats ask `loops_json` about `"two-dots"`: the difference on its one line, and its own count of closed walks, which is none — the reason nothing comes home yet |
 | **the triangle's ceiling** — `certificate_json` panicked on `"triangle"` rather than answering, so the beat where the tick belongs to the shape could only show two runs | that step asks `certificate_json("triangle", k)` for whichever tick she picks, prints the stiffest number, the integer eigenvector and the ceiling, and offers the ceiling itself as a third tick — where the certificate does not hold, and the refusal is the engine's |
 | **running partial sums along a walk** — `loops_json` gave a walk's total and no way to watch it being made, so the terms were got one at a time and the sum was simply printed | every walk table's running column is `walk_json`'s (`face_sum_json`'s on the ring): the engine's partial sums, in the order a reader takes the walk. `Engine.contribution` — the one-slot trick that got the terms before — is gone |
