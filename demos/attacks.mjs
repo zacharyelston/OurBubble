@@ -237,14 +237,16 @@ export const ATTACKS = [
   { guard: "gate 7 · a total that is not its terms", file: "steps.mjs",
     from: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     to: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[edges.map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[edges.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     expect: "and they do not" },
   { guard: "gate 7 · a wrong total reachable only by typing", file: "steps.mjs",
-    from: "                  show(inside.loops[0])]], { total: 1 }),",
-    to: "                  show(state.numbers[3] === arrows[3] ? inside.loops[0] : loops.loops[0])]],\n                { total: 1 }),",
+    from: '                [[inside.terms.map(signed).join("  "), show(inside.sum)]], { total: 1 }),',
+    to: '                [[inside.terms.map(signed).join("  "),\n'
+      + '                  show(state.numbers[3] === arrows[3] ? inside.sum : loops.loops[0])]],\n'
+      + '                { total: 1 }),',
     expect: "and they do not" },
   { guard: "gate 7 · a total-shaped caption over a column", file: "steps.mjs",
     from: 'const cornerTable = (values) => table("the corners", ["dot", "number"],',
@@ -258,18 +260,18 @@ export const ATTACKS = [
   { guard: "gate 7 · a table of several numbers that declares nothing", file: "steps.mjs",
     from: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     to: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]]),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]]),',
     expect: "does not say whether the last is their total" },
   { guard: "gate 7 · a table declaring its first column the total", file: "steps.mjs",
     from: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 1 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 1 }),',
     to: '              table("what the whole walk comes to", ["the three terms, as the walk uses them",\n'
       + '                "added up"],\n'
-      + '                [[walkTerms(edges).map(signed).join("  "), show(loop)]], { total: 0 }),',
+      + '                [[walk.terms.map(signed).join("  "), show(walk.sum)]], { total: 0 }),',
     expect: "declares column 0 as its total" },
 
   // ── gate 8: nothing is struck through, nothing touches ───────────────────────────────────────
@@ -522,6 +524,207 @@ ${WIRE_CIRCLE}`,
   { guard: "gate 4 · a net middle drawn twice over", file: "draw.mjs",
     from: MID_CIRCLE, to: `${MID_CIRCLE}\n${MID_CIRCLE}`,
     expect: "time(s), and the engine puts it in" },
+
+  // ── gate 11: the five the engine answers now, asked rather than remembered ───────────────────
+  //
+  // Every one of these is a page that looks right. None prints a number the engine did not produce,
+  // so gate 2 sees nothing; none types a digit, so gate 3 sees nothing. Eight of them are a fresh
+  // reviewer's, who walked all five of the first version's legs — every one of which failed OPEN,
+  // agreeing with the page about the page rather than holding the page to the step.
+  { guard: "gate 11 · a wrong weight silently accepted by the dial", file: "steps.mjs",
+    from: "          const run = engine.sloshWeighted(\"tetrahedron\", tetraCorners, state.numbers, k, ticks);",
+    to: "          const run = engine.sloshWeighted(\"tetrahedron\", tetraCorners,\n"
+      + "            LINES.map(() => plainWeight), k, ticks);",
+    expect: "where the engine answers" },
+  { guard: "gate 11 · a weight written as a word, which used to disarm the dial", file: "steps.mjs",
+    from: "                LINES.map((name, index) => [name, show(state.numbers[index])]),",
+    to: "                LINES.map((name, index) => [name, state.numbers[index] === plainWeight\n"
+      + '                  ? "the same as the rest" : show(state.numbers[index])]),',
+    expect: "where the engine answers" },
+  { guard: "gate 11 · the dialled run one row short", file: "steps.mjs",
+    from: '              runTable("every tick", run.history, run.totals, NAMES, "dial-run"),',
+    to: '              runTable("every tick", run.history.slice(1), run.totals, NAMES, "dial-run"),',
+    expect: "and the engine's answer for this step's own inputs has" },
+  { guard: "gate 11 · a running sum read off the terms instead of the engine", file: "steps.mjs",
+    from: "                  signed(walk.terms[index]), show(walk.running[index]),",
+    to: "                  signed(walk.terms[index]), show(walk.terms[index]),",
+    expect: "and the terms above it come to something else" },
+  { guard: "gate 11 · a walk table that does not say which column is its running sum",
+    file: "steps.mjs",
+    from: '                ]), { runs: [3, 4] }, "walk-running"),',
+    to: '                ]), null, "walk-running"),',
+    expect: "does not say which of its columns is the walk" },
+  { guard: "gate 11 · a running declaration pointed at two prose columns", file: "steps.mjs",
+    from: '                ]), { runs: [3, 4] }, "walk-running"),',
+    to: '                ]), { runs: [0, 1] }, "walk-running"),',
+    expect: "a declaration pointed at prose exempts the whole table" },
+  { guard: "gate 11 · the same walk entry point asked a different question", file: "steps.mjs",
+    from: '          const inside = engine.walk("tetrahedron", 2, 0, loops.loops);',
+    to: '          const inside = engine.walk("tetrahedron", 1, 0, state.numbers);',
+    expect: "is not the engine's for this step's own inputs" },
+  { guard: "gate 11 · the tetrahedron's certificate under the triangle's title", file: "steps.mjs",
+    from: '          const certificate = engine.certificate("triangle", chosen);',
+    to: '          const certificate = engine.certificate("tetrahedron", chosen);',
+    expect: 'the table tagged "triangle-certificate" prints' },
+  { guard: "gate 11 · a certificate pinned to a tick she did not pick", file: "steps.mjs",
+    from: '          const certificate = engine.certificate("triangle", chosen);',
+    to: '          const certificate = engine.certificate("triangle", atShape.k);',
+    expect: 'the table tagged "triangle-certificate" prints' },
+  { guard: "gate 11 · the octahedron step showing another shape's certificate", file: "steps.mjs",
+    from: '          const certificate = engine.certificate("octahedron", poke.k);',
+    to: '          const certificate = engine.certificate("tetrahedron", poke.k);',
+    expect: 'the table tagged "octahedron-certificate" prints' },
+  { guard: "gate 11 · a driven step's table with its tag taken off", file: "steps.mjs",
+    from: '              runTable("every tick", run.history, run.totals, NAMES, "dial-run"),',
+    to: '              runTable("every tick", run.history, run.totals, NAMES),',
+    expect: "and this gate speaks for exactly" },
+  // A tag used twice: the gate took the first table and the copy — the stella's ceiling under
+  // the tetrahedron's title — was held by nothing, with every number in it still the engine's.
+  { guard: "gate 11 · a second table carrying a tag already used", file: "steps.mjs",
+    from: '                { notASum: true }, "tetrahedron-certificate"),',
+    to: '                { notASum: true }, "tetrahedron-certificate"),\n'
+      + '              table("a second ceiling for the same tick",\n'
+      + '                ["tick", "the stiffest", "the ceiling", "inside it"],\n'
+      + '                [[show(engine.certificate("stella", k).k),\n'
+      + '                  show(String(engine.certificate("stella", k).eigenvalue)),\n'
+      + '                  show(engine.certificate("stella", k).bound),\n'
+      + '                  engine.certificate("stella", k).holds ? "yes" : "no"]],\n'
+      + '                { notASum: true }, "tetrahedron-certificate"),',
+    expect: "and this gate speaks for exactly" },
+  // A tag nothing claims: the table looks guarded and is not.
+  { guard: "gate 11 · a tag no step in the gate's list claims", file: "steps.mjs",
+    from: '    const cornerTable = (values) => table("the corners", ["dot", "number"],\n'
+      + '      corners.map((name, index) => [name, show(values[index])]));',
+    to: '    const cornerTable = (values) => table("the corners", ["dot", "number"],\n'
+      + '      corners.map((name, index) => [name, show(values[index])]), null, "the-corners");',
+    expect: "this step's own spec in this gate does not claim it" },
+  { guard: "gate 11 · a driven step's anchor renamed out from under the gate", file: "steps.mjs",
+    from: '        anchors: ["coming-home-on-eight-faces"],',
+    to: '        anchors: ["coming-home-on-eight-face"],',
+    expect: "is one of the five the engine was extended for" },
+  { guard: "gate 11 · the two-dot answer hard-coded instead of asked", file: "steps.mjs",
+    from: "          const closed = engine.loops(TWO_DOTS, [ZERO], 1);",
+    to: "          const closed = { closed_walks: 0 };",
+    expect: "never asked loops_json with" },
+  // The same defect with the engine call left in place above it, so that the question IS asked and
+  // the answer is thrown away. Every value comparison passes it — the typed cell agrees with the
+  // answer — and only making the engine answer differently tells them apart.
+  // A verdict word typed into ONE column of a driven table, its neighbour left honest. The
+  // probe compared whole tables, so the honest neighbour carried the typed cell along with it.
+  { guard: "gate 11 · the outward orientation typed instead of read", file: "steps.mjs",
+    from: '                  last ? String(fs.lines_walked_each_way) : "not all walked yet",\n'
+      + '                  fs.orientation]],',
+    to: '                  last ? String(fs.lines_walked_each_way) : "not all walked yet",\n'
+      + '                  "outward"]],',
+    expect: "whether or not face_sum_json says something else" },
+  { guard: "gate 11 · a certificate's verdict typed beside its honest ceiling",
+    file: "steps.mjs",
+    from: '                [[show(certificate.k), show(String(certificate.eigenvalue)),\n'
+      + '                  show(certificate.bound), certificate.holds ? "yes" : "no"]],\n'
+      + '                { notASum: true }, "tetrahedron-certificate"),',
+    to: '                [[show(certificate.k), show(String(certificate.eigenvalue)),\n'
+      + '                  show(certificate.bound), "yes"]],\n'
+      + '                { notASum: true }, "tetrahedron-certificate"),',
+    expect: "whether or not certificate_json says something else" },
+  // Two columns of a driven row that nothing spoke for, swapped: `never · 1` for `1 · never`.
+  { guard: "gate 11 · a driven row's unspoken-for columns swapped", file: "steps.mjs",
+    from: '                  String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]],',
+    to: '                  tried.period === 0 ? "never" : String(tried.period), String(tried.printable)]],',
+    expect: "where the engine answers" },
+  // A counter with no rows at all crashed the check instead of failing it, which this file has
+  // called a defect once already.
+  { guard: "gate 11 · a counting table with no rows at all", file: "steps.mjs",
+    from: '                  fs.orientation]],\n'
+      + '                { notASum: true }, "face-count"),',
+    to: '                  fs.orientation]].slice(1),\n'
+      + '                { notASum: true }, "face-count"),',
+    expect: "has no rows at all" },
+  // The columns of a driven walk table that the running-sum leg does not speak for. A reviewer
+  // reversed the face names beside honest terms, reversed the ring's cycles, and inverted the
+  // napkin's own refusal column on the beat about exactness — all three green until now.
+  { guard: "gate 11 · a walk's face names reversed beside its honest terms", file: "steps.mjs",
+    from: '                inside.steps.map((name, index) =>\n'
+      + '                  [name, signed(inside.terms[index]), show(inside.running[index])]),',
+    to: '                [...inside.steps].reverse().map((name, index) =>\n'
+      + '                  [name, signed(inside.terms[index]), show(inside.running[index])]),',
+    expect: "where the engine answers" },
+  { guard: "gate 11 · the eight faces' cycles reversed", file: "steps.mjs",
+    from: '                    fs.cycle_names[index].join(" → "),',
+    to: '                    [...fs.cycle_names[index]].reverse().join(" → "),',
+    expect: "where the engine answers" },
+  { guard: "gate 11 · the napkin's refusal column inverted on the walk", file: "steps.mjs",
+    from: '                  return [name, term.text, term.refused ? "no" : "yes",',
+    to: '                  return [name, term.text, term.refused ? "yes" : "no",',
+    expect: "where the engine answers" },
+  // A vendored word typed into a driven row: the same defect as a typed verdict, one step out.
+  { guard: "gate 11 · a vendored never typed into the tried-tick row", file: "steps.mjs",
+    from: '                  String(tried.printable), tried.period === 0 ? "never" : String(tried.period)]],',
+    to: '                  String(tried.printable), "never"]],',
+    expect: "whether or not the vendored row it comes off says something else" },
+  // Coverage, which is computed from what the pages print rather than committed as a number:
+  // a count says how many and never which, and a reviewer kept the count at twenty-two while
+  // covering less by moving one cell from one probe to another.
+  { guard: "gate 11 · a cell no expectation reaches in one state", file: "core.test.mjs",
+    from: '          last ? String(answer.lines_walked_each_way) : "not all walked yet", answer.orientation]];',
+    to: '          last ? String(answer.lines_walked_each_way) : "x", state.tick ? answer.orientation : null]];',
+    expect: "and this gate has" },
+  // A claimed tag worn by a step whose own spec does not name it: the check flattened every spec's
+  // tags into one set, so a table on an undriven step could wear one and be held by nothing.
+  { guard: "gate 11 · a tag borrowed from another step's spec", file: "steps.mjs",
+    from: '                : [["none tried yet", "none tried yet", "none tried yet"]]),',
+    to: '                : [["none tried yet", "none tried yet", "none tried yet"]], null,\n'
+      + '              "stella-comes-back"),',
+    expect: "this step's own spec in this gate does not claim it" },
+  // Both of these keep the file's line count: the fail-site census is keyed by line, and a mutation
+  // that moves the lines below it moves every site with them.
+  { guard: "gate 11 · a probe pointed away from the cell the committed set names",
+    file: "core.test.mjs",
+    from: '        tag: "face-count", cells: [[0, 3]] },',
+    to: '        tag: "face-count", cells: [[0, 2]] },',
+    expect: "any more, and this file says one does" },
+  { guard: "gate 11 · a probed cell missing from the committed set", file: "core.test.mjs",
+    from: '  "nothing-closes-yet · two-dots-closed · 1",',
+    to: '  "nothing-closes-yet · two-dots-closed · 9",',
+    expect: "and the committed set does not" },
+  { guard: "gate 11 · a probe cell moved somewhere else, leaving a constant unprobed",
+    file: "core.test.mjs",
+    from: '        tag: "two-dots-closed", cells: [[0, 0], [0, 1]] },',
+    to: '        tag: "two-dots-closed", cells: [[0, 0], [0, 0]] },',
+    expect: "is the same in every state" },
+  { guard: "gate 11 · a column dropped out of a table's expectation", file: "core.test.mjs",
+    from: '          return [name, term.text, term.refused ? "no" : "yes", printed(walk.running[index])];',
+    to: '          return [name, term.text];',
+    expect: "speaks for no column" },
+  { guard: "gate 11 · the faces there are taken from another count", file: "steps.mjs",
+    from: '                [[count(walked), String(cut.oct_faces),',
+    to: '                [[count(walked), String(cut.mid_lines.length),',
+    expect: "where the engine answers" },
+  { guard: "gate 11 · a vendored never typed one table above the tried ticks",
+    file: "steps.mjs",
+    from: '                [[String(runaway.ticks), run.period === 0 ? "never" : String(run.period)]],',
+    to: '                [[String(runaway.ticks), "never"]],',
+    expect: "says something else" },
+  { guard: "gate 11 · the two-dot answer typed into the cell, the engine still asked",
+    file: "steps.mjs",
+    from: '                [[closed.closed_walks === 0 ? "none" : String(closed.closed_walks),\n'
+      + '                  closed.closed_walks === 0 ? "no" : "yes"]],',
+    to: '                [["none", "no"]],',
+    expect: "whether or not loops_json says something else" },
+  { guard: "gate 11 · the eight-face walk taken from the payload instead of asked", file: "steps.mjs",
+    from: '          const fs = engine.faceSum("octahedron", faceArrows);',
+    to: "          const fs = { ...P.face_sum, cycle_names: R.gaps.outward_face_sum.cycle_names,\n"
+      + "            running: R.gaps.outward_face_sum.running,\n"
+      + "            orientation: R.gaps.outward_face_sum.orientation };",
+    expect: "never asked face_sum_json with" },
+  { guard: "gate 11 · the faces-walked counter disagreeing with the walk it counts",
+    file: "steps.mjs",
+    from: "                [[count(walked), String(cut.oct_faces),",
+    to: "                [[String(cut.oct_faces), String(cut.oct_faces),",
+    expect: "and the walk above it lists" },
+  { guard: "gate 11 · the dial never driven off the plain", file: "steps.mjs",
+    from: "            also: [R.gaps.dial.weights] },",
+    to: "            also: [] },",
+    expect: "never ran on any state of any step" },
 
   // ── the engine itself ────────────────────────────────────────────────────────────────────────
   // The engine's hashes are `check_edition.py`'s business, not this file's. What THIS check owns is

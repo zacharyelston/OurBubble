@@ -103,7 +103,10 @@ MARKER = re.compile(
 # What it catches: any case of `beat`/`beats`, any run of spaces, a newline between the word and the
 # number, and the literal `N`. What it does **not** catch, and a reader is the only guard on:
 # `BEAT 35` in full capitals, `beat #35`, `beat number 35`, and a number written in words.
-GLOBAL_FORM = re.compile(r"\b[Bb]eats?\s+(?:\d+|N\b)")
+# Whitespace **or a hyphen**: `#beat-31` is a book-wide beat number wearing a deep link's clothes,
+# and one sat in demos/DEMOS.md — the file whose own section is called *Nothing here knows a beat
+# number* — through a whole renumber, because this looked for a space. A reader found it.
+GLOBAL_FORM = re.compile(r"\b[Bb]eats?[\s-]+(?:\d+|N\b)")
 
 # A beat id written in prose or in a comment. The hyphen is what tells it from a version string:
 # every chapter slug has one, `python3.11` does not — and `slugs_are_hyphenated()` asserts that the

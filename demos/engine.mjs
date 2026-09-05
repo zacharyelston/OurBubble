@@ -14,8 +14,8 @@
 // So: **the pages do no arithmetic.** Every number on them arrives through this file, from one of
 // two places, and nowhere else:
 //
-//   * the compiled engine, ../engine/napkin.js — six entry points, strings in and strings out, so
-//     no rational type and no float crosses the boundary; and
+//   * the compiled engine, ../engine/napkin.js — the entry points ENTRY_POINTS lists, strings in
+//     and strings out, so no rational type and no float crosses the boundary; and
 //   * the vendored data, ../engine/napkin.json and ../engine/rows.json, whose every rational is an
 //     exact "n/d" string.
 //
@@ -29,7 +29,7 @@
 
 /** Every entry point the demos use, and the objects each will answer for. */
 export const ENTRY_POINTS = ["census_json", "cut_json", "loops_json", "slosh_json",
-  "certificate_json", "number_json"];
+  "certificate_json", "number_json", "slosh_weighted_json", "face_sum_json", "walk_json"];
 
 const NUMERIC_STRING = /^[-−+]?\d+(?:[./]\d+)?$/;
 
@@ -68,8 +68,7 @@ export class Engine {
     this.payload = payload;
     this.rows = rows;
     this.emitted = new Set();
-    // Nothing, in the engine's own words, taken off a row it computed. It is what every other slot
-    // is set to when one slot is asked about — see `contribution` below.
+    // Nothing, in the engine's own words, taken off a row it computed rather than typed.
     this.nothing = payload.poke.history[0][1];
     this.calls = [];
     this.cache = new Map();
@@ -109,22 +108,32 @@ export class Engine {
     return this.ask("slosh_json", object, initial, k, ticks);
   }
 
+  /** The same run with a weight per line — the dial, turned to wherever the reader has left it. */
+  sloshWeighted(object, initial, weights, k, ticks) {
+    return this.ask("slosh_weighted_json", object, initial, weights, k, ticks);
+  }
+
   /**
-   * What one number contributes to one walk — the engine's answer, not a sign flipped here.
+   * One walk, with its sum building term by term — the terms, the running column, and the total.
    *
    * A walk round a face uses each of its lines in a direction, and a line walked against the way it
    * points contributes the opposite of what it holds. The page must not work that out: a proof-reader
    * caught the first version printing a line's own difference in a walk column, so that three terms
    * were shown adding to a total they visibly did not make.
    *
-   * So it is asked. Everything but one slot is set to nothing and the walk is run: what comes back
-   * is exactly that line's contribution to it, with the orientation the object gives it, computed
-   * where every other number on these pages is computed.
+   * The page must not add them up either. Before this entry point existed the terms were got one at
+   * a time — every other slot set to nothing, the walk run, the single term read off the answer —
+   * and the running column simply could not be shown, so a reader watched three numbers appear and
+   * a total appear and never saw the one become the other. Both are the engine's now: `terms` in
+   * the order a reader takes the walk, `running` the sum after each of them, `total` the same
+   * number the coboundary gives at that cell.
    */
-  contribution(object, values, degree, index) {
-    const alone = values.map((value, at) => (at === index ? value : this.nothing));
-    return this.loops(object, alone, degree).loops;
+  walk(object, degree, index, values) {
+    return this.ask("walk_json", object, degree, index, values);
   }
+
+  /** The eight faces of a closed surface walked from outside: per face, with the sum building. */
+  faceSum(object, arrows) { return this.ask("face_sum_json", object, arrows); }
 
   /** Whether a tick is inside an object's ceiling, and the bound it is being held to. */
   certificate(object, k) { return this.ask("certificate_json", object, k); }

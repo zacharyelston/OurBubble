@@ -65,7 +65,11 @@ wrong within two commits — prose counting the artefact beside it, guarded by n
 prints all five on every run, which is the only place they cannot go stale.
 
 The furniture is worth naming beside the budget, because it is not small: on the two most visual
-pages the captions and column headings outweigh the prose they are excluded from. A reader still
+pages the captions and column headings outweigh the prose they are excluded from — and the check now
+**counts it and prints it beside the budget on every run**, which is a reader's finding: a pass can
+hold the budget steady, or even bring it down, while adding fifty words of heading, and the line
+saying "at most N words on a page" then reports something it did not measure. It is printed, not
+capped. A reader still
 meets those words. They are excluded because they are labels on data and they are held to the same
 rule about numbers as the prose is — not because they are free.
 
@@ -165,9 +169,10 @@ pinned by [`engine.lock`](../engine.lock).
 class in `demos/` any more, no `BigInt`, no second implementation of anything. Every number a page
 shows arrives through [`engine.mjs`](engine.mjs), from one of exactly two places:
 
-* the compiled engine, `../engine/napkin.js` — six entry points, strings in and strings out, so no
-  rational type and no float crosses the boundary: `census_json`, `cut_json`, `loops_json`,
-  `slosh_json`, `certificate_json`, `number_json`;
+* the compiled engine, `../engine/napkin.js` — the entry points `engine.mjs` lists, strings in and
+  strings out, so no rational type and no float crosses the boundary: `census_json`, `cut_json`,
+  `loops_json`, `slosh_json`, `certificate_json`, `number_json`, and the three the engine gained
+  for these pages, `slosh_weighted_json`, `face_sum_json` and `walk_json`;
 * the vendored data, `../engine/napkin.json` and `../engine/rows.json`, whose every rational is an
   exact `"n/d"` string.
 
@@ -242,8 +247,9 @@ is one more figure to go stale:
    three or more numbers — counting a **packed** cell (`+3  +1  −4`) as its numbers, wherever it sits
    — declares itself: `{ total: i }`, meaning column `i` is the sum of the numbers before it, or
    `{ notASum: true }`, meaning they are simply several numbers. A declared
-   total is added up here, on the digits a reader sees, in exact arithmetic: **614 of them on every
-   run.** The declaration is by **column index**, and that is the whole point of its shape: the first
+   total is added up here, on the digits a reader sees, in exact arithmetic, and the check prints
+   how many it added — a figure quoted here went stale the first time a table was added, so it is
+   printed and not quoted. The declaration is by **column index**, and that is the whole point of its shape: the first
    version of this gate read the column *headed* "added up", and a proof-reader switched it off by
    renaming that column in the same edit that broke the arithmetic under it, then switched it off
    again by moving the terms into a second table. Neither of those works now, and it is worth being
@@ -303,6 +309,56 @@ is one more figure to go stale:
    not exercise it at all. So every step, in every state, is rendered to its still, and the still is
    held to carrying its own stylesheet, its own title and description, and the firewall — and the
    check prints how many it rendered.
+11. **The five the engine answers now are asked, and the answers are the ones on the page.** Every
+   one of the five defects this gate exists for is a page that looks right: a dialled run vendored
+   as one fixed answer, a walk's running column read off its own terms, a certificate borrowed from
+   another shape, a "no closed walk" nobody computed. None prints a number the engine did not
+   produce, so gate 2 sees none of them — this is the part of *right value, wrong place* that can be
+   closed, because for these five the question is known.
+
+   **The first version of this gate asked whether the page agreed with itself, and a fresh reviewer
+   walked through every one of its legs in a single read.** It re-asked the engine using the tick
+   the table printed and the weights the table printed, so a certificate pinned to its own printed
+   tick agreed with itself in every state; a weight written as a word disarmed the dial through a
+   `null` check; the two-dot answer could simply be typed into the cell; a `{ runs: … }` declaration
+   pointed at two prose columns exempted a whole walk table; and every leg of it failed **open**.
+   That is the shape of defect this file keeps recording: a guard that stops applying rather than
+   one that fails.
+
+   So it holds the page to the **step**, not to itself. **The question was asked** — each driven
+   step is rebuilt against an engine door of its own, rendered in every state, and the calls that
+   door recorded must include the one the step owes, matched on the entry point *and* the arguments
+   the gate pins, so the right entry point asked a different question is caught. **The cells are the
+   answer** — every driven table's rows are rebuilt here from the engine and the state the check
+   itself drove the step into, and compared cell by cell. **The running column is the sum building**
+   — every table declaring `{ runs: [terms, running] }` has that column added up in exact
+   arithmetic, and a declaration whose columns hold no number on a row that has numbers is refused.
+   **The page reads the answer** — where a question's answer is the same in every state (two dots
+   close nothing; a shape's ceiling does not move), no comparison can tell a cell that read it from
+   a cell written to agree with it, so the step is rebuilt against a door that answers differently
+   and must say something else. **Per cell, and one perturbation per field**: the first version of
+   that probe compared whole tables, and a reviewer typed a verdict word into one column while
+   leaving its neighbour honest — the neighbour moved, so the table moved, so the probe passed. A
+   cell is what a reader reads. The same probe runs **over the vendored payload** where a cell comes
+   off a vendored row rather than an answer — the step is rebuilt on a changed copy of the payload
+   and must say something else — and each step is driven into **its own** states, because a
+   control's opening values come off the payload it was built against. And a tag no spec claims
+   fails too: a table that thinks it is guarded is worse than one that knows it is not. **What this gate speaks for is
+   computed from what the pages print**: every cell of every row of every table it names is
+   compared — a row that does not reach as far as the page's own is refused, and so is a `null`,
+   because a reader nulled one state's cell and printed a wrong word in exactly that state — and
+   every column whose value is the same in every state and every row is probed as well. That
+   replaced a count of the probed cells, which a reviewer laundered by moving one cell from one
+   probe to another: a count says how many and never which. Coverage is recorded **per step** and
+   per tag, because four steps share the tag `walk-running` and their tables are not the same shape
+   — and a tag is claimed by **the step that wears it**, since a table on an undriven step could
+   otherwise wear a tag some other step's spec claimed and be held by nothing at all. **Which cells
+   are probed is written down**: "constant, therefore probed" is a rule a page can walk out of by
+   giving a constant a per-state decoration, so the probes are a committed set, and dropping one is
+   a line in the check as well as a line in the page. **And every leg ran**: each of these counts, and a leg that fired on
+   no state of any step fails, whether it was switched off in the check, in the step, or in the
+   enumerator that drives it. A step names the tables this gate reads by a `tag` nobody is shown, so
+   a caption may be rewritten freely and losing the tag is a failure rather than a quiet exemption.
 
 ### No guard lands without the mutation that proves it bites
 
@@ -401,6 +457,13 @@ number and now name them by what they fold.
 
 
 
+**A word typed into a table gate 11 does not name.** That gate speaks for the tables it names, and
+what it names are the five the engine was extended for, their neighbours on the same steps, and
+every certificate on the pages. A table it does not name is held by gates 2, 3 and 7 like any
+other — which catch a wrong number and a typed digit, and do not catch a typed *word*: `never`,
+`none`, `yes`, `outward`. Four of those were found typed into driven tables and are now red; the
+same word in an undriven table is not, and the way to close one is to tag it and give it a spec.
+
 **Any value the engine produced, anywhere, put where it does not belong.** `cut.oct_dots` printed in
 the "lines" column reads as *six lines, twelve dots*; a tip named `A′` in a table beside a drawing
 that has just placed `D′` is right in every number and wrong in every noun; a bare `36` in a drawing,
@@ -460,51 +523,27 @@ node demos/core.test.mjs              # the cross-check on its own
 make check                            # tier 0, which runs both
 ```
 
-## Gaps in the engine
+## The gaps in the engine, and what closed them
 
-> **Five of these are closed in the engine, and none of them is closed here yet.** UniForge
-> [#362](https://github.com/zacharyelston/UniForge/pull/362) (`lab/napkin/0003`) implemented the
-> dial, the outward eight-face sum per face, the two-dot complex, the triangle's tick certificate
-> and a walk's running partial sums, and the 2026-09-04 engine bump vendored them: the module now
-> exports `slosh_weighted_json`, `face_sum_json` and `walk_json`, `loops_json` answers for
-> `"two-dots"` and carries `closed_walks`, and `certificate_json("triangle", …)` answers instead of
-> panicking. **The steps below still do what this section says they do** — rewiring them to ask the
-> new questions is a separate pass, so that the engine change and the reader-facing change can be
-> reviewed one at a time. `TOKENS.md`'s "The five the demos asked for" lists the entry points.
->
-> The one exception is the tick-to-tick difference, which was deliberately **not** registered: it is
-> a subtraction of two rows the engine already emits, so it is a page's reading rather than a
-> computation the engine owes. If a step wants it as data, that is an argument to make, not a field
-> to add quietly.
+**Five of the six gaps these pages found are closed in the engine and driven here; the sixth is not
+closed, and is not wanted.** UniForge [#362](https://github.com/zacharyelston/UniForge/pull/362)
+(`lab/napkin/0003`) implemented the five, the 2026-09-04 engine bump vendored them, and this pass
+rewired the steps to ask them. `TOKENS.md`'s "The five the demos asked for" lists the rows; gate 11
+above is what holds each step to asking.
 
-**Four** things a step wanted and the engine's browser surface does not expose, and a fifth noted
-rather than wanted. **None of them is computed in JavaScript**; each is either taken from the
-vendored payload — where the engine did compute it, for one fixed set of inputs — or the interaction
-is narrowed to what the engine can answer. They are the register rows to ask UniForge for.
-
-| what a step wanted | what it does instead |
+| what a step wanted | what asks it now |
 |---|---|
-| **the rule with the dial turned** — `slosh_json` runs with every line counted the same, so the reader cannot turn the dial and re-run | the dial step offers the two positions the engine computed a
-nd vendored (`motion.plain`, `motion.dialed`, `AB` counted double), as a choice rather than a dial |
-| **the outward-oriented eight-face sum** — `loops_json` walks the octahedron's faces in the complex's own orientation, which does not sum to zero; the vendored `face_sum` is the outward walk, and it does | the eight-face walk uses the eight faces
- of the vendored arrow set; the reader steps through the faces rather than changing an arrow |
-| **a tick-to-tick difference** — `slosh_json` returns the history and no diff, so "which dots moved this tick" cannot be asked | the poke on the tetrahedron prints *other dots not at nothing*
-, which is what the number is, rather than a difference computed in JavaScript |
-| **the two-dot complex** — `loops_json` answers for the book's four objects, and two dots and a line is not one of them | the second step of chapter one asks the triangle for the difference on `AB`
- and reads `AB` alone. It is the same line and the same coboundary either way |
+| **the rule with the dial turned** — `slosh_json` ran with every line counted the same, so the dial step could only offer the two positions the engine had computed and vendored | the dial step takes a **weight per line** from the reader and runs `slosh_weighted_json`; the total is the same number at every tick and the rhythm is not, both off that run |
+| **the outward-oriented eight-face sum** — the vendored `face_sum` carried the eight numbers and their total and nothing else | the eight-face walk asks `face_sum_json`, which answers per face: the cycle of dots the walk takes round it — which is what makes the orientation visible rather than asserted — the orientation in the engine's own word, and the sum building face by face |
+| **the two-dot complex** — `loops_json` answered for the book's four objects, and two dots and a line was not one of them | both of chapter one's two-dot beats ask `loops_json` about `"two-dots"`: the difference on its one line, and its own count of closed walks, which is none — the reason nothing comes home yet |
+| **the triangle's ceiling** — `certificate_json` panicked on `"triangle"` rather than answering, so the beat where the tick belongs to the shape could only show two runs | that step asks `certificate_json("triangle", k)` for whichever tick she picks, prints the stiffest number, the integer eigenvector and the ceiling, and offers the ceiling itself as a third tick — where the certificate does not hold, and the refusal is the engine's |
+| **running partial sums along a walk** — `loops_json` gave a walk's total and no way to watch it being made, so the terms were got one at a time and the sum was simply printed | every walk table's running column is `walk_json`'s (`face_sum_json`'s on the ring): the engine's partial sums, in the order a reader takes the walk. `Engine.contribution` — the one-slot trick that got the terms before — is gone |
 
-The fourth: `certificate_json` panics on `"triangle"` rather than answering, so the step where the tick belongs to the shape shows the
-
-triangle's two ticks through their runs — which rows a napkin can write, and whether it comes home —
-rather than through a ceiling.
-
-The fifth, noted rather than wanted: `loops_json` gives no **running partial sums** along a walk, so
-the walk step shows each step's own contribution
- and the engine's total rather than a running tally. What
-it *does* give is each line's contribution on its own — ask it about one line with every other set to
-nothing, and what comes back is that line's term in the walk, with the orientation the object gives
-it. That is how the walk's terms are got (`Engine.contribution`), and it is why **the page never
-flips a sign**.
+**The sixth stays a page's reading, as it was recorded.** A tick-to-tick difference is a subtraction
+of two rows the engine already emits, so `lab/napkin/0003` deliberately did not register it: it
+would put a rendering convenience inside the arithmetic. The poke step therefore still prints *other
+dots not at nothing*, which is what that number is. If a step ever wants the difference as data,
+that is an argument to make in a register row, not a field to add quietly.
 
 ## The drawings: three conventions, and one mark that is not a convention
 
@@ -763,7 +802,7 @@ it happens, the shape of it is:
   that slid between two ticks would be inventing something the rule does not do.
 - **Nothing loaded from anywhere.** No framework, no CDN, no font, no image, no analytics. Four
   modules, one stylesheet, and the engine this site already serves.
-- **A deep link is a beat**: `#beat-31` opens that step.
+- **A deep link is a step on its own page**: `#step-3` opens the third step of that chapter.
 
 ## How it reaches the published site
 

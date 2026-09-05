@@ -106,6 +106,12 @@ export function statesOf(step, view) {
         out.push({ ...base, choice: { ...option, index } });
       });
     }
+    // A control may name further sets of the engine's own values to be driven into, for a step
+    // whose opening position is deliberately the uninteresting one — the dial starts with every
+    // line counted the same, and the state the beat is about is the turned one.
+    if (control.kind === "numbers") {
+      for (const numbers of control.also || []) out.push({ ...base, numbers: [...numbers] });
+    }
     if (control.kind === "numbers" && control.initial.length > 1) {
       const different = control.initial.map((value) => {
         const other = control.initial.find((candidate) => candidate !== value);
