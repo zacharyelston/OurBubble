@@ -24,12 +24,17 @@ But suppose she does. What is the smallest next thing she could possibly do?
 
 <!-- beat the-shadow.2 -->
 
-She pushes a stick into the ground and scratches a line in the dirt where its shadow ends. An hour
-later she comes back and scratches another.
+She pushes a stick into the ground and scratches a line in the dirt where its shadow ends. Then she
+is called in for lunch, and when she comes back out the shadow has swung across the ground, so she
+scratches a second line where it ends now.
+
+The wait is one she already knows by heart. Lunch is a clock a child already owns: it comes once, at
+about the same point in the day, whether or not anybody is watching a shadow. One mark before it and
+one after it is all the time-keeping this needs — a then and a now.
 
 Now there are two marks, and a gap between them, and the gap is a certain number of finger-widths
-across. That number is not something she decided. She did not choose it, guess it, or prefer it. The
-world put it there and she wrote it down.
+across. That number came from the world rather than from her. She could have wished it smaller and
+it would not have moved. All she did was write it down.
 
 That is the whole of what a measurement is. Not an instrument, not a talent, not a laboratory — just
 something that changes, and someone willing to record by how much.
@@ -59,9 +64,11 @@ Did he have to be a genius?
 Around 240 BCE a man in Alexandria did the next thing, starting from almost exactly this.
 
 Eratosthenes of Cyrene ran the library at Alexandria, the largest collection of books in the world.
-The measurement he made used none of that. It takes no new mathematics and no special instrument.
-The arithmetic at the end is one multiplication, and you could do it now, in your head, if you had
-the two numbers. That is what makes it a good first example: you would not have needed to be him.
+What the measurement asked of him was smaller than that. It asked for an upright post, the length of
+the shadow it threw at noon, a distance somebody had already walked, and one multiplication — and
+you could do that multiplication now, in your head, if you had the two numbers. The library is the
+part of him you can leave out, which is what makes this a good first example: you would not have
+needed to be him.
 
 What he had was a discrepancy he could not explain.
 
@@ -96,11 +103,10 @@ That angle is doing all the work, because it is also the angle between the two t
 the centre of the Earth. If a fiftieth of the circle separates them, then the whole circle is fifty
 times the distance between them.
 
-He still needed that distance, and here the story is more ordinary than people expect. He did not
-work it out; he looked it up. The figure in use for Alexandria to Syene was around five thousand
-stadia. Where that figure came from, no ancient source says — the usual guess is the bematists,
-professional pacers paid to walk between places and count their steps, because pacing was how a
-kingdom knew its own size.
+He still needed that distance, and here the story is more ordinary than people expect: he looked it
+up. The figure in use for Alexandria to Syene was around five thousand stadia. Where that figure
+came from, no ancient source says — the usual guess is the bematists, professional pacers paid to
+walk between places and count their steps, because pacing was how a kingdom knew its own size.
 
 Fifty times five thousand. One multiplication, and he had a size for the Earth.
 
@@ -110,21 +116,23 @@ He was close. That is not the interesting part.
 
 <!-- beat the-shadow.7 -->
 
-Notice what he did *not* do. He did not begin with a beautiful idea about spheres and then go
-hunting for shadows that fitted it. He began with something he could not explain, proposed the
-smallest shape that would explain it, and then committed to a number — a number that could have come
-out absurd, and would have taken his shape down with it.
+Notice the order. He started from something he could not explain: one post with a shadow, one post
+without. He proposed the smallest shape that would account for it — a curved ground. Then he
+committed that shape to a number, an angle anyone in Alexandria could go and read off the same
+post, and a number that could have come out absurd and taken the shape down with it. Only when
+it survived did he multiply.
 
-Four steps:
+The steps, in order:
 
 1. Notice something you cannot explain.
 2. Propose the smallest structure that would explain it.
 3. Say, in advance, what result would prove the proposal wrong.
 4. Check. Keep the answer, especially when it is no.
 
-Step three is the one people skip. It is uncomfortable, it slows everything down, and it is the only
-step that makes the other three worth anything. Without it you have a story that fits — and stories
-that fit are cheap, because you can always find one after you know the answer.
+Saying in advance what would prove you wrong is the one people skip. It is uncomfortable, it slows
+everything down, and it is the only step that makes the others worth anything. Leave it out and what
+you have is a story that fits — and stories that fit are cheap, because you can always find one
+after you know the answer.
 
 So put the child back in the yard, with her stick and her two marks, and ask what she is still
 missing.
@@ -133,17 +141,15 @@ missing.
 
 <!-- beat the-shadow.8 -->
 
-Go back to her, and to the two marks in the ground.
+She has done the noticing, and she has a number for how much. What is still to come is small: a
+structure she can hold in her head, and a statement of what it would do that could turn out false.
 
-She is one step from Eratosthenes and it is not a large one. She has something that changed and a
-number for how much. What she lacks is what steps two and three would give her: a structure small
-enough to hold in her head, and a statement of what it would do that could turn out false.
+That is the hard part, and it is what the rest of this book does: builds a small world a little at a
+time, says what it should do before it does it, and lets it answer. The one thing to carry in with
+you is that a mark can be faithful and still be too coarse to settle what was asked of it — which is
+worth knowing before you make one.
 
-That is the hard part — and it is where she hands the book over. She got you this far.
-
-What the rest of this does is build a small world a little at a time, say what it should do before
-it does it, and let it answer. But a mark can be faithful and still be too coarse to settle what was
-asked of it — which is worth knowing before you make one.
+So this is where she hands the book over. She got you this far.
 
 *Every chapter ends with a line like this one: which files back up the chapter's claims, and which
 parts nothing backs up. The last chapter is about going and looking yourself.*
