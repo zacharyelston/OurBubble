@@ -221,7 +221,7 @@ def derive() -> dict:
             # This page's place among the demo pages, in the reading order's own sequence —
             # written down because the file is sorted by key, and because a chapter's place is
             # neither alphabetical nor a beat number any more. It is not the chapter's number in
-            # the book: the demos cover five of sixteen chapters.
+            # the book: the demos cover five of the napkin chapters.
             "order": order,
             "title": chapter_title(markdown, slug),
             "beats": len(numbers),

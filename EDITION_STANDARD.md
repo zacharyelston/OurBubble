@@ -57,6 +57,14 @@ parts is a count nothing guards.
 A chapter may carry **a study**, **figures**, or neither. The two are different kinds of thing and
 the reader can tell them apart from the caption; `ART_DIRECTION.md` is the long version.
 
+Two chapters at the front carry neither, deliberately. **The front door** is a statement about the
+book rather than a step in it, makes no claim a picture could illustrate, and an analogy image above
+it would be the first thing a reader met — before anything had been earned. ***Where the inside
+shows*** (2026-09-05) has a narrower reason: its subject is an arrangement — a thing, an edge, and
+somebody outside — rather than any of the things that have one, and the egg it opens on is
+deliberately disposable. A study that would earn its place there has not been drawn, and until it is,
+the page says so by carrying none rather than a picture of an egg.
+
 A **study** is an editorial analogy image, and where one is used it must:
 
 1. make the chapter's next question visible without pretending to display a result;
@@ -83,15 +91,13 @@ never hand-made**: `tools/figures.mjs` emits every committed still from the demo
 check` refuses a chapter that shows one this code does not draw, in either direction. That is the
 whole difference in what the two are worth: a study is judged, a figure is derived and checked.
 
-**The front door carries neither**, and deliberately: it is a statement about the book rather than a
-step in it, it makes no claim a picture could illustrate, and an analogy image above it would be the
-first thing a reader met — before anything had been earned. **A chapter that asks the reader to
-write a guess down carries no picture of the answer above the guess**, which is why *Is it round?*
-opens with none: its rings are data, and they belong where the answer is given.
+**A chapter that asks the reader to write a guess down carries no picture of the answer above the
+guess**, which is why *Is it round?* opens with none: its rings are data, and they belong where the
+answer is given.
 
 ## Numbers computed while the page is built
 
-Chapters 3–7 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+Chapters 4–8 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
 and every number in them is finger-countable — or, in the one case where it stops being, visibly
 stops being, which is that chapter's point. Quoting such a number from the record would be theatre:
 the reader can check it on a napkin, so the book does the arithmetic in front of her instead of
