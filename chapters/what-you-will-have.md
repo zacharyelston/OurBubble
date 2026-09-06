@@ -6,7 +6,7 @@
 
 This is the one page that talks about the book instead of doing it. If a section ever loses you,
 there is a link under its heading for telling us so; it needs a free GitHub account, the only thing
-anywhere in here that asks you to sign up for something. A few minutes, and then we begin.
+anywhere in here that asks you to sign up for something. A short read, and then we begin.
 
 ## What this is about
 
@@ -51,40 +51,41 @@ physics word names a feature of it.
 
 <!-- beat what-you-will-have.3 -->
 
-After the shadow, what everyone else did with one: the same method for a few thousand years, no
-cleverer and much sharper. Then a run of chapters on a napkin. Two dots and a line, then a
-triangle, then the smallest solid there is — and that turns out to be a whole world: every kind of
-number it can hold, and one setting for what each line counts. Then we make it move, by hand.
+First, why measuring gets done at edges. Then the shadow, and what everyone else did with one: the
+same method for a few thousand years, no cleverer and much sharper. Then a run of chapters on a
+napkin. Two dots and a line, then a triangle, then the smallest solid there is — which turns out to
+be a whole world: every kind of number in it, and a setting for what each line counts. Then we make
+it move, by hand.
 
-Then the napkin runs out. The smallest world with any room in it needs arithmetic no hand can
-do, so the same rule goes to a machine, unchanged — on a world with no edge.
+Then the napkin runs out. The smallest world with any room in it needs arithmetic no hand can do, so
+the same rule goes to a machine, unchanged — on a world with no edge.
 
 The rest is what came back. A ripple lopsided until one setting fixed it. What it costs to push on a
-piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement with
-its answer key taken away, a law that came back refused, and misses that were in our own reading
-rather than in the world. The noes are kept on purpose and given the same room as the yeses: a
-machine that can only agree with you is not an instrument.
+piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement
+with its answer key taken away, a law that came back refused, and misses that were in our reading,
+not in the world. The noes are given the same room as the yeses: a machine that can only agree with
+you is not an instrument.
 
 ## How to read it
 
 <!-- beat what-you-will-have.4 -->
 
 This is for someone curious who is not a physicist. There is nothing you have to *do* beyond adding
-and taking away. Numbers a machine worked out go past you; you are never asked to reproduce one by
-hand, only to see what it was compared against — though the last chapter hands you the commands.
+and taking away. Numbers a machine worked out go past you; you are never asked to reproduce one,
+only to see what it was compared against — though the last chapter hands you the commands.
 
-Read it in order: each chapter earns the next one's question. And do the ✎ moments — from partway in,
-every chapter that runs an experiment stops just before the answer and asks you to write your guess
+Read it in order: each chapter earns the next one's question. And do the ✎ moments — from partway
+in, every chapter that runs an experiment stops before the answer and asks you to write your guess
 down. That pause is the method, performed instead of described, and it works only if you commit.
 
-Sticks and light, dots and lines. That is what we have had since the first shadows anyone watched on
-a cave wall, it is all this book uses, and it was enough for everything in here.
+Sticks and light, dots and lines. That is what we have had since the first shadows on a cave wall,
+is all this book uses, and enough for everything in here.
 
-We start where measuring started: a shadow, and a man in Alexandria who did the smallest possible
-next thing about one.
+We start closer to hand than a shadow: an egg on a table, and a claim about where measuring gets
+done — worth holding lightly until you have done it yourself.
 
 *What this page cites — and what it does not:
 [the simulations](the-simulations.md#s-what-you-will-have).*
 
-**Next:** [The shadow](the-shadow.md)—a child in a yard, a Greek with a well, and the order of work
-this whole book is made of.
+**Next:** [Where the inside shows](where-the-inside-shows.md)—why measurements get made at edges,
+and what this book will put in your hands about them.

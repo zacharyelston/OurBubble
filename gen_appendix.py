@@ -72,10 +72,10 @@ against that file. That column is the boundary. The history section below carrie
 outside it deliberately, because they are not ours to check — they are checkable against the historical
 record instead, which is a different and in some ways better guarantee.
 
-Some sections cite no experiment of ours at all — the front door, the opening on method, and the
-history chapter — and they say so rather than being left out, because a reader should be able to
-tell *no evidence was cited* from *no evidence exists*. The closing chapter rests on commands you
-run yourself.
+Some sections cite no experiment of ours at all — the front door, the chapter on boundaries, the
+opening on method, and the history chapter — and they say so rather than being left out, because a
+reader should be able to tell *no evidence was cited* from *no evidence exists*. The closing chapter
+rests on commands you run yourself.
 
 One section per chapter, in reading order, **numbered from `00`** to match the order in
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what
@@ -100,8 +100,8 @@ that asks you for no email address and loads nothing onto the page you are readi
             # what is true of whatever is in the section. N8 (proofread, tranche B round 2) removed
             # "no rung, no gate and no figure corresponds to any of it" when the chapter briefly
             # carried the record's two self-corrections in its own last beats. Tranche E (issue #70)
-            # moved the chapter to second in the book and left those beats behind in the chapter that
-            # owns the misses, so the section is history and nothing else again — and the claim is
+            # moved the chapter to immediately after *The shadow* and left those beats behind in the
+            # chapter that owns the misses, so it is history and nothing else again — and the claim is
             # asserted from the section rather than typed, because that is the half that kept going
             # stale.
             ours = [key for key in ("rungs", "entries", "gates", "figures", "record_quotes")

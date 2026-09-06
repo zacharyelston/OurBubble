@@ -65,6 +65,60 @@ RENDERED_BOLD = re.compile(r"<strong>(.*?)</strong>", re.DOTALL)
 TAG = re.compile(r"<[^>]+>")
 
 
+# An exclusivity **about the toy** is not a claim about the world. The patterns key on a shape —
+# *only … at the edge* — and that shape is exactly how chapters 4–8 describe the object honestly
+# ("everything you add up lives only on the boundary of the triangle"). Refusing those sends a
+# drafter to reword true prose to satisfy a guard, which is how a guard gets weakened rather than
+# fixed (a proofreader, round 6).
+#
+# **The exemption is about the claim's subject, not about a phrase somewhere in the sentence.** The
+# first version tested the whole sentence for "in this model" and its relatives, and a proofreader
+# walked ten declared claims past it by typing "In this book," in front of them — including claims
+# about *the universe*, *nature*, *a star* and *a black hole*. Worse, it accepted `not in nature`,
+# which handed an exemption to the negation-as-disclaimer the reading rules refuse outright (round
+# 7). So the test is now for a **named piece of the toy** sitting beside the match: a triangle, a
+# tetrahedron, a napkin, numbers, dots, lines, edges somebody drew. `book`, `chapter`, `page`,
+# `model`, `toy` and `simulation` are gone: they say where a sentence is printed or what it is
+# called, never what it is about.
+MODEL_NOUN = re.compile(
+    r"\b(?:triangle|tetrahedron|tetrahedra|octahedron|napkin|lattice|mesh|stella"
+    r"|(?:this|that|the)\s+shape|numbers?|dots?|lines?"
+    r"|(?:we|you)\s+(?:drew|add\s+up|added\s+up))\b",
+    re.IGNORECASE,
+)
+# How far from the match a toy noun still counts as what the claim is about. Wide enough for "on the
+# boundary of the triangle", narrow enough that a garnish at the far end of the sentence buys nothing.
+MODEL_NOUN_REACH = 40
+# …and the veto, because proximity is not aboutness. `numbers`, `lines` and `dots` are this book's
+# ordinary vocabulary, so parking one beside a claim about the universe walked fifteen of sixteen
+# nature claims past the first version of this (a proofreader, round 8): "Nothing gets in or out of
+# the universe except at the edge **of the lattice**." A sentence that names the world is a claim
+# about the world however many toy nouns stand next to it, and no exemption reaches it.
+NATURE_SUBJECT = re.compile(
+    r"\b(?:the\s+universe|the\s+cosmos|the\s+real\s+world|in\s+nature|of\s+nature"
+    r"|nature\s+(?:keeps?|does|has|is|shows?|hands?|writes?)"
+    r"|a\s+star|the\s+sun|a\s+black\s+hole|the\s+earth|an\s+atom|the\s+atom"
+    r"|reality|all\s+of\s+physics|the\s+whole\s+of\s+physics"
+    r"|everything\s+there\s+is|all\s+there\s+is|anything\s+there\s+is)\b",
+    re.IGNORECASE,
+)
+
+
+def about_the_toy(piece: str, found: "re.Match[str]") -> bool:
+    """Whether this match is an exclusivity about the toy rather than about the world. **Pure.**
+
+    Two tests, and the veto comes first: a sentence that names the universe, nature, reality or a
+    star is making a claim about the world, and nothing in it can buy an exemption. Otherwise a
+    named piece of the toy within `MODEL_NOUN_REACH` characters of the match means the claim is
+    about the toy — "everything you add up lives only on the boundary of the triangle".
+    """
+    if NATURE_SUBJECT.search(piece):
+        return False
+    start = max(0, found.start() - MODEL_NOUN_REACH)
+    end = min(len(piece), found.end() + MODEL_NOUN_REACH)
+    return bool(MODEL_NOUN.search(piece[start:end]))
+
+
 def forbidden_hits(
     text: str,
     phrases: Sequence[str],
@@ -77,15 +131,49 @@ def forbidden_hits(
     mutation test showed the phrase list alone does not: rewriting "four faces = four forces" as
     "its four faces are the four forces" walked straight through. A firewall check that only
     recognises one spelling of a claim is a spell-checker, not a firewall.
+
+    **And both layers read the page twice**: the raw file, and the file with its markup taken off.
+    Matching only the raw file is defeated by one emphasis marker inside the phrase — `The world is
+    **made of** boundaries.` renders as the declared probe word for word and returned nothing at all
+    (a proofreader, round 3, as a blocker), which is the same defect `flattened()` was written for
+    on the retired-phrasing guard. The markup-blind read is done one sentence at a time
+    (`sentences()`), so a pattern's own `[^.\\n]{0,40}` window cannot reach past the sentence it
+    started in, and cannot be cut short by a stop that ended nothing.
     """
     lowered = text.casefold()
+    pieces = sentences(text)
+    flat = flattened(text)
     hits: List[str] = []
     for phrase in phrases:
-        if phrase.casefold() in lowered:
+        # The markup-blind comparison is for phrases that are still a phrase once the marks come
+        # off. `7π⁵` flattens to `7`, which is in every chapter of the book, so a phrase whose
+        # words do not survive flattening is matched on the raw file only — found by running this
+        # over the whole book the moment the second layer was added.
+        flat_phrase = flattened(phrase)
+        if phrase.casefold() in lowered or (
+            len(flat_phrase.split()) >= 3 and flat_phrase in flat
+        ):
             hits.append(f"unsupported legacy phrase present: {phrase!r}")
     for rule in patterns:
         pattern = str(rule["pattern"])
-        found = re.search(pattern, lowered, flags=re.IGNORECASE)
+        scoped_ok = bool(rule.get("scoped_ok"))
+        found = None
+        for piece in pieces:
+            for hit in re.finditer(pattern, piece, flags=re.IGNORECASE):
+                if scoped_ok and about_the_toy(piece, hit):
+                    continue          # an exclusivity about the triangle, said of the triangle
+                found = hit
+                break
+            if found:
+                break
+        if not found:
+            # The whole-file pass, kept for every pattern: dropping it for the exempt ones took the
+            # backstop away for a reason unrelated to why it existed (a proofreader, round 7).
+            for hit in re.finditer(pattern, lowered, flags=re.IGNORECASE):
+                if scoped_ok and about_the_toy(lowered, hit):
+                    continue
+                found = hit
+                break
         if found:
             hits.append(
                 f"unsupported legacy claim present ({rule.get('why', 'excluded')}): "
@@ -116,11 +204,58 @@ def self_test(manifest: Dict[str, object], errors: List[str]) -> None:
         "This book does not try to infer the shape of the universe.",
         "We did not measure the universe. We inspected one constructed object.",
         "The lattice is a toy, and its exponents are dimensionless.",
+        # …and the one sentence that exercises the made-of pattern's binding to `of / from / out of`,
+        # which a proofreader watched refuse the way chapters 4–8 are written (round 6).
+        "Everything here is built from one rule and four edges.",
     ]
     for sentence in benign:
         stray = forbidden_hits(sentence, phrases, patterns)
         if stray:
             errors.append(f"self-test: the guard false-positives on {sentence!r}: {stray}")
+
+    # The toy exemption, in **triples**, because a two-sided test of an exemption still misses the
+    # thing that actually went wrong. Each row is: an exclusivity *about the toy*, which must pass;
+    # the same sentence with the toy taken out, which must be refused; and the same nature claim
+    # with a toy noun parked beside it, which must **also** be refused. The three columns catch
+    # three different mutations — remove the exemption and column one fails; widen it back to a
+    # phrase-anywhere test and column two fails; loosen it to proximity alone, or stretch
+    # `MODEL_NOUN_REACH`, and column three fails. The third column is the one that was missing, and
+    # its absence is exactly why fifteen of sixteen smuggled claims survived a round (a proofreader,
+    # rounds 6, 7 and 8).
+    toy_and_twin = [
+        ("Everything you add up lives only on the boundary of the triangle.",
+         "Everything there is lives only on the boundary.",
+         "Everything there is lives only on the boundary, and the lines say so."),
+        ("Nothing gets in or out of the triangle except at the edge.",
+         "Nothing gets in or out of the universe except at the edge.",
+         "Nothing gets in or out of the universe except at the edge of the lattice."),
+        ("Whatever this shape does, it does at its edge and nowhere else.",
+         "Whatever the inside of a star does, it does at the edge and nowhere else.",
+         "Whatever the inside of a star does, it does at the edge and nowhere else, on this napkin."),
+        ("It is impossible for a number to move without crossing an edge.",
+         "It is impossible for anything in the universe to reach you without crossing the edge.",
+         "It is impossible for anything in the universe to reach you without crossing the edge we "
+         "drew."),
+        ("Nothing moves except at the edges we drew.",
+         "Nothing in nature moves except at the edge, and that is what we found.",
+         "Nothing in nature moves except at the edge, whatever the numbers say."),
+    ]
+    for about_toy, about_world, smuggled in toy_and_twin:
+        if forbidden_hits(about_toy, phrases, patterns):
+            errors.append(
+                f"self-test: the toy exemption does not cover {about_toy!r}, so the guard refuses "
+                "the way the napkin chapters are written"
+            )
+        if not forbidden_hits(about_world, phrases, patterns):
+            errors.append(
+                f"self-test: the toy exemption lets {about_world!r} through, so it is an escape "
+                "hatch rather than an exemption"
+            )
+        if not forbidden_hits(smuggled, phrases, patterns):
+            errors.append(
+                f"self-test: the toy exemption lets {smuggled!r} through — a claim about the world "
+                "with a piece of the toy parked beside it, which is proximity passing for aboutness"
+            )
 
 
 # A retired phrasing is compared on its WORDS. Everything else about a sentence — where the lines
@@ -134,6 +269,44 @@ LINK_TARGET = re.compile(r"\]\([^)]*\)")
 # identically and is a shape the book actually writes.
 INVISIBLE = re.compile(r"<!--.*?-->|<[^>\n]{0,200}>|\[\^[^\]]*\]|[\u00ad\u200b\ufeff]", re.S)
 NOT_WORD = re.compile(r"[^0-9a-z]+")
+# The same, with the sentence stop spared — and the handful of symbols the patterns themselves name,
+# because a pattern that hunts `7π⁵` cannot hunt it in a text that has thrown π away — which is how
+# one bold marker walked that phrase past both layers (a proofreader, round 4). `forbidden_hits`'
+# patterns bound themselves to one sentence with `[^.\n]{0,40}`, so flattening the stops away would
+# let a pattern reach across a paragraph and refuse a page for two halves of a claim nobody made in
+# one breath.
+NOT_WORD_OR_STOP = re.compile("[^0-9a-z_/απ⁵\u0000]+")
+# **Which stops, though.** Keeping every `.` was the first try, and a proofreader walked four
+# declared claims straight past the guard with punctuation this repository writes constantly — an
+# ellipsis, `(see ch. 4)`, `etc.`, `cf.` — because each of those stops ended a pattern's window in
+# the middle of the sentence it was reading (round 4). So only a stop that *ends a sentence*
+# survives: one followed by a capital letter or by the end of the text, closing quotes and brackets
+# allowed in between. `ch. 4` is followed by a digit, `etc. —` by a dash, `of ... boundaries` by a
+# lowercase word; none of them is a sentence end, and none of them shortens the window any more.
+# A block ends a sentence whatever its punctuation, and in hard-wrapped Markdown a **blank line**
+# is the only thing that reliably starts one. The first version of this also broke on any line
+# opening with `>`, `*` or `-`, which is not a block at all when the prose is wrapped: the scope
+# blockquote at the head of every chapter is wrapped that way, and a `**bold**` lead-in lands at
+# the start of a line 64 times in `chapters/` today. Cutting there halved a rendered sentence and
+# let a declared claim through under a reflow nobody edited (a proofreader, round 6). A blank line
+# already precedes every heading, list and table this repository writes, so nothing is lost.
+BLOCK_BREAK = re.compile(r"\n[ \t]*\n")
+# A candidate sentence end: stops, then any closing quotes or brackets, then whitespace or the end.
+CANDIDATE_END = re.compile(r"[.!?]+[\"'\u201d\u2019)\]]*(?=\s|$)")
+# …and the words that carry a full stop without ending anything. A single letter is an initial
+# (`F. W. Bessel`); the rest are the abbreviations this repository writes. Round 5 walked three
+# declared claims past the guard with `cf. Chapter 4`, `e.g. Light` and `see Fig. 2`, because each
+# one is a stop followed by a capital.
+#
+# **This is a list, and it behaves like one.** An abbreviation nobody wrote down here still splits a
+# pattern's window in half: `viz.`, `Op. Cit.`, `Refs.` and `U.S.` all do, and a claim straddling
+# one of them walks (a proofreader, rounds 6 and 7). The list holds what this book's prose actually
+# contains; adding to it is the fix when the prose grows a new one, and the limit is written here
+# rather than left for the next round to rediscover.
+ABBREVIATIONS = frozenset("""
+    cf ch chs chap chapt e g eg i ie etc fig figs no nos pp vs vol vols ed eds approx ca
+    st mr mrs ms dr prof jr sr al inc ltd
+""".split())
 
 
 def flattened(text: str) -> str:
@@ -156,6 +329,55 @@ def flattened(text: str) -> str:
     down, in any punctuation and any markup, not the idea behind them.
     """
     return NOT_WORD.sub(" ", INVISIBLE.sub(" ", LINK_TARGET.sub("", text)).casefold()).strip()
+
+
+def sentences(text: str) -> List[str]:
+    """The page as its sentences, each one flattened the way `flattened()` flattens a phrase.
+
+    One sentence per item, in lowercase words separated by single spaces, with the markup gone —
+    link targets, HTML comments and tags, footnote markers, zero-width characters, and every mark
+    that is not a letter, a digit or one of the few symbols the patterns themselves name.
+
+    **Why sentences and not characters.** A pattern here says "within forty characters, and not
+    past the end of this sentence", and it used to enforce the second half with `[^.\n]`. A full
+    stop is a poor proxy for a sentence end in both directions, and a proofreader found it failing
+    each way in consecutive rounds: `(see ch. 4)` and an ellipsis ended a window in mid-sentence and
+    let a declared claim through (round 4); then `cf. Chapter 4` did the same to the rule written to
+    fix it, while a stop before a bullet or a bold lead-in was *not* recognised and two innocent
+    halves were read as one claim (round 5). Cutting the page up once, here, on the raw text where
+    the capitals and the block markers still exist, ends both.
+
+    A sentence ends where a block ends, or at a stop that is followed by a capital and is not part
+    of an abbreviation or an initial. **Pure.**
+    """
+    body = INVISIBLE.sub(" ", LINK_TARGET.sub("", text))
+    out: List[str] = []
+    for block in BLOCK_BREAK.split(body):
+        start = 0
+        for found in CANDIDATE_END.finditer(block):
+            tail = block[found.end():]
+            after = tail.lstrip()
+            # A stop at the end of a line ends a sentence: hard-wrapped prose does not break a line
+            # mid-sentence *after* a full stop. That is what closes the em-dashed continuation and
+            # the lowercase quotation the merge half was still joining (a proofreader, round 6).
+            ends_line = tail[:1] in ("\n", "\r") or not tail
+            if not ends_line and after and not after[0].isupper():
+                continue                      # an ellipsis, or a stop inside a sentence
+            before = block[:found.start()].split()
+            word = "".join(c for c in before[-1] if c.isalpha()).casefold() if before else ""
+            # A single letter is an initial. The comment here said so for a round before the code
+            # did, and `F. W. Bessel` split a claim in half while the probe that was supposed to
+            # prove otherwise passed by accident of word order (a proofreader, round 6).
+            if len(word) == 1 or word in ABBREVIATIONS:
+                continue                      # `cf. Chapter 4`, `e.g. Light`, `F. W. Bessel`
+            out.append(block[start:found.end()])
+            start = found.end()
+        out.append(block[start:])
+    # Not `flattened()`: that throws away π and the superscript, and a pattern that hunts
+    # `7π⁵` cannot hunt it in a text that has thrown π away. NOT_WORD_OR_STOP is the same
+    # normalisation with the handful of symbols the patterns name left in.
+    return [piece for piece in
+            (NOT_WORD_OR_STOP.sub(" ", part.casefold()).strip() for part in out) if piece]
 
 
 def retired_hits(text: str, retired: Sequence[Dict[str, str]]) -> List[str]:

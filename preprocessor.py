@@ -124,7 +124,7 @@ def with_note_links(markdown: str, slug: str, report: list) -> str:
     Three decisions worth writing down:
 
     * **The marker is the trigger, not the heading.** A heading with no `<!-- beat slug.n -->`
-      under it gets no link, which is what keeps the generated appendix (fourteen headings, no
+      under it gets no link, which is what keeps the generated appendix (all headings, no
       markers) out of this and makes the rendered check's rule a two-way one: marked sections carry
       exactly one link, unmarked headings carry none.
     * **The link goes immediately after the heading**, before the marker and the prose, so the
