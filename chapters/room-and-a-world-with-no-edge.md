@@ -130,8 +130,8 @@ off.
 The arcade screen wraps in two directions, and mathematicians call that shape a **torus** — the same
 word they use for a doughnut, because rolling the screen into a tube and bending the tube round to
 meet itself gives you one. Ours wraps in three directions rather than two, so it is the same trick
-done once more, and the name comes along for the ride. What matters is not the word but why the
-Container has no edge: with no walls, nothing bounces, so the ring is only ever the ring.
+done once more, and the name comes along for the ride. What matters is not the word but why this
+world has no edge: with no walls, nothing bounces, so the ring is only ever the ring.
 
 Which leaves one thing to check before the question you have been unable to ask is worth asking.
 

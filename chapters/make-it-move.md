@@ -64,7 +64,7 @@ So: two rows. What does one tick do with them?
 
 <!-- beat make-it-move.4 -->
 
-Here is the rule, and it is the only one in the book.
+Here is the rule, and it is the only one you will run by hand.
 
 **Each dot's number is pushed toward its neighbours' by the differences on its lines — and carries
 forward the motion the two rows already hold.**
@@ -84,12 +84,11 @@ Is that really the whole law?
 
 <!-- beat make-it-move.5 -->
 
-Yes, for every world you build by hand, and for the machine's ripples. The rest of the record is the
-same bookkeeping of differences and sums, on the objects each chapter names, with nothing tuned to
-help an answer along.
+Yes, for every world you build by hand, and for the worlds the machine builds from them: the same
+bookkeeping of differences and sums, with nothing tuned to help an answer along.
 
-Some chapters do something else with that bookkeeping — a formula read off a shape, switches instead
-of ripples — and each says so where it does.
+Where a later chapter does something else with that bookkeeping — reads a formula off a shape, or
+puts switches where the numbers were — it says so where its object changes.
 
 So run it. Not on the tetrahedron, though — on something smaller.
 

@@ -73,8 +73,8 @@ nowhere near −1/2. **The law we proposed is the wrong law for this geometry, a
 
 **[Open the data-true shift-law figure](record/lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html)**
 
-Go and look at your guess. If you wrote *square root*, you are in good company — it is what we
-registered, in writing, in advance, with the warning beside it.
+Go and look at your guess. If you wrote *square root*, you wrote the textbook's answer — the one we
+registered as the target, held to a margin written first.
 
 ## Why — and what the reason is worth
 
@@ -85,9 +85,9 @@ does not: the lump is a small part of the cavity and most of the vibration sits 
 A local change should not inherit the scaling of a global one — so the mistake was in the argument
 rather than in the run.
 
-That explanation is comfortable, which is exactly when to be careful. A comfortable explanation
-arrives after the answer and costs nothing, and there is no way to tell a good one from a
-face-saving one except by making it pay.
+That explanation is comfortable, which is exactly when to be careful. This one was in the file with
+the warning, before the run — but an explanation written down is not yet a test of itself, and there
+is no way to tell a good one from a face-saving one except by making it pay.
 
 So it is written down where the next experiments queue up: if the volume fraction is really the
 reason, giving the lump a bigger share of the cavity should move the exponent toward −1/2. Testable,
@@ -110,8 +110,8 @@ time: no answer supplied.
 It returned the law that was in the data rather than the law in the chapter title.
 
 Which is what makes the agreements mean something. An instrument that only ever agrees has told you
-about itself. This one has now disagreed with its owners, in public, on a point they had committed
-to in writing — so when it agrees, the agreement is information.
+about itself. This one has now refused a law its owners registered as the target, by a margin they
+wrote down first, in public — so when it agrees, the agreement is information.
 
 That is what the steps in [the shadow](the-shadow.md) were for.
 

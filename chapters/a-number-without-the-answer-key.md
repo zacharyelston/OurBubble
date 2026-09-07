@@ -72,7 +72,7 @@ It is worth answering honestly rather than correctly, because the interesting ve
 question is *how much* would you trust it, and what exactly would the known case have to get right
 first. Write down the standard you would want met. One line.
 
-Ours is in the record from before the run: margins for the known case's numbers, written down first.
+Ours was written down first: margins for the known case's numbers.
 
 ## Make the instrument earn it
 
@@ -104,11 +104,12 @@ Now take the answer key away.
 
 <!-- beat a-number-without-the-answer-key.6 -->
 
-The three-dimensional version of the same model has no closed-form solution. Nobody has one. It is
-not that it is hard to look up — it does not exist.
+Next the flat sheet of switches itself, by a different method — a machine flipping them by chance —
+and then the block: the three-dimensional version of the same model, which has no closed-form
+solution. Nobody has one. It is not that it is hard to look up — it does not exist.
 
-The pipeline ran there unchanged. It reproduced the solved two-dimensional numbers first, as a
-built-in check, then went to three dimensions and reported what it found.
+The pipeline reproduced the solved two-dimensional numbers first, as a built-in check, then went to
+three dimensions and reported what it found.
 
 Two exponents, agreeing with the values measured *in real matter* — at the liquid–gas critical
 point, and in uniaxial magnets — to within a few percent. Nobody fitted those targets. There was no

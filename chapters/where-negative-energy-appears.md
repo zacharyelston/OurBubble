@@ -87,7 +87,7 @@ less of a difference to have. Pick one, and note in half a sentence which way yo
 And a second guess, because the chapter turns on it: if the difference deepens as the gap narrows,
 what does that mean the walls will *do*?
 
-Ours is in the record from before the run, on both counts; the next section says what it was.
+We wrote ours down first, on both counts; the next section says what it was.
 
 ## What the little world did
 

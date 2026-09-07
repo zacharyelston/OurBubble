@@ -12,17 +12,18 @@
 
 <!-- beat the-bubble-and-its-bill.1 -->
 
-The world now behaves the same way in every direction, which means a measurement made in it means
-what it appears to mean. Here the questions widen, so here, once, is what changes and what does not.
+The world now behaves the same way in every direction, and what got it there — a dial read from the
+object — is the habit that travels. Here the questions widen, so here, once, is what changes and what
+does not.
 
-What changes is the object under the question. You have met two already: the ripple's relative, and
-the interlude's flat sheet. The record's other runs were made on a plain grid of dots, on a line of
+What changes is the object under the question. You have met the ripple's relative and the interlude's
+flat sheet already. The record's other runs were made on a plain grid of dots, on a line of
 dots, and on a different small model altogether, and each chapter names its own where its run begins.
 
 What does not change is the work: say what you expect, compare, test the other reading, keep the
-answer. And the dial — what each line counts for — is a setting every one of these objects carries —
-read from the object, never turned toward an answer — which is what lets the same dots-and-lines
-bookkeeping be pointed at each of them in turn.
+answer. And the dial, what each line counts for, is a setting every dots-and-lines world here carries, read
+from the object and never turned toward an answer. That is what lets the same bookkeeping be pointed
+at each of them in turn; the switches are the stated exception.
 
 This chapter's object is a grid of dots and a formula that returns a number for a shape. What would
 it cost to move a *piece* of it — a region, contents and all, shifted along? Call the region a
@@ -41,7 +42,7 @@ Take the guess seriously for a second, because it is not a trick. There is an ar
 should cost a great deal — you have moved everything there is. There is an argument that it should
 cost nothing at all. Decide which, and write down why in half a sentence.
 
-Ours is in the record, with its reason, from before the run. Both are the next section's.
+We wrote ours down first, with the reason; both are the next section's.
 
 ## The bill for moving everything
 
