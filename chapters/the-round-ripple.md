@@ -9,8 +9,9 @@
 You have the object and you have the question: poke a world like it, and see whether the front
 travels at the same speed in every direction.
 
-The world the record poked is the Container's plainer relative — the same cubes, each cut into six
-tetrahedra rather than two-coloured — and the dial has the same job on both.
+The world the record poked is the Container's plainer relative: the same cubes, each cut into six
+tetrahedra, with no two-colouring and no twist in the cutting. Its grain is not the Container's three
+kinds of place but three kinds of line, and the dial has the same job on both.
 
 Speed is a distance divided by a time. Look at what you are actually holding, and one of those two
 is in your hand and the other is not.
@@ -63,11 +64,10 @@ one that assumes nothing.
 been told an edge and a diagonal differ in length and the counting cannot tell, so *not round* is
 the easy call.
 
-The live question is **which way**: along the cube's edges, or across its diagonals? One line is
-enough. Commit to a direction.
+The live question is **which way**: along the cube's edges, or corner to corner through its middle?
+One line is enough. Commit to a direction.
 
-Ours are in the record, written before either run: the obvious setting plainly uneven, the dial read
-from the shape at least halving it. Neither said which way.
+Ours are in the record from before either run, and neither said which way.
 
 This is the ritual for the rest of the book, and it is not a teaching trick. Once you have read a
 number it is hard to remember not having known it.
@@ -78,10 +78,10 @@ number it is hard to remember not having known it.
 
 Set every line to the same weight and the ring comes out **lopsided**.
 
-It runs faster across the cube's diagonals than along its edges — so if you guessed the diagonals,
-you were right, and for the reason the last section gave: the counting treats a long step and a
-short one alike, so the long one covers more ground per tick. What ought to be a circle is stretched
-along the diagonals, and anything you aimed in this world would drift.
+It runs faster corner to corner through the cube than along its edges — so if you guessed the long
+diagonal, you were right, and for the reason the last section gave: the counting treats a long step
+and a short one alike, so the long one covers more ground per tick. What ought to be a circle is
+stretched corner to corner, and anything you aimed in this world would drift.
 
 Notice what happened. Weighting all the lines equally *looked* like assuming nothing; it was a
 strong assumption, quietly made — that an edge and a diagonal are the same length. The object never
@@ -181,8 +181,8 @@ square into triangles means choosing which way the diagonals lean. Lean them all
 itself and the mesh does not. So the mesh is the suspect: it had been asserting a left-right
 difference the question never did.
 
-This is a different thing from the object's own three-way grain, whose symmetry carries each kind of
-place onto the others: a drawing choice in one demo broke a mirror the experiment needed.
+This is a different thing from a world's own grain, the kinds of line it has: a drawing choice in one
+demo broke a mirror the experiment needed.
 
 The correction is as small as the fault: alternate the diagonals, so mirroring the mesh lands on
 itself. Same scene, same solver, nothing else touched. The two halves now disagree by **5×10⁻¹⁵** of

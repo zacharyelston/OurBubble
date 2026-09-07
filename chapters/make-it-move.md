@@ -18,8 +18,8 @@ What is missing?
 Time. And it is worth being suspicious of that word, because time is what people smuggle into a
 small model without noticing.
 
-So do not smuggle it. Ask what the least is that would do the job: not a flowing river of time, nor
-a number that can be subdivided for ever, but a way of saying *and then*.
+So do not smuggle it. Ask what the least is that would do the job, and it is a way of saying *and
+then*.
 
 That is all a clock has to provide here: a before and an after, and then another one. Everything
 this book calls time is that, counted; nothing in these pages measures a duration.
@@ -84,14 +84,13 @@ Is that really the whole law?
 
 <!-- beat make-it-move.5 -->
 
-Yes, for every world you build by hand, and for what the machine does with them. The ripple that
-comes out round or lopsided, the wall and what gets past it, the gap and what stops fitting in it,
-the pitch of a shaken box: each is that sentence run on a bigger object, or on a plainer relative
-that its chapter names. No extra term is switched on when a result needs help.
+Yes, for every world you build by hand, and for the machine's ripples. The rest of the record is the
+same bookkeeping of differences and sums, on the objects each chapter names, with nothing tuned to
+help an answer along.
 
-Two chapters do something else, and say so. The bill for a push is a formula read off a shape, not
-a run of the rule; and the chapter that takes the answer key away puts switches on the table instead
-of waves.
+Some chapters do something else with that bookkeeping, and say so where they do: a formula read off
+a shape, a wall written into the rule, a list of vibration shapes added up, and once a different kind
+of small model altogether.
 
 So run it. Not on the tetrahedron, though — on something smaller.
 

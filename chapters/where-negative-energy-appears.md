@@ -87,8 +87,7 @@ less of a difference to have. Pick one, and note in half a sentence which way yo
 And a second guess, because the chapter turns on it: if the difference deepens as the gap narrows,
 what does that mean the walls will *do*?
 
-We registered the sign — below the line at every gap we tried — and left which way it moves as the
-walls close to the run.
+Ours is in the record from before the run, on both counts. The next section says what it was.
 
 ## What the little world did
 

@@ -13,18 +13,16 @@
 <!-- beat the-bubble-and-its-bill.1 -->
 
 The world now behaves the same way in every direction, which means a measurement made in it means
-what it appears to mean. This is the door of the book's second half, so here is what changes at it
-and what does not.
+what it appears to mean. Here the questions widen, so here, once, is what changes and what does not.
 
-What changes is the object under the question. You built the Container, the engine's own world. The
-record these chapters read from is older than that construction, and its runs were made on plainer
-relatives — the cube cut six ways that the ripple ran on, a plain grid of cells, a flat sheet of
-triangles, a line of dots — and once on a different small model altogether. Each chapter names its
-object in its first section.
+What changes is the object under the question. You have met one already: the ripple ran on the
+Container's plainer relative. The record's other runs were made on a plain grid of cells, on a flat
+sheet of triangles, on a line of dots, and on a different small model altogether, and each chapter
+names its own in its first section.
 
 What does not change is the work: say what you expect, compare, test the other reading, keep the
-answer. And the dial — what each line is worth — is a setting every one of these lattices has,
-whatever runs on it, which is what lets the same bookkeeping be pointed at each.
+answer. And the dial — what each line counts for — is a setting every one of these objects has, which
+is what lets the same dots-and-lines bookkeeping be pointed at each of them in turn.
 
 This chapter's object is a grid of cells and a formula that returns a number for a shape. What would
 it cost to move a *piece* of it — a region, contents and all, shifted along? Call the region a
@@ -43,8 +41,7 @@ Take the guess seriously for a second, because it is not a trick. There is an ar
 should cost a great deal — you have moved everything there is. There is an argument that it should
 cost nothing at all. Decide which, and write down why in half a sentence.
 
-We wrote down *nothing*, and the reason, before the run. Both are in the record, and the reason is
-the next section's.
+Ours is in the record, with its reason, from before the run. Both are the next section's.
 
 ## The bill for moving everything
 

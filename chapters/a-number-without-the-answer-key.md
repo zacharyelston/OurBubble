@@ -72,17 +72,17 @@ It is worth answering honestly rather than correctly, because the interesting ve
 question is *how much* would you trust it, and what exactly would the known case have to get right
 first. Write down the standard you would want met. One line.
 
-Ours is in the record as gates: the known case's numbers, to a stated number of digits, before any
-unknown one counted.
+Ours is in the record from before the run: the known case's numbers, within margins written down
+first, or no unknown one counted.
 
 ## Make the instrument earn it
 
 <!-- beat a-number-without-the-answer-key.5 -->
 
-This is the one place in the book where the rule changes as well as the object. The model is a
-lattice of switches, each up or down, each nudged by its neighbours and by chance — the Ising model,
-and not a wave. It is here because the numbers it gives near its turning point are the ones nature
-hands out class by class.
+Here the rule changes as well as the object. The model is a lattice of switches, each up or down,
+each nudged by its neighbours — the Ising model, and not a wave. It is here because the numbers it
+gives at the edge where it stops being one thing and becomes another are the *kind* nature hands out
+class by class, which is what makes them checkable.
 
 We pointed it first at a two-dimensional case that has an exact solution — Lars Onsager's, from
 1944, one of the results that made universality believable in the first place.
