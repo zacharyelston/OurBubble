@@ -68,8 +68,8 @@ the easy call.
 The live question is **which way**: along the cube's edges, or corner to corner through its middle?
 One line is enough. Commit to a direction.
 
-Ours — one per setting — are in the record from before the run; neither said which way, so this half
-is yours alone.
+Ours — one for this setting, one for the next — are in the record from before the run; neither
+said which way, so this half is yours alone.
 
 This is the ritual for the rest of the book, and it is not a teaching trick. Once you have read a
 number it is hard to remember not having known it.
@@ -164,7 +164,7 @@ Could a picture be lopsided because of the instrument itself?
 It could, and it was — on a page of ours anyone could open. A detour before the chapter closes: it
 is the child in the yard with the stick turned around on us.
 
-There is a public demonstration page: a ripple through two gaps, making bands on the far side. It
+There is a public demonstration page: a ripple through two gaps, making bands on the far side, and it
 ran that way for months. The scene is mirror-symmetric by construction — two identical gaps, one
 centred source, nothing in it that prefers a side — so the halves of the picture should have
 matched. One came out **3.8×** brighter than the other.
@@ -215,8 +215,8 @@ ripples get gentler.
 Go and look at your guess. Whichever way it went, you know something about the dial you could not
 have been told.
 
-Calibration is not a world with nothing left in it. It is a world whose remaining unevenness has
-been measured, and whose symmetries have been checked rather than assumed. This one steers true
+Calibration is a world whose remaining unevenness has been measured, and whose symmetries have been
+checked rather than assumed. This one steers true
 enough to measure with — so measure with it.
 
 *What this chapter cites — and what it does not:

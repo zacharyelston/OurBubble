@@ -52,8 +52,7 @@ should still be a square root.
 **Write down your guess.** Does a partial lump obey the whole-cavity law?
 
 Ours is in the record from before the run: the textbook law, registered as the target — sure enough
-of it for that, not sure enough to bet on it. Beside it, in the same file, is a note that a first look
-had already suggested the target would fail. The run for the record decided.
+of it for that, not sure enough to bet on it. The run for the record decided.
 
 ## What came back
 
@@ -67,7 +66,8 @@ the number we had committed to was a specific one.
 It came back with **p = −0.2753**, at a fit quality of **R² = 0.9774**.
 
 The registered expectation was **p = −1/2**. The measurement is a little over half that steep — a
-gap of about 0.22, outside the margin registered before the run to decide exactly this. And it is not an
+gap of about 0.22, outside the margin registered before the run to decide exactly this — a test the
+record then rewrote to hold the miss, so its check is green on a failed law. And it is not an
 artefact of one fitting choice: refit it a different way and the exponent moves to −0.3247, still
 nowhere near −1/2. **The law we proposed is the wrong law for this geometry, and it is refused.**
 
@@ -85,16 +85,16 @@ does not: the lump is a small part of the cavity and most of the vibration sits 
 A local change should not inherit the scaling of a global one — so the mistake was in the argument
 rather than in the run.
 
-That explanation is comfortable, which is exactly when to be careful. This one was in the file with
-the warning, before the run — but an explanation written down is not yet a test of itself, and there
-is no way to tell a good one from a face-saving one except by making it pay.
+That explanation is comfortable, which is exactly when to be careful. This one was in the file before the run, beside a
+note that a first look had already suggested the target would fail. But a reason written down is not
+yet a test of itself, and only making it pay tells a good one from a face-saving one.
 
 So it is written down where the next experiments queue up: if the volume fraction is really the
 reason, giving the lump a bigger share of the cavity should move the exponent toward −1/2. Testable,
 and named on the record as the thing to do next.
 
 Be exact about its standing, though, because the chapter's own point applies to us.
-**It is not yet a prediction.** Nothing is registered and nothing is run — no spec, no gate. Until
+**It is not yet a prediction.** Nothing is registered and nothing is run: no written question, no test. Until
 there is, it is an explanation that has not paid: better than an excuse, and less than a commitment.
 
 ## What a refusal is worth
@@ -130,11 +130,11 @@ changes character — which is itself only located to within a margin. Neither m
 the little world; both were that margin, never carried through. What differs is what it took to
 carry it.
 
-The first needed nothing new. The rung that recorded it had published its own locator margin, and
+The first needed nothing new. The experiment that recorded it had published its own locator margin, and
 had measured how far the quantity swings when the location moves. Multiply the two, and at all three
 candidate locations the miss stops being significant — well inside at the best-centred one, and
-under the line the rung registered to judge it by at the other two, though not comfortably. That is
-what *dissolves* means here, and the rung says so of itself: the miss is no longer significant, not
+under the line it had registered to judge it by at the other two, though not comfortably. That is
+what *dissolves* means here, and the record says so of itself: the miss is no longer significant, not
 the value confirmed.
 
 No new estimator, no new run — two numbers already on the page, multiplied by somebody who thought
@@ -147,16 +147,16 @@ to.
 The second was not like that, and calling it the same would be flattering ourselves.
 
 Its own published numbers do not dissolve it. Closing it took a *new* estimator — written for the
-next rung, for another purpose — and an error bar that did not exist until the re-analysis added it.
+next experiment, for another purpose — and an error bar that did not exist until the re-analysis added it.
 With those the miss closes to within one standard deviation; without them it stands at about five.
 
-And notice what it did *not* take: no new measurement. The curves it re-read were the failing rung's
+And notice what it did *not* take: no new measurement. The curves it re-read were the failing experiment's
 own. The observation had been sufficient all along; what nobody had written down was the way to read
 it.
 
 It still rests on a choice. There are two defensible ways to aggregate the curves it fits, and
 **they give opposite verdicts**. What licenses the choice is a case where the answer is
-independently known — a real argument, and not the same as not having to choose. The next rung says
+independently known — a real argument, and not the same as not having to choose. The next experiment says
 outright that it does not generalise.
 
 ## Not the ancient null, and not each other
@@ -182,7 +182,7 @@ afterwards to data that had been waiting.
 <!-- beat when-the-expected-law-fails.8 -->
 
 Which is why the original rows are still there, not deleted and rewritten, carrying a note of what
-later work found — so the miss is still there to read. Both re-analyses are rungs of their own,
+later work found — so the miss is still there to read. Both re-analyses are experiments of their own,
 named in the appendix.
 
 And it is why this is the rarest thing an instrument can do. Recovering a known answer is

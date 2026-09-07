@@ -144,7 +144,7 @@ asks about a strong result: did it miss anything?
 
 It did. One quantity, and it came out too high.
 
-Here is the part worth slowing down for. Before the run, the team wrote down that this particular
+Here is the part worth slowing down for. Before the run, we wrote down that this particular
 quantity was the one the affordable lattice sizes could not pin down — and that its estimate would
 come out *too high*, in that direction, for that reason.
 

@@ -113,7 +113,7 @@ That is the sign nothing before it had reached, appearing on its own.
 
 <!-- beat where-negative-energy-appears.7 -->
 
-Which is exactly why a sign is not enough, and this is the sceptical beat of the chapter.
+Which is exactly why a sign is not enough, and this is the sceptical section of the chapter.
 
 Half the ways of getting this calculation wrong hand you a negative number. If all we had was "it
 came out below the line", we would have almost no evidence that we had reproduced Casimir's effect

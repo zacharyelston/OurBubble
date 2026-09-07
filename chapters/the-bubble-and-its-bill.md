@@ -56,8 +56,7 @@ have done is renumber where things are — the same arrangement, described from 
 So the honest expectation is a bill of zero, which is what we wrote down, and the reason to run it
 anyway is that our formula does not know any of the above. It just takes a configuration and returns a number.
 
-It returned exactly zero. Not nearly zero, not zero to within the arithmetic — zero, with nothing
-left over.
+It returned exactly zero — not nearly zero, but zero, with nothing left over.
 
 That is the most boring result in this chapter, and it is the one that licenses every result after
 it. Because the uniform push is free, whatever we get charged next is being charged for the
@@ -84,7 +83,7 @@ Those are predictions about a situation nobody can build, which makes them an un
 a toy. All three were registered here, with thresholds, before the run.
 
 And the first came back. **Every** point where the formula returns anything at all returns a value
-below the baseline — not most of them, not on average. Nobody wrote that into the setup.
+below the baseline — every point, all of them. Nobody wrote that into the setup.
 
 So where does the cost sit?
 

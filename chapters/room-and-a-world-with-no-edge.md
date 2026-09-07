@@ -164,23 +164,19 @@ So the world has a grain, and no dot is privileged.
 <!-- beat room-and-a-world-with-no-edge.8 -->
 
 Now ask the stopwatch question: poke a dot, count ticks, see how far the front got; then another
-way.
-
-The grain gives that question teeth: if the two disagree, either the world runs faster one way,
-or you are reading the grain.
+way. If they disagree, either the world runs faster one way, or you are reading the grain.
 
 Every step was forced but one. Dots, because a number needs somewhere to sit; lines, because change
-lives between; a triangle, because it closes; a tetrahedron, because it does not flex; a clock and
-one rule, because nothing could happen; the cut, because the first room was inside; many, because one
-was too small; the two-colouring, because tetrahedra will not stack alone; a wrap, because
-edges echo.
+lives between; a triangle, because it closes; a tetrahedron, because it does not flex; a clock and a
+rule, because nothing happened; the cut, because the first room was inside; many, because one was too
+small; the two-colouring, because tetrahedra do not stack; a wrap, because edges echo.
 
-The exception is the dial: the one thing anybody chose, still unset.
+The exception is the dial, chosen and unset.
 
 The object has a name: **The Container**, because it holds all the napkin taught you, with room in
-it. The record the next chapters read from is older than this construction, so its runs were made on
-plainer worlds like it, each named where its run begins. The first question the record answers is whether
-a ring in such a world comes out round.
+it. It is the world the machine builds, the one this book has built toward. The record the next
+chapters read from is older than it; its runs were made on plainer worlds like it, each named where
+its run begins. The first question it answers is whether a ring in such a world comes out round.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-room-and-a-world-with-no-edge).*

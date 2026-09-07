@@ -46,7 +46,8 @@ We wrote ours down first, on all three counts; the next sections say what they w
 
 <!-- beat the-wall-that-worked-and-didnt.3 -->
 
-It does, and convincingly.
+It does, and convincingly. We had written down that the inside would hear less than a third of what
+the outside sent.
 
 Build the shell on the ripple's world — the cube cut into six tetrahedra — as a region where the
 field is heavily suppressed. It is not the bubble wall of the last chapter; that was a shape the energy took, and this is a thing we put there on purpose. Then
@@ -86,8 +87,8 @@ The blob inside moves as far as it did before, to within a millionth — where *
 Say that plainly: the test we registered was missed by that millionth and rewritten after the run,
 with the miss on the record. The isolation held as written.
 
-The run names the millionth: the wall reflects a wave of its own that leaks back inward at lattice
-speed. That is a difference in what reaches the blob, and it is not a difference in how hard the blob
+The run names the millionth: the wall reflects a wave of its own that leaks back inward at one line
+per tick. That is a difference in what reaches the blob, and it is not a difference in how hard the blob
 is to push.
 
 Go and look at your guess. This is the one the ritual is for, because the idea in the opening is
