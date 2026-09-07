@@ -1,9 +1,11 @@
 # Summary
 
 - [What you will have](what-you-will-have.md)
+- [Boundaries](start-at-the-boundaries.md)
 - [Where the inside shows](where-the-inside-shows.md)
 - [The shadow](the-shadow.md)
 - [A few thousand years of sharper shadows](a-few-thousand-years-of-sharper-shadows.md)
+- [Staring into the abyss](staring-into-the-abyss.md)
 - [Two dots, a line, and the first thing that closes](two-dots-and-a-line.md)
 - [One tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md)
 - [Make it move](make-it-move.md)
