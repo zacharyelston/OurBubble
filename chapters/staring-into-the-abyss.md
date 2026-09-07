@@ -3,8 +3,7 @@
 > **Scope.** This page is a primer: one scene from the author's own life, told in the first person,
 > and the idea it left behind. The book this page belongs to is about a **toy** — a small world
 > built inside a computer — and nothing on this page or in that book is a claim about nature. The
-> zero on this page
-> is a mark on paper, and the counting that follows it is counting.
+> zero on this page is a mark on paper, and the counting that follows it is counting.
 
 <!-- beat staring-into-the-abyss.1 -->
 

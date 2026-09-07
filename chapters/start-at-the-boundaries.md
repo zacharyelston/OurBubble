@@ -60,8 +60,7 @@ one after another, for an evening.
 
 Solving would mean a puzzle is intellectual — that it asks you to calculate something. It does not.
 It asks only that you start it, and then keep working, and the pieces do the rest of the thinking
-for you: each one you place tells you something
-about the ones still in the box.
+for you: each one you place tells you something about the ones still in the box.
 
 That is the habit I want you to bring to the next page.
 
