@@ -80,7 +80,7 @@ first. Ink in water needs no memory. A plucked string does.
 
 Is that really the whole law?
 
-## Nothing else, ever
+## The same bookkeeping
 
 <!-- beat make-it-move.5 -->
 
@@ -88,9 +88,7 @@ Yes, for every world you build by hand, and for the machine's ripples. The rest 
 same bookkeeping of differences and sums, on the objects each chapter names, with nothing tuned to
 help an answer along.
 
-Some chapters do something else with that bookkeeping, and say so where they do: a formula read off
-a shape, a wall written into the rule, a list of vibration shapes added up, and once a different kind
-of small model altogether.
+Some chapters do something else with that bookkeeping, and each says so where it does.
 
 So run it. Not on the tetrahedron, though — on something smaller.
 

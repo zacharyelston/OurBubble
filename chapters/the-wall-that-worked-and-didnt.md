@@ -40,8 +40,8 @@ Two more things worth committing to while you are at it, because they turn out t
 questions and the chapter's whole shape is that they got separate answers. Do you expect the shell
 to isolate at all? And if the blob does move differently, by how much — a little, or a lot?
 
-Ours is in the record from before the run, and it was the unattractive one. It is the answer's to
-tell.
+Ours are in the record from before the run, on all three counts; the next sections say what they
+were.
 
 ## First question: does the wall isolate?
 
@@ -83,7 +83,8 @@ Now the question the chapter was built for. The blob inside: does it move differ
 
 <!-- beat the-wall-that-worked-and-didnt.5 -->
 
-The blob inside moves exactly as far as it did before.
+The blob inside moves exactly as far as it did before — which is what we had written down, beside the
+isolation we expected: the null, registered as honestly as the yes.
 
 Not slightly further. Not slightly less. The blob's displacement differs between the walled and
 unwalled cases by about a millionth — far inside the threshold registered for it. The run does not
@@ -146,15 +147,14 @@ Note how modest that would be even if it worked: cancelling reaches zero, and a 
 below the floor.
 
 A conjecture, with a threshold: the target volume had to hold less than a fifth of the field
-elsewhere. It never came close. Tested to destruction. **No.**
+elsewhere, on a plain grid rather than the shell's world. It never came close. **No.**
 
 The energies add. You can cancel a field at a point and on a surface, but a volume where everything
-is zero cannot be built out of sources aimed from outside — the reason is structural, not a matter
-of trying harder.
+is zero cannot be built out of sources aimed from outside; the reason is structural.
 
 **[Open the data-true null figure](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
 
-Two chapters, three noes, and the barrier from
+Three noes, and the barrier from
 [what pushing on it costs](the-bubble-and-its-bill.md) still standing. This is the point in a
 project where you either stop, or you go and find the one place the sign is genuinely allowed.
 

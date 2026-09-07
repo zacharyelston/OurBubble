@@ -58,7 +58,7 @@ be a whole world. Then we make it move, by hand.
 Then the napkin runs out. The smallest world with any room in it needs arithmetic no hand can do, so
 the same rule goes to a machine, unchanged — on a world with no edge.
 
-The rest is what came back — from smaller worlds like it, each named when it arrives, and once from
+The rest is what came back — from plainer worlds like it, each named when it arrives, and once from
 a small model that is not a wave at all. A ripple lopsided until one setting fixed it. What it costs to push on a
 piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement
 with its answer key taken away, a law that came back refused, and misses that were in our reading,

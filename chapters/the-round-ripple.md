@@ -10,8 +10,9 @@ You have the object and you have the question: poke a world like it, and see whe
 travels at the same speed in every direction.
 
 The world the record poked is the Container's plainer relative: the same cubes, each cut into six
-tetrahedra, with no two-colouring and no twist in the cutting. Its grain is not the Container's three
-kinds of place but three kinds of line, and the dial has the same job on both.
+tetrahedra, with no two-colouring, no twist in the cutting, and — for this run — edges, so it finishes
+before the echo comes back. Its grain is not three kinds of place but three kinds of line, and the
+dial has the same job on both.
 
 Speed is a distance divided by a time. Look at what you are actually holding, and one of those two
 is in your hand and the other is not.
@@ -37,7 +38,7 @@ Doesn't counting steps already do that?
 
 <!-- beat the-round-ripple.2 -->
 
-It is worth sitting with why not, because "count the lines you crossed" sounds like a ruler.
+Sit with why not, because "count the lines you crossed" sounds like a ruler.
 
 Go back to the cube the world is built from. In the relative the record ran, its lines run three
 ways: along the cube's edges, across its faces, and through its middle from corner to corner. In the
@@ -78,8 +79,8 @@ number it is hard to remember not having known it.
 
 Set every line to the same weight and the ring comes out **lopsided**.
 
-It runs faster corner to corner through the cube than along its edges — so if you guessed the long
-diagonal, you were right, and for the reason the last section gave: the counting treats a long step
+It runs faster corner to corner through the cube than along its edges — so if you guessed corner to
+corner, you were right, and for the reason the last section gave: the counting treats a long step
 and a short one alike, so the long one covers more ground per tick. What ought to be a circle is
 stretched corner to corner, and anything you aimed in this world would drift.
 
@@ -105,8 +106,9 @@ settings, no new machinery — a reading taken from the thing rather than assume
 
 The two speeds now differ by **2.2%**: about ten times less.
 
-Both are the predictions written down before either run. That matters more than the numbers do, and
-it is the step people skip.
+What we wrote down before either run was that the obvious setting would be plainly uneven, and that
+the reading from the shape would at least halve it. That matters more than the numbers do, and it is
+the step people skip.
 
 The rounder of the two rings in the last section's figure is this one. The pair of them, together,
 is the difference between an assumption and a reading.
@@ -141,7 +143,7 @@ told nothing about what it is looking at. It picks
 from a menu written down beforehand and reports how far ahead of the runner-up it finished.
 
 It picked the straight-line law in all five directions, and by a wide margin: its score beat the
-runner-up — a square-root law — by about a quarter every time, which for a fit quality is a rout.
+runner-up — a square-root law — by about a quarter every time.
 The speed it returned agrees across directions to within a couple of percent, and that spread
 *shrinks* as the ripples get gentler. Which is the signature of a coarse grid.
 
@@ -165,8 +167,8 @@ ran that way for months. The scene is mirror-symmetric by construction — two i
 centred source, nothing in it that prefers a side — so the halves of the picture should have
 matched. One came out **3.8×** brighter than the other.
 
-That is a mark, in the sense her two scratches in the dirt were marks: a number nobody chose, that
-the thing itself put there. And like hers it is mute. Two readings fit it equally well. Either what
+That is a mark, in the sense her two scratches in the dirt were: a number nobody chose. And like
+hers it is mute. Two readings fit it equally well. Either what
 the ripple does at the gaps really is lopsided, or the thing doing the measuring is, and the picture
 is faithfully reporting the shape of what it travelled on rather than the shape of the question.
 
@@ -181,7 +183,7 @@ square into triangles means choosing which way the diagonals lean. Lean them all
 itself and the mesh does not. So the mesh is the suspect: it had been asserting a left-right
 difference the question never did.
 
-This is a different thing from a world's own grain, the kinds of line it has: a drawing choice in one
+This is a different thing from a world's own grain, whichever kind it has: a drawing choice in one
 demo broke a mirror the experiment needed.
 
 The correction is as small as the fault: alternate the diagonals, so mirroring the mesh lands on
@@ -203,7 +205,6 @@ So what did the chapter settle?
 
 Not that the little world has light in it.
 
-Two things, and everything after this depends on both.
 **One setting decides whether the world behaves the same way in every direction** — and that setting
 is a choice somebody makes, not a fact the object hands over. And
 **we can tell a coarse grid from a broken geometry**, by whether the disagreement shrinks when the

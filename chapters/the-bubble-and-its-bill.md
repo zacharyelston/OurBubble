@@ -16,15 +16,16 @@ The world now behaves the same way in every direction, which means a measurement
 what it appears to mean. Here the questions widen, so here, once, is what changes and what does not.
 
 What changes is the object under the question. You have met one already: the ripple ran on the
-Container's plainer relative. The record's other runs were made on a plain grid of cells, on a flat
+Container's plainer relative. The record's other runs were made on a plain grid of dots, on a flat
 sheet of triangles, on a line of dots, and on a different small model altogether, and each chapter
-names its own in its first section.
+names its own where its run begins.
 
 What does not change is the work: say what you expect, compare, test the other reading, keep the
-answer. And the dial — what each line counts for — is a setting every one of these objects has, which
-is what lets the same dots-and-lines bookkeeping be pointed at each of them in turn.
+answer. And the dial — what each line counts for — is a setting every one of these objects carries, fixed
+by the object or read from it, which is what lets the same dots-and-lines bookkeeping be pointed at
+each of them in turn.
 
-This chapter's object is a grid of cells and a formula that returns a number for a shape. What would
+This chapter's object is a grid of dots and a formula that returns a number for a shape. What would
 it cost to move a *piece* of it — a region, contents and all, shifted along? Call the region a
 bubble; that is all the word means in this book. Before shaping one, a cheaper question.
 
@@ -51,8 +52,8 @@ Nothing. And you can see why once you have said it out loud: shifting every dot 
 is not an event. Nothing in the world has changed relative to anything else in the world. All you
 have done is renumber where things are — the same arrangement, described from one pace to the left.
 
-So the honest expectation is a bill of zero, and the reason to run it anyway is that our formula
-does not know any of the above. It just takes a configuration and returns a number.
+So the honest expectation is a bill of zero, which is what we wrote down, and the reason to run it
+anyway is that our formula does not know any of the above. It just takes a configuration and returns a number.
 
 It returned exactly zero. Not nearly zero, not zero to within the arithmetic — zero, with nothing
 left over.

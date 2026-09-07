@@ -87,7 +87,7 @@ less of a difference to have. Pick one, and note in half a sentence which way yo
 And a second guess, because the chapter turns on it: if the difference deepens as the gap narrows,
 what does that mean the walls will *do*?
 
-Ours is in the record from before the run, on both counts. The next section says what it was.
+Ours is in the record from before the run, on both counts; the next section says what it was.
 
 ## What the little world did
 
@@ -96,7 +96,8 @@ Ours is in the record from before the run, on both counts. The next section says
 We built the one-dimensional version: a line of dots with a wall at each end, the smallest object the
 question fits, and the same bookkeeping of differences and sums on it. The allowed vibration shapes
 worked out from the line itself, the part that is the same inside and out subtracted away, and then
-the question: what is left?
+the question: what is left? We had written down, before the run, that it would sit below the line at
+every gap, and deeper as the walls close.
 
 Every measured value sits below the free-space line. And as the walls move closer, it goes further
 down.

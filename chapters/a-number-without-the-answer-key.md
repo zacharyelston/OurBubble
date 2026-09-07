@@ -72,8 +72,7 @@ It is worth answering honestly rather than correctly, because the interesting ve
 question is *how much* would you trust it, and what exactly would the known case have to get right
 first. Write down the standard you would want met. One line.
 
-Ours is in the record from before the run: the known case's numbers, within margins written down
-first, or no unknown one counted.
+Ours is in the record from before the run: margins for the known case's numbers, written down first.
 
 ## Make the instrument earn it
 
@@ -84,8 +83,9 @@ each nudged by its neighbours — the Ising model, and not a wave. It is here be
 gives at the edge where it stops being one thing and becomes another are the *kind* nature hands out
 class by class, which is what makes them checkable.
 
-We pointed it first at a two-dimensional case that has an exact solution — Lars Onsager's, from
-1944, one of the results that made universality believable in the first place.
+We pointed it first at a line of switches whose numbers at the edge are the two-dimensional class's —
+the case Lars Onsager solved exactly in 1944, one of the results that made universality believable in
+the first place.
 
 The answers are known precisely, and they were not given to the machinery. The pipeline saw only its
 own runs at a handful of manageable sizes, and had to produce the class numbers itself.

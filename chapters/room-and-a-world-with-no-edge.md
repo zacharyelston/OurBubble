@@ -163,8 +163,8 @@ So the world has a grain, and no dot is privileged.
 
 <!-- beat room-and-a-world-with-no-edge.8 -->
 
-Now ask the stopwatch question: poke a dot, count the ticks, see how far the front got, then
-again in another direction.
+Now ask the stopwatch question: poke a dot, count ticks, see how far the front got, then again
+another way.
 
 And the grain gives that question teeth: if the two disagree, either the world runs faster one way,
 or you are reading the grain.
@@ -177,10 +177,10 @@ edges echo.
 
 The exception is the dial: the one thing anybody chose, still unset.
 
-The object has a name: **The Container**, because it holds everything the napkin taught you and has
-room in it. The record the next chapters read from is older than this construction, so its runs were
-made on smaller worlds like it, each named in its chapter. The first is whether a ring in such a
-world comes out round.
+The object has a name: **The Container**, because it holds all the napkin taught you, with room in
+it. The record the next chapters read from is older than this construction, so its runs were made on
+plainer worlds like it, each named where it comes. The first question the record answers is whether
+a ring in such a world comes out round.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-room-and-a-world-with-no-edge).*
