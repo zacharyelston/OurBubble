@@ -51,8 +51,8 @@ physics word names a feature of it.
 
 <!-- beat what-you-will-have.3 -->
 
-First, why measuring gets done at edges. Then the shadow, and what everyone else did with one: the
-same method for a few thousand years, no cleverer and much sharper. Then a run of chapters on a
+First a puzzle, then why measuring gets done at edges. Then the shadow, and what everyone else did
+with one: the same method for a few thousand years, no cleverer and much sharper. Then chapters on a
 napkin. Two dots and a line, then a triangle, then the smallest solid there is — which turns out to
 be a whole world: every kind of number in it, and a setting for what each line counts. Then we make
 it move, by hand.
@@ -81,9 +81,9 @@ down. That pause is the method, performed instead of described, and it works onl
 Sticks and light, dots and lines. That is what we have had since the first shadows on a cave wall,
 is all this book uses, and enough for everything in here.
 
-We start further from a laboratory than a shadow is: at a table, with a jigsaw puzzle that has no
-picture on it, and where anyone who has done one begins. Then an egg, and a claim about where
-measuring gets done — worth holding lightly until you have done it yourself.
+We start at a table, with a jigsaw that has no picture on it, and the place anyone who has done one
+begins: its edge. Then an egg, and a claim about where measuring gets done — worth holding lightly
+until you have done it yourself.
 
 *What this page cites — and what it does not:
 [the simulations](the-simulations.md#s-what-you-will-have).*

@@ -1,8 +1,8 @@
 # Boundaries
 
 > **Scope.** This page is a primer: one scene from the author's own life, told in the first person,
-> and the idea it left behind. The book it opens is about a **toy** — a small world built inside a
-> computer — and nothing on this page or in that book is a claim about nature.
+> and the idea it left behind. The book this page belongs to is about a **toy** — a small world
+> built inside a computer — and nothing on this page or in that book is a claim about nature.
 
 <!-- beat start-at-the-boundaries.1 -->
 
@@ -41,7 +41,8 @@ So a puzzle falls almost the moment it is started. The border sets the solution 
 Then the border is complete, and you think: ha. I will finish this.
 
 And you do. Or you get bored, and it sits there on the table awaiting your attention. Tomorrow. Today
-you have to have some boundaries of your own. Some puzzles want to be solved; others need to be.
+you have to have some boundaries of your own. Some puzzles want to be solved; others need to be,
+and those are the ones that keep you at the table past midnight.
 
 All puzzles have one thing in common, though. They have a solution — and not just any solution. A
 puzzle has exactly one. Afterwards it can seem obvious that it went together that way and no other,
@@ -54,16 +55,17 @@ boundary, and the border gives you that start for free.
 
 So a puzzle gives you the two things engagement is made of: tension, and release. The tension is a
 piece in your hand with nowhere to go yet, and the release is the small click when it finds its
-place. Working a puzzle, you compound those small releases, one after another, for an evening.
+place. Working a puzzle — and the word is working, not solving — you compound those small releases,
+one after another, for an evening.
 
-Notice that I said working, and did not say solving. Solving would mean a puzzle is intellectual —
-that it asks you to calculate something. It does not. It asks only that you start it, and then keep
-working, and the pieces do the rest of the thinking for you: each one you place tells you something
+Solving would mean a puzzle is intellectual — that it asks you to calculate something. It does not.
+It asks only that you start it, and then keep working, and the pieces do the rest of the thinking
+for you: each one you place tells you something
 about the ones still in the box.
 
 That is the habit I want you to bring to the next page.
 
-## Where this book starts
+## Start with the boundaries
 
 <!-- beat start-at-the-boundaries.5 -->
 
@@ -71,9 +73,10 @@ This book is not a puzzle. It describes one — a small world, built one piece a
 every puzzle it goes together one way. You will watch the pieces force one another into place, and
 you will be told plainly where a hand had to choose.
 
-And we are going to start with the boundaries. The first chapter argues that a boundary is where
-the work of measuring gets done, and it does so with something even more ordinary than a jigsaw: an
-egg on a table, which you are about to be asked to look at very hard.
+And we are going to start with the boundaries. The next page,
+[Where the inside shows](where-the-inside-shows.md), argues that a boundary is where the work of
+measuring gets done, and it does so with something even more ordinary than a jigsaw: an egg on a
+table, which you are about to be asked to look at very hard.
 
 *What this page cites — and what it does not:
 [the simulations](the-simulations.md#s-start-at-the-boundaries).*

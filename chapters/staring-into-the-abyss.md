@@ -1,8 +1,9 @@
 # Staring into the abyss
 
 > **Scope.** This page is a primer: one scene from the author's own life, told in the first person,
-> and the idea it left behind. The book it opens is about a **toy** — a small world built inside a
-> computer — and nothing on this page or in that book is a claim about nature. The zero on this page
+> and the idea it left behind. The book this page belongs to is about a **toy** — a small world
+> built inside a computer — and nothing on this page or in that book is a claim about nature. The
+> zero on this page
 > is a mark on paper, and the counting that follows it is counting.
 
 <!-- beat staring-into-the-abyss.1 -->
@@ -41,24 +42,26 @@ it is exactly the right way in.
 
 <!-- beat staring-into-the-abyss.3 -->
 
-Because zero is what made all of this possible.
+Because zero is what made the counting in this book possible — all of it, every table in the
+chapters ahead.
 
 Zero is not my favourite number. That is three. Zero is the number that carries the most weight, the
 most power; if zero could make a claim, it would claim to be the spark. Which is odd, since most of
 us think of zero as nothing. That is more or less its definition.
 
 And yet with zero it all happens. Write a 0 on a piece of paper. You have just made one number — a
-zero. So by claiming a null you now have one thing, and one thing is a 1. Write the 0 and the 1 side
-by side and you have two digits in front of you, and 2 is born. You only wrote the 0. The others did
-not so much show up as burst on to the scene.
+zero. So by writing down a nothing you now have one thing on the page, and one thing is a 1. Look
+again: the zero, and the one you just counted — two things, and 2 is born. You only wrote the 0. The
+others did not so much show up as burst on to the scene.
 
 ## One direction
 
 <!-- beat staring-into-the-abyss.4 -->
 
-There is no stopping it once a null has been written. Infinity is emergent: it just happens,
-naturally, out of the first mark, and it happens in one direction only. Nobody writes their way back
-past the zero.
+There is no stopping it once the zero is down. There is no last mark: each one you count permits
+the next, so infinity is not something anyone adds — it is what you get, unasked, out of the first
+mark. And it runs one way only. You can always make another mark, and none of them unmakes the
+first.
 
 That, I think, is what the void was giving me at the end of every commute. Not an absence — the one
 place where a first mark could go.
