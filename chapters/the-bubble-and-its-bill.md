@@ -13,15 +13,22 @@
 <!-- beat the-bubble-and-its-bill.1 -->
 
 The world now behaves the same way in every direction, which means a measurement made in it means
-what it appears to mean. So here is the next thing you can ask of such a world.
+what it appears to mean. This is the door of the book's second half, so here is what changes at it
+and what does not.
 
-What would it cost to move a *piece* of it?
+What changes is the object under the question. You built the Container, the engine's own world. The
+record these chapters read from is older than that construction, and its runs were made on plainer
+relatives — the cube cut six ways that the ripple ran on, a plain grid of cells, a flat sheet of
+triangles, a line of dots — and once on a different small model altogether. Each chapter names its
+object in its first section.
 
-Not to move something through it — that is just a ripple, and you have seen one. To take a region,
-contents and all, and shift the region itself along. Call the region a bubble; that is all the word
-means in this book, and it is the only thing it means.
+What does not change is the work: say what you expect, compare, test the other reading, keep the
+answer. And the dial — what each line is worth — is a setting every one of these lattices has,
+whatever runs on it, which is what lets the same bookkeeping be pointed at each.
 
-Before spending anything on a shaped one, though, there is a cheaper question worth guessing at.
+This chapter's object is a grid of cells and a formula that returns a number for a shape. What would
+it cost to move a *piece* of it — a region, contents and all, shifted along? Call the region a
+bubble; that is all the word means in this book. Before shaping one, a cheaper question.
 
 ## ✎ Before we look
 
@@ -35,6 +42,9 @@ amount, in the same direction, all together.
 Take the guess seriously for a second, because it is not a trick. There is an argument that it
 should cost a great deal — you have moved everything there is. There is an argument that it should
 cost nothing at all. Decide which, and write down why in half a sentence.
+
+We wrote down *nothing*, and the reason, before the run. Both are in the record, and the reason is
+the next section's.
 
 ## The bill for moving everything
 

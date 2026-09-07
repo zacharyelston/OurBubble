@@ -37,8 +37,8 @@ reader every time instead of explained to her once.
 ## 0 · What you will have
 
 1. What is this book actually about — and should I go and look anything up?  *(the art of collecting data, which is smaller than its reputation: make a mark, take the difference, add the differences up, see whether they come home. A telescope is a better stick; between a child in a yard and a laboratory the instruments change and the bookkeeping gets more careful, and the moves do not change at all. The syntax those moves are written in has a name — **discrete exterior calculus** — said once and put straight back down)*
-2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, one rule she can run, why the tick a world runs on belongs to its shape, a machine's honest no told apart from a mistake, and a path from any number we produced to where it came from. Then something we claim rather than something the book proves: the sciences whose papers look like a wall are making marks, taking differences and adding them up too, in their own notation — this book will not teach her one of them, and what it does is put the moves in her hands, on an object small enough to count. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they come from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
-3. What is the road?  *(first a puzzle, then why measuring gets done at edges; then the shadow, and what everyone else did with one; then a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — and what it refused, kept on purpose)*
+2. What will I have when I finish?  *(the ideas themselves, not a rumour of them — a world she can count in her head, the one rule that world runs on, why the tick a world runs on belongs to its shape, a machine's honest no told apart from a mistake, and a path from any number we produced to where it came from. Then something we claim rather than something the book proves: the sciences whose papers look like a wall are making marks, taking differences and adding them up too, in their own notation — this book will not teach her one of them, and what it does is put the moves in her hands, on an object small enough to count. Nothing to believe: until the pencil runs out every number she is asked to check is one she can do by hand, and after that they come from a record that travels with the book. And no claim about the world — it is a toy, and the borrowed words name features of it)*
+3. What is the road?  *(first a puzzle, then why measuring gets done at edges; then the shadow, and what everyone else did with one; then a run of chapters on a napkin; then the napkin visibly running out, and the same one rule handed to a machine; then what came back — from that world's plainer relatives, each named when it arrives, and once from a small model that is not a wave — and what it refused, kept on purpose)*
 4. Do I need any mathematics, and how should I read it?  *(adding and taking away, in order, and the ✎ moments are hers. Sticks and light, dots and lines: all anyone has had since the first shadows on a cave wall, all this book uses, and enough for everything in it. It starts closer to hand than a shadow: an egg on a table, and a claim about where measuring gets done — carrying the next chapter's own hedge, and naming what the hedge is about, so she can tell what she is being asked to hold lightly)*
 
 ## 1 · Boundaries
@@ -113,7 +113,7 @@ reader every time instead of explained to her once.
 2. What is the least a clock needs?  *(ticks, all the same)*
 3. One number sitting at a dot — does it say what happens to it next?  *(no: it says where it is, not which way it is going. So the state is two rows, then and now, and the rule reads both — the engine's stepper takes both or it cannot write a next row at all)*
 4. So what does one tick *do* with those two rows?  *(one rule: each dot's number is pushed toward its neighbours' by the differences on its lines — and carries forward the motion the two rows already hold. The push sets the change in the change, not the change; that is the difference between a wave and a leak)*
-5. Is that really the whole law — nothing else, ever?  *(yes; every result in the book is that sentence, run)*
+5. Is that really the whole law — nothing else, ever?  *(yes, for every world she builds by hand and for what the machine does with them — the ripple, the wall, the gap, the shaken box, each on a bigger object or a plainer relative its chapter names. Two chapters do something else and say so: the bill for a push is a formula read off a shape, and the answer-key chapter puts switches on the table instead of waves)*
 6. Start smaller than the tetrahedron — three numbers on the triangle: what do they do?  *(2, 5, 2 at the triangle's own tick of two thirds: they slosh, whole numbers all the way, the total 9 never moves, and they are back where they started every four ticks)*  [napkin token `triangle_slosh_table`, R07 — computed at build]
 7. Why does the triangle need two thirds, when the next section's tetrahedron takes a half?  *(because the tick belongs to the shape. Run the triangle at the tetrahedron's tick and the same rule still conserves the total, but the numbers stop being writable after three rows and it never comes home. This is the dial arriving in time, before it arrives in length)*  [napkin token `tick_belongs_to_shape`, R07 at the book's tick + R16's ceiling for four dots]
 8. Now the tetrahedron, at a half — four numbers, tick by tick: what do they do?  *(they slosh back and forth — and every four ticks they are exactly back where they started; nothing leaks)*  [napkin token `slosh_table`]
@@ -148,24 +148,24 @@ reader every time instead of explained to her once.
 5. It reached the edge of our world and bounced back — how do I have no edge?  *(wrap it: the far side *is* the near side, like a screen where walking off the right returns you on the left)*
 6. What is that wrapped world called, and why do we live there from now on?  *(a torus — no walls to bounce off, so the ring is only ever the ring)*
 7. Now that the world has no edge — is any dot special?  *(none is singled out — but the rule for cutting the holes twists as it goes, so there are three kinds of place. They are copies of one another: turn one a third of the way round and step it over, and it lands exactly on the next kind. Counted while the page was built: three kinds, in exact thirds. The world has a grain — remember that when a ripple comes out lopsided, because a grain is one place lopsidedness can hide)*  [anchor: napkin token `vertex_classes`, computed at build — not a record quotation]
-8. Can I ask the stopwatch question now?  *(yes — and this is the object: everything from here is this one thing, asked a different question)*
+8. Can I ask the stopwatch question now?  *(yes — and this is the object, the Container: the engine's own world, the one the book has been describing how to find. Not every question ahead was put to it, and each chapter says what its was; the first is whether a ring in a world like this comes out round)*
 
 ## 12 · Is it round?
 
-1. Speed is distance over time — which half do I still not have?  *(distance: the dial has not been set)*
-2. Doesn't counting steps give me distance?  *(a step along a cube's edge and a step across its diagonal are both "one step" — until the dial says otherwise)*
-3. ✎ *Before we look:* if I give every line the same weight, will the ring be round?
+1. Speed is distance over time — which half do I still not have?  *(distance: the dial has not been set. The world the record poked is the Container's plainer relative — the same cubes cut into six tetrahedra rather than two-coloured — and the dial has the same job on both)*
+2. Doesn't counting steps give me distance?  *(in the relative the record ran, a cube's lines run three ways — edges, faces, corner to corner; in the Container a line is a face diagonal or a shape-between's long axis. Either way some lines are longer, and to the counting every line is "one step" — until the dial says otherwise)*
+3. ✎ *Before we look:* if I give every line the same weight, will the ring be round?  *(and which way is it lopsided? Ours, from the record: the obvious setting plainly uneven, the dial read from the shape at least halving it — neither said which way)*
 4. What does the ring do on the "obvious" setting?  *(lopsided: 22.4% between directions)*  [picture: the two rings]
 5. What if I weight the lines by their real geometry — the same dial, set from the shape?  *(round to 2.2%)*
 6. Is 2.2% the world being slightly uneven, or my grid being coarse — how could I tell?  *(a coarse grid improves with gentler ripples; a wrong geometry does not)*
 7. Could a machine decide that without my thumb on the scale?  *(hand it the timings and a written menu of laws; it picks, and says by how much)*  [picture: the fit, the runner-up]
-8. *An interlude:* could a picture be lopsided because of the instrument itself?  *(the public demo ran 3.8× lopsided on a mirror-symmetric scene — a mark with two readings; mirroring the mesh picks one, alternating the diagonals leaves 5×10⁻¹⁵, and the switch was left in the demo page rather than quietly removed. Carried by two adjacent sections: the mark and its two readings, then the test and the correction)*  [demo]
+8. *An interlude:* could a picture be lopsided because of the instrument itself?  *(the public demo — a flat sheet of squares cut into triangles, not the Container — ran 3.8× lopsided on a mirror-symmetric scene — a mark with two readings; mirroring the mesh picks one, alternating the diagonals leaves 5×10⁻¹⁵, and the switch was left in the demo page rather than quietly removed. Carried by two adjacent sections: the mark and its two readings, then the test and the correction)*  [demo]
 9. What did this chapter actually settle, and can I measure with this thing?  *(one dial decides whether the world behaves the same every way; we can tell coarse from broken; and that is what calibration is — the unevenness measured, the symmetries checked)*
 
 ## 13 · What does pushing on it cost?
 
-1. Now that it behaves evenly — what would it cost to move a *piece* of it, contents and all?  *(the bubble)*
-2. ✎ *Before we look:* what should moving the *whole* world cost?  *(nothing — it is just renaming positions)*
+1. Now that it behaves evenly — what would it cost to move a *piece* of it, contents and all?  *(the pivot, at the door of the results: what changes is the object under the question — the record's runs were made on the Container's plainer relatives, the cube cut six ways, a plain grid of cells, a flat sheet of triangles, a line of dots, and once on a different small model, each named in its chapter's first section; what does not change is the work, and the dial every lattice here has. This chapter's object is a grid of cells and a formula that returns a number for a shape — the bubble)*
+2. ✎ *Before we look:* what should moving the *whole* world cost?  *(nothing — it is just renaming positions; we wrote down nothing, and the reason, before the run)*
 3. Did it charge us for that?  *(exactly zero — and why that boring number licenses everything after)*
 4. Now shape the push — what came back, and did we put any of it in?  *(three things, all pre-registered)*
 5. Where does the cost sit?  *(at the wall, not the middle)*  [picture: the belt]
@@ -176,8 +176,8 @@ reader every time instead of explained to her once.
 ## 14 · Can you wall a piece off?
 
 1. If fields can't supply the sign — is the other half of the problem softer? Is resistance to being pushed a private property, or a relationship?  *(Mach's question)*
-2. ✎ *Before we look:* if I cut a region off from everything else, will what's inside get easier to push?
-3. First: does the wall even isolate?  *(half a million times weaker inside)*  [picture: the fading wave]
+2. ✎ *Before we look:* if I cut a region off from everything else, will what's inside get easier to push?  *(ours, from the record, was the unattractive one: the blob moves exactly as before, because a wall of this kind is nowhere in the blob's arithmetic — beside the isolation we did expect)*
+3. First: does the wall even isolate?  *(on the ripple's world, the cube cut six ways: half a million times weaker inside)*  [picture: the fading wave]
 4. How do I know I didn't just build a machine that damps everything?  *(the outside-to-outside path barely touched: 0.86)*
 5. Now the blob inside — does it move differently?  *(exactly as far as before)*
 6. Why not — where does a wall live in the equations?  *(at its own location, as a potential; nothing for it to change in the middle)*
@@ -190,8 +190,8 @@ reader every time instead of explained to her once.
 2. What does "empty" contain?  *(every shape a field could vibrate in, each carrying a little; the sum is the baseline)*
 3. Put two walls close — what stops fitting?  *(the long shapes)*
 4. So which baseline is lower, inside or outside — and why?  *(inside; we removed possibilities)*
-5. ✎ *Before we look:* as the walls approach, should the difference grow or shrink?
-6. What did the little world do?  *(below the line everywhere, deeper as the gap narrows — the walls pull together)*  [picture: the curve]
+5. ✎ *Before we look:* as the walls approach, should the difference grow or shrink?  *(we registered the sign — below the line at every gap tried — and left which way it moves to the run)*
+6. What did the little world do?  *(on a line of dots with a wall at each end — the smallest object the question fits, the same bookkeeping on it: below the line everywhere, deeper as the gap narrows — the walls pull together)*  [picture: the curve]
 7. A sign is easy — what would make this the phenomenon and not a sign?  *(the scaling law and its coefficient with a π in it)*
 8. Did the machine find them without being told?  *(−0.9997 vs −1; −0.13099 vs −π/24; nobody typed π)*
 9. What quietly changed in this chapter?  *(the machine swept and fitted — the exponent free, the coefficient never assumed — and reported; a person only checked afterwards. The instrument that picks a law from a written menu is the ripple's, not this one's)*
@@ -201,8 +201,8 @@ reader every time instead of explained to her once.
 1. There is a way to make a toy look profound — what is it, and why does it never mean anything?  *(formulas hunting a known constant)*
 2. What would count instead?  *(a number the method wasn't built to know, no dial to tune, checkable only after committing)*
 3. Where does nature hand you such numbers?  *(critical points; universality — details stop mattering, classes share numbers)*
-4. ✎ *Before we look:* should I trust an instrument on the unknown before it has recovered a known?
-5. Point it at the solved case — what comes back?  *(Onsager's numbers, to six and seven digits — a calibration, not a discovery)*  [picture: markers on the known line]
+4. ✎ *Before we look:* should I trust an instrument on the unknown before it has recovered a known?  *(ours is in the record as gates: the known case's numbers to a stated number of digits, before any unknown one counted)*
+5. Point it at the solved case — what comes back?  *(first the one change of rule in the book, said where it happens: a lattice of switches, each up or down, nudged by neighbours and by chance — the Ising model, not a wave — here because the numbers it gives near its turning point are the ones nature hands out class by class. Then Onsager's numbers, to six and seven digits — a calibration, not a discovery)*  [picture: markers on the known line]
 6. Now take the answer key away — the case nobody has solved?  *(exponents agreeing with real matter to a few percent; no parameter they could have entered through)*
 7. What was it still handed, and what happened when that was taken away too?  *(the transition temperature and one class number; the fully blind run found T_c to four parts in ten thousand)*
 8. Did it miss anything — and had it said so first?  *(one quantity, too high, in exactly the direction registered in advance)*  [no figure in the record for this one (0503 has none) — the band and the miss are stated in the appendix]
@@ -211,7 +211,7 @@ reader every time instead of explained to her once.
 ## 17 · When the world you built says no
 
 1. What is the simplest kind of prediction to get wrong?  *(a law you are sure of)*
-2. Put a denser lump in a resonating cavity — the pitch drops; by how much, as it gets denser?
+2. Put a denser lump in a resonating cavity — a walled box of the ripple's world, longer than it is wide — the pitch drops; by how much, as it gets denser?
 3. ✎ *Before we look:* the whole-cavity rule is a square root — should a partial lump obey it too?  *(we registered p = −½)*
 4. What came back?  *(p = −0.2753 — not a near miss; the law is refused)*  [picture: the two slopes]
 5. Why — and why is the explanation written as a *new* prediction rather than an excuse?  *(the lump is a fraction of the volume; if that is the reason, a bigger lump moves p toward −½ — a new commitment)*
@@ -251,7 +251,8 @@ the name of the syntax those moves are written in, and put straight back down. T
 five forbidding names are gone along with the promise that carried them — a list of names is a count,
 and the page now carries no count of the book's own parts that a reader could turn pages and falsify.
 One count of one thing remains and is true — "the one
-rule everything here is made of" — and nothing guards it ("the one page that talks about the book"
+rule that world runs on" (2026-09-07, tranche H, from "the one rule everything here is
+made of") — and nothing guards it ("the one page that talks about the book"
 went when the primers arrived, 2026-09-07: a primer's last beat talks about the book too) (a proofreader, round 5, mutating "the
 one rule" to "the three rules": tier 0 green).
 
@@ -342,6 +343,26 @@ a **triple**: the sentence about the toy that must pass, the same sentence about
 be refused, and that one with a toy noun parked beside it, which must be refused too. The legacy
 programme's patterns carry no exemption in the first place: "in this model, the universe is a
 bubble" is refused, and must be.*
+
+*Drafter's note on the pivot (owner, 2026-09-05 on issue #73 and 2026-09-07 on the recommendation;
+tranche H). The book promised, in the front door, in *Make it move* and at the close of *Room, and a
+world with no edge*, that every later result was the one rule run on the one object. The record does
+not do that, and a whole-book reader caught it as a blocker (issue #103): the ripple, the wall and
+the shaken box ran on the cube cut six ways (`mesh_3d_tetrahedral_grid`), the bill for a push on a
+plain grid of cells, the mirror on a flat sheet of triangles, the gap on a line of dots, and the
+exponents on switches (Ising, by Monte Carlo) — none of them on the two-coloured, twisting-cut world
+the reader builds (`mesh_3d_chiral_tetoct_periodic`, the object of `lab/primer/0116`). The owner's
+answer to #73 sets the frame: the Container is the engine's own world and the one the book describes
+how to find; "one method" is the dial's reach across objects, not method-over-instruments; the pivot
+goes about halfway. So the three promises are narrowed to the world she builds and to what the machine
+does with it, the pivot stands in the first beat of the first result chapter (what changes: the
+object; what does not: the work, and the dial every lattice here has), and every result chapter names
+its object in its first section. The ✎ beats also gained the project's own registered guess, in the
+first person plural and only where the record carries it — the honest null the wall rung wrote down,
+the sign the gap rung registered, the gates the class numbers were held to — so that a person has
+guessed before the reader is asked to. That is the middle of the three depths proposed in
+`notes/a-kleist-edition.md`; the singular "I" at those moments is the owner's to supply, never
+invented. The three retired promises are refused by name in `edition.json`.*
 
 *Drafter's note on the primers (owner, 2026-09-07). The brief, verbatim: "the book is currently to
 abstract and vague and relies on too many small steps without constant resolidifying. it 's not

@@ -40,14 +40,18 @@ Two more things worth committing to while you are at it, because they turn out t
 questions and the chapter's whole shape is that they got separate answers. Do you expect the shell
 to isolate at all? And if the blob does move differently, by how much — a little, or a lot?
 
+Ours is in the record, and it was the unattractive one: the blob moves exactly as before, because a
+wall of this kind is nowhere in the blob's arithmetic. Written down before the run, beside the
+isolation we did expect.
+
 ## First question: does the wall isolate?
 
 <!-- beat the-wall-that-worked-and-didnt.3 -->
 
 It does, and convincingly.
 
-Build the shell — a region where the field is heavily suppressed. It is not the bubble wall of the
-last chapter; that was a shape the energy took, and this is a thing we put there on purpose. Then
+Build the shell on the ripple's world — the cube cut six ways — as a region where the field is
+heavily suppressed. It is not the bubble wall of the last chapter; that was a shape the energy took, and this is a thing we put there on purpose. Then
 send a signal from outside and see how much of it arrives inside.
 
 About **half a million times** weaker than it would have been without the shell. That is not a

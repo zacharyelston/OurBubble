@@ -27,8 +27,9 @@ Here is one.
 
 <!-- beat when-the-expected-law-fails.2 -->
 
-Put a small region inside a resonating cavity and make it harder for the field to move through — a
-lump of denser material, in effect.
+Put a small region inside a resonating cavity — a walled box of the ripple's world, the cube cut six
+ways, longer than it is wide — and make it harder for the field to move through: a lump of denser
+material, in effect.
 
 The resonance drops in frequency. That much is not in question, and the experiment shows it plainly:
 put the weighted region near the side of the cavity being shaken, sweep the shaking rate, find the

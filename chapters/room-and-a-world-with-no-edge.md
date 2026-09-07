@@ -164,22 +164,22 @@ So the world has a grain, and no dot is privileged.
 <!-- beat room-and-a-world-with-no-edge.8 -->
 
 You can now ask the stopwatch question: poke a dot, count the ticks, see how far the front has gone,
-then do it again in another direction and compare.
+then do it again in another direction.
 
 And the grain gives that question teeth: if the two disagree, either the world really runs faster
 one way, or you are reading the grain.
 
 Every step was forced but one. Dots, because a number needs somewhere to sit; lines, because change
-lives between; a triangle, because it closes; a tetrahedron, because it is the triangle one dimension
-up and does not flex; a clock and one rule, because nothing could happen; the cut, because the first
-room was inside; many, because one was still too small; the two-colouring, because tetrahedra will
-not stack alone; a wrap, because edges echo.
+lives between; a triangle, because it closes; a tetrahedron, because it does not flex; a clock and
+one rule, because nothing could happen; the cut, because the first room was inside; many, because one
+was still too small; the two-colouring, because tetrahedra will not stack alone; a wrap, because
+edges echo.
 
 The exception is the dial: the only thing anybody chose, and still unset.
 
-That is the object, and it has a name: **The Container**, because everything this book measures
-happens inside it. Everything from here is this one thing asked a different question — and the first
-is whether the ring it makes is actually round.
+That is the object, and it has a name: **The Container** — the engine's own world, the one this book
+has been describing how to find. Not every question ahead was put to it; each chapter says which. The
+first is whether a ring in a world like this comes out round.
 
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-room-and-a-world-with-no-edge).*

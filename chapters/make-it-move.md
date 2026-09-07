@@ -18,12 +18,11 @@ What is missing?
 Time. And it is worth being suspicious of that word, because time is what people smuggle into a
 small model without noticing.
 
-So do not smuggle it. Ask instead what the least is that would do the job. You do not need a
-flowing river of time, or a number that can be subdivided for ever. You need a way of saying *and
-then*.
+So do not smuggle it. Ask what the least is that would do the job: not a flowing river of time, nor
+a number that can be subdivided for ever, but a way of saying *and then*.
 
 That is all a clock has to provide here: a before and an after, and then another one. Everything
-this book calls time is that, counted — nothing in these pages ever measures a duration.
+this book calls time is that, counted; nothing in these pages measures a duration.
 
 What is the least a clock needs to be?
 
@@ -71,8 +70,8 @@ Here is the rule, and it is the only one in the book.
 forward the motion the two rows already hold.**
 
 Read it twice, because a rule one word away from it is not ours. *Move toward your neighbours*: a
-dot looks along its lines, finds its neighbours higher, and goes up a bit. That is ink in water. It
-spreads, it flattens, it stops — and it needs one row, because it never asks where anything was.
+dot looks along its lines, finds its neighbours higher, and goes up a bit. That is ink in water: it
+spreads, flattens and stops, and it needs one row, because it never asks where anything was.
 
 Ours carries. The push hands a dot no destination; it acts on the motion the pair of rows holds, so
 it sets the change in the change rather than the change itself. A dot already rising keeps rising
@@ -85,15 +84,14 @@ Is that really the whole law?
 
 <!-- beat make-it-move.5 -->
 
-Yes. Everything the rest of this book measures is that sentence, run.
+Yes, for every world you build by hand, and for what the machine does with them. The ripple that
+comes out round or lopsided, the wall and what gets past it, the gap and what stops fitting in it,
+the pitch of a shaken box: each is that sentence run on a bigger object, or on a plainer relative
+that its chapter names. No extra term is switched on when a result needs help.
 
-The ripple that comes out round or lopsided, the cost of pushing on a region, the walls and what
-fits between them, the numbers that agree with real matter, the prediction that came back refused —
-all of it is that sentence on a bigger object.
-
-There is no second rule for the hard chapters, and no extra term switched on when a result needs
-help. When a later chapter surprises you, the surprise is in what that sentence *does*, not in
-anything added.
+Two chapters do something else, and say so. The bill for a push is a formula read off a shape, not
+a run of the rule; and the chapter that takes the answer key away puts switches on the table instead
+of waves.
 
 So run it. Not on the tetrahedron, though — on something smaller.
 
@@ -111,9 +109,8 @@ They slosh. And they come home — the pair of rows at tick four is the pair it 
 there the whole thing happens again, and again, for ever.
 
 Two things to check with a finger before reading on. Add each row up against the last column: the
-same total, every time.
-And nothing settles: this is the plucked string, not the ink. Whole numbers all the way down the
-table, too, which is what the third corner bought.
+same total, every time. And nothing settles: this is the plucked string, not the ink. Whole numbers
+all the way down, too, which is what the third corner bought.
 
 ## The tick belongs to the shape
 
@@ -149,7 +146,7 @@ holds the same four numbers as tick 0, in the same places. Not close; the same. 
 4, and at 7 and 8, and it will go on for ever.
 
 Count it off before reading on. That the world comes back *at all* is the rule's doing: nothing
-leaks away, so nothing runs down. That it comes back onto those exact numbers is the tick.
+leaks away. That it comes back onto those exact numbers is the tick.
 
 ## The total never moves
 
@@ -204,9 +201,9 @@ There is no ring.
 
 You know what you were expecting, because you have dropped a stone in a pond: a ring spreading
 outward, and behind it a place it has already passed. Poke this tetrahedron and the big number
-sloshes into the other three at once, all together, and back again.
+sloshes into the other three at once, and back again.
 
-The reason is embarrassingly simple, and it is a table.
+The reason is simple, and it is a table.
 
 {{napkin:no_room}}
 
@@ -227,8 +224,8 @@ lack is anything to divide by, and the reason is not an unset dial: the six line
 lengths in [one tetrahedron is a whole world](one-tetrahedron-is-a-whole-world.md). Every pair of
 dots here is one line apart, so every journey is the same. There is nothing to compare.
 
-Behind it sits a sharper version, and that is the one this book spends a chapter on. Not just *how
-fast*, but: **is it the same speed in every direction?** Directions need somewhere to go.
+Behind it sits a sharper version, and that is the one this book spends a chapter on: **is it the
+same speed in every direction?** Directions need somewhere to go.
 
 So you need room. The obvious way to get it is a second tetrahedron — but is that the cheapest place
 to look?

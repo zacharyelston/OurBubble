@@ -87,13 +87,17 @@ less of a difference to have. Pick one, and note in half a sentence which way yo
 And a second guess, because the chapter turns on it: if the difference deepens as the gap narrows,
 what does that mean the walls will *do*?
 
+We registered the sign — below the line at every gap we tried — and left which way it moves as the
+walls close to the run.
+
 ## What the little world did
 
 <!-- beat where-negative-energy-appears.6 -->
 
-We built the one-dimensional version. Two walls in the little world, the allowed vibration shapes
-worked out from the object itself, the part that is the same inside and out subtracted away, and
-then the question: what is left?
+We built the one-dimensional version: a line of dots with a wall at each end, the smallest object the
+question fits, and the same bookkeeping of differences and sums on it. The allowed vibration shapes
+worked out from the line itself, the part that is the same inside and out subtracted away, and then
+the question: what is left?
 
 Every measured value sits below the free-space line. And as the walls move closer, it goes further
 down.
