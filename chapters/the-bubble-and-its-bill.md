@@ -18,12 +18,13 @@ does not.
 
 What changes is the object under the question. You have met the ripple's relative and the interlude's
 flat sheet already. The record's other runs were made on a plain grid of dots, on a line of
-dots, and on a different small model altogether, and each chapter names its own where its run begins.
+dots, and on a different small model altogether — switches where the numbers were — and each chapter
+names its own where its run begins.
 
 What does not change is the work: say what you expect, compare, test the other reading, keep the
 answer. And the dial, what each line counts for, is a setting every dots-and-lines world here carries, read
 from the object and never turned toward an answer. That is what lets the same bookkeeping be pointed
-at each of them in turn; the switches are the stated exception.
+at each of them in turn; the switches are that exception.
 
 This chapter's object is a grid of dots and a formula that returns a number for a shape. What would
 it cost to move a *piece* of it — a region, contents and all, shifted along? Call the region a
@@ -60,7 +61,7 @@ left over.
 
 That is the most boring result in this chapter, and it is the one that licenses every result after
 it. Because the uniform push is free, whatever we get charged next is being charged for the
-*shaping*, and not for having a grid, or an edge, or arithmetic that rounds. Without this beat,
+*shaping*, and not for having a grid, or an edge, or arithmetic that rounds. Without this section,
 every number that follows could be the machinery talking.
 
 Now shape it.

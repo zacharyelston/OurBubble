@@ -49,7 +49,7 @@ But to the *counting*, every line is one line. A step along an edge and a step a
 both "one step". So a front that has crossed four lines might have gone four edges or four
 diagonals, and those are not the same distance, and nothing has told the object which.
 
-That is the dial's whole job: to say what each line is worth. Which means the answer to *is it
+That is the dial's job: to say what each line is worth. Which means the answer to *is it
 round* depends on a setting, and the setting has not been chosen yet.
 
 So choose the obvious one, and guess what happens.
@@ -68,7 +68,8 @@ the easy call.
 The live question is **which way**: along the cube's edges, or corner to corner through its middle?
 One line is enough. Commit to a direction.
 
-Ours are in the record from before the run, and neither said which way.
+Ours — one per setting — are in the record from before the run; neither said which way, so this half
+is yours alone.
 
 This is the ritual for the rest of the book, and it is not a teaching trick. Once you have read a
 number it is hard to remember not having known it.
@@ -84,7 +85,7 @@ corner, you were right, and for the reason the last section gave: the counting t
 and a short one alike, so the long one covers more ground per tick. What ought to be a circle is
 stretched corner to corner, and anything you aimed in this world would drift.
 
-Notice what happened. Weighting all the lines equally *looked* like assuming nothing; it was a
+Weighting all the lines equally *looked* like assuming nothing; it was a
 strong assumption, quietly made — that an edge and a diagonal are the same length. The object never
 said that. We did.
 
@@ -124,7 +125,7 @@ uneven, or the grid is too coarse to draw a smooth circle on.
 
 Those sound like the same complaint. They are not, and telling them apart needs no judgement.
 
-A coarse grid gets *better* as you use bigger, gentler ripples: a long, lazy wave stops noticing the
+A coarse grid gets *better* with bigger, gentler ripples: a long, lazy wave stops noticing the
 graininess underneath it. A genuine unevenness does
 nothing of the kind — it is there at every scale, because it is a property of the geometry rather
 than of the resolution.
@@ -211,8 +212,8 @@ is a choice somebody makes, not a fact the object hands over. And
 **we can tell a coarse grid from a broken geometry**, by whether the disagreement shrinks when the
 ripples get gentler.
 
-Go and look at your guess now. Whichever way it went, you know something about the dial that you
-could not have known by being told.
+Go and look at your guess. Whichever way it went, you know something about the dial you could not
+have been told.
 
 Calibration is not a world with nothing left in it. It is a world whose remaining unevenness has
 been measured, and whose symmetries have been checked rather than assumed. This one steers true

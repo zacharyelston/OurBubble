@@ -82,13 +82,13 @@ Now the question the chapter was built for. The blob inside: does it move differ
 
 <!-- beat the-wall-that-worked-and-didnt.5 -->
 
-The blob inside moves exactly as far as it did before — the null we had written down, as *identical*,
-beside the isolation we expected.
+The blob inside moves as far as it did before, to within a millionth — where *identical* was written.
+Say that plainly: the test we registered was missed by that millionth and rewritten after the run,
+with the miss on the record. The isolation held as written.
 
-Not slightly further. Not slightly less. It came back a millionth off, and the run says why that
-millionth is not a change in how hard the blob is to push: the wall reflects a wave of its own
-that leaks back inward at lattice speed. That is a difference in what reaches the blob, and it is
-not a difference in how hard the blob is to push.
+The run names the millionth: the wall reflects a wave of its own that leaks back inward at lattice
+speed. That is a difference in what reaches the blob, and it is not a difference in how hard the blob
+is to push.
 
 Go and look at your guess. This is the one the ritual is for, because the idea in the opening is
 genuinely attractive, and half the point of writing a prediction down is to catch yourself having
@@ -152,8 +152,8 @@ sources aimed from outside; the reason is structural.
 
 **[Open the data-true null figure](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
 
-The noes so far, and the barrier from
-[what pushing on it costs](the-bubble-and-its-bill.md) still standing. This is the point in a
+The noes so far stand, and so does the barrier from
+[what pushing on it costs](the-bubble-and-its-bill.md). This is the point in a
 project where you either stop, or you go and find the one place the sign is genuinely allowed.
 
 There is one. It is not in the fields at all — it is in what is left when you take them away.

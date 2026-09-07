@@ -83,14 +83,15 @@ each nudged by its neighbours — the Ising model, and not a wave. It is here be
 gives at the edge where it stops being one thing and becomes another are the *kind* nature hands out
 class by class, which is what makes them checkable.
 
-We pointed it first at a line of switches — which, for the numbers at the edge, is the same case as
-Onsager's flat sheet of them, solved exactly in 1944, one of the results that made universality
-believable in the first place.
+We pointed it first at a line of switches, which belongs to the same class as Onsager's flat sheet of
+them — that is what class membership means, and why the line will do. He solved the sheet exactly in
+1944.
 
-The answers are known precisely, and they were not given to the machinery. The pipeline saw only its
-own runs at a handful of manageable sizes, and had to produce the class numbers itself.
+The answers are known precisely and were not given to the machinery, which saw only its own runs at
+a handful of sizes and had to produce the class numbers itself.
 
-It got them: two of the three to seven digits, the third to four.
+It got them: two of the three to seven digits, the third to four — inside the margins we had set, a
+thousandth for one and a fiftieth for the other two.
 
 That is not a discovery. It is a calibration, and it is the whole reason anything later in this
 chapter is worth reading. An instrument that cannot recover a known answer has no business reporting

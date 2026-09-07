@@ -51,9 +51,9 @@ should still be a square root.
 
 **Write down your guess.** Does a partial lump obey the whole-cavity law?
 
-Ours is in the record from before the run: the textbook law, registered as the target — and beside
-it, in the same file, a note that a first look had already suggested the target would fail. The run
-for the record decided.
+Ours is in the record from before the run: the textbook law, registered as the target — sure enough
+of it for that, not sure enough to bet on it. Beside it, in the same file, is a note that a first look
+had already suggested the target would fail. The run for the record decided.
 
 ## What came back
 
@@ -61,7 +61,7 @@ for the record decided.
 
 We handed the peak positions and the weights to a fitter and asked it for one thing: the power the
 pitch follows as the lump gets denser. No menu this time, and no runner-up — one law, fitted, with
-the exponent left free to come out wherever the data put it. Which is all this beat needs, because
+the exponent left free to come out wherever the data put it. Which is all this section needs, because
 the number we had committed to was a specific one.
 
 It came back with **p = −0.2753**, at a fit quality of **R² = 0.9774**.
@@ -107,7 +107,7 @@ would have reached for. Not the same code each time: the ripple's fitter picks f
 vacuum's is bespoke to its own gate, this one fits a single free exponent. The same discipline every
 time: no answer supplied.
 
-It returned the law that was in the data rather than the law in the chapter title.
+It returned the law that was in the data rather than the law the ✎ section handed it.
 
 Which is what makes the agreements mean something. An instrument that only ever agrees has told you
 about itself. This one has now refused a law its owners registered as the target, by a margin they

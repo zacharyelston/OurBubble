@@ -11,7 +11,7 @@
 
 <!-- beat where-negative-energy-appears.1 -->
 
-Three noes now, all at the same barrier. A shaped push wants something below the floor. Ordinary
+The noes so far have all been at the same barrier. A shaped push wants something below the floor. Ordinary
 fields cannot go below the floor. Walling a region off does not change what resistance is, and aimed
 fields cannot empty a volume.
 
@@ -107,7 +107,7 @@ gap narrows is a quantity that would rather the gap were narrower — so the wal
 together. The attraction is not an extra ingredient. It is the same fact, read as a tendency instead
 of as a number.
 
-That is the sign three attempts had been unable to reach, appearing on its own.
+That is the sign nothing before it had reached, appearing on its own.
 
 ## A sign is easy
 
