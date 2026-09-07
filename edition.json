@@ -9,6 +9,12 @@
         "FIREWALL.md"
       ]
     },
+    "start-at-the-boundaries": {
+      "sources": [
+        "book/LESSON_STANDARD.md",
+        "FIREWALL.md"
+      ]
+    },
     "where-the-inside-shows": {
       "sources": [
         "book/LESSON_STANDARD.md",
@@ -23,6 +29,12 @@
     },
     "a-few-thousand-years-of-sharper-shadows": {
       "sources": []
+    },
+    "staring-into-the-abyss": {
+      "sources": [
+        "book/LESSON_STANDARD.md",
+        "FIREWALL.md"
+      ]
     },
     "the-round-ripple": {
       "sources": [
@@ -112,6 +124,14 @@
           "FIREWALL.md"
         ]
       },
+      "start-at-the-boundaries": {
+        "title": "Boundaries — a primer, and no experiment",
+        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The page is a primer — one scene from the author's own life, told in the first person, and the idea it left: that a puzzle is started at its border. Nothing in it is checkable against the record, and nothing in it needs to be; what it hands the reader is a habit, and the chapter after it is where the habit is put to work. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
+        "standards": [
+          "book/LESSON_STANDARD.md",
+          "FIREWALL.md"
+        ]
+      },
       "where-the-inside-shows": {
         "title": "Where the inside shows — why we measure at an edge, and no experiment",
         "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The chapter is an argument about where the account of an observation is kept, and what it promises the reader will do with a pencil — walk a shape's rim and come home to zero, add the numbers a shape's faces give her all the way round an inside and get zero — is kept by the napkin chapters below, which compute them while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
@@ -142,6 +162,14 @@
           "1912 · Henrietta Swan Leavitt — the period–luminosity relation: a pattern turned into a distance ruler, reaching past what any triangle could."
         ],
         "note": "**One entry runs past the chapter.** The chapter stops at Bessel, because that is where the ancient null gets its answer. The list carries one more — Leavitt's period–luminosity relation, 1912 — because it is the next rung of the same ladder and the first that reaches past what any triangle can do. It is here rather than in the chapter for the reason the chapter states about every episode in it: an episode earns its place by changing how a trace becomes evidence, and by then the reader has that.\n"
+      },
+      "staring-into-the-abyss": {
+        "title": "Staring into the abyss — a primer, and no experiment",
+        "note": "**What this section carries.** No rung, no gate, no figure and no quoted number. The page is a primer — one scene from the author's own life, told in the first person, and the idea it left: that a written zero is where counting starts, and that it runs one way. The counting in it is counting, done on the page in front of the reader, and the zero is a mark on paper; the napkin chapters that follow compute their numbers while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.\n",
+        "standards": [
+          "book/LESSON_STANDARD.md",
+          "FIREWALL.md"
+        ]
       },
       "the-round-ripple": {
         "title": "Is it round? — the dial, set twice",
@@ -765,6 +793,11 @@
       "phrase": "that is the whole of what is on offer to look at",
       "why": "an exclusivity claim in synonyms, written by the round that was removing the exclusivity claims: what the world will let anyone see, rather than where the reading is done",
       "probe": "the place where the egg stops and the room begins, and that is the *whole* of what is\non offer to look at."
+    },
+    {
+      "phrase": "We start closer to hand than a shadow: an egg on a table, and a claim about where measuring gets done",
+      "why": "the front door's closing pointer from before the primer on boundaries sat between it and the egg (2026-09-07): the book now starts at a table with a jigsaw, and the egg is the chapter after that",
+      "probe": "enough for everything in here.\n\nWe start *closer to hand* than a shadow: an egg on a [table](a.md), and a claim about where\nmeasuring gets done — worth holding lightly."
     }
   ]
 }

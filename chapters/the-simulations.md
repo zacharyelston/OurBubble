@@ -26,8 +26,8 @@ against that file. That column is the boundary. The history section below carrie
 outside it deliberately, because they are not ours to check — they are checkable against the historical
 record instead, which is a different and in some ways better guarantee.
 
-Some sections cite no experiment of ours at all — the front door, the chapter on boundaries, the
-opening on method, and the history chapter — and they say so rather than being left out, because a
+Some sections cite no experiment of ours at all — the front door, the two primers, the chapter on
+boundaries, the opening on method, and the history chapter — and they say so rather than being left out, because a
 reader should be able to tell *no evidence was cited* from *no evidence exists*. The closing chapter
 rests on commands you run yourself.
 
@@ -61,9 +61,27 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 ---
 
+<a id="s-start-at-the-boundaries"></a>
+
+## §01 · Boundaries — a primer, and no experiment
+
+**The chapter.** [start-at-the-boundaries.md](start-at-the-boundaries.md)
+
+**What this section carries.** No rung, no gate, no figure and no quoted number. The page is a primer — one scene from the author's own life, told in the first person, and the idea it left: that a puzzle is started at its border. Nothing in it is checkable against the record, and nothing in it needs to be; what it hands the reader is a habit, and the chapter after it is where the habit is put to work. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.
+
+
+**Standards and record this section rests on.**
+
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
+- [`FIREWALL.md`](record/FIREWALL.md)
+
+**Numbers.** None. This section's chapter carries no quoted measurement.
+
+---
+
 <a id="s-where-the-inside-shows"></a>
 
-## §01 · Where the inside shows — why we measure at an edge, and no experiment
+## §02 · Where the inside shows — why we measure at an edge, and no experiment
 
 **The chapter.** [where-the-inside-shows.md](where-the-inside-shows.md)
 
@@ -81,7 +99,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 <a id="s-the-shadow"></a>
 
-## §02 · The shadow — the method, before any experiment
+## §03 · The shadow — the method, before any experiment
 
 **The chapter.** [the-shadow.md](the-shadow.md)
 
@@ -100,7 +118,7 @@ that asks you for no email address and loads nothing onto the page you are readi
 
 <a id="s-a-few-thousand-years-of-sharper-shadows"></a>
 
-## §03 · A few thousand years of sharper shadows — the measurement history
+## §04 · A few thousand years of sharper shadows — the measurement history
 
 **The chapter.** [a-few-thousand-years-of-sharper-shadows.md](a-few-thousand-years-of-sharper-shadows.md)
 
@@ -124,9 +142,27 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 ---
 
+<a id="s-staring-into-the-abyss"></a>
+
+## §05 · Staring into the abyss — a primer, and no experiment
+
+**The chapter.** [staring-into-the-abyss.md](staring-into-the-abyss.md)
+
+**What this section carries.** No rung, no gate, no figure and no quoted number. The page is a primer — one scene from the author's own life, told in the first person, and the idea it left: that a written zero is where counting starts, and that it runs one way. The counting in it is counting, done on the page in front of the reader, and the zero is a mark on paper; the napkin chapters that follow compute their numbers while the book is built rather than quoting them. It is listed here rather than left out so a reader can tell *no evidence was cited* from *no evidence exists*. The standards are what its one scope claim rests on.
+
+
+**Standards and record this section rests on.**
+
+- [`book/LESSON_STANDARD.md`](record/book/LESSON_STANDARD.md)
+- [`FIREWALL.md`](record/FIREWALL.md)
+
+**Numbers.** None. This section's chapter carries no quoted measurement.
+
+---
+
 <a id="s-two-dots-and-a-line"></a>
 
-## §04 · Two dots, a line, and the first thing that closes — the object, from nothing
+## §06 · Two dots, a line, and the first thing that closes — the object, from nothing
 
 **The chapter.** [two-dots-and-a-line.md](two-dots-and-a-line.md)
 
@@ -141,7 +177,7 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 <a id="s-one-tetrahedron-is-a-whole-world"></a>
 
-## §05 · One tetrahedron is a whole world — every kind of number, on a napkin
+## §07 · One tetrahedron is a whole world — every kind of number, on a napkin
 
 **The chapter.** [one-tetrahedron-is-a-whole-world.md](one-tetrahedron-is-a-whole-world.md)
 
@@ -156,7 +192,7 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 <a id="s-make-it-move"></a>
 
-## §06 · Make it move — the one rule, and what one tick does
+## §08 · Make it move — the one rule, and what one tick does
 
 **The chapter.** [make-it-move.md](make-it-move.md)
 
@@ -171,7 +207,7 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 <a id="s-the-shape-between"></a>
 
-## §07 · The shape between — one tetrahedron, cut open
+## §09 · The shape between — one tetrahedron, cut open
 
 **The chapter.** [the-shape-between.md](the-shape-between.md)
 
@@ -186,7 +222,7 @@ What the book carries forward is the **method** — measure, state your resoluti
 
 <a id="s-two-worlds-threaded"></a>
 
-## §08 · Two worlds threaded — the last object that fits on a napkin, and the first that does not
+## §10 · Two worlds threaded — the last object that fits on a napkin, and the first that does not
 
 **The chapter.** [two-worlds-threaded.md](two-worlds-threaded.md)
 
@@ -221,7 +257,7 @@ Both come from the vendored engine, rendered by `stella_refusal` — register ro
 
 <a id="s-room-and-a-world-with-no-edge"></a>
 
-## §09 · Room, and a world with no edge — why tetrahedra need a compromise
+## §11 · Room, and a world with no edge — why tetrahedra need a compromise
 
 **The chapter.** [room-and-a-world-with-no-edge.md](room-and-a-world-with-no-edge.md)
 
@@ -258,7 +294,7 @@ cargo run --release -p viz --bin gen_synthesis -- "$(git rev-parse --short HEAD)
 
 <a id="s-the-round-ripple"></a>
 
-## §10 · Is it round? — the dial, set twice
+## §12 · Is it round? — the dial, set twice
 
 **The chapter.** [the-round-ripple.md](the-round-ripple.md)
 
@@ -312,7 +348,7 @@ cargo run  --release -p viz     --bin gen_doubleslit_mirror
 
 <a id="s-the-bubble-and-its-bill"></a>
 
-## §11 · What does pushing on it cost? — the shaped push and its bill
+## §13 · What does pushing on it cost? — the shaped push and its bill
 
 **The chapter.** [the-bubble-and-its-bill.md](the-bubble-and-its-bill.md)
 
@@ -352,7 +388,7 @@ cargo run  --release -p viz     --bin gen_energy
 
 <a id="s-the-wall-that-worked-and-didnt"></a>
 
-## §12 · Can you wall a piece off? — one experiment, one yes and one no
+## §14 · Can you wall a piece off? — one experiment, one yes and one no
 
 **The chapter.** [the-wall-that-worked-and-didnt.md](the-wall-that-worked-and-didnt.md)
 
@@ -397,7 +433,7 @@ cargo run  --release -p viz     --bin gen_null
 
 <a id="s-where-negative-energy-appears"></a>
 
-## §13 · Can a gap be emptier than empty? — the one place the sign is real
+## §15 · Can a gap be emptier than empty? — the one place the sign is real
 
 **The chapter.** [where-negative-energy-appears.md](where-negative-energy-appears.md)
 
@@ -444,7 +480,7 @@ cargo run  --release -p viz     --bin gen_casimir
 
 <a id="s-a-number-without-the-answer-key"></a>
 
-## §14 · Can it tell me something I didn't tell it? — the answer key taken away
+## §16 · Can it tell me something I didn't tell it? — the answer key taken away
 
 **The chapter.** [a-number-without-the-answer-key.md](a-number-without-the-answer-key.md)
 
@@ -502,7 +538,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §15 · When the world you built says no — the obvious answer refused, and two published misses dissolved
+## §17 · When the world you built says no — the obvious answer refused, and two published misses dissolved
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 
@@ -557,7 +593,7 @@ cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --
 
 <a id="s-cast-your-own-shadow"></a>
 
-## §16 · Cast your own shadow — the reproduce path
+## §18 · Cast your own shadow — the reproduce path
 
 **The chapter.** [cast-your-own-shadow.md](cast-your-own-shadow.md)
 

@@ -3,10 +3,12 @@
 **A book about a small world we built inside a computer, and what happened when we pointed real
 tests at it.**
 
-A short front door, sixteen chapters and an appendix. The front door says what the book is about
-and what a reader will have at the end of it; then it starts with an egg on a table and why the work
-of measuring gets done at an edge, goes on to a child noticing her shadow and a Greek who knew what
-to do next, and it ends with you running the checks yourself. In between: a structure built out of
+A short front door, eighteen chapters and an appendix. The front door says what the book is about
+and what a reader will have at the end of it; then a jigsaw puzzle with no picture on it, an egg on
+a table and why the work of measuring gets done at an edge, a child noticing her shadow and a Greek
+who knew what to do next, an empty patch of sea and the first mark on a blank page — and it ends with
+you running the checks yourself. Two of those chapters are **primers**: a scene from the author's own
+life, told in the first person, placed at the door of the movement it opens. In between: a structure built out of
 points and lines, a ripple that came out lopsided until one setting fixed it, a wall that worked and
 a hoped-for effect that did not, an energy bill, a measurement with no answer key, and a law that
 came back gentler than the one we proposed.
@@ -34,7 +36,7 @@ UniForge builds The Container. The lab tests it. Our Bubble teaches it.
 The reading order is [`chapters/SUMMARY.md`](chapters/SUMMARY.md) — that file is the *only* place
 the order is written down, so a chapter carries no number in its name and none in its prose.
 
-The front door and the sixteen chapters are narrative. They carry no rung labels and no quotations,
+The front door and the eighteen chapters are narrative. They carry no rung labels and no quotations,
 on purpose. Everything
 a skeptic wants — which registered experiment each chapter rests on, its gate, its data-true figure,
 the exact numbers quoted and the file that carries each one, and the commands that regenerate them —
@@ -92,7 +94,7 @@ Building can legitimately modify a tracked file: `chapters/the-simulations.md` i
 to the record and someone remembering to run a script. `git status` is therefore part of the check —
 a clean tree after a build means the appendix and the record agree.
 
-The build also **puts some of the book's numbers on the page from the engine**. Chapters 4–8 live on
+The build also **puts some of the book's numbers on the page from the engine**. Chapters 6–10 live on
 one triangle, one tetrahedron and the two shapes it is made of, where every number is
 finger-countable, so rather than quote them the chapters carry `{{napkin:…}}` tokens that the
 preprocessor replaces at build time — the census, the loop sums, the triangle's and the
@@ -150,7 +152,7 @@ artifact and the hashes together. `engine.lock`'s header is the long version.
 
 ## The demos
 
-Chapters 4–8 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
+Chapters 6–10 have a companion page each, under [`demos/`](demos), that **recomputes the chapter's
 numbers in the reader's browser** and walks her through the chapter's beats one at a time. Their
 beat ranges moved twice — when the outline gained *Two worlds threaded*, and again when it gained
 the front door — which is why a beat's id is now its own chapter's (`make-it-move.3`) and a demo

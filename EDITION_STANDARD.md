@@ -57,7 +57,9 @@ parts is a count nothing guards.
 A chapter may carry **a study**, **figures**, or neither. The two are different kinds of thing and
 the reader can tell them apart from the caption; `ART_DIRECTION.md` is the long version.
 
-Two chapters at the front carry neither, deliberately. **The front door** is a statement about the
+The pages at the front carry neither, deliberately. **A primer** (see *A primer* below) is a scene
+told in the first person, and a picture beside it would compete with the one the reader is being
+asked to stand in. **The front door** is a statement about the
 book rather than a step in it, makes no claim a picture could illustrate, and an analogy image above
 it would be the first thing a reader met — before anything had been earned. ***Where the inside
 shows*** (2026-09-05) has a narrower reason: its subject is an arrangement — a thing, an edge, and
@@ -95,9 +97,39 @@ whole difference in what the two are worth: a study is judged, a figure is deriv
 guess**, which is why *Is it round?* opens with none: its rings are data, and they belong where the
 answer is given.
 
+## A primer
+
+A **primer** is a page at the door of a movement of the book: one scene from the author's own life,
+told in the first person, and the idea that scene left behind. The form is borrowed from Kleist's
+*On the Marionette Theatre* (owner, 2026-09-05, on issue #73, and the brief of 2026-09-07): the
+abstract idea is never stated first — the reader is walked through a scene she can stand in, and the
+idea arrives at the end as what the scene turned out to mean. Two are in the book: *Boundaries*, a
+jigsaw with no picture on it, before *Where the inside shows*; and *Staring into the abyss*, an empty
+patch of sea and the first mark on a blank page, before the napkin chapters.
+
+To the tooling a primer is a chapter, and it answers to everything above: a slug with a hyphen, a
+Scope block that says *toy*, a beat marker under every heading and an outline block to match, the
+grain band, the appendix section that says *no evidence was cited*, the closing pointer, a `Next`.
+What is particular to it, and held by review rather than by any check:
+
+1. **The scene is the author's, verbatim in substance.** A primer is reflowed into the book's
+   pacing, never invented, extended or ghost-written: a drafter may cut, reorder and tighten the
+   owner's words and may not add an experience the owner did not have. Where a sentence's meaning
+   moved in the reflow, the PR says so.
+2. **First person, and one scene.** The `I` is the author's, and it is the only place in the book
+   the author speaks as a person. One scene per primer; Kleist made his whole argument from three.
+3. **The idea lands last, and it lands on the next page's first move.** A primer ends by handing the
+   reader the habit the coming chapter needs — start at the edge; nothing is where counting begins —
+   and then names that chapter's own opening so she walks straight into it.
+4. **It argues nothing a later chapter does not do in front of her**, and it makes no claim about
+   nature: a puzzle, a shoreline and a zero on paper are things the reader has, not things the world
+   is. The book's toy is named in its Scope block so the firewall is on the page.
+5. **Few.** One per movement — the door, the napkin, the machine, the record, the exit — never one
+   per chapter. A book of scenes stops being a book about anything.
+
 ## Numbers computed while the page is built
 
-Chapters 4–8 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
+Chapters 6–10 live on one triangle, one tetrahedron, and the two shapes that tetrahedron is made of,
 and every number in them is finger-countable — or, in the one case where it stops being, visibly
 stops being, which is that chapter's point. Quoting such a number from the record would be theatre:
 the reader can check it on a napkin, so the book does the arithmetic in front of her instead of

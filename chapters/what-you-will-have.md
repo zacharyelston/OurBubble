@@ -4,7 +4,7 @@
 > when we pointed real tests at it. Nothing here is a claim about nature. Where a chapter uses a word
 > like *vacuum*, the word names a pattern in the model.
 
-This is the one page that talks about the book instead of doing it. If a section ever loses you,
+This is the page that talks about the book instead of doing it. If a section ever loses you,
 there is a link under its heading for telling us so; it needs a free GitHub account, the only thing
 anywhere in here that asks you to sign up for something. A short read, and then we begin.
 
@@ -81,11 +81,12 @@ down. That pause is the method, performed instead of described, and it works onl
 Sticks and light, dots and lines. That is what we have had since the first shadows on a cave wall,
 is all this book uses, and enough for everything in here.
 
-We start closer to hand than a shadow: an egg on a table, and a claim about where measuring gets
-done — worth holding lightly until you have done it yourself.
+We start further from a laboratory than a shadow is: at a table, with a jigsaw puzzle that has no
+picture on it, and where anyone who has done one begins. Then an egg, and a claim about where
+measuring gets done — worth holding lightly until you have done it yourself.
 
 *What this page cites — and what it does not:
 [the simulations](the-simulations.md#s-what-you-will-have).*
 
-**Next:** [Where the inside shows](where-the-inside-shows.md)—why measurements get made at edges,
-and what this book will put in your hands about them.
+**Next:** [Boundaries](start-at-the-boundaries.md)—a puzzle with no picture on it, and why the
+edge pieces come out of the box first.

@@ -147,5 +147,5 @@ stick, no sun, no ground. A blank page, and the smallest thing anyone could draw
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-a-few-thousand-years-of-sharper-shadows).*
 
-**Next:** [Two dots, a line, and the first thing that closes](two-dots-and-a-line.md)—where you
-could put a number, and the smallest thing that comes back to where it started.
+**Next:** [Staring into the abyss](staring-into-the-abyss.md)—an empty patch of sea, and why a
+blank page is the right place to be standing.
