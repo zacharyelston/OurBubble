@@ -15,15 +15,14 @@
 The world now behaves the same way in every direction, which means a measurement made in it means
 what it appears to mean. Here the questions widen, so here, once, is what changes and what does not.
 
-What changes is the object under the question. You have met one already: the ripple ran on the
-Container's plainer relative. The record's other runs were made on a plain grid of dots, on a flat
-sheet of triangles, on a line of dots, and on a different small model altogether, and each chapter
-names its own where its run begins.
+What changes is the object under the question. You have met two already: the ripple's relative, and
+the interlude's flat sheet. The record's other runs were made on a plain grid of dots, on a line of
+dots, and on a different small model altogether, and each chapter names its own where its run begins.
 
 What does not change is the work: say what you expect, compare, test the other reading, keep the
-answer. And the dial — what each line counts for — is a setting every one of these objects carries, fixed
-by the object or read from it, which is what lets the same dots-and-lines bookkeeping be pointed at
-each of them in turn.
+answer. And the dial — what each line counts for — is a setting every one of these objects carries —
+read from the object, never turned toward an answer — which is what lets the same dots-and-lines
+bookkeeping be pointed at each of them in turn.
 
 This chapter's object is a grid of dots and a formula that returns a number for a shape. What would
 it cost to move a *piece* of it — a region, contents and all, shifted along? Call the region a

@@ -83,9 +83,9 @@ each nudged by its neighbours — the Ising model, and not a wave. It is here be
 gives at the edge where it stops being one thing and becomes another are the *kind* nature hands out
 class by class, which is what makes them checkable.
 
-We pointed it first at a line of switches whose numbers at the edge are the two-dimensional class's —
-the case Lars Onsager solved exactly in 1944, one of the results that made universality believable in
-the first place.
+We pointed it first at a line of switches — which, for the numbers at the edge, is the same case as
+Onsager's flat sheet of them, solved exactly in 1944, one of the results that made universality
+believable in the first place.
 
 The answers are known precisely, and they were not given to the machinery. The pipeline saw only its
 own runs at a handful of manageable sizes, and had to produce the class numbers itself.

@@ -88,7 +88,8 @@ Yes, for every world you build by hand, and for the machine's ripples. The rest 
 same bookkeeping of differences and sums, on the objects each chapter names, with nothing tuned to
 help an answer along.
 
-Some chapters do something else with that bookkeeping, and each says so where it does.
+Some chapters do something else with that bookkeeping — a formula read off a shape, switches instead
+of ripples — and each says so where it does.
 
 So run it. Not on the tetrahedron, though — on something smaller.
 

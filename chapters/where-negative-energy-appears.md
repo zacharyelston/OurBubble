@@ -97,7 +97,7 @@ We built the one-dimensional version: a line of dots with a wall at each end, th
 question fits, and the same bookkeeping of differences and sums on it. The allowed vibration shapes
 worked out from the line itself, the part that is the same inside and out subtracted away, and then
 the question: what is left? We had written down, before the run, that it would sit below the line at
-every gap, and deeper as the walls close.
+every gap, deeper as the walls close, and that the walls would be pulled together.
 
 Every measured value sits below the free-space line. And as the walls move closer, it goes further
 down.

@@ -83,12 +83,12 @@ Now the question the chapter was built for. The blob inside: does it move differ
 
 <!-- beat the-wall-that-worked-and-didnt.5 -->
 
-The blob inside moves exactly as far as it did before — which is what we had written down, beside the
-isolation we expected: the null, registered as honestly as the yes.
+The blob inside moves exactly as far as it did before — the null we had written down, beside the
+isolation we expected.
 
 Not slightly further. Not slightly less. The blob's displacement differs between the walled and
-unwalled cases by about a millionth — far inside the threshold registered for it. The run does not
-claim the two cases are bit-for-bit identical, and says why: the wall reflects a wave of its own
+unwalled cases by about a millionth — inside the margin the run set for itself afterwards, and it
+says why. The run does not claim the two cases are bit-for-bit identical: the wall reflects a wave of its own
 that leaks back inward at lattice speed. That is a difference in what reaches the blob, and it is
 not a difference in how hard the blob is to push.
 
@@ -146,7 +146,7 @@ fields, several sources carefully aimed, so they cancel one another over a whole
 Note how modest that would be even if it worked: cancelling reaches zero, and a shaped push wants
 below the floor.
 
-A conjecture, with a threshold: the target volume had to hold less than a fifth of the field
+A conjecture, with a threshold: the target volume had to lose more than a fifth of the field
 elsewhere, on a plain grid rather than the shell's world. It never came close. **No.**
 
 The energies add. You can cancel a field at a point and on a surface, but a volume where everything

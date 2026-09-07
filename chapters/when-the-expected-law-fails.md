@@ -51,8 +51,9 @@ should still be a square root.
 
 **Write down your guess.** Does a partial lump obey the whole-cavity law?
 
-We registered ours before running, and it was the obvious one: the exponent should come out at
-**p = −1/2**. Written down, committed, with the run still ahead of it.
+Ours is in the record from before the run: the textbook law, registered as the target — and beside
+it, in the same file, a note that a first look had already suggested the target would fail. The run
+for the record decided.
 
 ## What came back
 
@@ -65,15 +66,15 @@ the number we had committed to was a specific one.
 
 It came back with **p = −0.2753**, at a fit quality of **R² = 0.9774**.
 
-The expectation was −1/2. The measurement is a little over half that steep — a gap of about 0.22,
-against a threshold of 0.10 registered before the run to decide exactly this. And it is not an
+The registered expectation was **p = −1/2**. The measurement is a little over half that steep — a
+gap of about 0.22, outside the margin registered before the run to decide exactly this. And it is not an
 artefact of one fitting choice: refit it a different way and the exponent moves to −0.3247, still
 nowhere near −1/2. **The law we proposed is the wrong law for this geometry, and it is refused.**
 
 **[Open the data-true shift-law figure](record/lab/dna-thz/0001-dna-permittivity-shift-law/figures/shift_law.html)**
 
-Go and look at your guess. If you wrote *square root*, you are in good company — so did we, in
-writing, in advance.
+Go and look at your guess. If you wrote *square root*, you are in good company — it is what we
+registered, in writing, in advance, with the warning beside it.
 
 ## Why — and what the reason is worth
 
@@ -112,7 +113,7 @@ Which is what makes the agreements mean something. An instrument that only ever 
 about itself. This one has now disagreed with its owners, in public, on a point they had committed
 to in writing — so when it agrees, the agreement is information.
 
-That is what the four steps in [the shadow](the-shadow.md) were for.
+That is what the steps in [the shadow](the-shadow.md) were for.
 
 And it leaves one loose end, from earlier in the record.
 

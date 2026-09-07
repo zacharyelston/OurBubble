@@ -130,8 +130,8 @@ off.
 The arcade screen wraps in two directions, and mathematicians call that shape a **torus** — the same
 word they use for a doughnut, because rolling the screen into a tube and bending the tube round to
 meet itself gives you one. Ours wraps in three directions rather than two, so it is the same trick
-done once more, and the name comes along for the ride. What matters is not the word but why we live
-there from here on: with no walls, nothing bounces, so the ring is only ever the ring.
+done once more, and the name comes along for the ride. What matters is not the word but why the
+Container has no edge: with no walls, nothing bounces, so the ring is only ever the ring.
 
 Which leaves one thing to check before the question you have been unable to ask is worth asking.
 
@@ -163,10 +163,10 @@ So the world has a grain, and no dot is privileged.
 
 <!-- beat room-and-a-world-with-no-edge.8 -->
 
-Now ask the stopwatch question: poke a dot, count ticks, see how far the front got, then again
-another way.
+Now ask the stopwatch question: poke a dot, count ticks, see how far the front got; then another
+way.
 
-And the grain gives that question teeth: if the two disagree, either the world runs faster one way,
+The grain gives that question teeth: if the two disagree, either the world runs faster one way,
 or you are reading the grain.
 
 Every step was forced but one. Dots, because a number needs somewhere to sit; lines, because change
@@ -179,7 +179,7 @@ The exception is the dial: the one thing anybody chose, still unset.
 
 The object has a name: **The Container**, because it holds all the napkin taught you, with room in
 it. The record the next chapters read from is older than this construction, so its runs were made on
-plainer worlds like it, each named where it comes. The first question the record answers is whether
+plainer worlds like it, each named where its run begins. The first question the record answers is whether
 a ring in such a world comes out round.
 
 *What this chapter cites — and what it does not:

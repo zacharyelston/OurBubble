@@ -10,8 +10,8 @@ You have the object and you have the question: poke a world like it, and see whe
 travels at the same speed in every direction.
 
 The world the record poked is the Container's plainer relative: the same cubes, each cut into six
-tetrahedra, with no two-colouring, no twist in the cutting, and — for this run — edges, so it finishes
-before the echo comes back. Its grain is not three kinds of place but three kinds of line, and the
+tetrahedra instead of two-coloured, so its grain is three kinds of line where the Container's is
+three kinds of place. For this run it kept its edges and finished before the echo came back. The
 dial has the same job on both.
 
 Speed is a distance divided by a time. Look at what you are actually holding, and one of those two
@@ -68,7 +68,7 @@ the easy call.
 The live question is **which way**: along the cube's edges, or corner to corner through its middle?
 One line is enough. Commit to a direction.
 
-Ours are in the record from before either run, and neither said which way.
+Ours are in the record from before the run, and neither said which way.
 
 This is the ritual for the rest of the book, and it is not a teaching trick. Once you have read a
 number it is hard to remember not having known it.
@@ -119,8 +119,8 @@ But 2.2% is not zero. What is it?
 
 <!-- beat the-round-ripple.6 -->
 
-A sceptic should push on the residual, and there are two things it could be: the world really is
-slightly uneven, or the grid is too coarse to draw a smooth circle on.
+A sceptic should push on the residual, and there are two things it could be: the world is slightly
+uneven, or the grid is too coarse to draw a smooth circle on.
 
 Those sound like the same complaint. They are not, and telling them apart needs no judgement.
 
@@ -129,8 +129,8 @@ graininess underneath it. A genuine unevenness does
 nothing of the kind — it is there at every scale, because it is a property of the geometry rather
 than of the resolution.
 
-So the test writes itself. Make the ripples gentler and see whether the disagreement shrinks. Could
-a machine run that test without anyone's thumb on the scale?
+So the test writes itself: make the ripples gentler and see whether the disagreement shrinks. Could a
+machine run it without anyone's thumb on the scale?
 
 ## Hand it to something that cannot hope
 
@@ -138,7 +138,8 @@ a machine run that test without anyone's thumb on the scale?
 
 It can, and this is where the book acquires an instrument it uses again.
 
-Run the sweep again in five directions at once and hand the timings to a blind fitter: a program
+Run the sweep again — on the same relative, wrapped this time — in five directions at once and hand
+the timings to a blind fitter: a program
 told nothing about what it is looking at. It picks
 from a menu written down beforehand and reports how far ahead of the runner-up it finished.
 
@@ -159,8 +160,8 @@ Could a picture be lopsided because of the instrument itself?
 
 <!-- beat the-round-ripple.8 -->
 
-It could, and it was — on a page of ours anyone could open. A detour before the chapter closes,
-because it is the child in the yard with the stick turned around on us.
+It could, and it was — on a page of ours anyone could open. A detour before the chapter closes: it
+is the child in the yard with the stick turned around on us.
 
 There is a public demonstration page: a ripple through two gaps, making bands on the far side. It
 ran that way for months. The scene is mirror-symmetric by construction — two identical gaps, one
