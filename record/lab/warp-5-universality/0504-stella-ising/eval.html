@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/warp-5-universality/0504-stella-ising/eval.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/warp-5-universality/0504-stella-ising/eval.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># 0504 — Warp-5.4: Ising on the stella lattice — evaluation
+
+**Verdict:** CONFIRMED (R10) · **Gate:** `uf5_4_stella_ising_gate` (green: yes, 40 s) · **Commit:** `fe754c1` (registered `b5b1cdf`)
+
+## Result
+
+**Universality holds on our own lattice.** Ising spins on the engine&#x27;s stella complex — the graph read from
+the mesh&#x27;s own `d0_sparse` — order at a critical temperature nobody has tabulated, with the same class
+exponents as the cubic lattice.
+
+| quantity | measured | check | pass |
+|---|---|---|---|
+| P0 graph | FCC 2176 vertices (n=16), coordination 14, connected | matches the mesh | ✅ |
+| P1 stella `T_c` | **11.638** (crossing spread 0.075) | new; coordination sanity ≈ 11.4 | ✅ |
+| P2 `U*` | **0.305**, stable across sizes | ≠ periodic-cubic 0.484 — amplitudes are BC-dependent | ✅ |
+| P3 `γ/ν` | **1.895** | class 1.963 (3.5%); cubic run 2.027 (6.5%) | ✅ |
+| P3 `β/ν` | **0.515** | class 0.518 (0.6%); cubic run 0.486 (6.1%) | ✅ |
+
+Two lattices — cubic (5.3) and the stella tet-oct complex — different coordination (6 vs 14), different
+`T_c` (4.51 vs 11.64), different `U*` (0.484 vs 0.305), **same exponent ratios**. The non-universal numbers
+moved; the universal ones didn&#x27;t. That is the whole claim of universality, checked on the geometry this
+engine is actually built from. Data: [`data/stella_graph.csv`](data/stella_graph.csv),
+[`data/binder_stella.csv`](data/binder_stella.csv), [`data/results.csv`](data/results.csv). Figure: the
+Binder-crossing mechanism is rendered in [5.2&#x27;s figure](../0502-self-contained/figures/selfcontained.html);
+a stella-specific figure is on the menu.
+
+## Notes
+
+- `T_c = 11.638` and `U* = 0.305` are properties of *this* mesh (non-universal), useful as reference values
+  for any future spin work on the engine geometry.
+- The yz-periodic mesh (open in x) sets `U*` well below the fully-periodic 0.465–0.484 — expected:
+  amplitudes depend on boundary geometry. The fully-open mesh (probed) has even stronger surface effects;
+  the yz-periodic builder is the right default for critical measurements on the engine mesh.
+- Tolerances are the honest few-percent of small-`L` FSS, same as 5.3. Error bars (branch A) would turn
+  these into ± statements.
+
+## Deferred / next
+
+A stella-specific Binder figure; the stella **spectral dimension** (heat kernel of the mesh `d†d` — is the
+stella 3-dimensional to a walker?); error bars (branch A) to tighten all chapter-5 tolerances.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

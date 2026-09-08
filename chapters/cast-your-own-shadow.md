@@ -115,6 +115,12 @@ Every appendix section with a result of its own carries the command that re-runs
 chapters, the history among them, have none, because they have no run. Start with one whose runtime
 suits your machine, and read what the section says before you run anything.
 
+Two of the shortest were run on the Container itself, the object you built rather than one of its
+relatives: how often a walker stepping at random along its lines comes home, and the resistance
+between two of its dots when every line is made a resistor. The second is also written out as a
+circuit file that any circuit simulator will run, so it can be checked in a language that owes
+nothing to this book.
+
 ## ✎ Before you press Return
 
 <!-- beat cast-your-own-shadow.5 -->

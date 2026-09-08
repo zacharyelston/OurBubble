@@ -158,12 +158,32 @@ An experiment that announces its own ceiling in advance is doing something diffe
 explains a shortfall afterwards. The first is a prediction the experiment made about itself and then
 met; the second is a story assembled once the answer was in.
 
-So the instrument can recover a known answer, work where no answer exists, and state its own limits
-and hit them. What is left for it to prove?
+So far every object it has been pointed at was borrowed for the purpose: a line of switches, a
+sheet, a block. There is one more to point it at — the one you built.
+
+## On the world you built
+
+<!-- beat a-number-without-the-answer-key.9 -->
+
+The same switches, one on each dot of the Container — wrapped in two of its three directions for
+this run, with ends in the third — and the same machine flipping them by chance.
+
+Nobody had tabulated where this world's switches turn over, so a range for it was written down
+first, with the reason: a dot here has fourteen neighbours where the block's had six, and more
+neighbours mean a higher turning point. It turned over at **11.638**, inside the range; the block's
+had been **4.51**. The two class numbers measured on it came back within **3.5%** and **0.6%** of
+the class values, inside the margins registered for them.
+
+So the numbers that belong to the object moved, and the numbers that belong to the class did not.
+That is what universality claims, and here it was checked on the world you built rather than on a
+block borrowed for the purpose.
+
+So the instrument can recover a known answer, work where no answer exists, state its own limits and
+hit them, and hold its class numbers on your own object. What is left for it to prove?
 
 ## The one thing left
 
-<!-- beat a-number-without-the-answer-key.9 -->
+<!-- beat a-number-without-the-answer-key.10 -->
 
 That it can tell us we were wrong.
 

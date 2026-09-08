@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf8_3_netlist_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf8_3_netlist_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! Gate for lab/bridge/0803-netlist (rung 8.3, R1) — the netlist / SPICE view.
+//!
+//! Export the stella graph as a real SPICE netlist (resistor per edge) and verify an independent
+//! modified-nodal-analysis (MNA) solve — the SPICE formulation — reproduces our effective_resistance.
+//! Makes &quot;the circuit computes it&quot; literal; ties the electrical view (8.2) to analog/crossbar computing.
+//!
+//! Run: cargo test -p uniforge --release --test uf8_3_netlist_gate -- --nocapture   (~1 s)
+//!
+//! FIREWALL (R3): a resistor network of a TOY 14-regular graph — a computer for the toy&#x27;s graph math,
+//! never a physical realization of the warp analogy. Dimensionless; c=1.
+
+use kinematics::views::{commute_time, effective_resistance, mna_resistance, to_spice_netlist};
+use std::io::Write;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+const DIFFS_N: [[i64; 3]; 3] = [[1, -1, 0], [0, 1, -1], [-1, 0, 1]];
+const LONG_N: [[i64; 3]; 3] = [[1, -1, 1], [1, 1, -1], [-1, 1, 1]];
+fn stella_hops(tau: usize) -&gt; Vec&lt;[i64; 3]&gt; {
+    let mut h = Vec::with_capacity(14);
+    for d in [[1i64, 0, 0], [0, 1, 0], [0, 0, 1]] { h.push(d); h.push([-d[0], -d[1], -d[2]]); }
+    for d in DIFFS_N { h.push(d); h.push([-d[0], -d[1], -d[2]]); }
+    let sc = (2 * tau) % 3;
+    h.push(LONG_N[(sc + 1) % 3]);
+    let b = LONG_N[(sc + 2) % 3];
+    h.push([-b[0], -b[1], -b[2]]);
+    h
+}
+/// rule-built 14-regular stella torus: (n_nodes, edge list, dense Laplacian).
+fn stella_torus(m: usize) -&gt; (usize, Vec&lt;(usize, usize)&gt;, Vec&lt;Vec&lt;f64&gt;&gt;) {
+    let mm = m as i64;
+    let idx = |a: i64, b: i64, c: i64| (a.rem_euclid(mm) * mm * mm + b.rem_euclid(mm) * mm + c.rem_euclid(mm)) as usize;
+    let n = m * m * m;
+    let mut set = std::collections::BTreeSet::new();
+    let mut l = vec![vec![0.0f64; n]; n];
+    for a in 0..mm { for b in 0..mm { for c in 0..mm {
+        let tau = ((a + b + c) % 3) as usize;
+        let i = idx(a, b, c);
+        for d in stella_hops(tau) {
+            let j = idx(a + d[0], b + d[1], c + d[2]);
+            l[i][i] += 1.0; l[i][j] -= 1.0;
+            set.insert((i.min(j), i.max(j)));
+        }
+    }}}
+    (n, set.into_iter().collect(), l)
+}
+fn cube_edges() -&gt; Vec&lt;(usize, usize)&gt; {
+    (0..8usize).flat_map(|u| (0..3).map(move |b| (u, u ^ (1 &lt;&lt; b))).filter(|&amp;(u, v)| u &lt; v)).collect()
+}
+
+#[test]
+fn uf8_3_netlist_gate() {
+    rec!(&quot;=== rung 8.3 — the netlist / SPICE view (the circuit computes) ===&quot;);
+    rec!(&quot;FIREWALL: a resistor network of a TOY graph — a computer for its math, not nature.&quot;);
+
+    // ---- P0: MNA controls (closed forms) ----
+    let series = [(0usize, 1usize), (1, 2)];
+    let parallel = [(0usize, 1usize), (0, 1)];
+    let cube = cube_edges();
+    let r_series = mna_resistance(&amp;to_spice_netlist(&amp;series, 0, 2));
+    let r_parallel = mna_resistance(&amp;to_spice_netlist(&amp;parallel, 0, 1));
+    let r_cube = mna_resistance(&amp;to_spice_netlist(&amp;cube, 0, 7));
+    rec!(&quot;[P0] series={r_series:.9} (2)  parallel={r_parallel:.9} (0.5)  cube-diag={r_cube:.9} (5/6={:.9})&quot;, 5.0 / 6.0);
+    let p0 = (r_series - 2.0).abs() &lt; 1e-9 &amp;&amp; (r_parallel - 0.5).abs() &lt; 1e-9 &amp;&amp; (r_cube - 5.0 / 6.0).abs() &lt; 1e-9;
+
+    // ---- stella torus M=3 ----
+    let (n, edges, l) = stella_torus(3);
+    let ne = edges.len();
+    rec!(&quot;[stella] M=3: {n} nodes, {ne} edges&quot;);
+
+    // ---- P1: netlist-MNA == effective_resistance (membership gate) ----
+    let mut p1 = true;
+    let mut p1_worst = 0.0f64;
+    let mut rows = Vec::new();
+    for (a, b) in [(0usize, 1usize), (0, 13), (5, 20), (2, 25)] {
+        let r_mna = mna_resistance(&amp;to_spice_netlist(&amp;edges, a, b));
+        let r_eff = effective_resistance(&amp;l, a, b);
+        let d = (r_mna - r_eff).abs();
+        p1 &amp;= d &lt; 1e-9;
+        p1_worst = p1_worst.max(d);
+        rec!(&quot;[P1] pair {a},{b}: MNA={r_mna:.9} R_eff={r_eff:.9} |Δ|={d:.1e}&quot;);
+        rows.push(format!(&quot;{a}-{b},{r_mna:.9},{r_eff:.9}&quot;));
+    }
+
+    // ---- P2: walks↔circuits via the netlist ----
+    let mut p2 = true;
+    let mut p2_worst = 0.0f64;
+    let mut wrows = Vec::new();
+    for (a, b) in [(0usize, 1usize), (5, 20)] {
+        let elec = 2.0 * ne as f64 * mna_resistance(&amp;to_spice_netlist(&amp;edges, a, b));
+        let walk = commute_time(&amp;l, a, b);
+        let d = (elec - walk).abs();
+        p2 &amp;= d &lt; 1e-9;
+        p2_worst = p2_worst.max(d);
+        rec!(&quot;[P2] pair {a},{b}: 2E·R(netlist)={elec:.6} commute={walk:.6} |Δ|={d:.1e}&quot;);
+        wrows.push(format!(&quot;{a}-{b},{elec:.6},{walk:.6}&quot;));
+    }
+
+    // ---- P3: portable artifact ----
+    let cir = to_spice_netlist(&amp;edges, 0, 1);
+    let n_r = cir.lines().filter(|l| l.starts_with(&#x27;R&#x27;)).count();
+    let well_formed = n_r == ne &amp;&amp; cir.contains(&quot;V1 &quot;) &amp;&amp; cir.contains(&quot;.op&quot;) &amp;&amp; cir.contains(&quot;.end&quot;);
+    rec!(&quot;[P3] emitted .cir: {n_r} R-lines (edges={ne}), V1/.op/.end present = {well_formed}&quot;);
+    let p3 = well_formed;
+
+    // ---- emit data (R10): the netlist artifact + the agreement tables ----
+    let dir = std::path::PathBuf::from(concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/../../lab/bridge/0803-netlist/data&quot;));
+    std::fs::create_dir_all(&amp;dir).unwrap();
+    std::fs::write(dir.join(&quot;stella.cir&quot;), &amp;cir).unwrap();
+    let write = |name: &amp;str, header: &amp;str, rows: &amp;[String]| {
+        let mut f = std::fs::File::create(dir.join(name)).unwrap();
+        writeln!(f, &quot;{header}&quot;).unwrap();
+        for r in rows { writeln!(f, &quot;{r}&quot;).unwrap(); }
+    };
+    write(&quot;resistance.csv&quot;, &quot;pair,mna_netlist,effective_resistance&quot;, &amp;rows);
+    write(&quot;walks_circuits.csv&quot;, &quot;pair,elec_2ER_netlist,walk_commute&quot;, &amp;wrows);
+    write(&quot;summary.csv&quot;, &quot;quantity,value&quot;, &amp;[
+        format!(&quot;cube_diagonal,{r_cube:.9}&quot;),
+        format!(&quot;n_edges,{ne}&quot;),
+        format!(&quot;netlist_vs_reff_worst,{p1_worst:.2e}&quot;),
+    ]);
+
+    rec!(&quot;--------------------------------------------------------------------&quot;);
+    rec!(&quot;[VERDICT] P0(MNA controls)={p0} P1(netlist==R_eff, worst={p1_worst:.1e})={p1} P2(walks↔circuits, worst={p2_worst:.1e})={p2} P3(portable .cir)={p3}&quot;);
+    rec!(&quot;[FIREWALL] the stella .cir is a runnable resistor network for a TOY graph&#x27;s math (analog/&quot;);
+    rec!(&quot;           crossbar lineage) — a circuit that computes the lattice&#x27;s resistances, not nature.&quot;);
+    assert!(p0, &quot;P0 failed: MNA closed-form controls&quot;);
+    assert!(p1, &quot;P1 failed: netlist MNA ≠ effective_resistance (export unfaithful / view fails membership)&quot;);
+    assert!(p2, &quot;P2 failed: 2E·R(netlist) ≠ commute time&quot;);
+    assert!(p3, &quot;P3 failed: emitted .cir malformed&quot;);
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

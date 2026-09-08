@@ -490,6 +490,7 @@ cargo run  --release -p viz     --bin gen_casimir
 - warp-5 5.1 — the blind three-dimensional swing
 - warp-5 5.2 — the self-contained pipeline
 - warp-5 5.3 — the fully blind close, with its registered limit
+- warp-5 5.4 — the same switches on the world the reader built, its geometry wrapped in two directions for the run and open in the third: a critical temperature nobody had tabulated, located inside its registered range, and the class numbers unchanged within their registered margins. The record has no figure of its own for this rung; its eval says so
 - warp-5 5.9 and warp-5 5.10 — the two negatives re-analysed. They did not dissolve the same way, and the difference is the subject of the coda in the section for when the world you built says no
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
@@ -498,11 +499,13 @@ cargo run  --release -p viz     --bin gen_casimir
 - [`lab/warp-5-universality/0501-montecarlo-prediction`](record/lab/warp-5-universality/0501-montecarlo-prediction)
 - [`lab/warp-5-universality/0502-self-contained`](record/lab/warp-5-universality/0502-self-contained)
 - [`lab/warp-5-universality/0503-blind-3d`](record/lab/warp-5-universality/0503-blind-3d)
+- [`lab/warp-5-universality/0504-stella-ising`](record/lab/warp-5-universality/0504-stella-ising)
 
 **Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
 
 - [`core/uniforge/tests/uf5_universality_gate.rs`](record/core/uniforge/tests/uf5_universality_gate.html)
 - [`core/uniforge/tests/uf5_3_blind3d_gate.rs`](record/core/uniforge/tests/uf5_3_blind3d_gate.html)
+- [`core/uniforge/tests/uf5_4_stella_ising_gate.rs`](record/core/uniforge/tests/uf5_4_stella_ising_gate.html)
 
 **Data-true figures.** Rendered from the run's own committed output — no analogy art.
 
@@ -524,6 +527,10 @@ cargo run  --release -p viz     --bin gen_casimir
 | `0.036%` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
 | `0.630` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
 | `0.766` | [`book/chapters/05-universality/chapter.md`](record/book/chapters/05-universality/chapter.md) |
+| `11.638` | [`lab/warp-5-universality/0504-stella-ising/eval.md`](record/lab/warp-5-universality/0504-stella-ising/eval.md) |
+| `4.51` | [`lab/warp-5-universality/0504-stella-ising/eval.md`](record/lab/warp-5-universality/0504-stella-ising/eval.md) |
+| `3.5%` | [`lab/warp-5-universality/0504-stella-ising/eval.md`](record/lab/warp-5-universality/0504-stella-ising/eval.md) |
+| `0.6%` | [`lab/warp-5-universality/0504-stella-ising/eval.md`](record/lab/warp-5-universality/0504-stella-ising/eval.md) |
 
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
@@ -532,6 +539,7 @@ cd core
 cargo test --release -p uniforge --test uf5_universality_gate -- --nocapture
 cargo run  --release -p viz     --bin gen_universality
 cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
+cargo test --release -p uniforge --test uf5_4_stella_ising_gate -- --nocapture
 ```
 
 ---
@@ -597,6 +605,30 @@ cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --
 
 **The chapter.** [cast-your-own-shadow.md](cast-your-own-shadow.md)
 
+**Registered rungs.**
+
+- lattice-constants 7.0 — the Container's own random-walk return constant: how often a walker stepping at random along its lines comes home, after the same machinery reproduced Watson's closed forms for two textbook lattices. Its gate re-runs in seconds
+- bridge 8.2 — the Container's lines as resistors: the resistance between two dots, and the same number reached a second way, as the time a random walk takes to go and come back
+- bridge 8.3 — the same circuit written out as a netlist file any circuit simulator will run, and solved by an independent method that agrees with the engine's resistance to machine precision
+
+**Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
+
+- [`lab/lattice-constants/0700-watson-constant`](record/lab/lattice-constants/0700-watson-constant)
+- [`lab/bridge/0802-electrical`](record/lab/bridge/0802-electrical)
+- [`lab/bridge/0803-netlist`](record/lab/bridge/0803-netlist)
+
+**Gates.** The tests that re-run the experiment and refuse to pass unless the answer comes back as registered.
+
+- [`core/uniforge/tests/uf7_0_watson_gate.rs`](record/core/uniforge/tests/uf7_0_watson_gate.html)
+- [`core/uniforge/tests/uf8_2_electrical_gate.rs`](record/core/uniforge/tests/uf8_2_electrical_gate.html)
+- [`core/uniforge/tests/uf8_3_netlist_gate.rs`](record/core/uniforge/tests/uf8_3_netlist_gate.html)
+
+**Data-true figures.** Rendered from the run's own committed output — no analogy art.
+
+- [`lab/lattice-constants/0700-watson-constant/figures/watson.html`](record/lab/lattice-constants/0700-watson-constant/figures/watson.html)
+- [`lab/bridge/0802-electrical/figures/electrical.html`](record/lab/bridge/0802-electrical/figures/electrical.html)
+- [`lab/bridge/0803-netlist/figures/netlist.html`](record/lab/bridge/0803-netlist/figures/netlist.html)
+
 **Standards and record this section rests on.**
 
 - [`PREDICTIONS.md`](record/PREDICTIONS.md)
@@ -605,10 +637,14 @@ cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --
 
 **Numbers.** None. This section's chapter carries no quoted measurement.
 
-**Regenerate.** From this repository's root:
+**Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
 ```sh
+cd core
 python3 check_edition.py
 mdbook build
 python3 check_edition.py --rendered
+cargo test --release -p uniforge --test uf7_0_watson_gate -- --nocapture
+cargo test --release -p uniforge --test uf8_2_electrical_gate -- --nocapture
+cargo test --release -p uniforge --test uf8_3_netlist_gate -- --nocapture
 ```

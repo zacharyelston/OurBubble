@@ -148,7 +148,7 @@ reader every time instead of explained to her once.
 5. It reached the edge of our world and bounced back — how do I have no edge?  *(wrap it: the far side *is* the near side, like a screen where walking off the right returns you on the left)*
 6. What is that wrapped world called, and why do we live there from now on?  *(a torus — no walls to bounce off, so the ring is only ever the ring)*
 7. Now that the world has no edge — is any dot special?  *(none is singled out — but the rule for cutting the holes twists as it goes, so there are three kinds of place. They are copies of one another: turn one a third of the way round and step it over, and it lands exactly on the next kind. Counted while the page was built: three kinds, in exact thirds. The world has a grain — remember that when a ripple comes out lopsided, because a grain is one place lopsidedness can hide)*  [anchor: napkin token `vertex_classes`, computed at build — not a record quotation]
-8. Can I ask the stopwatch question now?  *(yes — and this is the object, the Container, named because it holds everything the napkin taught her and has room in it — the world the machine builds, the one the book has built toward. The record the next chapters read from is older than it, so its runs were made on plainer worlds like it, each named where its run begins; the first question the record answers is whether a ring in such a world comes out round)*
+8. Can I ask the stopwatch question now?  *(yes — and this is the object, the Container, named because it holds everything the napkin taught her and has room in it — the world the machine builds. The record the next chapters read from is older than it; most of its runs were made on plainer worlds like it, each named where its run begins, and those made here say so. The first question it answers is whether a ring in such a world comes out round)*
 
 ## 12 · Is it round?
 
@@ -205,8 +205,9 @@ reader every time instead of explained to her once.
 5. Point it at the solved case — what comes back?  *(first the change of rule, said where it happens: a lattice of switches, each up or down, nudged by its neighbours — the Ising model, not a wave — here because the numbers it gives at the edge where it stops being one thing are the kind nature hands out class by class, which is what makes them checkable. Then, on a line of switches in the same class as Onsager's flat sheet — which is what class membership means — Onsager's numbers, to six and seven digits, inside the margins set first: a calibration, not a discovery)*  [picture: markers on the known line]
 6. Now take the answer key away — the case nobody has solved?  *(first the flat sheet by a different method, a machine flipping the switches by chance, then the block: exponents agreeing with real matter to a few percent; no parameter they could have entered through)*
 7. What was it still handed, and what happened when that was taken away too?  *(the transition temperature and one class number; the fully blind run found T_c to four parts in ten thousand)*
-8. Did it miss anything — and had it said so first?  *(one quantity, too high, in exactly the direction registered in advance)*  [no figure in the record for this one (0503 has none) — the band and the miss are stated in the appendix]
-9. What is left for an instrument to prove?  *(that it can tell us we were wrong)*
+8. Did it miss anything — and had it said so first?  *(one quantity, too high, in exactly the direction registered in advance. Every object so far was borrowed — a line, a sheet, a block; one is left to point it at, the one she built)*  [no figure in the record for this one (0503 has none) — the band and the miss are stated in the appendix]
+9. And on the world she built?  *(the same switches on the Container's dots — its geometry wrapped in two directions for this run, open in the third — the same machine flipping them by chance. Where it turns over was registered first as a range, with the reason: fourteen neighbours to the block's six. It turned over at 11.638, inside the range, against the block's 4.51; the two class numbers came back within 3.5% and 0.6% of the class values, inside their registered margins. The object's numbers moved, the class's did not — universality checked on her own object)*  [no stella-specific figure in the record (0504's eval says so) — the numbers are declared in the appendix]
+10. What is left for an instrument to prove?  *(that it can tell us we were wrong)*
 
 ## 17 · The law we were sure of
 
@@ -224,7 +225,7 @@ reader every time instead of explained to her once.
 1. What did we actually do — in one honest sentence?  *(inspected one object we built, and watched its tools do seven things)*
 2. Can I follow one result without running anything?  *(four files, ten minutes: question → data → verdict → summary, in that order)*
 3. What travels with the book, and what does the book promise about it?  *(the record, verbatim, checked on every build — and exactly which sentences no program has read)*
-4. What is the check that would actually catch us?  *(re-run a test at full size, let it overwrite the data the book quotes, ask git)*
+4. What is the check that would actually catch us?  *(re-run a test at full size, let it overwrite the data the book quotes, ask git. Two of the shortest re-runs are the Container's own: a random walk's return, and the resistance between two dots with every line a resistor — the latter also a circuit file any circuit simulator runs)*  [rungs 7.0, 8.2, 8.3 in the appendix; no number quoted]
 5. ✎ Before you press Return — what do you expect?
 6. Where is the next shadow?
 

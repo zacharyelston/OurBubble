@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>lab/bridge/0802-electrical/PROVENANCE.md · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>lab/bridge/0802-electrical/PROVENANCE.md</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre># Provenance — 0802 the 4th view (electrical / random-walk)
+
+- **Register commit (R1, spec + module + gate):** `1b61300`
+- **Run commit (data):** `73a4d40`
+- **Toolchain:** `rustc 1.91.1 (ed61e7d7e 2025-11-07)`
+- **Module:** `core/kinematics/src/views.rs` — `effective_resistance`, `hitting_time`, `commute_time`,
+  `spanning_tree_ln` (Kirchhoff), `dense_solve`. The `⟨ln λ⟩` Bloch sum lives in the gate (screw-specific).
+- **Probe (breadcrumb, first-class):** [`core/uniforge/examples/electrical_probe.rs`](../../../core/uniforge/examples/electrical_probe.rs)
+  — learned z, its log-singularity convergence, and the walks↔circuits identity; caught the
+  engine-mesh-vs-rule-built-torus graph mismatch. `cargo run -p uniforge --release --example electrical_probe`.
+- **Regenerate:**
+  ```bash
+  cd core
+  cargo test --release -p uniforge --test uf8_2_electrical_gate -- --nocapture
+  # writes data/*.csv under lab/bridge/0802-electrical/data/
+  ```
+- **Determinism:** pure f64, no RNG, no wall-clock. Bloch k-sum over M=24,48,96,192 (Richardson);
+  dense Jacobi + Gaussian-elimination solves on the rule-built torus.
+- **Graph:** the rule-built 14-regular stella torus (7.0&#x27;s `stella_torus_adjacency`) — the actual complex
+  vertices; NOT the engine periodic mesh (placeholders would corrupt `⟨ln λ⟩`).
+- **Data files:**
+  - `kirchhoff_controls.csv` — `graph,ln_tau,expected`: Cayley/cycle spanning-tree controls (P0).
+  - `entropy_ksum.csv` — `M,z_M`: the Bloch `⟨ln λ⟩` ladder (P1).
+  - `walks_circuits.csv` — `pair,R_eff,elec_2ER,walk_commute`: the P2 membership identity per node pair.
+  - `summary.csv` — `quantity,value`: `z_stella`, `z_6` dense vs Bloch.
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>
