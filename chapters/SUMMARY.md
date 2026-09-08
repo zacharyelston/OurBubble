@@ -17,7 +17,7 @@
 - [Can you wall a piece off?](the-wall-that-worked-and-didnt.md)
 - [Can a gap be emptier than empty?](where-negative-energy-appears.md)
 - [Can it tell me something I didn't tell it?](a-number-without-the-answer-key.md)
-- [When the world you built says no](when-the-expected-law-fails.md)
+- [The law we were sure of](when-the-expected-law-fails.md)
 - [Cast your own shadow](cast-your-own-shadow.md)
 
 ---

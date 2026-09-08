@@ -177,5 +177,5 @@ defend, and see whether it has the standing to refuse.
 *What this chapter cites — and what it does not:
 [the simulations](the-simulations.md#s-a-number-without-the-answer-key).*
 
-**Next:** [When the world you built says no](when-the-expected-law-fails.md)—the obvious answer,
+**Next:** [The law we were sure of](when-the-expected-law-fails.md)—the obvious answer,
 refused.
