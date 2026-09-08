@@ -487,9 +487,9 @@
       "cast-your-own-shadow": {
         "title": "Cast your own shadow — the reproduce path",
         "rungs": [
-          "lattice-constants 7.0 — the Container's own random-walk return constant: how often a walker stepping at random along its lines comes home, after the same machinery reproduced Watson's closed forms for two textbook lattices. Its gate re-runs in seconds",
-          "bridge 8.2 — the Container's lines as resistors: the resistance between two dots, and the same number reached a second way, as the time a random walk takes to go and come back",
-          "bridge 8.3 — the same circuit written out as a netlist file any circuit simulator will run, and solved by an independent method that agrees with the engine's resistance to machine precision"
+          "lattice-constants 7.0 — the random-walk return constant of a small wrapped copy of the Container, the same dots and lines: how often a walker stepping at random along its lines comes home, after the same machinery reproduced Watson's closed forms for two textbook lattices. Its gate re-runs in seconds",
+          "bridge 8.2 — the same copy's lines as resistors: the resistance between two dots, and the same number reached a second way, as the time a random walk takes to go and come back",
+          "bridge 8.3 — the same circuit written out as a standard netlist file that circuit simulators read, and solved by an independent method that agrees with the engine's resistance to machine precision"
         ],
         "entries": [
           "lab/lattice-constants/0700-watson-constant",

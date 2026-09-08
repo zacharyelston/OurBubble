@@ -607,9 +607,9 @@ cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --
 
 **Registered rungs.**
 
-- lattice-constants 7.0 — the Container's own random-walk return constant: how often a walker stepping at random along its lines comes home, after the same machinery reproduced Watson's closed forms for two textbook lattices. Its gate re-runs in seconds
-- bridge 8.2 — the Container's lines as resistors: the resistance between two dots, and the same number reached a second way, as the time a random walk takes to go and come back
-- bridge 8.3 — the same circuit written out as a netlist file any circuit simulator will run, and solved by an independent method that agrees with the engine's resistance to machine precision
+- lattice-constants 7.0 — the random-walk return constant of a small wrapped copy of the Container, the same dots and lines: how often a walker stepping at random along its lines comes home, after the same machinery reproduced Watson's closed forms for two textbook lattices. Its gate re-runs in seconds
+- bridge 8.2 — the same copy's lines as resistors: the resistance between two dots, and the same number reached a second way, as the time a random walk takes to go and come back
+- bridge 8.3 — the same circuit written out as a standard netlist file that circuit simulators read, and solved by an independent method that agrees with the engine's resistance to machine precision
 
 **Lab entries.** Each carries its own `spec.md` (the question, registered first), `eval.md` (the verdict) and `PROVENANCE.md`.
 
@@ -637,13 +637,18 @@ cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --
 
 **Numbers.** None. This section's chapter carries no quoted measurement.
 
+**Regenerate.** From this repository's root:
+
+```sh
+python3 check_edition.py
+mdbook build
+python3 check_edition.py --rendered
+```
+
 **Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):
 
 ```sh
 cd core
-python3 check_edition.py
-mdbook build
-python3 check_edition.py --rendered
 cargo test --release -p uniforge --test uf7_0_watson_gate -- --nocapture
 cargo test --release -p uniforge --test uf8_2_electrical_gate -- --nocapture
 cargo test --release -p uniforge --test uf8_3_netlist_gate -- --nocapture

@@ -175,7 +175,7 @@ The exception is the dial, chosen and unset.
 
 The object has a name: **The Container**, because it holds all the napkin taught you, with room in
 it. It is the world the machine builds. The record the next chapters read from is older than it; most
-of its runs were made on plainer worlds like it, each named where its run begins, and those made here
+of its runs were made on plainer worlds like it, each named where its run begins, and those made on it
 say so. The first question it answers is whether a ring in such a world comes out round.
 
 *What this chapter cites — and what it does not:

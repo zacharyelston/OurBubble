@@ -165,14 +165,15 @@ sheet, a block. There is one more to point it at — the one you built.
 
 <!-- beat a-number-without-the-answer-key.9 -->
 
-The same switches, one on each dot of the Container — wrapped in two of its three directions for
-this run, with ends in the third — and the same machine flipping them by chance.
+The same switches, one on each dot of the Container, and the same machine flipping them by chance.
+For this run the world was wrapped in two of its three directions and left open in the third; the
+record registered that the open ends would move one of the object's own numbers and none of the
+class's, and they did.
 
-Nobody had tabulated where this world's switches turn over, so a range for it was written down
-first, with the reason: a dot here has fourteen neighbours where the block's had six, and more
-neighbours mean a higher turning point. It turned over at **11.638**, inside the range; the block's
-had been **4.51**. The two class numbers measured on it came back within **3.5%** and **0.6%** of
-the class values, inside the margins registered for them.
+Nobody had tabulated the temperature at which this world's switches turn over, so a range for it was
+written down first, drawn around a first look. In the model's own units it came out at **11.638**,
+inside the range; the block's had been **4.51**. The two class numbers the block gave came back here
+within **3.5%** and **0.6%** of the class values, inside the margins registered for them.
 
 So the numbers that belong to the object moved, and the numbers that belong to the class did not.
 That is what universality claims, and here it was checked on the world you built rather than on a

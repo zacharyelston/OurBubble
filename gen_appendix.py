@@ -155,11 +155,19 @@ that asks you for no email address and loads nothing onto the page you are readi
             # `cargo` commands belong to the engine, which is no longer the repository you are
             # standing in — so the instruction has to say which root it means. `.record/` is the
             # pinned checkout the fetcher makes, and is exactly the commit these numbers came from.
-            root = ("the engine checkout (`.record/`, or your own UniForge clone)"
-                    if any(c.startswith("cargo") for c in s['commands']) else "this repository's root")
-            L.append(f"**Regenerate.** From {root}:\n"); L.append("```sh")
-            if any(c.startswith("cargo") for c in s['commands']): L.append("cd core")
-            L+=s['commands']; L.append("```\n")
+            #
+            # A section may carry both kinds — the exit chapter's does, since it re-runs the book's
+            # own checks and then the engine's gates — and a reader who followed one header into
+            # the wrong root got "no such file" (tranche I, round 1). So the two roots get two
+            # blocks, each with only the commands that run there.
+            book = [c for c in s['commands'] if not c.startswith("cargo")]
+            engine = [c for c in s['commands'] if c.startswith("cargo")]
+            if book:
+                L.append("**Regenerate.** From this repository's root:\n"); L.append("```sh")
+                L += book; L.append("```\n")
+            if engine:
+                L.append("**Regenerate.** From the engine checkout (`.record/`, or your own UniForge clone):\n")
+                L.append("```sh"); L.append("cd core"); L += engine; L.append("```\n")
     return "\n".join(L).rstrip() + "\n"
 
 
