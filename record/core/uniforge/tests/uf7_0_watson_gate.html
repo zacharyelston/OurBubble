@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf7_0_watson_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf7_0_watson_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! lab/lattice-constants/0700 — rung 7.0: the stella random-walk constant (the Watson integral
+//! on our own graph). Issue #155.
+//!
+//! The simple-random-walk return constant — the lattice Green&#x27;s function G(0,0), return
+//! probability p = 1 − 1/G — computed on:
+//!   • SC (control, P0)   — Watson&#x27;s closed form √6/(32π³)·Γ(1/24)Γ(5/24)Γ(7/24)Γ(11/24),
+//!   • FCC (answer key, P1) — Watson 1939: G = 9·Γ(1/3)⁶/(2^{14/3}π⁴) = 1.344661183165145,
+//!   • the stella tet-oct complex graph (P3) — FCC + the screw-assigned octahedral long-diagonal
+//!     bonds (14-regular, vertex-transitive): a NEW registered lattice constant.
+//! Machinery: deflated torus k-sums (3×3 Bloch blocks for the stella screw structure) with a
+//! kinematics::richardson ladder (orders 1,3,5 over M = 48..384); cross-checked against the
+//! engine mesh&#x27;s own d0 adjacency (exact), a real-space CG solve (P2), and a strict matvec
+//! lower bound. R9 unit tests cover every building block on hand-derivable cases.
+//!
+//! Run: `cargo test -p uniforge --release --test uf7_0_watson_gate -- --nocapture`  (~10 s)
+//!
+//! FIREWALL (R3): graph sums over a TOY lattice complex — bucket 🔵 math constants, facts about
+//! graphs, never predictions of nature. The stella value is a constant of THIS complex.
+
+use kinematics::richardson;
+use std::io::Write;
+use uniforge::engine_operator::oct_axis;
+use uniforge::mesh_3d_chiral_tetoct;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+// ---- the registered targets (spec.md; f64 Γ values, formula pinned to the literature decimals) ----
+const GAMMA_1_3: f64 = 2.678938534707748;
+const GAMMA_1_24: f64 = 23.46248769318332;
+const GAMMA_5_24: f64 = 4.396800100000252;
+const GAMMA_7_24: f64 = 3.081505560003435;
+const GAMMA_11_24: f64 = 1.9322353352363755;
+const G_SC_LIT: f64 = 1.516386059151978; // Watson / Glasser–Zucker / Silagadze
+const G_FCC_LIT: f64 = 1.344661183165145; // = 3 × F(0,0,0;3), F = 0.4482203944
+const P_FCC_LIT: f64 = 0.256318236504649;
+const G_STELLA_REG: f64 = 1.302_310_014_1; // registered from the probe (spec.md P3)
+const P_STELLA_REG: f64 = 0.232_133_678_5;
+const S8_REG: f64 = 1.166_371_405; // registered open-mesh partial sum (strict lower bound)
+
+fn closed_form_fcc() -&gt; f64 {
+    9.0 * GAMMA_1_3.powi(6) / (2.0f64.powf(14.0 / 3.0) * std::f64::consts::PI.powi(4))
+}
+fn closed_form_sc() -&gt; f64 {
+    6.0f64.sqrt() / (32.0 * std::f64::consts::PI.powi(3))
+        * GAMMA_1_24
+        * GAMMA_5_24
+        * GAMMA_7_24
+        * GAMMA_11_24
+}
+
+// ---------------- scalar torus k-sums (deflated Green&#x27;s value) ----------------
+
+fn cos_sin_tables(m: usize) -&gt; (Vec&lt;f64&gt;, Vec&lt;f64&gt;) {
+    let w = 2.0 * std::f64::consts::PI / m as f64;
+    (0..m).map(|p| ((w * p as f64).cos(), (w * p as f64).sin())).unzip()
+}
+
+/// SC: λ = (cos q₁ + cos q₂ + cos q₃)/3 on the cubic torus, k = 0 deflated.
+fn green_sc(m: usize) -&gt; f64 {
+    let (c, _) = cos_sin_tables(m);
+    let mut tot = 0.0;
+    for p1 in 0..m {
+        for p2 in 0..m {
+            let c12 = c[p1] + c[p2];
+            for p3 in 0..m {
+                if p1 == 0 &amp;&amp; p2 == 0 &amp;&amp; p3 == 0 {
+                    continue;
+                }
+                tot += 1.0 / (1.0 - (c12 + c[p3]) / 3.0);
+            }
+        }
+    }
+    tot / (m * m * m) as f64
+}
+
+/// FCC in primitive (n-)coordinates: hops ±a_i, ±(a_i − a_j);
+/// λ = [cos q₁ + cos q₂ + cos q₃ + cos(q₁−q₂) + cos(q₂−q₃) + cos(q₃−q₁)]/6.
+fn green_fcc(m: usize) -&gt; f64 {
+    let (c, s) = cos_sin_tables(m);
+    let mut tot = 0.0;
+    for p1 in 0..m {
+        for p2 in 0..m {
+            let c12 = c[p1] * c[p2] + s[p1] * s[p2];
+            for p3 in 0..m {
+                if p1 == 0 &amp;&amp; p2 == 0 &amp;&amp; p3 == 0 {
+                    continue;
+                }
+                let c23 = c[p2] * c[p3] + s[p2] * s[p3];
+                let c31 = c[p3] * c[p1] + s[p3] * s[p1];
+                let lam = (c[p1] + c[p2] + c[p3] + c12 + c23 + c31) / 6.0;
+                tot += 1.0 / (1.0 - lam);
+            }
+        }
+    }
+    tot / (m * m * m) as f64
+}
+
+/// 1-D ring of m sites (R9 hand case): G_m = (1/m)Σ_{j≠0} 1/(1−cos 2πj/m) = (m²−1)/(6m).
+fn green_ring_1d(m: usize) -&gt; f64 {
+    let (c, _) = cos_sin_tables(m);
+    (1..m).map(|j| 1.0 / (1.0 - c[j])).sum::&lt;f64&gt;() / m as f64
+}
+
+// ---------------- the stella tet-oct graph ----------------
+//
+// Vertices: FCC = n₁a₁+n₂a₂+n₃a₃, a₁=(1,1,0), a₂=(0,1,1), a₃=(1,0,1). Class τ = (n₁+n₂+n₃) mod 3
+// (cartesian coordinate-sum class S = 2τ mod 3). Hops: the 12 FCC bonds, plus per vertex one
+// forward long diagonal +2e_m (m = (S+1) mod 3, through the hole it points at) and one backward
+// −2e_m&#x27; (m&#x27; = (S+2) mod 3) — exactly the diagonals `oct_axis(c) = (cx+cy+cz) mod 3` assigns.
+// n-coordinates: 2e_x = (1,−1,1), 2e_y = (1,1,−1), 2e_z = (−1,1,1).
+
+const DIFFS_N: [[i64; 3]; 3] = [[1, -1, 0], [0, 1, -1], [-1, 0, 1]];
+const LONG_N: [[i64; 3]; 3] = [[1, -1, 1], [1, 1, -1], [-1, 1, 1]];
+const DEG_STELLA: f64 = 14.0;
+
+/// The 14 hops (n-coordinates) out of a vertex of class τ.
+fn stella_hops(tau: usize) -&gt; Vec&lt;[i64; 3]&gt; {
+    let mut hops: Vec&lt;[i64; 3]&gt; = Vec::with_capacity(14);
+    for d in [[1i64, 0, 0], [0, 1, 0], [0, 0, 1]] {
+        hops.push(d);
+        hops.push([-d[0], -d[1], -d[2]]);
+    }
+    for d in DIFFS_N {
+        hops.push(d);
+        hops.push([-d[0], -d[1], -d[2]]);
+    }
+    let sclass = (2 * tau) % 3;
+    let f = LONG_N[(sclass + 1) % 3];
+    let b = LONG_N[(sclass + 2) % 3];
+    hops.push(f);
+    hops.push([-b[0], -b[1], -b[2]]);
+    hops
+}
+
+type C64 = (f64, f64);
+fn cadd(a: C64, b: C64) -&gt; C64 {
+    (a.0 + b.0, a.1 + b.1)
+}
+fn csub(a: C64, b: C64) -&gt; C64 {
+    (a.0 - b.0, a.1 - b.1)
+}
+fn cmul(a: C64, b: C64) -&gt; C64 {
+    (a.0 * b.0 - a.1 * b.1, a.0 * b.1 + a.1 * b.0)
+}
+
+/// Tr(C⁻¹) of a 3×3 complex matrix via Tr(adj C)/det C, Tr(adj C) = (TrC² − Tr(C²))/2.
+fn trace_inv_3x3(c: &amp;[[C64; 3]; 3]) -&gt; C64 {
+    let tr = cadd(cadd(c[0][0], c[1][1]), c[2][2]);
+    let mut tr2 = (0.0, 0.0);
+    for r in 0..3 {
+        for k in 0..3 {
+            tr2 = cadd(tr2, cmul(c[r][k], c[k][r]));
+        }
+    }
+    let t = csub(cmul(tr, tr), tr2);
+    let tradj = (t.0 * 0.5, t.1 * 0.5);
+    let m0 = csub(cmul(c[1][1], c[2][2]), cmul(c[1][2], c[2][1]));
+    let m1 = csub(cmul(c[1][0], c[2][2]), cmul(c[1][2], c[2][0]));
+    let m2 = csub(cmul(c[1][0], c[2][1]), cmul(c[1][1], c[2][0]));
+    let det = cadd(csub(cmul(c[0][0], m0), cmul(c[0][1], m1)), cmul(c[0][2], m2));
+    let d2 = det.0 * det.0 + det.1 * det.1;
+    ((tradj.0 * det.0 + tradj.1 * det.1) / d2, (tradj.1 * det.0 - tradj.0 * det.1) / d2)
+}
+
+/// Deflated Green&#x27;s value of the stella graph on the M³ n-torus (M ≡ 0 mod 3): the 3×3 Bloch
+/// trace sum G_M = (1/(3M³)) Σ_q Tr₃(I − B(q)/14)⁻¹, the three zero-mode copies deflated (7/3).
+fn green_stella(m: usize) -&gt; f64 {
+    assert_eq!(m % 3, 0, &quot;stella torus needs M ≡ 0 mod 3 (screw-rule consistency)&quot;);
+    let (cs, sn) = cos_sin_tables(m);
+    let mut tot = 0.0;
+    let mut max_im: f64 = 0.0;
+    for p1 in 0..m {
+        for p2 in 0..m {
+            for p3 in 0..m {
+                if p1 == p2 &amp;&amp; p2 == p3 &amp;&amp; (3 * p1) % m == 0 {
+                    tot += 2.0 / (1.0 - 2.0 / DEG_STELLA); // deflated zero-mode copy: 7/3
+                    continue;
+                }
+                let p = [p1, p2, p3];
+                let cd = |a: usize, b: usize| cs[p[a]] * cs[p[b]] + sn[p[a]] * sn[p[b]];
+                let f0 = 2.0 * (cd(0, 1) + cd(1, 2) + cd(2, 0));
+                let ax = (cs[p1] + cs[p2] + cs[p3], sn[p1] + sn[p2] + sn[p3]);
+                let ph = |v: [i64; 3]| {
+                    let mut z = (1.0, 0.0);
+                    for (k, &amp;vk) in v.iter().enumerate() {
+                        if vk != 0 {
+                            let e = (cs[p[k]], if vk &gt; 0 { sn[p[k]] } else { -sn[p[k]] });
+                            z = cmul(z, e);
+                        }
+                    }
+                    z
+                };
+                let mut cmat = [[(0.0, 0.0); 3]; 3];
+                for tau in 0..3 {
+                    let sclass = (2 * tau) % 3;
+                    let fwd = ph(LONG_N[(sclass + 1) % 3]);
+                    let bwd = ph(LONG_N[(sclass + 2) % 3]);
+                    let up = cadd(ax, fwd); // τ → τ+1 hops (Δ(Σn) ≡ +1)
+                    let dn = ((ax.0 + bwd.0), -(ax.1 + bwd.1)); // τ → τ+2 (conjugate family)
+                    cmat[tau][tau] = (1.0 - f0 / DEG_STELLA, 0.0);
+                    cmat[tau][(tau + 1) % 3] = (-up.0 / DEG_STELLA, -up.1 / DEG_STELLA);
+                    cmat[tau][(tau + 2) % 3] = (-dn.0 / DEG_STELLA, -dn.1 / DEG_STELLA);
+                }
+                let (re, im) = trace_inv_3x3(&amp;cmat);
+                // Hermiticity sanity: the trace is analytically real; rounding leaves a residue
+                // proportional to the (near-singular, k→0-amplified) real part, so the honest
+                // bound is RELATIVE. Probed: max ≤ 1.4e-13 at M ≤ 384 (an absolute bound here
+                // was the one machinery bug of the first run-for-record — see eval.md, R5).
+                max_im = max_im.max(im.abs() / (1.0 + re.abs()));
+                tot += re;
+            }
+        }
+    }
+    assert!(max_im &lt; 1e-11, &quot;Bloch trace must be real (Hermiticity): max|Im|/(1+|Re|) = {max_im:.3e}&quot;);
+    tot / (3 * m * m * m) as f64
+}
+
+/// The rule-built stella torus adjacency (n-coordinates, M³ vertices, 14-regular).
+fn stella_torus_adjacency(m: usize) -&gt; Vec&lt;[u32; 14]&gt; {
+    let mm = m as i64;
+    let idx = |a: i64, b: i64, c: i64| {
+        (a.rem_euclid(mm) * mm * mm + b.rem_euclid(mm) * mm + c.rem_euclid(mm)) as usize
+    };
+    let mut adj = vec![[0u32; 14]; m * m * m];
+    for a in 0..mm {
+        for b in 0..mm {
+            for c in 0..mm {
+                let tau = ((a + b + c) % 3) as usize;
+                let i = idx(a, b, c);
+                for (k, d) in stella_hops(tau).iter().enumerate() {
+                    adj[i][k] = idx(a + d[0], b + d[1], c + d[2]) as u32;
+                }
+            }
+        }
+    }
+    adj
+}
+
+/// Deflated Green&#x27;s value by real-space CG: (I − A/14) g = e₀ − 1/N, g ⟂ 1; returns g[0].
+fn green_stella_cg(m: usize, tol: f64) -&gt; f64 {
+    let adj = stella_torus_adjacency(m);
+    let n = adj.len();
+    let nf = n as f64;
+    let apply = |x: &amp;[f64], y: &amp;mut [f64]| {
+        for (i, row) in adj.iter().enumerate() {
+            let mut s = 0.0;
+            for &amp;j in row {
+                s += x[j as usize];
+            }
+            y[i] = x[i] - s / DEG_STELLA;
+        }
+    };
+    let mut b = vec![-1.0 / nf; n];
+    b[0] += 1.0;
+    let mut g = vec![0.0; n];
+    let mut r = b.clone();
+    let mut p = r.clone();
+    let mut ap = vec![0.0; n];
+    let mut rr: f64 = r.iter().map(|v| v * v).sum();
+    let mut it = 0usize;
+    while rr.sqrt() &gt; tol &amp;&amp; it &lt; 20 * m {
+        apply(&amp;p, &amp;mut ap);
+        let pap: f64 = p.iter().zip(&amp;ap).map(|(x, y)| x * y).sum();
+        let alpha = rr / pap;
+        for i in 0..n {
+            g[i] += alpha * p[i];
+            r[i] -= alpha * ap[i];
+        }
+        let rr2: f64 = r.iter().map(|v| v * v).sum();
+        let beta = rr2 / rr;
+        rr = rr2;
+        for i in 0..n {
+            p[i] = r[i] + beta * p[i];
+        }
+        it += 1;
+    }
+    rec!(&quot;    [R8] CG M={m}: {it} iters, |r| = {:.2e}&quot;, rr.sqrt());
+    let mean: f64 = g.iter().sum::&lt;f64&gt;() / nf;
+    g[0] - mean
+}
+
+/// Dense brute-force deflated Green&#x27;s value on a tiny torus (R9 oracle; M=6 → 216×216 GE).
+fn green_stella_brute(m: usize) -&gt; f64 {
+    let adj = stella_torus_adjacency(m);
+    let n = adj.len();
+    let nf = n as f64;
+    let mut a = vec![vec![0.0f64; n + 1]; n];
+    for i in 0..n {
+        a[i][i] = 1.0;
+        for &amp;j in &amp;adj[i] {
+            a[i][j as usize] -= 1.0 / DEG_STELLA;
+        }
+        a[i][n] = (if i == 0 { 1.0 } else { 0.0 }) - 1.0 / nf;
+    }
+    for j in 0..n {
+        a[n - 1][j] = 1.0; // gauge row: Σg = 0
+    }
+    a[n - 1][n] = 0.0;
+    for col in 0..n {
+        let piv = (col..n).max_by(|&amp;x, &amp;y| a[x][col].abs().total_cmp(&amp;a[y][col].abs())).unwrap();
+        a.swap(col, piv);
+        let pv = a[col][col];
+        for row in col + 1..n {
+            let f = a[row][col] / pv;
+            if f != 0.0 {
+                for k in col..=n {
+                    a[row][k] -= f * a[col][k];
+                }
+            }
+        }
+    }
+    let mut g = vec![0.0f64; n];
+    for row in (0..n).rev() {
+        let mut s = a[row][n];
+        for k in row + 1..n {
+            s -= a[row][k] * g[k];
+        }
+        g[row] = s / a[row][row];
+    }
+    g[0]
+}
+
+// ---------------- the engine mesh&#x27;s own graph (cross-check arm) ----------------
+
+/// Vertex adjacency by RAW dense index from the mesh&#x27;s own d0 (rows = edges).
+fn mesh_adjacency_raw(n: usize) -&gt; Vec&lt;Vec&lt;usize&gt;&gt; {
+    let mesh = mesh_3d_chiral_tetoct(n, n, n, oct_axis);
+    let nv = (n + 1) * (n + 1) * (n + 1);
+    let mut nbrs: Vec&lt;Vec&lt;usize&gt;&gt; = vec![Vec::new(); nv];
+    for row in &amp;mesh.d0_sparse {
+        let (mut h, mut t) = (usize::MAX, usize::MAX);
+        for &amp;(v, s) in row {
+            if s &gt; 0 {
+                h = v;
+            } else {
+                t = v;
+            }
+        }
+        nbrs[h].push(t);
+        nbrs[t].push(h);
+    }
+    nbrs
+}
+
+/// The registered neighbor rule at an (even, interior) cartesian vertex: 12 FCC face diagonals
+/// + the forward long bond +2e_{(S+1)%3} + the backward long bond −2e_{(S+2)%3}, S = (x+y+z) mod 3.
+fn rule_neighbors(x: i64, y: i64, z: i64, n: usize) -&gt; Vec&lt;usize&gt; {
+    let idx =
+        |a: i64, b: i64, c: i64| (a as usize) * (n + 1) * (n + 1) + (b as usize) * (n + 1) + c as usize;
+    let fcc: [[i64; 3]; 12] = [
+        [1, 1, 0], [1, -1, 0], [-1, 1, 0], [-1, -1, 0],
+        [0, 1, 1], [0, 1, -1], [0, -1, 1], [0, -1, -1],
+        [1, 0, 1], [1, 0, -1], [-1, 0, 1], [-1, 0, -1],
+    ];
+    let s = ((x + y + z) % 3) as usize;
+    let mut fwd = [0i64; 3];
+    fwd[(s + 1) % 3] = 2;
+    let mut bwd = [0i64; 3];
+    bwd[(s + 2) % 3] = -2;
+    let mut out: Vec&lt;usize&gt; = fcc.iter().map(|d| idx(x + d[0], y + d[1], z + d[2])).collect();
+    out.push(idx(x + fwd[0], y + fwd[1], z + fwd[2]));
+    out.push(idx(x + bwd[0], y + bwd[1], z + bwd[2]));
+    out.sort_unstable();
+    out
+}
+
+/// Richardson ladder (orders 1, 3, 5) over the four torus values; returns (levels, final, ord3_last).
+fn ladder(vals: &amp;[f64; 4]) -&gt; (Vec&lt;Vec&lt;f64&gt;&gt;, f64, f64) {
+    let l1: Vec&lt;f64&gt; = vals.windows(2).map(|w| richardson(w[0], w[1], 1)).collect();
+    let l2: Vec&lt;f64&gt; = l1.windows(2).map(|w| richardson(w[0], w[1], 3)).collect();
+    let l3: Vec&lt;f64&gt; = l2.windows(2).map(|w| richardson(w[0], w[1], 5)).collect();
+    let fin = l3[0];
+    let ord3_last = l2[1];
+    (vec![l1, l2, l3], fin, ord3_last)
+}
+
+// ---------------- R9 unit tests — hand-derivable building blocks ----------------
+
+#[test]
+fn r9_ring_1d_is_recurrent() {
+    // G_M = (M²−1)/(6M) exactly; it DIVERGES with M — the 1-D walk returns with probability 1.
+    for m in [8usize, 48] {
+        let exact = ((m * m - 1) as f64) / (6.0 * m as f64);
+        assert!((green_ring_1d(m) - exact).abs() &lt; 1e-12, &quot;ring closed form failed at M={m}&quot;);
+    }
+    assert!(green_ring_1d(48) &gt; green_ring_1d(8), &quot;1-D G_M must grow (recurrence)&quot;);
+}
+
+#[test]
+fn r9_sc_ksum_m2_hand_value() {
+    // M=2: modes λ ∈ {±1/3 (×3 each), −1}: G = (1/8)(3·(3/2) + 3·(3/4) + 1/2) = 29/32.
+    assert!((green_sc(2) - 29.0 / 32.0).abs() &lt; 1e-15);
+}
+
+#[test]
+fn r9_trace_inv_3x3_hand_values() {
+    let diag: [[C64; 3]; 3] = [
+        [(2.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
+        [(0.0, 0.0), (4.0, 0.0), (0.0, 0.0)],
+        [(0.0, 0.0), (0.0, 0.0), (5.0, 0.0)],
+    ];
+    let (re, im) = trace_inv_3x3(&amp;diag);
+    assert!((re - 0.95).abs() &lt; 1e-15 &amp;&amp; im.abs() &lt; 1e-15);
+    // [[3,1,0],[1,3,0],[0,0,2]]: eigenvalues 2, 4, 2 → Tr inv = 1/2 + 1/4 + 1/2 = 5/4.
+    let sym: [[C64; 3]; 3] = [
+        [(3.0, 0.0), (1.0, 0.0), (0.0, 0.0)],
+        [(1.0, 0.0), (3.0, 0.0), (0.0, 0.0)],
+        [(0.0, 0.0), (0.0, 0.0), (2.0, 0.0)],
+    ];
+    let (re2, im2) = trace_inv_3x3(&amp;sym);
+    assert!((re2 - 1.25).abs() &lt; 1e-15 &amp;&amp; im2.abs() &lt; 1e-15);
+}
+
+#[test]
+fn r9_bloch_matches_dense_brute_force() {
+    // The 3×3 Bloch trace sum vs a dense 216×216 linear solve on the same M=6 torus.
+    let gb = green_stella_brute(6);
+    let gk = green_stella(6);
+    assert!((gb - gk).abs() &lt; 1e-12, &quot;Bloch {gk} vs brute {gb}&quot;);
+}
+
+#[test]
+fn r9_stella_torus_is_14_regular_symmetric() {
+    let adj = stella_torus_adjacency(6);
+    for (i, row) in adj.iter().enumerate() {
+        let mut sorted = row.to_vec();
+        sorted.sort_unstable();
+        sorted.dedup();
+        assert_eq!(sorted.len(), 14, &quot;vertex {i} not 14-distinct-regular&quot;);
+        for &amp;j in row {
+            assert!(adj[j as usize].contains(&amp;(i as u32)), &quot;asymmetric hop {i}→{j}&quot;);
+        }
+    }
+}
+
+// ---------------- the gate (P0–P3) ----------------
+
+#[test]
+fn uf7_0_watson_gate() {
+    rec!(&quot;\n######## lab/lattice-constants/0700 — rung 7.0: the stella random-walk constant ########&quot;);
+    rec!(&quot;FIREWALL (R3): graph sums over a TOY lattice complex — 🔵 math constants, not nature.\n&quot;);
+
+    let g_sc_target = closed_form_sc();
+    let g_fcc_target = closed_form_fcc();
+    assert!((g_sc_target - G_SC_LIT).abs() &lt; 1e-14, &quot;SC closed-form arithmetic drifted&quot;);
+    assert!((g_fcc_target - G_FCC_LIT).abs() &lt; 1e-14, &quot;FCC closed-form arithmetic drifted&quot;);
+
+    let ms = [48usize, 96, 192, 384];
+    let t0 = std::time::Instant::now();
+
+    // P0 — SC control
+    let mut sc = [0.0f64; 4];
+    for (i, &amp;m) in ms.iter().enumerate() {
+        sc[i] = green_sc(m);
+        rec!(&quot;[R8] SC     M={m:&gt;3}  G_M={:.12}  ({:?})&quot;, sc[i], t0.elapsed());
+    }
+    let (sc_lv, g_sc, _) = ladder(&amp;sc);
+    let sc_ratios: Vec&lt;f64&gt; =
+        sc.windows(2).map(|w| (g_sc_target - w[0]) / (g_sc_target - w[1])).collect();
+    rec!(&quot;[P0] SC: G = {g_sc:.12} vs Watson {g_sc_target:.12}  (err {:.2e}); raw error ratios {:.4} {:.4} {:.4}&quot;,
+        (g_sc - g_sc_target).abs(), sc_ratios[0], sc_ratios[1], sc_ratios[2]);
+
+    // P1 — FCC answer key
+    let mut fcc = [0.0f64; 4];
+    for (i, &amp;m) in ms.iter().enumerate() {
+        fcc[i] = green_fcc(m);
+        rec!(&quot;[R8] FCC    M={m:&gt;3}  G_M={:.12}  ({:?})&quot;, fcc[i], t0.elapsed());
+    }
+    let (fcc_lv, g_fcc, _) = ladder(&amp;fcc);
+    let p_fcc = 1.0 - 1.0 / g_fcc;
+    rec!(&quot;[P1] FCC: G = {g_fcc:.12} vs Watson {g_fcc_target:.12}  (err {:.2e}); p = {p_fcc:.12} (err {:.2e})&quot;,
+        (g_fcc - g_fcc_target).abs(), (p_fcc - P_FCC_LIT).abs());
+
+    // P2 — the graph is the complex&#x27;s
+    let nmesh = 12usize;
+    let nbrs = mesh_adjacency_raw(nmesh);
+    let mut checked = 0usize;
+    let hi = nmesh as i64 - 2;
+    for x in 2..=hi {
+        for y in 2..=hi {
+            for z in 2..=hi {
+                let vidx = (x as usize) * (nmesh + 1) * (nmesh + 1)
+                    + (y as usize) * (nmesh + 1)
+                    + z as usize;
+                if (x + y + z) % 2 != 0 {
+                    assert!(nbrs[vidx].is_empty(), &quot;odd (hole) point ({x},{y},{z}) not isolated&quot;);
+                    continue;
+                }
+                let mut got = nbrs[vidx].clone();
+                got.sort_unstable();
+                got.dedup();
+                assert_eq!(
+                    got,
+                    rule_neighbors(x, y, z, nmesh),
+                    &quot;P2a: mesh adjacency ≠ rule at ({x},{y},{z})&quot;
+                );
+                checked += 1;
+            }
+        }
+    }
+    let g_bloch_24 = green_stella(24);
+    let g_cg_24 = green_stella_cg(24, 1e-13);
+    let cg_diff = (g_bloch_24 - g_cg_24).abs();
+    rec!(&quot;[P2] adjacency rule == mesh d0 at {checked} interior vertices; CG(24) = {g_cg_24:.14} vs Bloch(24) = {g_bloch_24:.14} (diff {cg_diff:.2e})&quot;);
+
+    // P3 — the stella constant
+    let mut st = [0.0f64; 4];
+    for (i, &amp;m) in ms.iter().enumerate() {
+        st[i] = green_stella(m);
+        rec!(&quot;[R8] STELLA M={m:&gt;3}  G_M={:.12}  ({:?})&quot;, st[i], t0.elapsed());
+    }
+    let (st_lv, g_stella, g_stella_ord3) = ladder(&amp;st);
+    let p_stella = 1.0 - 1.0 / g_stella;
+    let ladder_consistency = (g_stella - g_stella_ord3).abs();
+
+    // strict dynamics lower bound from the OPEN engine mesh (support cannot reach the boundary)
+    let nopen = 32usize;
+    let open_nbrs = mesh_adjacency_raw(nopen);
+    let nv = (nopen + 1) * (nopen + 1) * (nopen + 1);
+    let ctr = nopen / 2;
+    let origin = ctr * (nopen + 1) * (nopen + 1) + ctr * (nopen + 1) + ctr;
+    assert_eq!(open_nbrs[origin].len(), 14);
+    let mut x = vec![0.0f64; nv];
+    x[origin] = 1.0;
+    let mut y = vec![0.0f64; nv];
+    let mut s8 = 1.0; // t = 0
+    let mut partials: Vec&lt;(usize, f64, f64)&gt; = vec![(0, 1.0, 1.0)];
+    for t in 1..=nopen / 4 {
+        for v in y.iter_mut() {
+            *v = 0.0;
+        }
+        for (i, row) in open_nbrs.iter().enumerate() {
+            if x[i] != 0.0 {
+                let share = x[i] / row.len() as f64;
+                for &amp;j in row {
+                    y[j] += share;
+                }
+            }
+        }
+        std::mem::swap(&amp;mut x, &amp;mut y);
+        s8 += x[origin];
+        partials.push((t, x[origin], s8));
+    }
+    rec!(&quot;[P3] STELLA: G = {g_stella:.12} (registered {G_STELLA_REG}); p = {p_stella:.12} (registered {P_STELLA_REG})&quot;);
+    rec!(&quot;     ladder consistency |ord5 − ord3| = {ladder_consistency:.2e}; open-mesh S_8 = {s8:.9} (&lt; G, registered {S8_REG})&quot;);
+
+    // ---- data (R10 source of truth) ----
+    let dir = concat!(
+        env!(&quot;CARGO_MANIFEST_DIR&quot;),
+        &quot;/../../lab/lattice-constants/0700-watson-constant/data&quot;
+    );
+    std::fs::create_dir_all(dir).expect(&quot;create lab data dir&quot;);
+    let conv = |name: &amp;str, vals: &amp;[f64; 4], target: Option&lt;f64&gt;| {
+        let mut out = String::from(&quot;m,g,err_vs_target\n&quot;);
+        for (i, &amp;m) in ms.iter().enumerate() {
+            match target {
+                Some(t) =&gt; out.push_str(&amp;format!(&quot;{m},{:.12},{:.3e}\n&quot;, vals[i], (vals[i] - t).abs())),
+                None =&gt; out.push_str(&amp;format!(&quot;{m},{:.12},\n&quot;, vals[i])),
+            }
+        }
+        std::fs::write(format!(&quot;{dir}/{name}&quot;), out).expect(&quot;write conv csv&quot;);
+    };
+    conv(&quot;sc_conv.csv&quot;, &amp;sc, Some(g_sc_target));
+    conv(&quot;fcc_conv.csv&quot;, &amp;fcc, Some(g_fcc_target));
+    conv(&quot;stella_conv.csv&quot;, &amp;st, None);
+    let mut lad = String::from(&quot;lattice,level,order,index,value\n&quot;);
+    for (name, lv) in [(&quot;sc&quot;, &amp;sc_lv), (&quot;fcc&quot;, &amp;fcc_lv), (&quot;stella&quot;, &amp;st_lv)] {
+        for (li, (ord, level)) in [1usize, 3, 5].iter().zip(lv.iter()).enumerate() {
+            for (i, v) in level.iter().enumerate() {
+                lad.push_str(&amp;format!(&quot;{name},{},{ord},{i},{v:.12}\n&quot;, li + 1));
+            }
+        }
+    }
+    std::fs::write(format!(&quot;{dir}/ladder.csv&quot;), lad).expect(&quot;write ladder.csv&quot;);
+    let mut ps = String::from(&quot;t,p_t,s_t\n&quot;);
+    for (t, pt, st_) in &amp;partials {
+        ps.push_str(&amp;format!(&quot;{t},{pt:.12e},{st_:.12}\n&quot;));
+    }
+    std::fs::write(format!(&quot;{dir}/stella_partial_sum.csv&quot;), ps).expect(&quot;write partial sums&quot;);
+    let consts = format!(
+        &quot;constant,measured,target,err,tol\n\
+         g_sc,{g_sc:.12},{g_sc_target:.12},{:.3e},1e-10\n\
+         g_fcc,{g_fcc:.12},{g_fcc_target:.12},{:.3e},1e-9\n\
+         p_fcc,{p_fcc:.12},{P_FCC_LIT:.12},{:.3e},1e-9\n\
+         g_stella,{g_stella:.12},{G_STELLA_REG:.10},{:.3e},1e-8\n\
+         p_stella,{p_stella:.12},{P_STELLA_REG:.10},{:.3e},1e-8\n\
+         watson_fcc_integral,{:.10},0.4482203944,{:.3e},\n\
+         s8_lower_bound,{s8:.9},{S8_REG:.9},{:.3e},1e-9\n&quot;,
+        (g_sc - g_sc_target).abs(),
+        (g_fcc - g_fcc_target).abs(),
+        (p_fcc - P_FCC_LIT).abs(),
+        (g_stella - G_STELLA_REG).abs(),
+        (p_stella - P_STELLA_REG).abs(),
+        g_fcc / 3.0,
+        (g_fcc / 3.0 - 0.448_220_394_4).abs(),
+        (s8 - S8_REG).abs()
+    );
+    std::fs::write(format!(&quot;{dir}/watson_constants.csv&quot;), consts).expect(&quot;write constants csv&quot;);
+
+    // ---- verdicts ----
+    let p0 = (g_sc - g_sc_target).abs() &lt; 1e-10
+        &amp;&amp; sc_ratios.iter().all(|r| (1.9..=2.1).contains(r));
+    let p1 = (g_fcc - g_fcc_target).abs() &lt; 1e-9 &amp;&amp; (p_fcc - P_FCC_LIT).abs() &lt; 1e-9;
+    let p2 = checked &gt; 300 &amp;&amp; cg_diff &lt; 1e-10;
+    let p3 = (g_stella - G_STELLA_REG).abs() &lt; 1e-8
+        &amp;&amp; (p_stella - P_STELLA_REG).abs() &lt; 1e-8
+        &amp;&amp; ladder_consistency &lt; 1e-9
+        &amp;&amp; s8 &lt; g_stella
+        &amp;&amp; (s8 - S8_REG).abs() &lt; 1e-9;
+
+    let verdict = if p0 &amp;&amp; p1 &amp;&amp; p2 &amp;&amp; p3 {
+        format!(
+            &quot;THE LATTICE COMPUTES ITS OWN WATSON CONSTANT. The machinery reproduces Watson&#x27;s exact \
+             closed forms — SC {g_sc:.12} (err {:.0e}) and FCC {g_fcc:.12} (err {:.0e}, return \
+             probability p = {p_fcc:.10}) — and the same ladder on the engine&#x27;s own stella tet-oct \
+             graph (adjacency verified vertex-by-vertex against d0, k-space == real-space CG to \
+             {cg_diff:.0e}) registers a NEW lattice constant: G_stella = {g_stella:.10}, return \
+             probability p_stella = {p_stella:.10}. FIREWALL (R3): 🔵 facts of graph mathematics on a \
+             toy complex — the stella value is a constant of THIS complex, not a property of matter.&quot;,
+            (g_sc - g_sc_target).abs(),
+            (g_fcc - g_fcc_target).abs()
+        )
+    } else {
+        format!(
+            &quot;CHECK (R5) — p0={p0} p1={p1} p2={p2} p3={p3}; g_sc_err={:.1e} g_fcc_err={:.1e} \
+             g_stella={g_stella:.12} (reg err {:.1e}) ladder={ladder_consistency:.1e} s8={s8:.9}. \
+             FIREWALL (R3).&quot;,
+            (g_sc - g_sc_target).abs(),
+            (g_fcc - g_fcc_target).abs(),
+            (g_stella - G_STELLA_REG).abs()
+        )
+    };
+    rec!(&quot;\n[lab/0700 VERDICT] {verdict}&quot;);
+    rec!(&quot;\n  [recorded: p0={p0} p1={p1} p2={p2} p3={p3} g_sc={g_sc:.12} g_fcc={g_fcc:.12} p_fcc={p_fcc:.12} g_stella={g_stella:.12} p_stella={p_stella:.12} cg_diff={cg_diff:.3e} ladder={ladder_consistency:.3e} s8={s8:.9} checked={checked}]&quot;);
+
+    assert!(p0, &quot;P0: the SC control must hit Watson&#x27;s closed form (machinery)&quot;);
+    assert!(p1, &quot;P1: the FCC constant must match Watson 1939 (the answer key)&quot;);
+    assert!(p2, &quot;P2: the walked graph must BE the complex&#x27;s own graph&quot;);
+    assert!(p3, &quot;P3: the registered stella constant must reproduce from committed code&quot;);
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>

@@ -18,8 +18,8 @@ does not.
 
 What changes is the object under the question. You have met the ripple's relative and the interlude's
 flat sheet already. The record's other runs were made on a plain grid of dots, on a line of
-dots, and on a different small model altogether — switches where the numbers were — and each chapter
-names its own where its run begins.
+dots, and on switches where the numbers were, once on the Container itself — and each chapter names
+its own where its run begins.
 
 What does not change is the work: say what you expect, compare, test the other reading, keep the
 answer. And the dial, what each line counts for, is a setting every dots-and-lines world here carries, read

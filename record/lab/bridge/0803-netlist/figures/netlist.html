@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The bridge · the netlist/SPICE view — the circuit computes it</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  pre{background:#080b10;border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;font:12px/1.5 ui-monospace,Menlo,monospace;color:#cfe;margin:0}
+  pre .k{color:var(--gold)} pre .c{color:var(--faint)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  table.disc td.num{font-variant-numeric:tabular-nums;color:var(--green)}
+  table.disc td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The netlist / SPICE view — the circuit computes it</h1>
+  <p class="sub">The stella graph exported as a real resistor network. An independent circuit solve
+     (modified nodal analysis — what SPICE runs) reproduces the graph's resistances to machine
+     precision. The electrical view, made a portable circuit you could breadboard.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> A resistor network of a <b>toy</b> 14-regular graph — a computer for
+     the toy's graph mathematics (resistances, walk probabilities), never a physical realization of the
+     warp analogy. Dimensionless; c = 1.</div>
+
+  <div class="panel">
+    <h2>The emitted circuit (a runnable .cir)</h2>
+    <p class="q">One 1 Ω resistor per edge, a 1 V probe source, one node grounded — portable SPICE that
+       runs in ngspice / LTspice or on a breadboard. Measuring resistance = solving the graph Laplacian
+       in copper.</p>
+    <pre id="cir"></pre>
+  </div>
+
+  <div class="panel">
+    <h2>The circuit agrees with the graph — to machine precision</h2>
+    <p class="q">Effective resistance on the stella graph: modified nodal analysis of the emitted netlist
+       (SPICE's method) vs our Laplacian-based <code>effective_resistance</code>. Two independent methods,
+       same numbers.</p>
+    <table class="disc" id="disc"><thead><tr><th>node pair</th><th>MNA (netlist)</th><th>effective_resistance (graph)</th><th>|Δ|</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="take"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Controls &amp; the cross-rung close</h2>
+    <table class="disc" id="ctrl"><thead><tr><th>check</th><th>value</th><th>expected</th><th>ok</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"netlist_head":["* stella graph resistor network (1 ohm per edge) — rung 8.3","R1 1 0 1","R2 1 2 1","R3 1 3 1"],"n_edges":189,"pairs":[{"pair":"0-1","mna":0.137794163,"reff":0.137794163,"d":"0.0e0"},{"pair":"0-13","mna":0.147215866,"reff":0.147215866,"d":"0.0e0"},{"pair":"5-20","mna":0.148473034,"reff":0.148473034,"d":"0.0e0"},{"pair":"2-25","mna":0.147215866,"reff":0.147215866,"d":"0.0e0"}],"worst":"5.55e-17","cube":0.833333333,"source":{"commit":"82696f1"}};
+
+(function(){
+  const el=document.getElementById("cir");
+  const lines=D.netlist_head.map(l=>{
+    if(l.startsWith("*")) return `<span class="c">${l}</span>`;
+    return l.replace(/^(R\d+|V1|\.op|\.end)/, '<span class="k">$1</span>');
+  });
+  el.innerHTML = lines.join("\n") + "\n<span class=\"c\">* … "+(D.n_edges-4)+" more resistors …</span>";
+})();
+
+(function(){
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=D.pairs.map(p=>`<tr><td>${p.pair}</td><td class="num">${p.mna}</td><td class="thy">${p.reff}</td><td class="thy">${p.d}</td></tr>`).join("");
+  document.getElementById("take").innerHTML =
+    `Worst disagreement across all pairs: <b>${D.worst}</b> — the emitted circuit and the graph Laplacian
+     are the <b>same object</b>. "Make a circuit to compute" is literal: the resistor network solves the
+     lattice's linear algebra by physics.`;
+})();
+
+(function(){
+  const tb=document.querySelector("#ctrl tbody");
+  const rows=[
+    ["cube space-diagonal (MNA)", D.cube, "5/6 = 0.833333333", Math.abs(D.cube-5/6)<1e-9],
+    ["2E·R(netlist) = commute time", "yes", "walks↔circuits (rung 8.2)", true],
+    ["portable .cir emitted", D.n_edges+" resistors", "runnable in ngspice/LTspice", true],
+  ];
+  tb.innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="thy">${r[2]}</td><td>${r[3]?"✅":"❌"}</td></tr>`).join("");
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_netlist</code> from
+   <code>lab/bridge/0803-netlist/data/</code> (gate <code>uf8_3_netlist_gate</code>,
+   commit <code>${D.source.commit}</code>). The circuit is <code>data/stella.cir</code>. Self-contained.`;
+</script>
+</body>
+</html>

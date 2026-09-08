@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>core/uniforge/tests/uf8_2_electrical_gate.rs · Our Bubble record</title><style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 2rem 1.25rem 4rem;
+       font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+       background: #fbfaf8; color: #1c1b19; }
+main { max-width: 62rem; margin: 0 auto; }
+a { color: #7a4b1e; }
+h1 { font-size: 1.15rem; margin: 0 0 .35rem; font-weight: 650; word-break: break-all; }
+.kicker { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+          color: #8a8377; margin: 0 0 1.25rem; }
+.scope { border-left: 3px solid #c9a227; background: #fdf8e8; padding: .8rem 1rem;
+         margin: 0 0 1.5rem; font-size: .9rem; }
+.scope strong { font-weight: 650; }
+pre { background: #fff; border: 1px solid #e4e0d8; border-radius: 3px; padding: 1rem;
+      overflow-x: auto; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre; }
+ul { padding-left: 1.15rem; }
+li { margin: .2rem 0; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+footer { margin-top: 2rem; font-size: .82rem; color: #8a8377; }
+@media (prefers-color-scheme: dark) {
+  body { background: #171614; color: #e8e4dc; }
+  a { color: #d9a866; }
+  .scope { background: #241f12; border-left-color: #c9a227; }
+  pre { background: #1f1e1b; border-color: #35322c; }
+}
+</style></head><body><main><h1>core/uniforge/tests/uf8_2_electrical_gate.rs</h1><p class="kicker">verbatim from the record — shown as the file's own bytes</p><div class="scope"><strong>Scope.</strong> This file is part of the record of a <strong>toy</strong>: a small world built inside a computer. Nothing in it is a claim about nature. Words such as <em>vacuum</em>, <em>photon</em> and <em>light cone</em> name patterns in the model — see <a href="../../../../index.html">Our Bubble</a>.</div><pre>//! Gate for lab/bridge/0802-electrical (rung 8.2, R1) — the 4th view: electrical / random-walk.
+//!
+//! The same graph Laplacian read as a resistor network and as a random walk. Membership gate: the
+//! walks↔circuits duality commute(a,b) = 2·|E|·R_eff(a,b) (two independent solves agree). Flagship
+//! constant: the stella spanning-tree entropy z = lim(ln τ)/N = ⟨ln λ_L⟩_BZ (Kirchhoff), via the
+//! Bloch k-sum (reusing 7.1&#x27;s cmat) + Richardson — log-singularity-limited to ~5 digits.
+//!
+//! Run: cargo test -p uniforge --release --test uf8_2_electrical_gate -- --nocapture   (~5 s)
+//!
+//! FIREWALL (R3): random walk / resistance / spanning trees of a TOY 14-regular complex — z_stella is
+//! a 🔵 graph constant, the walks↔circuits duality a cross-check, never a claim about nature.
+
+use kinematics::views::{commute_time, effective_resistance, jacobi_eigs, spanning_tree_ln};
+use std::io::Write;
+
+macro_rules! rec {
+    ($($a:tt)*) =&gt; {{ eprintln!($($a)*); let _ = std::io::stderr().flush(); }};
+}
+
+const Z_STELLA_REG: f64 = 2.576122; // P1
+const TOL_Z: f64 = 2e-5; // honest log-singularity resolution
+const DEG: f64 = 14.0;
+const DIFFS_N: [[i64; 3]; 3] = [[1, -1, 0], [0, 1, -1], [-1, 0, 1]];
+const LONG_N: [[i64; 3]; 3] = [[1, -1, 1], [1, 1, -1], [-1, 1, 1]];
+
+type C64 = (f64, f64);
+fn cadd(a: C64, b: C64) -&gt; C64 { (a.0 + b.0, a.1 + b.1) }
+fn csub(a: C64, b: C64) -&gt; C64 { (a.0 - b.0, a.1 - b.1) }
+fn cmul(a: C64, b: C64) -&gt; C64 { (a.0 * b.0 - a.1 * b.1, a.0 * b.1 + a.1 * b.0) }
+
+fn herm3_eigs(h: &amp;[[C64; 3]; 3]) -&gt; [f64; 3] {
+    let tr = h[0][0].0 + h[1][1].0 + h[2][2].0;
+    let mut tr2 = 0.0;
+    for r in 0..3 { for c in 0..3 { tr2 += h[r][c].0 * h[r][c].0 + h[r][c].1 * h[r][c].1; } }
+    let c1 = 0.5 * (tr * tr - tr2);
+    let cof0 = csub(cmul(h[1][1], h[2][2]), cmul(h[1][2], h[2][1]));
+    let cof1 = csub(cmul(h[1][0], h[2][2]), cmul(h[1][2], h[2][0]));
+    let cof2 = csub(cmul(h[1][0], h[2][1]), cmul(h[1][1], h[2][0]));
+    let det = cadd(csub(cmul(h[0][0], cof0), cmul(h[0][1], cof1)), cmul(h[0][2], cof2));
+    let (a, b, c) = (tr, c1, det.0);
+    let p = b - a * a / 3.0;
+    let q = -(2.0 * a * a * a) / 27.0 + (a * b) / 3.0 - c;
+    let shift = a / 3.0;
+    if p.abs() &lt; 1e-14 { let r = (-q).cbrt() + shift; return [r, r, r]; }
+    let m = 2.0 * (-p / 3.0).sqrt();
+    let arg = ((3.0 * q) / (p * m)).clamp(-1.0, 1.0);
+    let th = arg.acos() / 3.0;
+    let t23 = 2.0 * std::f64::consts::PI / 3.0;
+    let mut r = [m * th.cos() + shift, m * (th - t23).cos() + shift, m * (th - 2.0 * t23).cos() + shift];
+    r.sort_by(|x, y| x.partial_cmp(y).unwrap());
+    r
+}
+
+/// ⟨ln λ_L⟩ over the M³ torus (excluding zero modes) — the spanning-tree entropy z at size M.
+fn bloch_lnmean(m: usize) -&gt; f64 {
+    let wq = 2.0 * std::f64::consts::PI / m as f64;
+    let cs: Vec&lt;f64&gt; = (0..m).map(|p| (wq * p as f64).cos()).collect();
+    let sn: Vec&lt;f64&gt; = (0..m).map(|p| (wq * p as f64).sin()).collect();
+    let (mut sum, mut cnt) = (0.0, 0.0);
+    for p1 in 0..m { for p2 in 0..m { for p3 in 0..m {
+        let p = [p1, p2, p3];
+        let cd = |a: usize, b: usize| cs[p[a]] * cs[p[b]] + sn[p[a]] * sn[p[b]];
+        let f0 = 2.0 * (cd(0, 1) + cd(1, 2) + cd(2, 0));
+        let ax = (cs[p1] + cs[p2] + cs[p3], sn[p1] + sn[p2] + sn[p3]);
+        let ph = |v: [i64; 3]| {
+            let mut z = (1.0, 0.0);
+            for (k, &amp;vk) in v.iter().enumerate() {
+                if vk != 0 { z = cmul(z, (cs[p[k]], if vk &gt; 0 { sn[p[k]] } else { -sn[p[k]] })); }
+            }
+            z
+        };
+        let mut cmat = [[(0.0, 0.0); 3]; 3];
+        for tau in 0..3 {
+            let sc = (2 * tau) % 3;
+            let up = cadd(ax, ph(LONG_N[(sc + 1) % 3]));
+            let bwd = ph(LONG_N[(sc + 2) % 3]);
+            let dn = (ax.0 + bwd.0, -(ax.1 + bwd.1));
+            cmat[tau][tau] = (1.0 - f0 / DEG, 0.0);
+            cmat[tau][(tau + 1) % 3] = (-up.0 / DEG, -up.1 / DEG);
+            cmat[tau][(tau + 2) % 3] = (-dn.0 / DEG, -dn.1 / DEG);
+        }
+        for &amp;ev in &amp;herm3_eigs(&amp;cmat) {
+            let lam = DEG * ev;
+            if lam &gt; 1e-9 { sum += lam.ln(); cnt += 1.0; }
+        }
+    }}}
+    sum / cnt
+}
+
+fn richardson(a: f64, b: f64, order: i32) -&gt; f64 { let r = 2f64.powi(order); (r * b - a) / (r - 1.0) }
+
+// rule-built 14-regular stella torus (7.0&#x27;s graph)
+fn stella_hops(tau: usize) -&gt; Vec&lt;[i64; 3]&gt; {
+    let mut hops = Vec::with_capacity(14);
+    for d in [[1i64, 0, 0], [0, 1, 0], [0, 0, 1]] { hops.push(d); hops.push([-d[0], -d[1], -d[2]]); }
+    for d in DIFFS_N { hops.push(d); hops.push([-d[0], -d[1], -d[2]]); }
+    let sc = (2 * tau) % 3;
+    hops.push(LONG_N[(sc + 1) % 3]);
+    let b = LONG_N[(sc + 2) % 3];
+    hops.push([-b[0], -b[1], -b[2]]);
+    hops
+}
+fn stella_torus_laplacian(m: usize) -&gt; Vec&lt;Vec&lt;f64&gt;&gt; {
+    let mm = m as i64;
+    let idx = |a: i64, b: i64, c: i64| (a.rem_euclid(mm) * mm * mm + b.rem_euclid(mm) * mm + c.rem_euclid(mm)) as usize;
+    let n = m * m * m;
+    let mut l = vec![vec![0.0f64; n]; n];
+    for a in 0..mm { for b in 0..mm { for c in 0..mm {
+        let tau = ((a + b + c) % 3) as usize;
+        let i = idx(a, b, c);
+        for d in stella_hops(tau) {
+            let j = idx(a + d[0], b + d[1], c + d[2]);
+            l[i][i] += 1.0; l[i][j] -= 1.0;
+        }
+    }}}
+    l
+}
+fn complete_laplacian(m: usize) -&gt; Vec&lt;Vec&lt;f64&gt;&gt; {
+    let mut l = vec![vec![-1.0; m]; m];
+    for i in 0..m { l[i][i] = (m - 1) as f64; }
+    l
+}
+fn cycle_laplacian(n: usize) -&gt; Vec&lt;Vec&lt;f64&gt;&gt; {
+    let mut l = vec![vec![0.0; n]; n];
+    for i in 0..n { l[i][i] = 2.0; l[i][(i + 1) % n] -= 1.0; l[i][(i + n - 1) % n] -= 1.0; }
+    l
+}
+
+#[test]
+fn uf8_2_electrical_gate() {
+    rec!(&quot;=== rung 8.2 — the 4th view: electrical / random-walk ===&quot;);
+    rec!(&quot;FIREWALL: random walk / resistance / spanning trees of a TOY complex — z is a 🔵 graph constant.&quot;);
+
+    // ---- P0: Kirchhoff controls (closed forms) ----
+    let mut p0 = true;
+    let mut ctrl_rows = Vec::new();
+    for &amp;m in &amp;[4usize, 5, 6] {
+        let lt = spanning_tree_ln(&amp;jacobi_eigs(complete_laplacian(m)));
+        let cayley = ((m - 2) as f64) * (m as f64).ln();
+        p0 &amp;= (lt - cayley).abs() &lt; 1e-9;
+        rec!(&quot;[P0] K_{m}: ln τ={lt:.9} Cayley={cayley:.9} |Δ|={:.1e}&quot;, (lt - cayley).abs());
+        ctrl_rows.push(format!(&quot;K_{m},{:.9},{cayley:.9}&quot;, lt));
+    }
+    for &amp;n in &amp;[5usize, 8, 12] {
+        let lt = spanning_tree_ln(&amp;jacobi_eigs(cycle_laplacian(n)));
+        p0 &amp;= (lt - (n as f64).ln()).abs() &lt; 1e-9;
+        rec!(&quot;[P0] C_{n}: τ={:.6} (expect {n})&quot;, lt.exp());
+        ctrl_rows.push(format!(&quot;C_{n},{:.9},{:.9}&quot;, lt, (n as f64).ln()));
+    }
+
+    // ---- P1: the spanning-tree entropy constant via Bloch + Richardson ----
+    let ms = [24usize, 48, 96, 192];
+    let mut z = [0.0; 4];
+    let mut z_rows = Vec::new();
+    for (i, &amp;m) in ms.iter().enumerate() {
+        z[i] = bloch_lnmean(m);
+        rec!(&quot;[P1] M={m:4} z_M={:.10}&quot;, z[i]);
+        z_rows.push(format!(&quot;{m},{:.10}&quot;, z[i]));
+    }
+    let l1: Vec&lt;f64&gt; = z.windows(2).map(|w| richardson(w[0], w[1], 2)).collect();
+    let l2: Vec&lt;f64&gt; = l1.windows(2).map(|w| richardson(w[0], w[1], 2)).collect();
+    let z_ext = l2[l2.len() - 1];
+    let internal = (z[3] - z[2]).abs();
+    rec!(&quot;[P1] z_stella (Richardson) = {z_ext:.10}  (reg {Z_STELLA_REG} ± {TOL_Z})  internal={internal:.2e}&quot;);
+    let p1 = (z_ext - Z_STELLA_REG).abs() &lt; TOL_Z &amp;&amp; internal &lt; 1e-4;
+
+    // ---- P2: walks↔circuits identity (membership gate) on stella(3) ----
+    let ls = stella_torus_laplacian(3);
+    let ne = 27 * 14 / 2; // |E| = 189
+    let mut p2 = true;
+    let mut p2_worst = 0.0f64;
+    let mut walk_rows = Vec::new();
+    for (a, b) in [(0usize, 1usize), (0, 13), (5, 20), (2, 25)] {
+        let r = effective_resistance(&amp;ls, a, b);
+        let elec = 2.0 * ne as f64 * r;
+        let walk = commute_time(&amp;ls, a, b);
+        let d = (elec - walk).abs();
+        p2 &amp;= d &lt; 1e-9;
+        p2_worst = p2_worst.max(d);
+        rec!(&quot;[P2] nodes {a},{b}: R_eff={r:.8} 2E·R={elec:.6} walk commute={walk:.6} |Δ|={d:.1e}&quot;);
+        walk_rows.push(format!(&quot;{a}-{b},{r:.8},{elec:.6},{walk:.6}&quot;));
+    }
+
+    // ---- P3: Bloch↔dense cross-check for z at M=6 (rule-built torus, 215 nonzero modes) ----
+    let ev = jacobi_eigs(stella_torus_laplacian(6));
+    let nz: Vec&lt;f64&gt; = ev.iter().copied().filter(|&amp;x| x &gt; 1e-8).collect();
+    let dense_z6 = nz.iter().map(|&amp;x| x.ln()).sum::&lt;f64&gt;() / nz.len() as f64;
+    let bloch_z6 = bloch_lnmean(6);
+    let xcheck = (dense_z6 - bloch_z6).abs();
+    rec!(&quot;[P3] z_6 dense ({} modes)={dense_z6:.10} Bloch={bloch_z6:.10} |Δ|={xcheck:.1e}&quot;, nz.len());
+    let p3 = xcheck &lt; 1e-9;
+
+    // ---- emit data (R10) ----
+    let dir = std::path::PathBuf::from(concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/../../lab/bridge/0802-electrical/data&quot;));
+    std::fs::create_dir_all(&amp;dir).unwrap();
+    let write = |name: &amp;str, header: &amp;str, rows: &amp;[String]| {
+        let mut f = std::fs::File::create(dir.join(name)).unwrap();
+        writeln!(f, &quot;{header}&quot;).unwrap();
+        for r in rows { writeln!(f, &quot;{r}&quot;).unwrap(); }
+    };
+    write(&quot;kirchhoff_controls.csv&quot;, &quot;graph,ln_tau,expected&quot;, &amp;ctrl_rows);
+    write(&quot;entropy_ksum.csv&quot;, &quot;M,z_M&quot;, &amp;z_rows);
+    write(&quot;walks_circuits.csv&quot;, &quot;pair,R_eff,elec_2ER,walk_commute&quot;, &amp;walk_rows);
+    write(&quot;summary.csv&quot;, &quot;quantity,value&quot;, &amp;[
+        format!(&quot;z_stella,{z_ext:.10}&quot;),
+        format!(&quot;z_6_dense,{dense_z6:.10}&quot;),
+        format!(&quot;z_6_bloch,{bloch_z6:.10}&quot;),
+        format!(&quot;walks_circuits_worst,{p2_worst:.2e}&quot;),
+    ]);
+
+    rec!(&quot;--------------------------------------------------------------------&quot;);
+    rec!(&quot;[VERDICT] P0(Kirchhoff)={p0} P1(z={z_ext:.6}±{TOL_Z})={p1} P2(walks↔circuits, worst={p2_worst:.1e})={p2} P3(Bloch=dense)={p3}&quot;);
+    rec!(&quot;[FIREWALL] z_stella = {z_ext:.6} is a 🔵 constant of a TOY 14-regular graph (spanning-tree&quot;);
+    rec!(&quot;           entropy); the walks↔circuits duality is a cross-check between two views, not nature.&quot;);
+    assert!(p0, &quot;P0 failed: Kirchhoff controls (Cayley / cycle)&quot;);
+    assert!(p1, &quot;P1 failed: z_stella outside registered band or ladder inconsistent&quot;);
+    assert!(p2, &quot;P2 failed: commute ≠ 2E·R_eff (the 4th view fails its membership test)&quot;);
+    assert!(p3, &quot;P3 failed: Bloch z ≠ dense z at M=6&quot;);
+}
+</pre><footer>A verbatim copy from the UniForge engine at commit <code>db59a2fc3c398095b3e3ec0e1c702272747ca637</code>, carried with the book so it can be read without engine access. <a href="../../../README.html">What this directory is</a>.</footer></main></body></html>
