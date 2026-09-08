@@ -75,7 +75,7 @@ record instead, which is a different and in some ways better guarantee.
 Some sections cite no experiment of ours at all — the front door, the two primers, the chapter on
 boundaries, the opening on method, and the history chapter — and they say so rather than being left out, because a
 reader should be able to tell *no evidence was cited* from *no evidence exists*. The closing chapter
-rests on commands you run yourself, and on three small runs of its own that it points you to.
+rests on commands you run yourself, and on a few small runs of its own that it points you to.
 
 One section per chapter, in reading order, **numbered from `00`** to match the order in
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what

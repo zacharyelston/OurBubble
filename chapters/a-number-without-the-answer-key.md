@@ -166,8 +166,8 @@ sheet, a block. There is one more to point it at — the one you built.
 <!-- beat a-number-without-the-answer-key.9 -->
 
 The same switches, one on each dot of the Container, and the same machine flipping them by chance.
-For this run the world was wrapped in two of its three directions and left open in the third.
-Switches do not ripple, so an open end is not an echo here; what it moves is one number of the
+For this run the world was wrapped in two of its three directions and left open in the third, the
+record's own default for this measurement. Switches do not ripple, so an open end is not an echo here; what it moves is one number of the
 object's own — the height at which its curves at different sizes cross — and the record registered
 that it would move that one and none of the class's. It did.
 

@@ -164,7 +164,7 @@ reader every time instead of explained to her once.
 
 ## 13 · What does pushing on it cost?
 
-1. Now that it behaves evenly — what would it cost to move a *piece* of it, contents and all?  *(the pivot, said once as the questions widen: what changes is the object under the question — she has met the ripple's relative and the interlude's flat sheet already; the record's other runs were made on a plain grid of dots, a line of dots, and a different small model, each named where its run begins; what does not change is the work, and the dial every dots-and-lines world here carries — read from the object, never turned toward an answer — with the switches the stated exception. This chapter's object is a grid of dots and a formula that returns a number for a shape — the bubble)*
+1. Now that it behaves evenly — what would it cost to move a *piece* of it, contents and all?  *(the pivot, said once as the questions widen: what changes is the object under the question — she has met the ripple's relative and the interlude's flat sheet already; the record's other runs were made on a plain grid of dots, a line of dots, and on switches, once on the Container itself, each named where its run begins; what does not change is the work, and the dial every dots-and-lines world here carries — read from the object, never turned toward an answer — with the switches the stated exception. This chapter's object is a grid of dots and a formula that returns a number for a shape — the bubble)*
 2. ✎ *Before we look:* what should moving the *whole* world cost?  *(nothing — it is just renaming positions; ours is in the record with its reason, from before the run, and both are the next beat's)*
 3. Did it charge us for that?  *(exactly zero, which is what we wrote down — and why that boring number licenses everything after)*
 4. Now shape the push — what came back, and did we put any of it in?  *(three things, all pre-registered)*
@@ -225,7 +225,7 @@ reader every time instead of explained to her once.
 1. What did we actually do — in one honest sentence?  *(inspected one object we built, and watched its tools do seven things)*
 2. Can I follow one result without running anything?  *(four files, ten minutes: question → data → verdict → summary, in that order)*
 3. What travels with the book, and what does the book promise about it?  *(the record, verbatim, checked on every build — and exactly which sentences no program has read)*
-4. What is the check that would actually catch us?  *(re-run a test at full size, let it overwrite the data the book quotes, ask git. Two of the smallest were made on wrapped copies of the Container, the same dots and lines: a random walk's return, the copies grown until the number stopped moving, and the resistance between two dots with every line a resistor — the latter also a standard circuit file circuit simulators read)*  [rungs 7.0, 8.2, 8.3 in the appendix; no number quoted]
+4. What is the check that would actually catch us?  *(re-run a test at full size, let it overwrite the data the book quotes, ask git. Two of the smallest were made on wrapped copies of the Container, the same dots and lines: a random walk's return, the copies grown and the number they were heading for read off, and the resistance between two dots with every line a resistor — the latter also a standard circuit file circuit simulators read)*  [rungs 7.0, 8.2, 8.3 in the appendix; no number quoted]
 5. ✎ Before you press Return — what do you expect?
 6. Where is the next shadow?
 

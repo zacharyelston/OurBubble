@@ -29,7 +29,7 @@ record instead, which is a different and in some ways better guarantee.
 Some sections cite no experiment of ours at all — the front door, the two primers, the chapter on
 boundaries, the opening on method, and the history chapter — and they say so rather than being left out, because a
 reader should be able to tell *no evidence was cited* from *no evidence exists*. The closing chapter
-rests on commands you run yourself, and on three small runs of its own that it points you to.
+rests on commands you run yourself, and on a few small runs of its own that it points you to.
 
 One section per chapter, in reading order, **numbered from `00`** to match the order in
 `chapters/SUMMARY.md`. Each also carries a stable anchor keyed to its chapter's name, which is what
@@ -607,7 +607,7 @@ cargo test --release -p uniforge --test uf5_9_bond_locator_reprocess_gate  -- --
 
 **Registered rungs.**
 
-- lattice-constants 7.0 — the Container's random-walk return constant: how often a walker stepping at random along its lines comes home, reached by growing wrapped copies of the same dots and lines until the number stopped moving, after the same machinery reproduced G. N. Watson's 1939 closed forms for two textbook lattices. Its gate re-runs in seconds
+- lattice-constants 7.0 — the Container's random-walk return constant: how often a walker stepping at random along its lines comes home, reached by growing wrapped copies of the same dots and lines and reading off the number they were heading for, after the same machinery reproduced Watson's 1939 closed forms for two textbook lattices. Its gate re-runs in seconds
 - bridge 8.2 — a small wrapped copy's lines as resistors: the resistance between two dots, and the same fact reached a second way, as the time a random walk takes to go and come back, which is proportional to it
 - bridge 8.3 — the same circuit written out as a standard netlist file that circuit simulators read, and solved by an independent method that agrees with the engine's resistance to machine precision
 
