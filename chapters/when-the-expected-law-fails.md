@@ -1,4 +1,4 @@
-# When the world you built says no
+# The law we were sure of
 
 > **Scope.** *Cavity*, *resonance*, *material weight* and *exponent* name geometry and numbers inside a
 > lattice **toy**. No real substance is being modelled and no real frequency is being measured; the

@@ -538,7 +538,7 @@ cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture
 
 <a id="s-when-the-expected-law-fails"></a>
 
-## §17 · When the world you built says no — the obvious answer refused, and two published misses dissolved
+## §17 · The law we were sure of — the obvious answer refused, and two published misses dissolved
 
 **The chapter.** [when-the-expected-law-fails.md](when-the-expected-law-fails.md)
 

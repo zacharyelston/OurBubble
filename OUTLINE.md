@@ -208,7 +208,7 @@ reader every time instead of explained to her once.
 8. Did it miss anything — and had it said so first?  *(one quantity, too high, in exactly the direction registered in advance)*  [no figure in the record for this one (0503 has none) — the band and the miss are stated in the appendix]
 9. What is left for an instrument to prove?  *(that it can tell us we were wrong)*
 
-## 17 · When the world you built says no
+## 17 · The law we were sure of
 
 1. What is the simplest kind of prediction to get wrong?  *(a law you are sure of)*
 2. Put a denser lump in a resonating cavity — a walled box of the ripple's world, longer than it is wide — the pitch drops; by how much, as it gets denser?
