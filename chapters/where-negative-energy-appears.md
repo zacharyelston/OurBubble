@@ -11,7 +11,7 @@
 
 <!-- beat where-negative-energy-appears.1 -->
 
-Three noes now, all at the same barrier. A shaped push wants something below the floor. Ordinary
+The noes so far have all been at the same barrier. A shaped push wants something below the floor. Ordinary
 fields cannot go below the floor. Walling a region off does not change what resistance is, and aimed
 fields cannot empty a volume.
 
@@ -87,13 +87,17 @@ less of a difference to have. Pick one, and note in half a sentence which way yo
 And a second guess, because the chapter turns on it: if the difference deepens as the gap narrows,
 what does that mean the walls will *do*?
 
+We wrote ours down first, on both counts; the next section says what it was.
+
 ## What the little world did
 
 <!-- beat where-negative-energy-appears.6 -->
 
-We built the one-dimensional version. Two walls in the little world, the allowed vibration shapes
-worked out from the object itself, the part that is the same inside and out subtracted away, and
-then the question: what is left?
+We built the one-dimensional version: a line of dots with a wall at each end, the smallest object the
+question fits, and the same bookkeeping of differences and sums on it. The allowed vibration shapes
+worked out from the line itself, the part that is the same inside and out subtracted away, and then
+the question: what is left? We had written down, before the run, that it would sit below the line at
+every gap, deeper as the walls close, and that the walls would be pulled together.
 
 Every measured value sits below the free-space line. And as the walls move closer, it goes further
 down.
@@ -103,13 +107,13 @@ gap narrows is a quantity that would rather the gap were narrower — so the wal
 together. The attraction is not an extra ingredient. It is the same fact, read as a tendency instead
 of as a number.
 
-That is the sign three attempts had been unable to reach, appearing on its own.
+That is the sign nothing before it had reached, appearing on its own.
 
 ## A sign is easy
 
 <!-- beat where-negative-energy-appears.7 -->
 
-Which is exactly why a sign is not enough, and this is the sceptical beat of the chapter.
+Which is exactly why a sign is not enough, and this is the sceptical section of the chapter.
 
 Half the ways of getting this calculation wrong hand you a negative number. If all we had was "it
 came out below the line", we would have almost no evidence that we had reproduced Casimir's effect

@@ -40,14 +40,17 @@ Two more things worth committing to while you are at it, because they turn out t
 questions and the chapter's whole shape is that they got separate answers. Do you expect the shell
 to isolate at all? And if the blob does move differently, by how much — a little, or a lot?
 
+We wrote ours down first, on all three counts; the next sections say what they were.
+
 ## First question: does the wall isolate?
 
 <!-- beat the-wall-that-worked-and-didnt.3 -->
 
-It does, and convincingly.
+It does, and convincingly. We had written down that the inside would hear less than a third of what
+the outside sent.
 
-Build the shell — a region where the field is heavily suppressed. It is not the bubble wall of the
-last chapter; that was a shape the energy took, and this is a thing we put there on purpose. Then
+Build the shell on the ripple's world — the cube cut into six tetrahedra — as a region where the
+field is heavily suppressed. It is not the bubble wall of the last chapter; that was a shape the energy took, and this is a thing we put there on purpose. Then
 send a signal from outside and see how much of it arrives inside.
 
 About **half a million times** weaker than it would have been without the shell. That is not a
@@ -80,13 +83,13 @@ Now the question the chapter was built for. The blob inside: does it move differ
 
 <!-- beat the-wall-that-worked-and-didnt.5 -->
 
-The blob inside moves exactly as far as it did before.
+The blob inside moves as far as it did before, to within a millionth — where *identical* was written.
+Say that plainly: the test we registered was missed by that millionth and rewritten after the run,
+with the miss on the record. The isolation held as written.
 
-Not slightly further. Not slightly less. The blob's displacement differs between the walled and
-unwalled cases by about a millionth — far inside the threshold registered for it. The run does not
-claim the two cases are bit-for-bit identical, and says why: the wall reflects a wave of its own
-that leaks back inward at lattice speed. That is a difference in what reaches the blob, and it is
-not a difference in how hard the blob is to push.
+The run names the millionth: the wall reflects a wave of its own that leaks back inward at one line
+per tick. That is a difference in what reaches the blob, and it is not a difference in how hard the blob
+is to push.
 
 Go and look at your guess. This is the one the ritual is for, because the idea in the opening is
 genuinely attractive, and half the point of writing a prediction down is to catch yourself having
@@ -139,20 +142,19 @@ There is one more route to the same barrier, and it is worth closing before movi
 Shielding a region isolates it. It does not *empty* it. So try the other thing: arrange ordinary
 fields, several sources carefully aimed, so they cancel one another over a whole volume.
 
-Note how modest that would be even if it worked: cancelling reaches zero, and a shaped push wants
-below the floor.
+Note how modest that would be even if it worked: cancelling reaches zero, and a push wants below the
+floor.
 
-A conjecture, with a threshold: the target volume had to hold less than a fifth of the field
-elsewhere. It never came close. Tested to destruction. **No.**
+A conjecture, with a threshold: the target volume had to end up more than a fifth emptier than the
+field around it, on a plain grid rather than the shell's world. It never came close. **No.**
 
-The energies add. You can cancel a field at a point and on a surface, but a volume where everything
-is zero cannot be built out of sources aimed from outside — the reason is structural, not a matter
-of trying harder.
+The energies add. You can cancel a field at a point and on a surface, but not over a volume, from
+sources aimed from outside; the reason is structural.
 
 **[Open the data-true null figure](record/lab/warp-3-shield/0304-four-source-null/figures/null.html)**
 
-Two chapters, three noes, and the barrier from
-[what pushing on it costs](the-bubble-and-its-bill.md) still standing. This is the point in a
+The noes so far stand, and so does the barrier from
+[what pushing on it costs](the-bubble-and-its-bill.md). This is the point in a
 project where you either stop, or you go and find the one place the sign is genuinely allowed.
 
 There is one. It is not in the fields at all — it is in what is left when you take them away.

@@ -680,7 +680,7 @@ export function chapterSteps(engine, draw) {
       {
         // Folded: "is that really the whole law" is answered by there being one
         // button, and it does the same thing every time.
-        anchors: ["what-one-tick-does", "nothing-else-ever"],
+        anchors: ["what-one-tick-does", "the-same-bookkeeping"],
         act: "Tick, once.",
         controls: [{ kind: "tick", count: ticks, noun: "tick" }],
         render: (state) => {

@@ -12,16 +12,23 @@
 
 <!-- beat the-bubble-and-its-bill.1 -->
 
-The world now behaves the same way in every direction, which means a measurement made in it means
-what it appears to mean. So here is the next thing you can ask of such a world.
+The world now behaves the same way in every direction, and what got it there — a dial read from the
+object — is the habit that travels. Here the questions widen, so here, once, is what changes and what
+does not.
 
-What would it cost to move a *piece* of it?
+What changes is the object under the question. You have met the ripple's relative and the interlude's
+flat sheet already. The record's other runs were made on a plain grid of dots, on a line of
+dots, and on a different small model altogether — switches where the numbers were — and each chapter
+names its own where its run begins.
 
-Not to move something through it — that is just a ripple, and you have seen one. To take a region,
-contents and all, and shift the region itself along. Call the region a bubble; that is all the word
-means in this book, and it is the only thing it means.
+What does not change is the work: say what you expect, compare, test the other reading, keep the
+answer. And the dial, what each line counts for, is a setting every dots-and-lines world here carries, read
+from the object and never turned toward an answer. That is what lets the same bookkeeping be pointed
+at each of them in turn; the switches are that exception.
 
-Before spending anything on a shaped one, though, there is a cheaper question worth guessing at.
+This chapter's object is a grid of dots and a formula that returns a number for a shape. What would
+it cost to move a *piece* of it — a region, contents and all, shifted along? Call the region a
+bubble; that is all the word means in this book. Before shaping one, a cheaper question.
 
 ## ✎ Before we look
 
@@ -36,6 +43,8 @@ Take the guess seriously for a second, because it is not a trick. There is an ar
 should cost a great deal — you have moved everything there is. There is an argument that it should
 cost nothing at all. Decide which, and write down why in half a sentence.
 
+We wrote ours down first, with the reason; both are the next section's.
+
 ## The bill for moving everything
 
 <!-- beat the-bubble-and-its-bill.3 -->
@@ -44,15 +53,14 @@ Nothing. And you can see why once you have said it out loud: shifting every dot 
 is not an event. Nothing in the world has changed relative to anything else in the world. All you
 have done is renumber where things are — the same arrangement, described from one pace to the left.
 
-So the honest expectation is a bill of zero, and the reason to run it anyway is that our formula
-does not know any of the above. It just takes a configuration and returns a number.
+So the honest expectation is a bill of zero, which is what we wrote down, and the reason to run it
+anyway is that our formula does not know any of the above. It just takes a configuration and returns a number.
 
-It returned exactly zero. Not nearly zero, not zero to within the arithmetic — zero, with nothing
-left over.
+It returned exactly zero — not nearly zero, but zero, with nothing left over.
 
 That is the most boring result in this chapter, and it is the one that licenses every result after
 it. Because the uniform push is free, whatever we get charged next is being charged for the
-*shaping*, and not for having a grid, or an edge, or arithmetic that rounds. Without this beat,
+*shaping*, and not for having a grid, or an edge, or arithmetic that rounds. Without this section,
 every number that follows could be the machinery talking.
 
 Now shape it.
@@ -75,7 +83,7 @@ Those are predictions about a situation nobody can build, which makes them an un
 a toy. All three were registered here, with thresholds, before the run.
 
 And the first came back. **Every** point where the formula returns anything at all returns a value
-below the baseline — not most of them, not on average. Nobody wrote that into the setup.
+below the baseline — every point, all of them. Nobody wrote that into the setup.
 
 So where does the cost sit?
 

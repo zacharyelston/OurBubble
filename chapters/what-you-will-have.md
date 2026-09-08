@@ -33,7 +33,7 @@ exterior calculus* — and you may put it straight back down. You will not need 
 <!-- beat what-you-will-have.2 -->
 
 By the last page you will have the ideas themselves, not a rumour of them: a world you can hold in
-your head and count; the one rule everything here is made of; why the tick a world runs on belongs
+your head and count; the one rule that world runs on; why the tick a world runs on belongs
 to its shape; a machine's honest *no*, told apart from a mistake; and a path from any number we
 produced to where it came from — a file in the record, or arithmetic done in front of you.
 
@@ -52,15 +52,14 @@ physics word names a feature of it.
 <!-- beat what-you-will-have.3 -->
 
 First a puzzle, then why measuring gets done at edges. Then the shadow, and what everyone else did
-with one: the same method for a few thousand years, no cleverer and much sharper. Then chapters on a
-napkin. Two dots and a line, then a triangle, then the smallest solid there is — which turns out to
-be a whole world: every kind of number in it, and a setting for what each line counts. Then we make
-it move, by hand.
+with one: the same method for a few thousand years, sharper and sharper. Then chapters on a napkin. Two dots and a line, then a triangle, then the smallest solid there is, which turns out to
+be a whole world. Then we make it move, by hand.
 
 Then the napkin runs out. The smallest world with any room in it needs arithmetic no hand can do, so
 the same rule goes to a machine, unchanged — on a world with no edge.
 
-The rest is what came back. A ripple lopsided until one setting fixed it. What it costs to push on a
+The rest is what came back — from plainer worlds like it, each named when it arrives, and once from
+a small model of switches, not ripples. A ripple lopsided until one setting fixed it. What it costs to push on a
 piece of it. A wall that worked, and hopes that did not. A gap emptier than empty. A measurement
 with its answer key taken away, a law that came back refused, and misses that were in our reading,
 not in the world. The noes are given the same room as the yeses: a machine that can only agree with

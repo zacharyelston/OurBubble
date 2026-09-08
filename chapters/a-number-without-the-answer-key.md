@@ -72,17 +72,26 @@ It is worth answering honestly rather than correctly, because the interesting ve
 question is *how much* would you trust it, and what exactly would the known case have to get right
 first. Write down the standard you would want met. One line.
 
+Ours was written down first: margins for the known case's numbers.
+
 ## Make the instrument earn it
 
 <!-- beat a-number-without-the-answer-key.5 -->
 
-We used a two-dimensional case that has an exact solution — Lars Onsager's, from 1944, one of the
-results that made universality believable in the first place.
+Here the rule changes as well as the object. The model is a lattice of switches, each up or down,
+each nudged by its neighbours — the Ising model, and not a wave. It is here because the numbers it
+gives at the edge where it stops being one thing and becomes another are the *kind* nature hands out
+class by class, which is what makes them checkable.
 
-The answers are known precisely, and they were not given to the machinery. The pipeline saw only its
-own runs at a handful of manageable sizes, and had to produce the class numbers itself.
+We pointed it first at a line of switches, which belongs to the same class as Onsager's flat sheet of
+them — that is what class membership means, and why the line will do. He solved the sheet exactly in
+1944.
 
-It got them: two of the three to seven digits, the third to four.
+The answers are known precisely and were not given to the machinery, which saw only its own runs at
+a handful of sizes and had to produce the class numbers itself.
+
+It got them: two of the three to seven digits, the third to four — inside the margins we had set, a
+thousandth for one and a fiftieth for the other two.
 
 That is not a discovery. It is a calibration, and it is the whole reason anything later in this
 chapter is worth reading. An instrument that cannot recover a known answer has no business reporting
@@ -96,11 +105,12 @@ Now take the answer key away.
 
 <!-- beat a-number-without-the-answer-key.6 -->
 
-The three-dimensional version of the same model has no closed-form solution. Nobody has one. It is
-not that it is hard to look up — it does not exist.
+Next the flat sheet of switches itself, by a different method — a machine flipping them by chance —
+and then the block: the three-dimensional version of the same model, which has no closed-form
+solution. Nobody has one. It is not that it is hard to look up — it does not exist.
 
-The pipeline ran there unchanged. It reproduced the solved two-dimensional numbers first, as a
-built-in check, then went to three dimensions and reported what it found.
+The pipeline reproduced the solved two-dimensional numbers first, as a built-in check, then went to
+three dimensions and reported what it found.
 
 Two exponents, agreeing with the values measured *in real matter* — at the liquid–gas critical
 point, and in uniaxial magnets — to within a few percent. Nobody fitted those targets. There was no
@@ -134,7 +144,7 @@ asks about a strong result: did it miss anything?
 
 It did. One quantity, and it came out too high.
 
-Here is the part worth slowing down for. Before the run, the team wrote down that this particular
+Here is the part worth slowing down for. Before the run, we wrote down that this particular
 quantity was the one the affordable lattice sizes could not pin down — and that its estimate would
 come out *too high*, in that direction, for that reason.
 
