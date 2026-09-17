@@ -29,7 +29,8 @@
 
 /** Every entry point the demos use, and the objects each will answer for. */
 export const ENTRY_POINTS = ["census_json", "cut_json", "loops_json", "slosh_json",
-  "certificate_json", "number_json", "slosh_weighted_json", "face_sum_json", "walk_json"];
+  "certificate_json", "number_json", "slosh_weighted_json", "face_sum_json", "walk_json",
+  "experiment_example_json", "experiment_json"];
 
 const NUMERIC_STRING = /^[-−+]?\d+(?:[./]\d+)?$/;
 
@@ -112,6 +113,11 @@ export class Engine {
   sloshWeighted(object, initial, weights, k, ticks) {
     return this.ask("slosh_weighted_json", object, initial, weights, k, ticks);
   }
+
+  experimentExample() { return this.ask("experiment_example_json"); }
+
+  // Pass imported text through unchanged: Rust must see duplicate keys and enforce its size cap.
+  experiment(text) { return this.ask("experiment_json", text); }
 
   /**
    * One walk, with its sum building term by term — the terms, the running column, and the total.

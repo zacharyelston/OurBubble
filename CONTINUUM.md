@@ -71,6 +71,12 @@ Rules of the ledger:
 
 ## Active lanes
 
+**2026-09-17 — #366 replay adapter:** owner requested completion of UniForge #366 before #364.
+Demos/Repository territory: `demos/replay*`, additive adapter/controller wiring, engine pin/artifacts,
+engine provenance and checks. Branch `codex/366-experiment-replay`; no chapter beats, record pin or C-series work.
+Fresh review and tier 0 are required before integration.
+
+
 | lane | role | territory | delivery | state |
 |---|---|---|---|---|
 | **Structure** | owner + the decision session (Fable): section architecture, ordering, merges, scope calls | decisions; merges; this file | this ledger + merge verdicts | active |

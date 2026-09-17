@@ -58,11 +58,12 @@
 version       = 1
 repo          = github.com/zacharyelston/UniForge
 ref           = main
-sha           = aab98a96ba7f5197a25e7a94c7c36f1046d011b0
+sha           = 5ba7a5ed74c85b16636fbcb914eacf64bbf1855a
 crate         = napkin
 crate_version = 0.1.2
 register      = lab/napkin/0001-napkin-engine-register
 register      = lab/napkin/0003-engine-gaps
+register      = lab/napkin/0005-experiment-replay
 
 # The toolchain. UniForge pins rustc and the wasm target in its own `core/rust-toolchain.toml`, so
 # `cargo` run inside that checkout uses exactly this channel and `tools/build_engine.sh` only
@@ -88,9 +89,9 @@ build = wasm-bindgen --target web --out-dir engine/ $UNIFORGE_SRC/core/target/wa
 # satisfied by deleting the rest. `check_edition.py` compares this block against the
 # directory in both directions on every run.
 
-sha256 = 65455d8f54a7dfe0a49bfb1cad515b09aea6c44602bbc35b3912984b618b2364  engine/napkin.d.ts
-sha256 = db7817a7dc46767f180c6427b55c501279a7614ebc8dd0a43a54bf63e6d59880  engine/napkin.js
+sha256 = 7fdabbfac56f8705f1d1ea5f8cde6ecda39b91f07f48fc65e639bdc784b2a43a  engine/napkin.d.ts
+sha256 = f8ae662262a144813ba87c6a28a5161c990d3c5566de8f8fc0cca6b65b619ca0  engine/napkin.js
 sha256 = a770f4c4d1b08e8858ad21ef39e5276996ad482126f92b0dc8932722470be007  engine/napkin.json
-sha256 = 34c75747f725c148423a26f56c52206cc29a421e03cb9a0686c100f42b206951  engine/napkin_bg.wasm
-sha256 = 351ef2e2c0f40350085f1321e3dfd1a4e70d70502af308d5b100e51d8e752466  engine/napkin_bg.wasm.d.ts
+sha256 = 3cd215a3b30fa7a73d96de0af9ae6d920f58129af08e02312a67dbb47d6662ed  engine/napkin_bg.wasm
+sha256 = 1d69ae7ae5728a5d676df1bd8b40aba6cce026d003c15a54a95e3bf095a2ee1a  engine/napkin_bg.wasm.d.ts
 sha256 = 981997afe19a618b583e771aff6637e8910f5431b409d19e64bedabede073b18  engine/rows.json

@@ -318,3 +318,12 @@ footer.foot {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* Saved comparison keeps controls in place while the exact rows update. */
+.replay { margin-block: 1.5rem; padding: 1rem; border: 1px solid currentColor; }
+.replay fieldset { display: flex; flex-wrap: wrap; gap: .75rem; }
+.replay label { display: flex; flex-direction: column; gap: .25rem; max-width: 100%; }
+.replay-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-block: .8rem; }
+.replay p { overflow-wrap: anywhere; }
+.replay pre, .replay-output { max-width: 100%; overflow-x: auto; }
+.replay input { max-width: 100%; }
