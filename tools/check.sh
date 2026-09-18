@@ -108,6 +108,8 @@ step "3/5 · the guards the edition check does not reach"
 # 22 969 bytes, is what makes a number on a page a fact about the object rather than about a program.
 python3 -B tools/engine_check.py
 node demos/replay.test.mjs
+node demos/replay-dom.test.mjs
+python3 tools/replay_mutations.py
 python3 -B tools/octahedron.py > /dev/null
 # The guard's own last line, printed rather than restated: a hardcoded echo beside a discarded
 # pass line is a status nobody verified, and this one named the cap and the ordering while omitting

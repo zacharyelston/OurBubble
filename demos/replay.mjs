@@ -48,10 +48,10 @@ export function mountReplay(engine) {
   const stop=()=>{if(timer!==null){clearInterval(timer);timer=null;}play.textContent="play";};
   const message=element("p");message.setAttribute("role","status");message.setAttribute("aria-live","polite");
   const output=element("div");output.className="replay-output";
-  function change(fields) {stop();try{replay.change(fields);sync();draw();message.textContent="Recomputed from the starting state.";}catch(error){message.textContent=`Not loaded: ${error.message}`;}}
+  function change(fields) {stop();try{replay.change(fields);sync();draw();message.textContent="Recomputed from the starting state.";}catch(error){sync();message.textContent=`Not loaded: ${error.message}. Previous experiment kept.`;}}
   replay.request.initial.forEach((value,index)=>{
     const input=field(`Dot ${index}`,element("input"));input.type="text";input.value=value;input.size=5;
-    input.addEventListener("change",()=>change({initial:initial.map(input=>input.value)}));initial.push(input);
+    input.addEventListener("change",()=>change({initial:initial.map(input=>input.value),selected_tick:0}));initial.push(input);
   });
   replay.request.edge_order.forEach((edge,index)=>{
     const input=field(`Line ${edge.join("–")}`,select(["1/2","1","3/2","2"]));input.value=replay.request.edge_weights[index];

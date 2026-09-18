@@ -33,4 +33,4 @@ assert.deepEqual(fresh.answer.baseline.history,fresh.answer.experiment.history);
 assert.equal(fresh.answer.experiment.checks.oscillatory_mode_stability.status,"verified:sufficient-bound");
 assert.equal(fresh.answer.experiment.checks.physical_energy_conservation,"not-checked");
 assert.ok(fresh.engine.calls.some(c=>c.startsWith("experiment_json(")),"all runs use Rust");
-console.log("replay: exact fresh-load parity, arm selection, reset, weighted checks and 14 refusal mutations pass");
+console.log("replay: exact fresh-load parity, arm selection, reset, weighted checks and refusal mutations pass");

@@ -858,5 +858,11 @@ the existing SVG still download. Failed imports preserve the previous experiment
 
 `node demos/replay.test.mjs` uses actual vendored Wasm for fresh-engine export/replay parity,
 selected-arm readback, reset and bad-input mutations, including duplicate keys and stale source
-identity. It is required by `make check`. The historical numeric/figure guards still run.
+identity. The mounted-UI guard `replay-dom.test.mjs` compares displayed table cells, arm labels,
+stability bounds and exported/imported files against real Rust outputs. Refused controls restore
+their accepted values; changing initial values resets the selected tick. `tools/replay_mutations.py`
+proves that swapped arms, invented cells, wrong bounds, swapped headings, stale refused controls
+and incorrect exports fail that guard. All three checks run in `make check`; the small DOM fixture
+checks wiring and content, while browser inspection checks layout and keyboard behavior.
+The historical numeric/figure guards still run.
 FIREWALL: toy lattice arithmetic, no claim about nature.
