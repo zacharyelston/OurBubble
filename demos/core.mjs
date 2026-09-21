@@ -13,6 +13,7 @@
 import { openEngine } from "./engine.mjs";
 import { drawings } from "./draw.mjs";
 import { chapterSteps } from "./steps.mjs";
+import { mountReplay } from "./replay.mjs";
 
 export { openEngine } from "./engine.mjs";
 export { drawings } from "./draw.mjs";
@@ -273,7 +274,8 @@ export async function mount(slug) {
   const controls = element("div", { class: "controls" });
   const numbers = element("div", { class: "tables" });
   const still = element("div", { class: "still" });
-  stage.append(heading, act, drawing, controls, numbers, still);
+  const replay = slug === "make-it-move" ? mountReplay(engine) : null;
+  stage.append(heading, act, drawing, controls, numbers, ...(replay ? [replay.element] : []), still);
 
   const previous = element("button", { type: "button", text: "back", class: "walk" });
   const onward = element("button", { type: "button", text: "on", class: "walk" });
@@ -422,6 +424,7 @@ export async function mount(slug) {
 
   function render() {
     const step = steps[current];
+    if (replay) replay.setVisible(step.anchors.includes("turn-the-dial"));
     const rendered = step.render(state);
     heading.textContent = step.title;
     act.textContent = step.act;

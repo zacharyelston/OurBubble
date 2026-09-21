@@ -4,6 +4,8 @@ export const memory: WebAssembly.Memory;
 export const census_json: (a: number) => [number, number];
 export const certificate_json: (a: number, b: number, c: number, d: number) => [number, number];
 export const cut_json: () => [number, number];
+export const experiment_example_json: () => [number, number];
+export const experiment_json: (a: number, b: number) => [number, number];
 export const face_sum_json: (a: number, b: number, c: number, d: number) => [number, number];
 export const loops_json: (a: number, b: number, c: number, d: number, e: number) => [number, number];
 export const number_json: (a: number, b: number) => [number, number];

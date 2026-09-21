@@ -17,6 +17,16 @@ export function certificate_json(object: string, k: string): string;
 export function cut_json(): string;
 
 /**
+ * A complete, bounded experiment descriptor for export and subsequent replay.
+ */
+export function experiment_example_json(): string;
+
+/**
+ * Recompute an exported descriptor; unsupported or mismatched inputs are refused.
+ */
+export function experiment_json(descriptor: string): string;
+
+/**
  * The eight faces of a closed surface, walked from outside, per face.
  */
 export function face_sum_json(object: string, arrows: string[]): string;
@@ -53,6 +63,8 @@ export interface InitOutput {
     readonly census_json: (a: number) => [number, number];
     readonly certificate_json: (a: number, b: number, c: number, d: number) => [number, number];
     readonly cut_json: () => [number, number];
+    readonly experiment_example_json: () => [number, number];
+    readonly experiment_json: (a: number, b: number) => [number, number];
     readonly face_sum_json: (a: number, b: number, c: number, d: number) => [number, number];
     readonly loops_json: (a: number, b: number, c: number, d: number, e: number) => [number, number];
     readonly number_json: (a: number, b: number) => [number, number];

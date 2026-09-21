@@ -839,3 +839,30 @@ one. A proof-reader reported a defect twice from a build like that, and the auth
 screenshots of a fix that was not on screen. If a change does not appear: stop the server, rebuild,
 start it on a **new port**, and load the page fresh — or check the drawing by rendering it under
 node, which is what the checks do and what settled every measurement in this lane's last two rounds.
+
+# Saved comparisons — UniForge #366
+
+The “turn the dial” step in **Make it move** has a “Save and replay a comparison” disclosure.
+It is a bounded experiment with its own declared initial state and tick setting: exact integer
+inputs in [-12,12], positive weights from the displayed menu, k in {1/16,1/8,1/4}, at most
+64 ticks. k means c²dt², and the previous state equals the initial state. The existing chapter
+demonstration retains its registered settings. Export saves the descriptor and selected tick;
+import passes original text to Rust, which checks schema, engine source, identities and limits,
+then recomputes both arms. A changed weight restarts the arm from the same initial condition.
+
+`demos/replay.mjs` selects and displays; `experiment_json` computes every exact history, total
+and sufficient metric-specific stability bound. No uniform-weight certificate is reused and
+no JavaScript physics is added. Both arms appear at the same tick, with all initial numbers,
+weights, k, boundaries and source identity visible. The new export button is separate from
+the existing SVG still download. Failed imports preserve the previous experiment and engine.
+
+`node demos/replay.test.mjs` uses actual vendored Wasm for fresh-engine export/replay parity,
+selected-arm readback, reset and bad-input mutations, including duplicate keys and stale source
+identity. The mounted-UI guard `replay-dom.test.mjs` compares displayed table cells, arm labels,
+stability bounds and exported/imported files against real Rust outputs. Refused controls restore
+their accepted values; changing initial values resets the selected tick. `tools/replay_mutations.py`
+proves that swapped arms, invented cells, wrong bounds, swapped headings, stale refused controls
+and incorrect exports fail that guard. All three checks run in `make check`; the small DOM fixture
+checks wiring and content, while browser inspection checks layout and keyboard behavior.
+The historical numeric/figure guards still run.
+FIREWALL: toy lattice arithmetic, no claim about nature.

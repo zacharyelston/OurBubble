@@ -59,6 +59,43 @@ export function cut_json() {
 }
 
 /**
+ * A complete, bounded experiment descriptor for export and subsequent replay.
+ * @returns {string}
+ */
+export function experiment_example_json() {
+    let deferred1_0;
+    let deferred1_1;
+    try {
+        const ret = wasm.experiment_example_json();
+        deferred1_0 = ret[0];
+        deferred1_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred1_0, deferred1_1, 1);
+    }
+}
+
+/**
+ * Recompute an exported descriptor; unsupported or mismatched inputs are refused.
+ * @param {string} descriptor
+ * @returns {string}
+ */
+export function experiment_json(descriptor) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passStringToWasm0(descriptor, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.experiment_json(ptr0, len0);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
+
+/**
  * The eight faces of a closed surface, walked from outside, per face.
  * @param {string} object
  * @param {string[]} arrows
