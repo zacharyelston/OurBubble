@@ -53,12 +53,15 @@
 #   (lab/napkin/0003 — the five engine gaps). The pin moved to UniForge main on 2026-09-04 (#362 merged
 #   at ee6114e, lint fix #363 at aab98a9); this note is the record that it was once ahead of main.
 #
+#   2026-09-21 · pinned to the reviewed #366 replay head 5ba7a5e ahead of its merge (UniForge PR #367
+#   review vendoring); the pin moved to that PR's merge commit eeeae59 on UniForge main the same day.
+#
 # Format: `key = value`, one per line; `#` comments; repeated keys accumulate. `record.lock`'s.
 
 version       = 1
 repo          = github.com/zacharyelston/UniForge
 ref           = main
-sha           = 5ba7a5ed74c85b16636fbcb914eacf64bbf1855a
+sha           = eeeae59804c0bc6f15821aeb69ef58958ca57c08
 crate         = napkin
 crate_version = 0.1.2
 register      = lab/napkin/0001-napkin-engine-register

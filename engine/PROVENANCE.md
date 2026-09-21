@@ -14,7 +14,7 @@ commit [`../engine.lock`](../engine.lock) pins, and every byte of it is hashed t
 | | |
 |---|---|
 | source | `github.com/zacharyelston/UniForge` — **private** |
-| commit | `5ba7a5ed74c85b16636fbcb914eacf64bbf1855a` — reviewed #366 replay API, pre-merge pin; moves to main when UniForge PR #367 integrates. |
+| commit | `eeeae59804c0bc6f15821aeb69ef58958ca57c08` — UniForge PR #367's merge commit on `main`; the reviewed #366 replay delivery. |
 | crate | `core/napkin` v0.1.2 — UniForge Layer 3 |
 | register | `lab/napkin/0001-napkin-engine-register` — 23 registered computations, all implemented; and `lab/napkin/0003-engine-gaps` — five more (G01–G05), all implemented; `lab/napkin/0005-experiment-replay` adds bounded exact export/replay |
 | toolchain | rustc 1.97.1, `wasm32-unknown-unknown`, wasm-bindgen 0.2.127 |
