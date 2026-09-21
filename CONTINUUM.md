@@ -71,10 +71,13 @@ Rules of the ledger:
 
 ## Active lanes
 
-**2026-09-17 — #366 replay adapter:** owner requested completion of UniForge #366 before #364.
-Demos/Repository territory: `demos/replay*`, additive adapter/controller wiring, engine pin/artifacts,
-engine provenance and checks. Branch `codex/366-experiment-replay`; no chapter beats, record pin or C-series work.
-Fresh review and tier 0 are required before integration.
+**2026-09-21 — #366 replay adapter complete:** [PR #110](https://github.com/zacharyelston/OurBubble/pull/110)
+merged at `a22a6ce` after independent review and current-head CI. The engine pin is UniForge PR #367's
+merged revision `eeeae59`; all six artifacts reproduce the reviewed bytes. The chapter beats and
+scientific record pin are unchanged. UniForge #366 is recorded complete and its #364 prerequisite
+is released; no C-series work was performed in this delivery. Final reconciliation is tracked in
+[UniForge #379](https://github.com/zacharyelston/UniForge/issues/379). The book ledger mirror is
+[#111](https://github.com/zacharyelston/OurBubble/issues/111); old references to #25 named a merged PR.
 
 
 | lane | role | territory | delivery | state |
