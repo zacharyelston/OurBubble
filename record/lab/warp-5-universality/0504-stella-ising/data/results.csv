@@ -1,0 +1,7 @@
+quantity,measured,check
+T_c_stella,11.6384,new (sanity ~11.4)
+U_star,0.3049,cubic-periodic 0.484 (should differ)
+gamma_over_nu,1.8948,1.963
+beta_over_nu,0.5149,0.518
+gamma_over_nu_cubic53,2.0273,cross-lattice
+beta_over_nu_cubic53,0.4855,cross-lattice

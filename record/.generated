@@ -21,16 +21,45 @@ core/uniforge/tests/uf4_casimir_energy_gate.html	core/uniforge/tests/uf4_casimir
 core/uniforge/tests/uf4_casimir_force_gate.html	core/uniforge/tests/uf4_casimir_force_gate.rs
 core/uniforge/tests/uf5_10_site_locator_reprocess_gate.html	core/uniforge/tests/uf5_10_site_locator_reprocess_gate.rs
 core/uniforge/tests/uf5_3_blind3d_gate.html	core/uniforge/tests/uf5_3_blind3d_gate.rs
+core/uniforge/tests/uf5_4_stella_ising_gate.html	core/uniforge/tests/uf5_4_stella_ising_gate.rs
 core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.html	core/uniforge/tests/uf5_9_bond_locator_reprocess_gate.rs
 core/uniforge/tests/uf5_universality_gate.html	core/uniforge/tests/uf5_universality_gate.rs
 core/uniforge/tests/uf6_1_thz_shift_law_gate.html	core/uniforge/tests/uf6_1_thz_shift_law_gate.rs
+core/uniforge/tests/uf7_0_watson_gate.html	core/uniforge/tests/uf7_0_watson_gate.rs
+core/uniforge/tests/uf8_2_electrical_gate.html	core/uniforge/tests/uf8_2_electrical_gate.rs
+core/uniforge/tests/uf8_3_netlist_gate.html	core/uniforge/tests/uf8_3_netlist_gate.rs
 docs/DEMOS.html	docs/DEMOS.md
+lab/bridge/0802-electrical/PROVENANCE.html	lab/bridge/0802-electrical/PROVENANCE.md
+lab/bridge/0802-electrical/data/entropy_ksum.html	lab/bridge/0802-electrical/data/entropy_ksum.csv
+lab/bridge/0802-electrical/data/kirchhoff_controls.html	lab/bridge/0802-electrical/data/kirchhoff_controls.csv
+lab/bridge/0802-electrical/data/summary.html	lab/bridge/0802-electrical/data/summary.csv
+lab/bridge/0802-electrical/data/walks_circuits.html	lab/bridge/0802-electrical/data/walks_circuits.csv
+lab/bridge/0802-electrical/eval.html	lab/bridge/0802-electrical/eval.md
+lab/bridge/0802-electrical/index.html
+lab/bridge/0802-electrical/spec.html	lab/bridge/0802-electrical/spec.md
+lab/bridge/0803-netlist/PROVENANCE.html	lab/bridge/0803-netlist/PROVENANCE.md
+lab/bridge/0803-netlist/data/resistance.html	lab/bridge/0803-netlist/data/resistance.csv
+lab/bridge/0803-netlist/data/summary.html	lab/bridge/0803-netlist/data/summary.csv
+lab/bridge/0803-netlist/data/walks_circuits.html	lab/bridge/0803-netlist/data/walks_circuits.csv
+lab/bridge/0803-netlist/eval.html	lab/bridge/0803-netlist/eval.md
+lab/bridge/0803-netlist/index.html
+lab/bridge/0803-netlist/spec.html	lab/bridge/0803-netlist/spec.md
 lab/dna-thz/0001-dna-permittivity-shift-law/PROVENANCE.html	lab/dna-thz/0001-dna-permittivity-shift-law/PROVENANCE.md
 lab/dna-thz/0001-dna-permittivity-shift-law/data/probe_shift_law.html	lab/dna-thz/0001-dna-permittivity-shift-law/data/probe_shift_law.csv
 lab/dna-thz/0001-dna-permittivity-shift-law/data/shift_law.html	lab/dna-thz/0001-dna-permittivity-shift-law/data/shift_law.csv
 lab/dna-thz/0001-dna-permittivity-shift-law/eval.html	lab/dna-thz/0001-dna-permittivity-shift-law/eval.md
 lab/dna-thz/0001-dna-permittivity-shift-law/index.html
 lab/dna-thz/0001-dna-permittivity-shift-law/spec.html	lab/dna-thz/0001-dna-permittivity-shift-law/spec.md
+lab/lattice-constants/0700-watson-constant/PROVENANCE.html	lab/lattice-constants/0700-watson-constant/PROVENANCE.md
+lab/lattice-constants/0700-watson-constant/data/fcc_conv.html	lab/lattice-constants/0700-watson-constant/data/fcc_conv.csv
+lab/lattice-constants/0700-watson-constant/data/ladder.html	lab/lattice-constants/0700-watson-constant/data/ladder.csv
+lab/lattice-constants/0700-watson-constant/data/sc_conv.html	lab/lattice-constants/0700-watson-constant/data/sc_conv.csv
+lab/lattice-constants/0700-watson-constant/data/stella_conv.html	lab/lattice-constants/0700-watson-constant/data/stella_conv.csv
+lab/lattice-constants/0700-watson-constant/data/stella_partial_sum.html	lab/lattice-constants/0700-watson-constant/data/stella_partial_sum.csv
+lab/lattice-constants/0700-watson-constant/data/watson_constants.html	lab/lattice-constants/0700-watson-constant/data/watson_constants.csv
+lab/lattice-constants/0700-watson-constant/eval.html	lab/lattice-constants/0700-watson-constant/eval.md
+lab/lattice-constants/0700-watson-constant/index.html
+lab/lattice-constants/0700-watson-constant/spec.html	lab/lattice-constants/0700-watson-constant/spec.md
 lab/primer/0116-tetoct-primer/PROVENANCE.html	lab/primer/0116-tetoct-primer/PROVENANCE.md
 lab/primer/0116-tetoct-primer/data/lattice.html	lab/primer/0116-tetoct-primer/data/lattice.json
 lab/primer/0116-tetoct-primer/eval.html	lab/primer/0116-tetoct-primer/eval.md
@@ -117,6 +146,13 @@ lab/warp-5-universality/0503-blind-3d/data/results.html	lab/warp-5-universality/
 lab/warp-5-universality/0503-blind-3d/eval.html	lab/warp-5-universality/0503-blind-3d/eval.md
 lab/warp-5-universality/0503-blind-3d/index.html
 lab/warp-5-universality/0503-blind-3d/spec.html	lab/warp-5-universality/0503-blind-3d/spec.md
+lab/warp-5-universality/0504-stella-ising/PROVENANCE.html	lab/warp-5-universality/0504-stella-ising/PROVENANCE.md
+lab/warp-5-universality/0504-stella-ising/data/binder_stella.html	lab/warp-5-universality/0504-stella-ising/data/binder_stella.csv
+lab/warp-5-universality/0504-stella-ising/data/results.html	lab/warp-5-universality/0504-stella-ising/data/results.csv
+lab/warp-5-universality/0504-stella-ising/data/stella_graph.html	lab/warp-5-universality/0504-stella-ising/data/stella_graph.csv
+lab/warp-5-universality/0504-stella-ising/eval.html	lab/warp-5-universality/0504-stella-ising/eval.md
+lab/warp-5-universality/0504-stella-ising/index.html
+lab/warp-5-universality/0504-stella-ising/spec.html	lab/warp-5-universality/0504-stella-ising/spec.md
 lab/warp-5-universality/0509-bond-locator-reprocess/PROVENANCE.html	lab/warp-5-universality/0509-bond-locator-reprocess/PROVENANCE.md
 lab/warp-5-universality/0509-bond-locator-reprocess/data/crossing_pairs.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/crossing_pairs.csv
 lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_estimates.html	lab/warp-5-universality/0509-bond-locator-reprocess/data/locator_estimates.csv

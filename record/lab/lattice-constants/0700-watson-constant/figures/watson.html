@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Lattice constants · the stella random-walk constant — Watson's integral on our own graph</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .legend{font-size:12px;color:var(--mute);margin-top:8px}
+  .legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 5px 0 12px;vertical-align:middle}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  table.disc td.num{font-variant-numeric:tabular-nums;color:var(--green)}
+  table.disc td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  table.disc td.new{font-variant-numeric:tabular-nums;color:var(--violet);font-weight:600}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The stella random-walk constant — Watson's integral on our own graph</h1>
+  <p class="sub">The simple-random-walk return constant G(0,0): reproduced against Watson's exact 1939
+     closed forms on SC and FCC (the answer keys), then registered on the engine's own stella tet-oct
+     complex graph — a new lattice constant, the repo's own Madelung number.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Graph sums over a <b>toy</b> lattice complex — 🔵 facts of graph
+     mathematics, exact and un-tuned, never predictions about nature. The stella value is a constant of
+     <b>this complex</b>, not a property of matter. Dimensionless; c = 1.</div>
+
+  <div class="panel">
+    <h2>Correct digits vs torus size — and what the Richardson ladder buys</h2>
+    <p class="q">Lines: −log₁₀|error| of the raw deflated torus k-sums G<sub>M</sub> (SC/FCC vs the Γ-function
+       closed forms; stella vs its extrapolated value). Dots at right: the digits after the
+       order-(1,3,5) Richardson ladder over the same four sums.</p>
+    <canvas id="conv" width="1120" height="330"></canvas>
+    <div class="legend">
+      <span class="sw" style="background:var(--gold)"></span>SC (control)
+      <span class="sw" style="background:var(--cyan)"></span>FCC (Watson's answer key)
+      <span class="sw" style="background:var(--violet)"></span>stella tet-oct (the new constant)
+    </div>
+    <div class="take" id="ctake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The constants</h2>
+    <table class="disc" id="disc"><thead><tr><th>constant</th><th>lattice + ladder</th><th>target</th><th>|error|</th></tr></thead><tbody></tbody></table>
+    <div class="take" id="dtake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The complex's own dynamics brackets it from below</h2>
+    <p class="q">Partial sums S<sub>t</sub> = Σ<sub>t'≤t</sub> p<sub>t'</sub>(0,0) of the return series, walked on the
+       open engine mesh (<code>mesh_3d_chiral_tetoct</code>, adjacency from its own d0) — every term exact
+       because the support cannot reach the boundary. S₈ is a strict lower bound on G<sub>stella</sub>.</p>
+    <canvas id="bound" width="1120" height="240"></canvas>
+    <div class="take" id="btake"></div>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"sc":[{"m":48,"g":1.488165276221,"digits":1.549},{"m":96,"g":1.502274790417,"digits":1.850},{"m":192,"g":1.509330315544,"digits":2.151},{"m":384,"g":1.512858173706,"digits":2.452}],"fcc":[{"m":48,"g":1.321855584599,"digits":1.642},{"m":96,"g":1.333259270711,"digits":1.943},{"m":192,"g":1.338960337878,"digits":2.244},{"m":384,"g":1.341810774389,"digits":2.545}],"stella":[{"m":48,"g":1.281479958622,"digits":1.681},{"m":96,"g":1.291896064594,"digits":1.982},{"m":192,"g":1.297103174162,"digits":2.283},{"m":384,"g":1.299706610985,"digits":2.584}],"final_digits":{"sc":12.55,"fcc":11.22,"stella":11.51},"consts":[{"name":"G(0,0) — SC (control)","measured":"1.516386059152","target":"1.516386059152","err":"2.787e-13","new":false},{"name":"G(0,0) — FCC (Watson 1939)","measured":"1.344661183159","target":"1.344661183165","err":"6.050e-12","new":false},{"name":"return probability p — FCC","measured":"0.256318236501","target":"0.256318236505","err":"3.346e-12","new":false},{"name":"Watson integral F(0,0,0;3)","measured":"0.4482203944","target":"0.4482203944","err":"1.364e-11","new":false},{"name":"G(0,0) — stella tet-oct (NEW)","measured":"1.302310014103","target":"1.3023100141","err":"3.067e-12","new":true},{"name":"return probability p — stella (NEW)","measured":"0.232133678486","target":"0.2321336785","err":"1.387e-11","new":true}],"g_stella":"1.302310014103","p_stella":"0.232133678486","g_stella_num":1.302310014103,"partial":[{"t":0,"s":1.000000000000},{"t":1,"s":1.000000000000},{"t":2,"s":1.071428571429},{"t":3,"s":1.097667638484},{"t":4,"s":1.120210329030},{"t":5,"s":1.135754447552},{"t":6,"s":1.148176992580},{"t":7,"s":1.158112531768},{"t":8,"s":1.166371404505}],"source":{"commit":"cf357dd"}};
+
+// ---- convergence + ladder chart ----
+(function(){
+  const cv=document.getElementById("conv"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=46,padR=150,padT=16,padB=40;
+  const series=[["sc","#eab308"],["fcc","#06b6d4"],["stella","#c084fc"]];
+  const ms=D.sc.map(r=>r.m);
+  const ymax=Math.max(...series.map(([k])=>D.final_digits[k]))*1.12;
+  const X=i=>padL+(i/(ms.length-1))*(W-padL-padR);
+  const Y=v=>(H-padB)-(v/ymax)*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let v=0;v<=ymax;v+=2){const y=Y(v);g.strokeStyle="#141c27";g.beginPath();g.moveTo(padL,y);g.lineTo(W-padR+60,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="right";g.fillText(v.toFixed(0),padL-5,y+3);}
+  g.fillStyle="#4b5c70";g.textAlign="left";g.font="10px system-ui";g.fillText("correct digits",padL,padT+2);
+  ms.forEach((m,i)=>{g.fillStyle="#9fb0c3";g.font="11px system-ui";g.textAlign="center";g.fillText("M="+m,X(i),H-padB+16);});
+  const labelYs=[];
+  series.forEach(([k,col])=>{
+    const rows=D[k];
+    g.strokeStyle=col;g.lineWidth=2;g.beginPath();
+    rows.forEach((r,i)=>{const x=X(i),y=Y(r.digits);i?g.lineTo(x,y):g.moveTo(x,y);});
+    g.stroke();
+    rows.forEach((r,i)=>{g.fillStyle=col;g.beginPath();g.arc(X(i),Y(r.digits),3,0,7);g.fill();});
+    // ladder-final dot (labels nudged apart when finals nearly coincide)
+    const fx=W-padR+34, fy=Y(D.final_digits[k]);
+    g.strokeStyle=col;g.setLineDash([3,4]);g.beginPath();g.moveTo(X(ms.length-1),Y(rows[rows.length-1].digits));g.lineTo(fx,fy);g.stroke();g.setLineDash([]);
+    g.fillStyle=col;g.beginPath();g.arc(fx,fy,5,0,7);g.fill();
+    let ly=fy; while(labelYs.some(v=>Math.abs(v-ly)<14)) ly+=14;
+    labelYs.push(ly);
+    g.font="600 11px system-ui";g.textAlign="left";g.fillText(D.final_digits[k].toFixed(1)+" digits",fx+9,ly+4);
+  });
+  document.getElementById("ctake").innerHTML =
+    `The raw torus sums crawl (the registered 1/M error law — one digit per doubling would take forever);
+     the <b>order-(1,3,5) Richardson ladder</b> over the same four sums jumps to
+     ${D.final_digits.fcc.toFixed(0)}–${D.final_digits.sc.toFixed(0)} digits. Acceleration, not compute,
+     is the precision lever (the 4.3 lesson, again).`;
+})();
+
+// ---- scorecard ----
+(function(){
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=D.consts.map(c=>`<tr><td>${c.name}</td><td class="${c.new?"new":"num"}">${c.measured}</td><td class="thy">${c.target}</td><td class="thy">${c.err}</td></tr>`).join("");
+  document.getElementById("dtake").innerHTML =
+    `SC and FCC land on the exact Γ-function closed forms (Watson 1939; Glasser–Zucker 1977) with
+     <b>zero tuning</b> — the answer keys that license the machinery. The same ladder on the stella
+     tet-oct graph (12 FCC bonds + 2 screw-assigned long diagonals per vertex, verified vertex-by-vertex
+     against the mesh's own d0) gives the <b>new constant</b>
+     G<sub>stella</sub> = <b>${D.g_stella}</b>, return probability p = <b>${D.p_stella}</b>.`;
+})();
+
+// ---- lower-bound partial sums ----
+(function(){
+  const cv=document.getElementById("bound"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=46,padR=16,padT=18,padB=34, P=D.partial, G=D.g_stella_num;
+  const ymin=0.95, ymax=G*1.05;
+  const X=i=>padL+(i/(P.length-1))*(W-padL-padR);
+  const Y=v=>(H-padB)-((v-ymin)/(ymax-ymin))*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(const v of [1.0,1.1,1.2,1.3]){const y=Y(v);g.strokeStyle="#141c27";g.beginPath();g.moveTo(padL,y);g.lineTo(W-padR,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="right";g.fillText(v.toFixed(1),padL-5,y+3);}
+  // G line
+  const gy=Y(G);g.strokeStyle="#c084fc";g.setLineDash([6,5]);g.beginPath();g.moveTo(padL,gy);g.lineTo(W-padR,gy);g.stroke();g.setLineDash([]);
+  g.fillStyle="#c084fc";g.font="600 11px system-ui";g.textAlign="left";g.fillText("G_stella = "+D.g_stella,padL+8,gy-6);
+  // S_t staircase
+  g.strokeStyle="#22c55e";g.lineWidth=2;g.beginPath();
+  P.forEach((r,i)=>{const x=X(i),y=Y(r.s);i?g.lineTo(x,y):g.moveTo(x,y);});
+  g.stroke();
+  P.forEach((r,i)=>{const x=X(i),y=Y(r.s);g.fillStyle="#22c55e";g.beginPath();g.arc(x,y,3,0,7);g.fill();
+    g.fillStyle="#9fb0c3";g.font="10px system-ui";g.textAlign="center";g.fillText("t="+r.t,x,H-padB+14);});
+  const last=P[P.length-1];
+  g.fillStyle="#e6edf5";g.font="600 11px system-ui";g.textAlign="right";g.fillText("S₈ = "+last.s.toFixed(6),X(P.length-1)-8,Y(last.s)+14);
+  document.getElementById("btake").innerHTML =
+    `The return series walked on the <b>actual complex</b> climbs to S₈ = <b>${last.s.toFixed(6)}</b>,
+     strictly below the k-space constant — the dynamics and the spectral route bracket the same number
+     (the real-space CG solve matches the Bloch sum to machine level; eval.md).`;
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_watson</code> from
+   <code>lab/lattice-constants/0700-watson-constant/data/</code> (gate <code>uf7_0_watson_gate</code>,
+   commit <code>${D.source.commit}</code>). Self-contained; opens with no server.`;
+</script>
+</body>
+</html>

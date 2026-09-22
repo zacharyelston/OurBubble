@@ -115,6 +115,12 @@ Every appendix section with a result of its own carries the command that re-runs
 chapters, the history among them, have none, because they have no run. Start with one whose runtime
 suits your machine, and read what the section says before you run anything.
 
+Two of the smallest were made on wrapped copies of the Container, the same dots and lines as yours:
+how often a walker stepping at random along its lines comes home, the copies grown and the number
+they were heading for read off; and the resistance between two dots when every line is made a
+resistor, which is also written out as a standard circuit file that
+circuit simulators read, so it can be checked in a language that owes nothing to this book.
+
 ## ✎ Before you press Return
 
 <!-- beat cast-your-own-shadow.5 -->

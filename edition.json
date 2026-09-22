@@ -351,17 +351,20 @@
           "warp-5 5.1 — the blind three-dimensional swing",
           "warp-5 5.2 — the self-contained pipeline",
           "warp-5 5.3 — the fully blind close, with its registered limit",
+          "warp-5 5.4 — the same switches on the world the reader built, its geometry wrapped in two directions for the run and open in the third: a critical temperature nobody had tabulated, located inside its registered range, and the class numbers unchanged within their registered margins. The record has no figure of its own for this rung; its eval says so",
           "warp-5 5.9 and warp-5 5.10 — the two negatives re-analysed. They did not dissolve the same way, and the difference is the subject of the coda in the section for when the world you built says no"
         ],
         "entries": [
           "lab/warp-5-universality/0500-ising-universality",
           "lab/warp-5-universality/0501-montecarlo-prediction",
           "lab/warp-5-universality/0502-self-contained",
-          "lab/warp-5-universality/0503-blind-3d"
+          "lab/warp-5-universality/0503-blind-3d",
+          "lab/warp-5-universality/0504-stella-ising"
         ],
         "gates": [
           "core/uniforge/tests/uf5_universality_gate.rs",
-          "core/uniforge/tests/uf5_3_blind3d_gate.rs"
+          "core/uniforge/tests/uf5_3_blind3d_gate.rs",
+          "core/uniforge/tests/uf5_4_stella_ising_gate.rs"
         ],
         "figures": [
           "lab/warp-5-universality/0500-ising-universality/figures/universality.html"
@@ -369,7 +372,8 @@
         "commands": [
           "cargo test --release -p uniforge --test uf5_universality_gate -- --nocapture",
           "cargo run  --release -p viz     --bin gen_universality",
-          "cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture"
+          "cargo test --release -p uniforge --test uf5_3_blind3d_gate -- --nocapture",
+          "cargo test --release -p uniforge --test uf5_4_stella_ising_gate -- --nocapture"
         ],
         "record_quotes": [
           {
@@ -419,6 +423,22 @@
           {
             "text": "0.766",
             "source": "book/chapters/05-universality/chapter.md"
+          },
+          {
+            "text": "11.638",
+            "source": "lab/warp-5-universality/0504-stella-ising/eval.md"
+          },
+          {
+            "text": "4.51",
+            "source": "lab/warp-5-universality/0504-stella-ising/eval.md"
+          },
+          {
+            "text": "3.5%",
+            "source": "lab/warp-5-universality/0504-stella-ising/eval.md"
+          },
+          {
+            "text": "0.6%",
+            "source": "lab/warp-5-universality/0504-stella-ising/eval.md"
           }
         ]
       },
@@ -466,6 +486,26 @@
       },
       "cast-your-own-shadow": {
         "title": "Cast your own shadow — the reproduce path",
+        "rungs": [
+          "lattice-constants 7.0 — the Container's random-walk return constant: how often a walker stepping at random along its lines comes home, reached by growing wrapped copies of the same dots and lines and reading off the number they were heading for, after the same machinery reproduced Watson's 1939 closed forms for two textbook lattices. Its gate re-runs in seconds",
+          "bridge 8.2 — a small wrapped copy's lines as resistors: the resistance between two dots, and the same fact reached a second way, as the time a random walk takes to go and come back, which is proportional to it",
+          "bridge 8.3 — the same circuit written out as a standard netlist file that circuit simulators read, and solved by an independent method that agrees with the engine's resistance to machine precision"
+        ],
+        "entries": [
+          "lab/lattice-constants/0700-watson-constant",
+          "lab/bridge/0802-electrical",
+          "lab/bridge/0803-netlist"
+        ],
+        "gates": [
+          "core/uniforge/tests/uf7_0_watson_gate.rs",
+          "core/uniforge/tests/uf8_2_electrical_gate.rs",
+          "core/uniforge/tests/uf8_3_netlist_gate.rs"
+        ],
+        "figures": [
+          "lab/lattice-constants/0700-watson-constant/figures/watson.html",
+          "lab/bridge/0802-electrical/figures/electrical.html",
+          "lab/bridge/0803-netlist/figures/netlist.html"
+        ],
         "standards": [
           "PREDICTIONS.md",
           "book/LESSON_STANDARD.md",
@@ -474,7 +514,10 @@
         "commands": [
           "python3 check_edition.py",
           "mdbook build",
-          "python3 check_edition.py --rendered"
+          "python3 check_edition.py --rendered",
+          "cargo test --release -p uniforge --test uf7_0_watson_gate -- --nocapture",
+          "cargo test --release -p uniforge --test uf8_2_electrical_gate -- --nocapture",
+          "cargo test --release -p uniforge --test uf8_3_netlist_gate -- --nocapture"
         ]
       },
       "two-dots-and-a-line": {

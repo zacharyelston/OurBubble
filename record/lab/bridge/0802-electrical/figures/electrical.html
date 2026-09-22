@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The bridge · the 4th view — electricity & random walks (spanning-tree entropy)</title>
+<style>
+  :root{--bg:#0b0e13;--ink:#e6edf5;--mute:#9fb0c3;--faint:#6b7c90;--line:#233042;--surf:#0e131b;
+    --cyan:#06b6d4;--gold:#eab308;--red:#ef4444;--violet:#c084fc;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:26px 20px 50px}
+  h1{font:600 21px/1.25 Georgia,serif;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 12px;font-size:13px}
+  .ramp{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#eab308,#ef4444)}
+  .fire{border:1px solid var(--line);border-left:3px solid var(--red);background:rgba(239,68,68,.06);border-radius:8px;padding:9px 12px;color:var(--mute);font-size:12.5px;margin-bottom:18px}
+  .fire b{color:#f87171}
+  .panel{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .panel h2{font:600 12px/1.3 system-ui;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin:0 0 3px}
+  .panel .q{color:var(--mute);font-size:12.5px;margin:0 0 10px}
+  canvas{display:block;width:100%;height:auto;background:#080b10;border:1px solid var(--line);border-radius:8px}
+  .take{font-size:12.5px;color:var(--ink);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .take b{color:var(--gold)}
+  table.disc{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.disc th,table.disc td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.disc th{color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  table.disc td.num{font-variant-numeric:tabular-nums;color:var(--green)}
+  table.disc td.thy{color:var(--faint);font-variant-numeric:tabular-nums}
+  .cap{font-size:11px;color:var(--faint);line-height:1.55;margin-top:14px}
+  code{color:var(--cyan);font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The 4th view — electricity &amp; random walks</h1>
+  <p class="sub">The same graph Laplacian, read as a resistor network and as a random walk. The two agree
+     through a famous duality (commute time = 2E·resistance), which is how this view *earns its place*.
+     Its flagship number is the stella spanning-tree entropy.</p>
+  <div class="ramp"></div>
+  <div class="fire"><b>FIREWALL.</b> Random walks, resistance, spanning trees of a <b>toy</b> 14-regular
+     complex — a 🔵 graph constant and a cross-check between two views, never a claim about nature.
+     Dimensionless; c = 1.</div>
+
+  <div class="panel">
+    <h2>Membership gate: walks ↔ circuits agree</h2>
+    <p class="q">For each node pair: the random-walk <b>commute time</b> (hitting-time solve on I−P) vs the
+       electrical <b>2·E·R_eff</b> (voltage solve on L). Two independent computations — they must land on
+       the same value, or the view doesn't join.</p>
+    <canvas id="wc" width="1120" height="280"></canvas>
+    <div class="legend" style="font-size:12px;color:var(--mute);margin-top:8px">
+      <span style="display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 5px 0 12px;vertical-align:middle;background:var(--cyan)"></span>2E·R_eff (electrical)
+      <span style="display:inline-block;width:12px;height:12px;border-radius:50%;margin:0 5px 0 12px;vertical-align:middle;background:var(--gold)"></span>commute time (walk)
+    </div>
+    <div class="take" id="wctake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>The spanning-tree entropy constant</h2>
+    <p class="q">z = lim (ln τ)/N = ⟨ln λ⟩ over the Brillouin zone (τ = # spanning trees, Kirchhoff). The
+       Bloch k-sum converges toward z_stella; the ln has a mild log-singularity at the band bottom, so
+       this settles at ~5 digits (dashed = registered value).</p>
+    <canvas id="conv" width="1120" height="260"></canvas>
+    <div class="take" id="ctake"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Kirchhoff controls — spanning trees against closed forms</h2>
+    <table class="disc" id="disc"><thead><tr><th>graph</th><th>ln τ (Kirchhoff = ∏λ/N)</th><th>closed form</th><th>agree</th></tr></thead><tbody></tbody></table>
+  </div>
+
+  <div class="cap" id="cap"></div>
+</div>
+
+<script>
+"use strict";
+const D = {"walks":[{"pair":"0-1","elec":52.086194,"walk":52.086194},{"pair":"0-13","elec":55.647597,"walk":55.647597},{"pair":"5-20","elec":56.122807,"walk":56.122807},{"pair":"2-25","elec":55.647597,"walk":55.647597}],"walks_worst":"5.68e-14","zconv":[{"m":24,"z":2.5765833997},{"m":48,"z":2.5761931834},{"m":96,"z":2.5761334417},{"m":192,"z":2.5761246030}],"z_reg":2.5761244,"controls":[{"graph":"K_4","ln_tau":2.772588722,"expected":2.772588722},{"graph":"K_5","ln_tau":4.828313737,"expected":4.828313737},{"graph":"K_6","ln_tau":7.167037877,"expected":7.167037877},{"graph":"C_5","ln_tau":1.609437912,"expected":1.609437912},{"graph":"C_8","ln_tau":2.079441542,"expected":2.079441542},{"graph":"C_12","ln_tau":2.484906650,"expected":2.484906650}],"source":{"commit":"73a4d40"}};
+
+// ---- walks↔circuits ----
+(function(){
+  const cv=document.getElementById("wc"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=54,padR=20,padT=18,padB=44, P=D.walks;
+  const vals=P.flatMap(r=>[r.elec,r.walk]), ymin=Math.min(...vals)*0.98, ymax=Math.max(...vals)*1.02;
+  const bw=(W-padL-padR)/P.length, Y=v=>(H-padB)-((v-ymin)/(ymax-ymin))*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let t=0;t<=4;t++){const v=ymin+(ymax-ymin)*t/4, y=Y(v);g.strokeStyle="#141c27";g.beginPath();g.moveTo(padL,y);g.lineTo(W-padR,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="right";g.fillText(v.toFixed(1),padL-6,y+3);}
+  P.forEach((r,i)=>{
+    const x=padL+bw*(i+0.5);
+    g.fillStyle="#06b6d4";g.fillRect(x-16,Y(r.elec),32,(H-padB)-Y(r.elec));
+    g.fillStyle="#eab308";g.beginPath();g.arc(x,Y(r.walk),5,0,7);g.fill();
+    g.fillStyle="#9fb0c3";g.font="11px system-ui";g.textAlign="center";g.fillText(r.pair,x,H-padB+16);
+  });
+  document.getElementById("wctake").innerHTML =
+    `Every pair: the gold dot (random-walk commute time) sits dead-center on the cyan bar (2E·resistance)
+     — agreement to <b>${D.walks_worst}</b>. The electrical and random-walk views are the <b>same object</b>;
+     the duality holds, so the 4th view joins the multi-view.`;
+})();
+
+// ---- convergence ----
+(function(){
+  const cv=document.getElementById("conv"), g=cv.getContext("2d"), W=cv.width, H=cv.height;
+  const padL=64,padR=20,padT=18,padB=40, C=D.zconv;
+  const zr=D.z_reg, ys=C.map(r=>r.z).concat([zr]);
+  const ymin=Math.min(...ys)-2e-5, ymax=Math.max(...ys)+2e-5;
+  const X=i=>padL+(i/(C.length-1))*(W-padL-padR), Y=v=>(H-padB)-((v-ymin)/(ymax-ymin))*(H-padT-padB);
+  g.clearRect(0,0,W,H);
+  for(let t=0;t<=4;t++){const v=ymin+(ymax-ymin)*t/4,y=Y(v);g.strokeStyle="#141c27";g.beginPath();g.moveTo(padL,y);g.lineTo(W-padR,y);g.stroke();
+    g.fillStyle="#3b4a5e";g.font="10px system-ui";g.textAlign="right";g.fillText(v.toFixed(5),padL-6,y+3);}
+  const yr=Y(zr);g.strokeStyle="#c084fc";g.setLineDash([6,5]);g.beginPath();g.moveTo(padL,yr);g.lineTo(W-padR,yr);g.stroke();g.setLineDash([]);
+  g.fillStyle="#c084fc";g.font="600 11px system-ui";g.textAlign="left";g.fillText("z_stella = "+zr,padL+8,yr-6);
+  g.strokeStyle="#22c55e";g.lineWidth=2;g.beginPath();
+  C.forEach((r,i)=>{const x=X(i),y=Y(r.z);i?g.lineTo(x,y):g.moveTo(x,y);});g.stroke();
+  C.forEach((r,i)=>{g.fillStyle="#22c55e";g.beginPath();g.arc(X(i),Y(r.z),3.2,0,7);g.fill();
+    g.fillStyle="#9fb0c3";g.font="10px system-ui";g.textAlign="center";g.fillText("M="+r.m,X(i),H-padB+15);});
+  document.getElementById("ctake").innerHTML =
+    `z_M marches down toward <b>z_stella = ${zr}</b>. The band-bottom log-singularity limits this to ~5
+     digits (unlike rung 7.1's ~10) — the honest resolution; singularity-subtraction would sharpen it.`;
+})();
+
+// ---- controls ----
+(function(){
+  const tb=document.querySelector("#disc tbody");
+  tb.innerHTML=D.controls.map(c=>{
+    const cf = c.graph.startsWith("K_") ? `(m−2)·ln m = ${c.expected}` : `ln n = ${c.expected}`;
+    return `<tr><td>${c.graph}</td><td class="num">${c.ln_tau}</td><td class="thy">${cf}</td><td>${Math.abs(c.ln_tau-c.expected)<1e-9?"✅":"❌"}</td></tr>`;
+  }).join("");
+})();
+
+document.getElementById("cap").innerHTML =
+  `<b>Data-true (R10):</b> rendered by <code>core/viz gen_electrical</code> from
+   <code>lab/bridge/0802-electrical/data/</code> (gate <code>uf8_2_electrical_gate</code>,
+   commit <code>${D.source.commit}</code>). Self-contained; opens with no server.`;
+</script>
+</body>
+</html>
